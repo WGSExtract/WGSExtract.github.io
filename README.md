@@ -1,2 +1,2 @@
 # WGS Extract
-a tool for analyzing and manipulating your 30x WGS test results
+a desktop tool for verifying, analyzing and manipulating your 30x WGS test results
