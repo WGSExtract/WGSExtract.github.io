@@ -7,9 +7,9 @@ __Current release__ is Beta v2b (18 Feb 2020):
 
 You may find the Facebook [Dante Labs and Nebula Genomics Customers](https://www.facebook.com/groups/373644229897409/) group useful for discussions on this and other tools that make use of your 30x WGS test results. Bugs, use cases and announcements about this tool are made there.  As part of the Files section, you can find a number of useful companion documents and tool references.  In particular, start with [Bioinformatics for Newbies](http://bit.ly/38jnxnK)
 
-Further documentation is available in our [WGS Extract Developer's Documentation Repository](../../WGSExtract-Dev/docs)
+Further documentation is available in our [WGS Extract Developer's Documentation Repository](https://github.com/WGSExtract/WGSExtract-Dev/docs)
 
-Developer's should visit the main GitHub [WGS Extract Developers Code Repository](../../WGSExtract-Dev/)
+Developer's should visit the main GitHub [WGS Extract Developers Code Repository](https://github.com/WGSExtract/WGSExtract-Dev/)
 
 (The acronym **WGSE** for the tool is pronounced as "wig-see". We encourage this use in discussions.)
 
