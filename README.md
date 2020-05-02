@@ -7,7 +7,7 @@ __Current release__ is Beta v2b (18 Feb 2020):
 
 :warning:**`IMPORTANT`**: [MacOSX Patch Release](https://github.com/WGSExtract/WGSExtract-Dev/blob/master/docs/Betav2b_MacOSX_patch.md) is available for Version Beta v2B above.  Fixes the install and starting of the program. A complete replacement. (25 April 2020)
 
-:memo:**`Note`**: [Française Language Patch](https://github.com/WGSExtract/WGSExtract-Dev/blob/master/docs/Betav2b_Francaise_Patch.md) is available for Version Beta v2b above.  Adds Francaise language support to the existing English and Deutsch language support. (1 May 2020)
+:memo:**`Note`**: [Français Language Patch](https://github.com/WGSExtract/WGSExtract-Dev/blob/master/docs/Betav2b_Francais_Patch.md) is available for Version Beta v2b above.  Adds Français language support to the existing English and Deutsch language support. (1 May 2020)
 
 You may find the Facebook [Dante Labs and Nebula Genomics Customers](https://www.facebook.com/groups/373644229897409/) group useful for discussions on this and other tools that make use of your 30x WGS test results. Bugs, use cases and announcements about this tool are made there.  As part of the Files section, you can find a number of useful companion documents and tool references.  In particular, start with [Bioinformatics for Newbies](http://bit.ly/38jnxnK)
 
