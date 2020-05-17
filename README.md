@@ -5,7 +5,7 @@ __Current release__ is Beta v2b (18 Feb 2020):
 * **WGS Extract** [Manual (Google Doc)](http://bit.ly/36Jdpnq)
 * **WGS Extract** [Release (5 GB)](http://37.187.22.93/wgsextract/WGSExtractBeta.zip)
 
-:warning:**`IMPORTANT`**: [MacOSX Patch Release](https://github.com/WGSExtract/WGSExtract-Dev/blob/master/docs/Betav2b_MacOSX_patch.md) is available for Version Beta v2B above.  Fixes the install and starting of the program. A complete replacement. (25 April 2020)
+:warning:**`IMPORTANT`**: [MacOSX Patch Release](https://github.com/WGSExtract/WGSExtract-Dev/blob/master/docs/Betav2b_MacOSX_patch.md) is available for Version Beta v2B above.  Fixes the install and starting of the program. (25 April 2020)
 
 :memo:**`Note`**: [Français Language Patch](https://github.com/WGSExtract/WGSExtract-Dev/blob/master/docs/Betav2b_Francais_Patch.md) is available for Version Beta v2b above.  Adds Français language support to the existing English and Deutsch language support. (1 May 2020)
 
