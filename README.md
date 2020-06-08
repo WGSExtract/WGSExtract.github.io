@@ -8,7 +8,7 @@ __Current release__ is Beta v2b (18 Feb 2020):
 SHA256: 4B2BB4CB42D90D20F528BD60C6A21A019C3672651716B6A8AE84C67E10481123
 MD5: 5979E0994C76347023EE622DF3E895CE
 ```
-[More information on hashes to verify the downloaded release](https://www.howtogeek.com/67241/htg-explains-what-are-md5-sha-1-hashes-and-how-do-i-check-them/)
+[More information on hashes is available to verify the downloaded release](https://www.howtogeek.com/67241/htg-explains-what-are-md5-sha-1-hashes-and-how-do-i-check-them/)
 
 **`Note`**: The tool acronym is **WGSE** and is pronounced as "wig-see". We encourage this use in English language onversation.
 
