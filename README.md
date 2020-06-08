@@ -4,8 +4,10 @@ a desktop tool for verifying, analyzing and manipulating your **DTC 30x WGS test
 __Current release__ is Beta v2b (18 Feb 2020):
 * **WGS Extract** [Manual (Google Doc)](http://bit.ly/36Jdpnq)
 * **WGS Extract** [Release (5 GB)](http://37.187.22.93/wgsextract/WGSExtractBeta.zip)
+```
 SHA256: 4B2BB4CB42D90D20F528BD60C6A21A019C3672651716B6A8AE84C67E10481123
 MD5: 5979E0994C76347023EE622DF3E895CE
+```
 [More information on hashes to verify the downloaded release](https://www.howtogeek.com/67241/htg-explains-what-are-md5-sha-1-hashes-and-how-do-i-check-them/)
 
 **`Note`**: The tool acronym is **WGSE** and is pronounced as "wig-see". We encourage this use in English language onversation.
