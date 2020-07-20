@@ -1,0 +1,1 @@
+Patch and other bundled releases.  No large binary blobs as has traditionally been distruted. See links to other repositories for those.  Working to remove all such blobs from the release and instead make them part of the Install process.
