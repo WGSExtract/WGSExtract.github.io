@@ -14,7 +14,7 @@ MD5: 5979E0994C76347023EE622DF3E895CE
 
 **`Note`**: [Français Language Patch](https://github.com/WGSExtract/WGSExtract-Dev/blob/master/docs/Betav2b_Francais_Patch.md) is available for Version Beta v2b.  Adds Français language support to the existing English and Deutsch language support. (1 May 2020)
 
-**`Note`**: If working with a Nebula Genomics CRAM file, please [check the CRAM to BAM conversrion document](https://bit.ly/31TeqYH). The next release will handle CRAMs and BAMs interchangeably.
+**`Note`**: If working with a Nebula Genomics CRAM file, please [check the CRAM to BAM conversion document](https://bit.ly/31TeqYH). The next release will handle CRAMs and BAMs interchangeably.
 
 This tool is geared toward the needs of [genetic genealogy](https://h600.org/wiki/Genetic+Genealogy) but may be helpful for this looking into health-releated uses of WGS tests. The **sub-$500, Direct-to-Consumer (DTC), 30x Whole Genome Sequence (WGS) tests** are delivered with basic data files and often some health-related reports. This tool serves to bridge the gap between the WGS files delivered to the [genetic genealogy community tools](https://h600.org/wiki/Third+Party+Analysis+Tools). This tool is designed to be simple, button-push manipulation of WGS files from any source. It hides the scripting of complex bioinformatic tools in the background and automatically determines needed parameters and variances for the data supplied it.  For more control over your pipeline, either learn to use the underlying tools directly in a command shell or seek a Galaxy server (such as [UseGalaxy](https://usegalaxy.org/)
 .
