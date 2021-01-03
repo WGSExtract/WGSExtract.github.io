@@ -10,9 +10,9 @@ MD5: 5979E0994C76347023EE622DF3E895CE
 ```
 [More information on hashes used to verify the download release is available](https://www.howtogeek.com/67241/htg-explains-what-are-md5-sha-1-hashes-and-how-do-i-check-them/)
 
-**`IMPORTANT`**: [MacOSX Release Patch](https://github.com/WGSExtract/WGSExtract-Dev/blob/master/docs/Betav2b_MacOSX_patch.md) is available for Version Beta v2b.  Fixes the install and start scripts of the program. Adds an Unintall as well. (v1 on 25 April 2020, v3 on 20 Jun 2020, v5 on 31 Oct 2020)
+**`IMPORTANT`**: [MacOSX Release Patch](https://github.com/WGSExtract/WGSExtract-Dev/blob/master/Docs/Betav2b_MacOSX_patch.md) is available for Version Beta v2b.  Fixes the install and start scripts of the program. Adds an Unintall as well. (v1 on 25 April 2020, v3 on 20 Jun 2020, v5 on 31 Oct 2020)
 
-**`Note`**: [Français Language Patch](https://github.com/WGSExtract/WGSExtract-Dev/blob/master/docs/Betav2b_Francais_Patch.md) is available for Version Beta v2b.  Adds Français language support to the existing English and Deutsch language support. (1 May 2020)
+**`Note`**: [Français Language Patch](https://github.com/WGSExtract/WGSExtract-Dev/blob/master/Docs/Betav2b_Francais_Patch.md) is available for Version Beta v2b.  Adds Français language support to the existing English and Deutsch language support. (1 May 2020)
 
 **`Note`**: If working with a Nebula Genomics CRAM file, please [check the CRAM to BAM conversion document](https://bit.ly/31TeqYH). The next release will handle CRAMs and BAMs interchangeably.
 
