@@ -24,7 +24,7 @@ User issues, if not brought up in the [Facebook group](https://www.facebook.com/
 
 The tool acronym is **WGSE** and is pronounced as "wig-see". We encourage this use in English language conversation.
 
-Further documentation beyond the manual link above is available in our [WGS Extract Developer's Documentation Repository](https://github.com/WGSExtract/WGSExtract-Dev/tree/master/docs).
+Further documentation beyond the manual link above is available in our [WGS Extract Developer's Documentation Repository](https://github.com/WGSExtract/WGSExtract-Dev/tree/master/Docs).
 
 Developer's should visit the main GitHub [WGS Extract Developers Code Repository](https://github.com/WGSExtract/WGSExtract-Dev/).  Development issues, code bugs and limitations should be [raised in the development issues section](https://github.com/WGSExtract/WGSExtract-Dev/issues) so they are tracked till resolved in a release.
 
