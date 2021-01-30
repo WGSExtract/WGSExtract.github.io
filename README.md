@@ -3,7 +3,7 @@ a desktop tool for verifying, analyzing and manipulating your **DTC 30x WGS test
 
 __Current release__ is Beta v2b (18 Feb 2020):
 * **WGS Extract** [Manual (Google Doc)](http://bit.ly/36Jdpnq)
-* **WGS Extract** [Download Release (5 GB)](http://37.187.22.93/wgsextract/WGSExtractBeta.zip)
+* **WGS Extract** [Download Release (5 GB)](http://bit.ly/3afRl6O)
 ```
 SHA256: 4B2BB4CB42D90D20F528BD60C6A21A019C3672651716B6A8AE84C67E10481123
 MD5: 5979E0994C76347023EE622DF3E895CE
