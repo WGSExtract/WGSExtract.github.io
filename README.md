@@ -1,5 +1,5 @@
 # WGS Extract
-a desktop tool for verifying, analyzing and manipulating your **DTC 30x WGS test** results
+a desktop tool for verifying, analyzing and manipulating your **DTC 30x [WGS](https://h600.org/wiki/WGS) test** results
 
 __Current release__ is Beta v2b (18 Feb 2020):
 * **WGS Extract** [Manual (Google Doc)](http://bit.ly/36Jdpnq)
