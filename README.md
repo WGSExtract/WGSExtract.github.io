@@ -5,8 +5,8 @@ __Current release__ is Beta v2b (18 Feb 2020):
 * **WGS Extract** [Manual (Google Doc)](http://bit.ly/36Jdpnq)
 * **WGS Extract** [Download Release (5 GB)](http://bit.ly/3afRl6O)
 ```
-SHA256: 4B2BB4CB42D90D20F528BD60C6A21A019C3672651716B6A8AE84C67E10481123
-MD5: 5979E0994C76347023EE622DF3E895CE
+SHA256: 41D68ED9ABEAAD0AA6BB68F3043294DC02F5DD17E28F86BB776C56704148F76C
+MD5: 690C3C6D5CFBF745114D1690C4C00065
 ```
 [More information on hashes used to verify the download release is available](https://www.howtogeek.com/67241/htg-explains-what-are-md5-sha-1-hashes-and-how-do-i-check-them/)
 
