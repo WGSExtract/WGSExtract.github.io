@@ -2,7 +2,7 @@
 a desktop tool for verifying, analyzing and manipulating your **DTC 30x [WGS](https://h600.org/wiki/WGS) test** results
 
 __Current release__ is Beta v2b (18 Feb 2020):
-* **WGS Extract** [Manual (Google Doc)](http://bit.ly/36Jdpnq)
+* **WGS Extract** [Manual (Google Doc)](http://bit.ly/36Jdpnq)  (''see below for alternative'')
 * **WGS Extract** [Download Release (5 GB)](http://bit.ly/3afRl6O)
 ```
 SHA256: 41D68ED9ABEAAD0AA6BB68F3043294DC02F5DD17E28F86BB776C56704148F76C
@@ -38,7 +38,7 @@ The original, first year, [historical release is documented here](https://github
 
 This page is located at https://WGSExtract.github.io/ and serves as the new WWW home for the tool. Once the new version without the reference models is released for distribution here, the historical IP-number site link given above will go away. The current manual link of http://bit.ly/36Jdpnq will be redirected to this page as a more permanent link as well. As the need develops, we will create our own Facebook Group for users to raise issues outside of the [User Issues Section](https://github.com/WGSExtract/WGSExtract.github.io/issues) already mentioned.
 
-UPDATE One Year Later (Feb 2021):
+**UPDATE** One Year Later (Feb 2021):
 The BetaV2b release was simple and quick.  The 4.5 GB zip archive consists of 4.2 GB of Human Genom Reference Models that are sometimes needed. But it is this large size that gives most issues.  Therefore, we have done the following and created three separate .zip archives:
 
 __WGS Extract release__ of Beta v2b (18 Feb 2020) broken up into separate ZIP archives (including all patches already applied:
