@@ -14,7 +14,7 @@ See the **Update** at the end here for a patched download that can be performed 
 
 Still waiting for your WGS test results?  Want to get started today?  See the [International Genome Sample Resource (1K Genome archive)](https://www.internationalgenome.org/data) for BAM files you can download to play with and learn the tool while waiting.
 
-**`Note`**: MacOS 11 on M1 systems is having issues with the MacPorts tools execution. We are waiting for Apple and Macports to find a solution.  Also, since switching to our Google Drive delivery cloud, it seems Safari may be required to download in MacOS. See our special [MacOSX Release Patch](https://github.com/WGSExtract/WGSExtract-Dev/blob/master/Docs/Betav2b_MacOSX_patch.md) for further notes.
+**`Note`**: MacOS 11 on M1 systems is having [issues with the MacPorts tools](https://trac.macports.org/wiki/BigSurProblems) execution. We are waiting for Apple and Macports to find a solution.  Also, since switching to our Google Drive delivery cloud, it seems Safari may be required to download in MacOS. See our special [MacOSX Release Patch](https://github.com/WGSExtract/WGSExtract-Dev/blob/master/Docs/Betav2b_MacOSX_patch.md) for further notes.
 
 **`IMPORTANT`**: [MacOSX Release Patch](https://github.com/WGSExtract/WGSExtract-Dev/blob/master/Docs/Betav2b_MacOSX_patch.md) is available for Version Beta v2b.  Fixes the install and start scripts of the program. Adds an Unintall as well. (v1 on 25 April 2020, v3 on 20 Jun 2020, v5 on 31 Oct 2020)
 
