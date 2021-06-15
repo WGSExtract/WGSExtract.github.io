@@ -1,10 +1,13 @@
 # WGS Extract Version 3 Beta
-a desktop tool for verifying, analyzing and manipulating your **Consumer 30x [WGS](https://h600.org/wiki/WGS) test** results
+a desktop tool for verifying, analyzing and manipulating your **Consumer 30x [WGS](https://h600.org/wiki/WGS) test** results. Can also be used with any BAM or CRAM file, including WES tests, but with a more limited benefit.
 
 __Current release__ is **Beta v3 (15 Jun 2021)**:
 * **WGS Extract** [Manual (Google Doc)](https://bit.ly/35IziTY)
-* **WGS Extract** [Download Installer (28 KB)](https://bit.ly/2RTk0JL)  **Installer only**  ([Onedrive backup](https://1drv.ms/u/s!AgorjTSMFYpjfBqqcwdiHPk_g6U?e=P1RESj))
-* **WGS Extract** [Download Full Release (265 MB)](https://bit.ly/2Tu2jRk)  **Full Release** (normally grabbed by Installer,  ([Onedrive backup](https://1drv.ms/u/s!AgorjTSMFYpjfYGzVGVuJQeZKOk?e=mauOSR))
+* **WGS Extract Installer only**  (28 KB)\
+    [Download from GoogleDrive](https://bit.ly/2RTk0JL) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjfBqqcwdiHPk_g6U?e=P1RESj))
+* **WGS Extract Full Release** (265 MB)\
+    [Download from GoogleDrive](https://bit.ly/2Tu2jRk) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjfYGzVGVuJQeZKOk?e=mauOSR))  
+You do NOT need to download the Full release.  The installer will grab it for you.  It is provided here for licenseing requirements.
 ```
 SHA256: 
 fdbdfbd4dc4b2601b63287af3781a772183329f13806038f7d884a2c30f5b7fd *WGSExtract-Betav3_15Jun2021_installer.zip
@@ -13,11 +16,9 @@ MD5:
 ea348682c1b3eb76fa43d2df759aa16d *WGSExtract-Betav3_15Jun2021_installer.zip
 02726af1630bc2e5aec83823a356de9e *WGSExtract-Betav3_15Jun2021_Full.zip
 ```
-[More information on hashes used to verify the download release is available](https://www.howtogeek.com/67241/htg-explains-what-are-md5-sha-1-hashes-and-how-do-i-check-them/)
+[More information is available on using hashes to verify the download](https://www.howtogeek.com/67241/htg-explains-what-are-md5-sha-1-hashes-and-how-do-i-check-them/)
 
-You do NOT need to download the Full release.  The installer will grab it for you.  It is provided here, as a direct link, for complete documentation and licenseing requirements.
-
-If you have any version installed, you can overlay the Installer scripts in the same directory and they will work to save the large reference genome files for reuse so you can avoid the large download.  See the 00README.txt, Release Notes and [Manual (Google Doc)](https://bit.ly/35IziTY) for more information on installing. The installer grabs locally hosted files from Microsoft Onedrive.  The primary links above are to Google Drive.
+If you have any version installed, you can overlay the Installer scripts in the same directory and they will work to save the large reference genome files for reuse so you can avoid the large download.  See the **00README.txt**, **Release Notes** and [Manual (Google Doc)](https://bit.ly/35IziTY) Installation section for more information.
 
 Still waiting for your WGS test results?  Want to get started today?  See the [International Genome Sample Resource (1K Genome archive)](https://www.internationalgenome.org/data) for BAM files that you can download and play with to learn the tool while waiting for your results.
 
@@ -25,7 +26,9 @@ This tool is geared toward the needs of [genetic genealogy](https://h600.org/wik
 
 This tool is designed to be a simple, push-button manipulation of [WGS files](https://h600.org/wiki/Sequencing+File+Formats) from any source. It hides the scripting of complex bioinformatic tools and automatically determines needed parameters and variances for the data supplied it.  For more control over your pipeline, either learn to use the underlying tools directly in a command shell or seek a Galaxy server (such as [UseGalaxy](https://usegalaxy.org/)).
 
-We use the Facebook group [Cpnsumer WGS Testing](https://www.facebook.com/groups/373644229897409/) for discussions on how to make use of your **sub-$500, DTC 30x WGS test** results. Bugs, use cases and announcements about this tool happen there.  As part of that Facebook groups' Files section, you will find a number of useful companion documents and tool references.  In particular, start with [Bioinformatics for Newbies](http://bit.ly/38jnxnK).
+[Dante Labs](https://genome.dantelabs.com), [Nebula Genomics](https://portal.nebula.org/), and [ySeq](https://yseq.net/) are test results most commonly used with this tool. [Full Genomes Corp](https://fullgenomes.com]), [Sano Genetics](https://sanogenetics.com), [Sequencing](https://sequencing.com/) and [Veritas (historical)](https://veritasgenetics.com) are other test providers. These are all results from [Illumina](https://illumina.com) or [MGI](https://en.mgi-tech.com/) sequencers.  Results from [Oxford Nanapore](https://nanoporetech.com/) and [PacBio HiFi](https://www.pacb.com/smrt-science/smrt-sequencing/hifi-reads-for-highly-accurate-long-read-sequencing/) are also used; as is [FamilyTreeDNA](https://ftdna.com/)'s BigY product. (This is not an endorsement of any company or service; simply reporting what we commonly encounter.)
+
+We use the Facebook group [Consumer WGS Testing](https://www.facebook.com/groups/373644229897409/) for discussions on how to make use of your **sub-$500, DTC 30x WGS test** results. Bugs, use cases and announcements about this tool happen there.  As part of that Facebook groups' Files section, you will find a number of useful companion documents and tool references.  In particular, start with [Bioinformatics for Newbies](http://bit.ly/38jnxnK). 
 
 User issues, if not brought up in the [Facebook group](https://www.facebook.com/groups/373644229897409/), should be raised in the [user issues section of this site](https://github.com/WGSExtract/WGSExtract.github.io/issues). The local issues section is preferred so code bugs, use limitations and suggested improvements can be tracked within the development project.
 
@@ -35,19 +38,19 @@ Developer's should visit the main GitHub [WGS Extract Developers Code Repository
 
 We bring you v3 after 16 months of v2 and 6 months of v1 before that.  The original, first 2 years [v1 and v2 historical release is documented here](https://github.com/WGSExtract/WGSExtract-Historical). Many thanks to Marko for his original effort there. Especially the microarray generator.
 
-This page is located at https://WGSExtract.github.io/ and serves as the WWW home for the tool. As the need develops, we will create our own Facebook Group for users to raise issues outside of the [User Issues Section](https://github.com/WGSExtract/WGSExtract.github.io/issues) already mentioned.
+This page is located at [https://WGSExtract.github.io/](https://WGSExtract.github.io/) and serves as the WWW home for the tool. As the need develops, we will create our own Facebook Group for users to raise issues outside of the [User Issues Section](https://github.com/WGSExtract/WGSExtract.github.io/issues) already mentioned.
 
 The tool has the potential to be a simple install in a BioConda environment as it is a Python package. But a majority of our users are on Microsoft Windows 10 systems. Bioconda nor the bioinformatic tools are available there. So we currently deliver the tool with our own installers and Win10 executables when needed. This may change going forward after we find a Win10 package manager to supply the bioinformatic tool ports we develop here. We fully test and use the Win10, Ubuntu Linux and Apple MaxOS versions; on Intel, AMD and Apple M1 (Arm) architectures. This is the only source of the bioinformatic tools on a Win10 system (that we are aware of).
 
 **Win10 Release Users**
 Some have downloaded the tool solely to gain access to the Win10 native executables of the Bioinformatic Tools that we make available.  These are installed as part of the Win10 Installer package.  They rely on locally sourced blobs. You can download and use these blobs without installing the whole **WGS Extract** program; if you desire.
 
-* **Win10 [CygWin64 partial](https://drive.google.com/file/d/1lYZbFJ3eyDps7e4I_Yu4zVyZz_vjjVcd/view?usp=sharing)** environment (11 MB); minimal to support the Bioinformatic Tools and WGS Extract installer
-* **Win10 [CygWin64 Bioinformatic](https://drive.google.com/file/d/1xf24oYYieU6SuiNFkrHG01qNwyJXZdKE/view?usp=sharing)** tools (43 MB); hstlib, samtools, bcftools, bwa, etc
-* **[Merge of the above two](https://bit.ly/3epnGeQ)** tool sets (56 MB); already overlaid and combined as happens during installation)
-* **Win10 [CygWin64 full](https://bit.ly/2TtArgn)** environment (46 MB); minimal CygWin64 install but the full, basic CygWin64 release with matching DLL versions for the above Bioinformatic tool release. As of June 2021, the release includes htslib 1.12 from April 2021.
+* **Win10 [CygWin64 partial](https://bit.ly/3q2Z3sn)** environment (11 MB) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjcGO3m9V1V_i-mho?e=q1Elia)); minimal to support the Bioinformatic Tools and WGS Extract installer
+* **Win10 [CygWin64 Bioinformatic](https://bit.ly/2RZG05K)** tools (43 MB) ([MS Ondedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjeWbKyVRfkb1yTnI?e=2ZgeMZ)); hstlib, samtools, bcftools, bwa, etc
+* **[Merge of the above two](https://bit.ly/3epnGeQ)** tool sets (56 MB) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjgQALD5Ljnr4m6ozf?e=m1vjed)); already overlaid and combined as happens during installation)
+* **Win10 [CygWin64 full](https://bit.ly/2TtArgn)** environment (46 MB) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjf9hlX7SFoOGWWlU?e=pGa40h)); minimal CygWin64 install but the full, basic CygWin64 release with matching DLL versions for the above Bioinformatic tool release. As of June 2021, the release includes htslib 1.12 from April 2021.
 
-The first two are used by the installer directly and in stages.  It merges or overlays them on top of each other.  As a result, we provide the merged form directly as the third link above.  The CygWin64 environment is minimal to what the installers and **WGS Extract** tool need. If you wish to have a more complete environment, we have provided the capture of a minimal, typical CygWin64 install as the fourth link above.  It is using the same version code and DLLs as the compiled bioinformatic tools in the second (and third) links.  You will need to merge / overlay this last link with the second (or third) to get the more complete Bioinformatic tool release and a complete CygWin64 BASH environment.
+The first two are used by the installer directly and in stages.  It merges or overlays them on top of each other.  As a result, we provide the merged form directly as the third link above.  The CygWin64 environment is minimal to what the installers and **WGS Extract** tool need. If you wish to have a more complete environment, we have provided the capture of a minimal, typical CygWin64 install as the fourth link above.  It is using the same version code and DLLs as the compiled bioinformatic tools in the second (and third) links.  You will need to merge / overlay this last link with the second (or third) to get the more complete Bioinformatic tool release and a complete CygWin64 BASH environment. The installer uses MS Onedrive links.
 
 The CygWin64 tools tend to be slower on a Win10 platform than the Win10 WSL environment running Ubuntu Linux with tools available there.  Once WSLG becomes more complete and supported, w will likely avoid delivering Win10 executables and simply ask Win10 users to install and use WSLG for **WGS Extract**. At which time we can consider becoming a Bioconda package as well.
 ```
