@@ -3,8 +3,8 @@ a desktop tool for verifying, analyzing and manipulating your **DTC 30x [WGS](ht
 
 __Current release__ is **Beta v3 (15 Jun 2021)**:
 * **WGS Extract** [Manual (Google Doc)](https://bit.ly/35IziTY)
-* **WGS Extract** [Download Installer (28 KB)](https://bit.ly/2RTk0JL)  **Installer only**  ([Onedrive backup](https://1drv.ms/u/s!AgorjTSMFYpjfYGzVGVuJQeZKOk?e=mauOSR))
-* **WGS Extract** [Download Full Release (265 MB)](https://bit.ly/2RTk0JL)  **Full Release** (normally grabbed by Installer, [Onedrive backup](https://1drv.ms/u/s!AgorjTSMFYpjfBqqcwdiHPk_g6U?e=P1RESj))
+* **WGS Extract** [Download Installer (28 KB)](https://bit.ly/2RTk0JL)  **Installer only**  ([Onedrive backup](https://1drv.ms/u/s!AgorjTSMFYpjfBqqcwdiHPk_g6U?e=P1RESj))
+* **WGS Extract** [Download Full Release (265 MB)](https://bit.ly/2Tu2jRk)  **Full Release** (normally grabbed by Installer,  ([Onedrive backup](https://1drv.ms/u/s!AgorjTSMFYpjfYGzVGVuJQeZKOk?e=mauOSR))
 ```
 SHA256: 
 fdbdfbd4dc4b2601b63287af3781a772183329f13806038f7d884a2c30f5b7fd *WGSExtract-Betav3_15Jun2021_installer.zip
