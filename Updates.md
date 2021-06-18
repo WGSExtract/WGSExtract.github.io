@@ -4,7 +4,8 @@ Your release is dated and in the header when you start the program.  The latest 
 
 30 June 2021:
 * Align and Unalign button (actually, was there internally. Simply polished off and made visible. Key is align works off any fastq file and allows any of the 10 reference genomes.)
-* Oxford Nanopore BAM / CRAM / FASTQ processing
+* Reference Genome Q&A expanded; added Build number to string when Unknown Reference Genome
+* Oxford Nanopore BAM / CRAM / FASTQ processing (mainly, alignment command added in)
 
 15 June 2021:
 * Initial Beta v3 release.  See the release notes in the install directory for major changes from Beta v3 (18 Feb 2020).
