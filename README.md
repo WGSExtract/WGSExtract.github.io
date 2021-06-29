@@ -43,29 +43,29 @@ This page is located at [https://WGSExtract.github.io/](https://WGSExtract.githu
 The tool has the potential to be a simple install in a BioConda environment as it is a Python package. But a majority of our users are on Microsoft Windows 10 systems. Bioconda nor the bioinformatic tools are available there. So we currently deliver the tool with our own installers and Win10 executables when needed. This may change going forward after we find a Win10 package manager to supply the bioinformatic tool ports. We fully test and use the Win10, Ubuntu Linux and Apple MaxOS versions; on Intel, AMD and Apple M1 (Arm) architectures. This is the only source of the bioinformatic tools on a Win10 system (that we are aware of).
 
 **Win10 Release Users**
-Some have downloaded the tool solely to gain access to the Win10 native executables of the Bioinformatic Tools that we make available.  These are installed as part of the Win10 Installer package.  You can download and use these tools without installing the whole **WGS Extract** program; if you desire.
+Some have downloaded the **WGSE** tool solely to gain access to the Win10 native executables of the Bioinformatic Tools that we make available.  These are installed as part of the Win10 Installer package.  You can download and use these Bioinformatic tools without installing the whole **WGS Extract** program; if you desire.
 
-* **Win10 [CygWin64 full](https://bit.ly/2TtArgn)** environment (46 MB) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjf9hlX7SFoOGWWlU?e=pGa40h)); minimal CygWin64 install but a full, basic CygWin64 release with matching DLL versions for the Bioinformatic tool release. As of June 2021, the release includes htslib 1.12 from April 2021. 
+* **Win10 [CygWin64 full Bioinformatic](https://bit.ly/3jrXjrA)** environment (86 MB) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjgQFkYV9HW0WbI1nS?e=rLSnLo)); A full, basic CygWin64 release with matching Bioinformatic tool v1.12 release. As of June 2021, the release includes htslib 1.12 from April 2021.
 
-This is a more complete environment than provided by the WGS Extract installation.  A minimal, typical CygWin64 install using the same version code and DLLs as the compiled bioinformatic tools in the second (and third) links below.  You will need to merge / overlay this with the second (or third) to get the more complete Bioinformatic tool release and a complete CygWin64 BASH environment. (Note: will update this to be the full release merged with the Bioinformatic Tools release below for more convenience.)
+This is a more complete environment than provided by the WGS Extract installation.  A minimal, but typical CygWin64 install using the same version DLLs as the compiled bioinformatic tools (which are also included).
 
-We install a less-than-minimal, usable Cygwin64 release during the WGS Extract tool install.  The original files used by the installer are located here:
-* **Win10 [CygWin64 partial](https://bit.ly/3q2Z3sn)** environment (11 MB) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjcGO3m9V1V_i-mho?e=q1Elia)); minimal to support the Bioinformatic Tools and WGS Extract installer
+We install a less-than-minimal, usable Cygwin64 release during the **WGS Extract** tool install.  The original files used by the installer are here:
+* **Win10 [CygWin64 partial](https://bit.ly/3q2Z3sn)** environment (11 MB) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjcGO3m9V1V_i-mho?e=zLr3h4)); minimal to support the Bioinformatic Tools and WGS Extract installer
 * **Win10 [CygWin64 Bioinformatic](https://bit.ly/2RZG05K)** tools (43 MB) ([MS Ondedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjeWbKyVRfkb1yTnI?e=2ZgeMZ)); hstlib, samtools, bcftools, bwa, etc
 * **[Merge of the above two](https://bit.ly/3epnGeQ)** tool sets (56 MB) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjgQALD5Ljnr4m6ozf?e=m1vjed)); already overlaid and combined as happens during installation)
 
-The first two are used by the installer directly and in stages.  It merges or overlays them on top of each other.  As a result, we provide the merged form directly as the third link above.  The CygWin64 environment is minimal to what the installers and **WGS Extract** tool need. he installer uses MS Onedrive links.
+The first two immediately above are used by the installer directly and in stages.  It merges or overlays them on top of each other.  As a result, we provide the merged form directly as the third link above; for your concenience.  The CygWin64 environment installed with the **WGS Extract** tool is minimal to what the installers and **WGS Extract** need. The installer uses MS Onedrive links to only the first two above.
 
-The CygWin64 tools can be slower on a Win10 platform than the Win10 WSL environment running Ubuntu Linux with Linux versions of the bioinformatic tools installed directly.  Once WSLG becomes more complete and supported, we will likely avoid delivering Win10 executables all together and simply ask Win10 users to install and use WSLG for running **WGS Extract**. At which time we can consider becoming a Bioconda package as well.
+The CygWin64 tools can be slower on a Win10 platform than the Win10 WSL environment running Ubuntu Linux with Linux versions of the bioinformatic tools installed directly.  Once WSLG becomes more complete and supported in Win11, we will likely avoid delivering Win10 executables all together and simply ask Windows users to install and use WSLG for running **WGS Extract**. At which time we can consider becoming a Bioconda package as well.  As of Spring 2021, you can get WSLG with the Win11 release as part of the [Windows Insiders program](https://insider.windows.com/).  We do not provide support for this use of **WSGE** on **WSLG** at this time.
 ```
 $ md5sum *.zip
+c5ade89fa8aee97f0b2db376bdb8a169 *win10tools-1.12-full.zip
 0898dba22b4d7c074a203e49a12f70ad *win10tools-1.12.zip
 6a347e44667eb7320868cb7688b870c6 *win10tools-bioinfo1.12.zip
-9ef4829ed8cdccfcbda7139a67fe3c2c *win10tools-cygwin64-full.zip
 cf67ef5fe86db0837f71f7847b91db08 *win10tools-cygwin64.zip
 $ shasum -a 256 *.zip
+c9a3ec4e10154895acb5144320ecfd79558ac84d5850bed5dfd18faf8a2f08ed *win10tools-1.12-full.zip
 f956dc197ad89ccd0ab1345abc89559f492059d26f20a444d7f1ddec31225557 *win10tools-1.12.zip
 a160a7930e06b984b547a071cfa742d6538089e2fcc7ae1b1ac3644bc1ae6bdd *win10tools-bioinfo1.12.zip
-6c1d743dc6176f96ac0fbb6b5fb39e0a0c5db0bcc10742bdc2756993b36f43aa *win10tools-cygwin64-full.zip
 0c72aec08091f3f1bd6fb5154d9b0e69b416cf9b0e8dcd145f558dbaf51ac45c *win10tools-cygwin64.zip
 ```
