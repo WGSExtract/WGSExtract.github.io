@@ -6,12 +6,13 @@ Your installed v3 release version is dated and displayed in the banner when you 
 Releases are shown newest first and back to the initial **Beta v3 release of 15 June 2021**.
 
 # **30 June 2021**:
-* Align and Unalign button added to **Analysis** tab in new FASTQ frame.  This adds new request pop-ups for needed parameters and generalizes the previous BAM Realign button.  Align works off if any FASTQ file(s) specified and allows any of the 10 reference genomes to be chosen to make the target BAM or CRAM. 
-* Reference Genome selector expanded; Build number added to description string; mainly for the Unknown Reference Genome.
-* Oxford Nanopore BAM / CRAM / FASTQ processing polished off.  Mainly, added the minimap2 alignment command for those FASTQs. Minimap2 is already part of Win10tools; added to the Ubuntu Upgrade script.  Minimap2 is not available in MacOS (not in any package manager we have found)
+* Align and Unalign button added to GUI **Analysis** tab in new FASTQ frame.  This adds new request pop-ups for needed parameters and generalizes the sub-functions of the BAM Realign button.  Align works off if any FASTQ file(s) specified and allows any of the 10 reference genomes to be chosen to make the target BAM or CRAM.
+* Reference Genome selector window expanded and cleaned-up; Build number added to description string; mainly for the Unknown Reference Genome.
+* Oxford Nanopore BAM / CRAM / FASTQ processing finished.  Mainly, added the minimap2 alignment command for the Align FASTQs button. Minimap2 is already part of Win10tools; added to the Ubuntu Upgrade script.  Minimap2 is not available in MacOS (not in any package manager we have found)
 * Added individual get_and_process scripts for each of the 10 reference genomes in the reference/genomes folder. For when you do not want to run option (1) to download all ten files. Can run the individual script for a particular reference gebine for when the tool reports the file is missing. Eventually this will all be moved into Python code and be done dynamically on demand. Also added -EBI versiobs of scripts for the 4 1K Genome models located on NIH servers.  The EBI scripts uses the EBI copy.  NIH servers seem to give problems to some in the EU.  EBI servers tend to be problematic for most others.  Gives one the option to try one or the other now.
-* Refined memory calculator for samtools sort command to use 10% less of the available memory; then divided by the number of OS CPU processors available. Required adding psutil to the Python PIP library and as part of the install / upgrade.
-* Numerous minor refactoring (e.g. in mainwindow names) and latent introduced bugs (e.g. in DEBUG_MODE unsort command)
+* Refined the memory calculator for the samtools sort command to use 10% less of the available memory; then divided by the number of OS CPU processors available. Required adding psutil to the Python PIP library and as part of the install / upgrade.
+* Changed the Aligner Index command to use the alternate algorithm (-a bwtsw) instead of the default (-a is).  The alternate is meant to be better on the larger Human Genome Reference models. We found some cases of bwa index on the Home_sapien models of taking 10 hours to index.  Hopefully this will make it better for all models on all platforms.
+* Numerous minor refactoring (e.g. in mainwindow names) and latent introduced bugs (e.g. in DEBUG_MODE unsort command) completed.
 
 # **15 June 2021**:
 Initial Beta v3 release.  List major changes from Beta v2 (18 Feb 2020).
@@ -38,7 +39,7 @@ Here is a mapping of the basic, standard reference genomes between the v2 and v3
 |hs37d5.fa.gz            | `*`                             | (no change)
 |human_f1k_v37.fasta.gz  | `-`                             | (no change) ; not ever used
 |GCA_000...set.fna.gz    | `*` hs38.fa.gz                  | renamed
-|`-`                     | `-` hs38dh.fa.gz                | added, aka GRCh38_full_analysis_set_plus_decoy_hla.fa.gz
+|`-`                     | `-` hs38dh.fa.gz                | added, aka GRCh38_full_analysis...hla.fa.gz
 |hg19.fa.gz              | `-` hg19_wgse.fa.gz             | renamed, in error and should not be used
 |`-`                     | `*` hg19_yseq.fa.gz             | added, replaces earlier hg19.fa.gz
 |`-`                     | `*` hg19.fa.gz                  | added, only true Yoruba hg19 model
@@ -55,7 +56,7 @@ Although the UI appears very similar, the tool has, for the most part, been rewr
 This release started the day the old Beta v2 release was delivered on 18 February 2020.  And includes the patches made to that release over the next few months.  While we had hoped for a v3 release in June 2020 (and we did make an internal one), inevitable delays made us take another 12 months.  The largest issue was working to expand the code to handle any BAM (or CRAM) thrown at it. Many have started processing AncientDNA samples; which come in all varieties of formats and reference models.  We scoured the Internet and found well over 150 different reference models that BAMs have been aligned too.  We had to work to catalogue and characterize them. This is still a work in progress.
 
 More detailed bullet notes on changes in this Beta v3 15 June 2021 release since Beta v2 18 Feb 2020:
-(Taken from the Beta v3 manual forked on  15 June 2020. ~~strike-through~~ suggested changes listed at the end. Removed from there once added here.)
+(Taken from the Beta v3 manual forked on 15 June 2020 with ~~strike-through~~ suggested changes listed at the end. Removed from there once added here.)
 * Added programs/tmp folder to Win10tools release to resolve BASH not finding /tmp error.
 * Downloaded yleaf original .py's and undid many unneeded changes.  Also incorporated yleaf v2.2 upgrade to handle CRAMs. We still have many changes; some of which can be back ported into the yleaf master.
 * Modified MacOS install to not check for dot, not install graphviz, and auto install python3 and macports
