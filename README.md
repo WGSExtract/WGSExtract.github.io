@@ -10,11 +10,11 @@ __Current release__ is **Beta v3 (30 Jun 2021)**:
 You do NOT need to download the Full release.  The installer will grab it for you.  It is provided here for licenseing requirements.
 ```
 SHA256: 
-f508bcdad13ca65899685109bf5a4b70912dcad17505674f52d91ed7dacbe538 *WGSExtract-Betav3_15Jun2021_installer.zip
-24f7853e9d8a010e375d34120f69ad199e65af500b00ed103e4cb6bf407dcfe7 *WGSExtract-Betav3_15Jun2021_Full.zip
+2e186527b725f38231f1e3492e78925b5d6b9008430701efdde696c811e7a1c7 *WGSExtract-Betav3_15Jun2021_installer.zip
+06219a3121e07a7e8a5bfe9322dc5814edc1ac3959bb716be5e59a4f1bdb3d74 *WGSExtract-Betav3_15Jun2021_Full.zip
 MD5:
-31f1fc2493b52cba50f4877146ecdb10 *WGSExtract-Betav3_15Jun2021_installer.zip
-27ef131bdf71b9ff7f20cb04de24af65 *WGSExtract-Betav3_15Jun2021_Full.zip
+4d357dca7f21575bacdfd3ec25082c80 *WGSExtract-Betav3_15Jun2021_installer.zip
+d17b421b6bb0bb589510724fa8ce42e2 *WGSExtract-Betav3_15Jun2021_Full.zip
 ```
 [More information is available on using hashes to verify the download](https://www.howtogeek.com/67241/htg-explains-what-are-md5-sha-1-hashes-and-how-do-i-check-them/)
 
