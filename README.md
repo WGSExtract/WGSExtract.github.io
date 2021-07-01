@@ -1,20 +1,20 @@
 # WGS Extract Version 3 Beta
 a desktop tool for verifying, analyzing and manipulating your **Consumer 30x [WGS](https://h600.org/wiki/WGS) test** results. Can also be used with any BAM or CRAM file, including WES tests, but with a more limited benefit.
 
-__Current release__ is **Beta v3 (15 Jun 2021)**:
+__Current release__ is **Beta v3 (30 Jun 2021)**:
 * **WGS Extract** [Manual (Google Doc)](https://bit.ly/35IziTY)
-* **WGS Extract Installer only**  (28 KB)\
-    [Download from GoogleDrive](https://bit.ly/2RTk0JL) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjfBqqcwdiHPk_g6U?e=P1RESj))
-* **WGS Extract Full Release** (265 MB)\
-    [Download from GoogleDrive](https://bit.ly/2Tu2jRk) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjfYGzVGVuJQeZKOk?e=mauOSR))  
+* **WGS Extract Installer only**  (26 KB)\
+    [Download from GoogleDrive](https://bit.ly/3AbGKpD) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjgQJKdRSFu1ipZlfd?e=exyNOS))
+* **WGS Extract Full Release** (271 MB)\
+    [Download from GoogleDrive](https://bit.ly/3A9k5dv) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjgQPHWwCDaxeWCtq3?e=DJQh5z))	
 You do NOT need to download the Full release.  The installer will grab it for you.  It is provided here for licenseing requirements.
 ```
 SHA256: 
-fdbdfbd4dc4b2601b63287af3781a772183329f13806038f7d884a2c30f5b7fd *WGSExtract-Betav3_15Jun2021_installer.zip
-437bf494b0f89f865e4cf59c966ab8f1c156d8ca298aa0f182d9b803c3b889d6 *WGSExtract-Betav3_15Jun2021_Full.zip
+f508bcdad13ca65899685109bf5a4b70912dcad17505674f52d91ed7dacbe538 *WGSExtract-Betav3_15Jun2021_installer.zip
+24f7853e9d8a010e375d34120f69ad199e65af500b00ed103e4cb6bf407dcfe7 *WGSExtract-Betav3_15Jun2021_Full.zip
 MD5:
-ea348682c1b3eb76fa43d2df759aa16d *WGSExtract-Betav3_15Jun2021_installer.zip
-02726af1630bc2e5aec83823a356de9e *WGSExtract-Betav3_15Jun2021_Full.zip
+31f1fc2493b52cba50f4877146ecdb10 *WGSExtract-Betav3_15Jun2021_installer.zip
+27ef131bdf71b9ff7f20cb04de24af65 *WGSExtract-Betav3_15Jun2021_Full.zip
 ```
 [More information is available on using hashes to verify the download](https://www.howtogeek.com/67241/htg-explains-what-are-md5-sha-1-hashes-and-how-do-i-check-them/)
 
