@@ -1,20 +1,20 @@
 # WGS Extract Version 3 Beta
 a desktop tool for verifying, analyzing and manipulating your **Consumer 30x [WGS](https://h600.org/wiki/WGS) test** results. Can also be used with any BAM or CRAM file, including WES tests, but with a more limited benefit.
 
-__Current release__ is **Beta v3 (30 Jun 2021)**:
+__Current release__ is **Beta v3 (10 Jul 2021)**:
 * **WGS Extract** [Manual (Google Doc)](https://bit.ly/35IziTY)
 * **WGS Extract Installer only**  (26 KB)\
-    [Download from GoogleDrive](https://bit.ly/3AbGKpD) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjgQJKdRSFu1ipZlfd?e=exyNOS))
+    [Download from GoogleDrive](https://bit.ly/3hvFsyA) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjgQQ2d-5pcycvLRyW?e=RLpR5s))
 * **WGS Extract Full Release** (271 MB)\
-    [Download from GoogleDrive](https://bit.ly/3A9k5dv) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjgQPHWwCDaxeWCtq3?e=DJQh5z))	
+    [Download from GoogleDrive](https://bit.ly/2VmsRF3) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjgQX81ThI613oQre_?e=8EzVRF))	
 You do NOT need to download the Full release.  The installer will grab it for you.  It is provided here for licenseing requirements.
 ```
 SHA256: 
-2e186527b725f38231f1e3492e78925b5d6b9008430701efdde696c811e7a1c7 *WGSExtract-Betav3_15Jun2021_installer.zip
-06219a3121e07a7e8a5bfe9322dc5814edc1ac3959bb716be5e59a4f1bdb3d74 *WGSExtract-Betav3_15Jun2021_Full.zip
+4b8618270ede6054308c9faa212ba2379ab95dde337bee6b312fd1e25573a230 *WGSExtract-Betav3_10Jul2021_installer.zip
+5366fc3671f096ea310d14b95a60b2a29f6d1965c23be76f942380c5b8c144b6 *WGSExtract-Betav3_10Jul2021_Full.zip
 MD5:
-4d357dca7f21575bacdfd3ec25082c80 *WGSExtract-Betav3_15Jun2021_installer.zip
-d17b421b6bb0bb589510724fa8ce42e2 *WGSExtract-Betav3_15Jun2021_Full.zip
+4389a8672b5f3ccbf12b779c9e31cc7b *WGSExtract-Betav3_10Jul2021_installer.zip
+7bd319efbb49940d0aa5bfecb5a68502 *WGSExtract-Betav3_10Jul2021_Full.zip
 ```
 [More information is available on using hashes to verify the download](https://www.howtogeek.com/67241/htg-explains-what-are-md5-sha-1-hashes-and-how-do-i-check-them/)
 
@@ -36,7 +36,7 @@ The tool acronym is **WGSE** and pronounced as "wig-see". We encourage that use 
 
 Developer's should visit the main GitHub [WGS Extract Developers Code Repository](https://github.com/WGSExtract/WGSExtract-Dev/).  Development issues, code bugs and limitations should be [raised in the development issues section](https://github.com/WGSExtract/WGSExtract-Dev/issues) so they are tracked till resolved in a release.
 
-We bring you v3 after 16 months of v2 and 6 months of v1 before that.  The original, first 2 years [v1 and v2 historical release is documented here](https://github.com/WGSExtract/WGSExtract-Historical). Many thanks to Marko for his original effort there. Especially the microarray generator.
+We bring you v3 after 16 months of v2 and 6 months of v1 before that.  The original, first 2 years [v1 and v2 historical release is documented here](https://github.com/WGSExtract/WGSExtract-Historical). Many thanks to Marko for his original effort there. Especially the microarray generator. v3 went into Alpha in June 2020 and was finally released as Beta on 15 June 2021.
 
 This page is located at [https://WGSExtract.github.io/](https://WGSExtract.github.io/) and serves as the WWW home for the tool. As the need develops, we will create our own Facebook Group for users to raise issues outside of the [User Issues Section](https://github.com/WGSExtract/WGSExtract.github.io/issues) already mentioned.
 
