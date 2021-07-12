@@ -42,7 +42,7 @@ This page is located at [https://WGSExtract.github.io/](https://WGSExtract.githu
 
 The tool has the potential to be a simple install in a BioConda environment as it is a Python package. But a majority of our users are on Microsoft Windows 10 systems. Bioconda nor the bioinformatic tools are available there. So we currently deliver the tool with our own installers and Win10 executables when needed. This may change going forward after we find a Win10 package manager to supply the bioinformatic tool ports. We fully test and use the Win10, Ubuntu Linux and Apple MaxOS versions; on Intel, AMD and Apple M1 (Arm) architectures. This is the only source of the bioinformatic tools on a Win10 system (that we are aware of).
 
-**Win10 Release Users**
+# Win10 Release Users
 Some have downloaded the **WGSE** tool solely to gain access to the Win10 native executables of the Bioinformatic Tools that we make available.  These are installed as part of the Win10 Installer package.  You can download and use these Bioinformatic tools without installing the whole **WGS Extract** program; if you desire.
 
 * **Win10 [CygWin64 full Bioinformatic](https://bit.ly/3jrXjrA)** environment (86 MB) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjgQFkYV9HW0WbI1nS?e=rLSnLo)); A full, basic CygWin64 release with matching Bioinformatic tool v1.12 release. As of June 2021, the release includes htslib 1.12 from April 2021.
