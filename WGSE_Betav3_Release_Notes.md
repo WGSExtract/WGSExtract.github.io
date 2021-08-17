@@ -1,9 +1,16 @@
-# Release notes Beta v3 30 June 2021.  
+# Release notes Beta v3 10 Jul 2021.
 These notes here are in the `WGSE_Betav3_Release_Notes.txt` file installed with the software. They should give you a more comprehensive list of changes since Beta v2.
 
 Your installed v3 release version is dated and displayed in the banner when you start the program.  If your date is before the latest shown above, then you likely want to update your software.  To update, simply delete the **program/** folder in your installation directory.  Download the new release installer, unzip and copy it over files in your old installation folder. Then run the appropriate **Upgrade_yourOS** script file.  This will update you to the latest release.
 
 Releases are shown newest first and back to the initial **Beta v3 release of 15 June 2021**.
+
+# **10 Jul 2021**:
+* Reworked Upgrade_UbuntuLinux.sh (all platforms) and reference/genomes/get*sh to create single new script (get_and_process_refgenomes.sh) with 17 choices instead of just yes/no in old Upgrade*sh script. Removed all the individual get_ref*sh scripts introduced in the 30 Jun 2021 release.
+* Restructured install of WGS Extractv3 to create, from scratch, the win10tools/tmp and temp/ folders (even though in release .zip) so bad ACLs on previous installs do not propagate.
+* Fixed minor bug in process_reference_genomes.sh that prevented handling multiple file parameters correctly
+* Added -y option to win10 python self-extracting archive command in Upgrade_UbuntuLinux.sh so it does not give the user an option of changing the download location
+* Minor refactoring of some internal names
 
 # **30 June 2021**:
 * Align and Unalign button added to GUI **Analysis** tab in new FASTQ frame.  This adds new request pop-ups for needed parameters and generalizes the sub-functions of the BAM Realign button.  Align works off if any FASTQ file(s) specified and allows any of the 10 reference genomes to be chosen to make the target BAM or CRAM.
