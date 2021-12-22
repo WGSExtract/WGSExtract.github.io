@@ -1,7 +1,7 @@
 # WGS Extract Version 3 Beta
 is a desktop tool for verifying, analyzing and manipulating your **Consumer 30x [WGS](https://h600.org/wiki/WGS) test** results. It can also be used with any human genome based [BAM or CRAM](https://h600.org/wiki/Sequencing+File+Formats) file, including [WES](https://h600.org/wiki/WES) test results, but with a more limited benefit.
 
-__Current release__ is **Beta v3 (10 Jul 2021)** on supported platforms[^Platforms]:
+__Current release__ is **Beta v3 (10 Jul 2021)** on [supported platforms](#Supported-Platforms):
 * **WGS Extract** [Manual (Google Doc)](https://bit.ly/35IziTY)
 * **WGS Extract Installer only**  (26 KB)\
     [Download from GoogleDrive](https://bit.ly/3hvFsyA) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjgQQ2d-5pcycvLRyW?e=RLpR5s))
@@ -17,8 +17,6 @@ MD5:
 7bd319efbb49940d0aa5bfecb5a68502 *WGSExtract-Betav3_10Jul2021_Full.zip
 ```
 [More information is available on using hashes to verify the download](https://www.howtogeek.com/67241/htg-explains-what-are-md5-sha-1-hashes-and-how-do-i-check-them/)
-
-[^Platforms]: Platforms tested as part of the release are: (1) Microsoft Windows 10 and 11 on Intel and AMD processors; WSLG in Win11 looked at but not supported due to limitations in the Tk/TCL GUI library support. (2) Apple MacOS 10.14 (Mojave), 10.15 (Catalina) and 11 (Big Sur) on Intel and Apple M1 processors (Monterey awaiting full support from Apple and dependent tool providers). (3) Ubuntu Linux LTS 18.04 and 20.04 (22.04 expected next year) (We recommend 20.04 to get the later Samtools release.)
 
 >__NOTE__: A manual patch for the file __WGSExtractv3/program/mainwindow.py__ can be [downloaded from here](https://bit.ly/3efrYoa). Replace the the current release file with this downloaded one in the __WGSExtractv3/program__ directory. Fixes a basic bug in the __(Re)Align__ command that slipped through after being fixed during the regression testing release process  This does not fix the issue with Samtools stalling while processing most MGI sequencer files (most recent Nebula Genomics results) or for the S Tk/Tcl Python library bug not allowing you to select two FASTQ files in the __Align__ button. Those fixes will be posted in the next update.
 
@@ -43,6 +41,12 @@ Developer's should visit the main GitHub [WGS Extract Developers Code Repository
 We bring you v3 after 16 months of v2 and 6 months of v1 before that.  The original, first 2 years [v1 and v2 historical release](https://github.com/WGSExtract/WGSExtract-Historical) from Marko is documented there. Especially key there is the microarray generator. v3 went into Alpha on the 18th June 2020 and was finally released as Beta on the 15th June 2021.
 
 This page is located at [https://WGSExtract.github.io/](https://WGSExtract.github.io/) and serves as the WWW home for the tool. As the need develops, we will create our own Facebook Group for users to raise issues outside of the local [User Issues Section](https://github.com/WGSExtract/WGSExtract.github.io/issues) already mentioned.
+
+# Supported Platforms
+Platforms tested as part of the release process are:
+* Microsoft Windows 10 and 11 on Intel and AMD processors; WSLG in Win11 looked at but not supported due to limitations in the Tk/TCL GUI library support
+* Apple MacOS 10.14 (Mojave), 10.15 (Catalina) and 11 (Big Sur) on Intel and Apple M1 processors (Monterey awaiting full support from Apple and dependent tool providers). 
+* Ubuntu Linux LTS 18.04 and 20.04 (22.04 expected next year) (We recommend 20.04 to get the later Samtools release.)
 
 The tool has the potential to be a simple install in a [BioConda environment](https://anaconda.org/bioconda) as it is mostly just a [Python package](https://www.python.org/). But a majority of our users are on Microsoft Windows 10/11 systems. Bioconda nor the bioinformatic tools are supported there. So we currently deliver the tool with our own installer and Win10 executables when needed. This may change going forward after we find a Win10 package manager to supply the bioinformatic tool ports we currently provide. We fully test and use the Win10, Ubuntu Linux and Apple MaxOS versions; on Intel, AMD and Apple M1 (Arm) architectures[^Platforms]. This is the only source of the bioinformatic tools on a Win10 system (that we are aware of). Docker packages are either not usable across all the platforms or too ineffecient at the current time. But could play a role in the future.
 
