@@ -1,7 +1,7 @@
 # WGS Extract Version 3 Beta
 is a desktop tool for verifying, analyzing and manipulating your **Consumer 30x [WGS](https://h600.org/wiki/WGS) test** results. It can also be used with any human genome based [BAM or CRAM](https://h600.org/wiki/Sequencing+File+Formats) file, including [WES](https://h600.org/wiki/WES) test results, but with a more limited benefit.
 
-__Current release__ is **Beta v3 (10 Jul 2021)** on [supported platforms](#Supported-Platforms):
+__Current release__ is **Beta v3 (10 Jul 2021)** on many [supported platforms](#Supported-Platforms):
 * **WGS Extract** [Manual (Google Doc)](https://bit.ly/35IziTY)
 * **WGS Extract Installer only**  (26 KB)\
     [Download from GoogleDrive](https://bit.ly/3hvFsyA) ([MS Onedrive alternate](https://1drv.ms/u/s!AgorjTSMFYpjgQQ2d-5pcycvLRyW?e=RLpR5s))
