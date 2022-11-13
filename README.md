@@ -1,16 +1,16 @@
 # WGS Extract
-is a desktop tool for verifying, analyzing and manipulating your **Personal 30x [WGS](https://h600.org/wiki/WGS) test** result. It can also be used with any human genome based [BAM or CRAM](https://h600.org/wiki/Sequencing+File+Formats) file. Including [WES](https://h600.org/wiki/WES) test results; albeit with a more limited benefit.
+is a desktop tool for verifying, analyzing and manipulating your **Personal 30x [WGS](https://h600.org/wiki/WGS) test** result. It can also be used with any human genome based [BAM or CRAM](https://h600.org/wiki/Sequencing+File+Formats) file including [WES](https://h600.org/wiki/WES) test results.
 
 **WGS Extract** **User Manual**: [v4 Alpha](https://bit.ly/3JCyZNa) (Google Doc)
 
 __Latest Releases__ you can install on the [supported platforms](#supported-platforms) are:
-* **[BETA v4 Installer (Aug 2022 and later)](https://bit.ly/3Ow0GJG)** (note: installs the latest stable ALPHA v4 until BETA v4 is truly available).
+* **[BETA v4 (Aug 2022 and later) Installer](https://bit.ly/3Ow0GJG)** (note: installs the latest stable ALPHA v4 until BETA v4 is truly available).
 * **[ALPHA v4 (1 Apr 2022 and later) Installer](https://bit.ly/3B8MK5s)**
 * **[Dev(eloper) v4+ (Aug 2021 and later) Installer](https://bit.ly/3z7nGZQ)**
 
-See the **v4 Release Notes** in the installation directory and the **Installation Section** in the [v4 Alpha](https://bit.ly/3JCyZNa) manual for more details about the v4 release and your platform.
+These are just the installer scripts.  You need to download, unpack and run the installer for your OS from within. See the **Installation Section** in the [v4 Alpha](https://bit.ly/3JCyZNa) manual for more details about how to install on your platform.  See the **v4 Release Notes** in the installation directory for more information about the updates in the current v4 release. The initial program installation is just under 1GB but can grow in size as more reference libraries are loaded. This program size is miniscule compared to the 50+ GB BAM files it operates on.
 
->As of the 31 July 2022 release, the program will now auto-update if you run the installer again. Not just the environment the tool depends on.
+>As of the 31 July 2022 release, the **WGS Extract** program will now auto-update if you run the installer again. Not just the environment the tool depends on.
 
 This tool is geared toward the needs of [genetic genealogy](https://h600.org/wiki/Genetic+Genealogy) and [Ancient DNA](https://h600.org/wiki/Deep+Ancestry) (aDNA) studies but may be helpful for those looking into health-releated uses of [WGS](https://h600.org/wiki/WGS) tests. The **personal, sub-$500, Direct-to-Consumer (DTC), 30x Whole Genome Sequence ([WGS](https://h600.org/wiki/WGS)) tests** are delivered with basic data files and reports. This tool serves to bridge the gap between the [WGS data files](https://h600.org/wiki/Sequencing+File+Formats) delivered and the present day [genetic genealogy community tools](https://h600.org/wiki/Third+Party+Analysis+Tools). Many health analysis sites accept the microarray and VCF files generated from your WGS test by this tool.
 
