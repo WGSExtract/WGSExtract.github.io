@@ -8,6 +8,8 @@ __Latest Releases__ you can install on the [supported platforms](#supported-plat
 * **[ALPHA v4 (1 Apr 2022 and later) Installer](https://bit.ly/3B8MK5s)**
 * **[Dev(eloper) v4+ (Aug 2021 and later) Installer](https://bit.ly/3z7nGZQ)**
 
+>On 20 Dec we discovered the 29 Nov v42 release of the program subpackage used in the Alpha track was corrupted in a way that only some unzip programs on some platforms crashed without message or error. The program zip file has now been fixed and Alpha releases should easily install on all platforms again. We apologize for the inconvenience. 
+
 These are just the installer scripts.  You need to download, unpack and run the installer for your OS from within. See the **Installation Section** in the [v4 Alpha](https://bit.ly/3JCyZNa) manual for more details about how to install on your platform.  See the **v4 Release Notes** in the installation directory for more information about the updates in the current v4 release. The initial program installation is just under 1GB but can grow in size as more reference libraries are loaded. This program size is miniscule compared to the 50+ GB BAM files it operates on.
 
 >As of the 31 July 2022 release, the **WGS Extract** program will now auto-update if you run the installer again. Not just the environment the tool depends on.
