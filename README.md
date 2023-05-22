@@ -4,21 +4,21 @@ is a desktop tool for verifying, analyzing and manipulating your **Personal 30x 
 **WGS Extract** **User Manual**: [v4 Alpha](https://bit.ly/3JCyZNa) (Google Doc)
 
 __Latest Releases__ you can install on the [supported platforms](#supported-platforms) are:
-* **[BETA v4 (Aug 2022 and later) Installer](https://bit.ly/3Ow0GJG)** (note: installs the latest stable ALPHA v4 until BETA v4 is truly available).
-* **[ALPHA v4 (1 Apr 2022 and later) Installer](https://bit.ly/3B8MK5s)**
-* **[Dev(eloper) v4+ (Aug 2021 and later) Installer](https://bit.ly/3z7nGZQ)**
+* **[BETA v4 Installer](https://bit.ly/3Ow0GJG)**
+* **[ALPHA v4 Installer](https://bit.ly/3B8MK5s)**
+* **[Dev(eloper) v4+ Installer](https://bit.ly/3z7nGZQ)**
 
->On 20 Dec we discovered the 29 Nov v42 release of the program subpackage used in the Alpha track was corrupted in a way that only some unzip programs on some platforms crashed without message or error. The program zip file has now been fixed and Alpha releases should easily install on all platforms again. We apologize for the inconvenience. 
+>On the 15 Jan 2023, we discovered the 7 Dec 2022 v44 release of the program subpackage used in the Dev track introduced a bug that prevented microarray file generation from Build 38 BAMs / CRAMs. This is fixed in the v45 release (which may not yet be available in all tracks). We apologize for the inconvenience. 
 
-These are just the installer scripts.  You need to download, unpack and run the installer for your OS from within. See the **Installation Section** in the [v4 Alpha](https://bit.ly/3JCyZNa) manual for more details about how to install on your platform.  See the **v4 Release Notes** in the installation directory for more information about the updates in the current v4 release. The initial program installation is just under 1GB but can grow in size as more reference libraries are loaded. This program size is miniscule compared to the 50+ GB BAM files it operates on.
+These are just the installer scripts.  You need to download, unpack and run the installer for your OS. See the **Installation Section** in the [v4 Alpha](https://bit.ly/3JCyZNa) manual for more details about how to install on your platform.  See the **v4 Release Notes** in the installation directory for more information about the updates in the current release. The initial program installation is just under 1GB but can grow in size as more reference libraries are loaded. This program size is miniscule compared to the 50+ GB BAM files it operates on.
 
->As of the 31 July 2022 release, the **WGS Extract** program will now auto-update if you run the installer again. Not just the environment the tool depends on.
+>As of the 31 July 2022 release, the **WGS Extract** program will now auto-update if you run the installer again. Not just updating the environment the tool depends on.
 
 This tool is geared toward the needs of [genetic genealogy](https://h600.org/wiki/Genetic+Genealogy) and [Ancient DNA](https://h600.org/wiki/Deep+Ancestry) (aDNA) studies but may be helpful for those looking into health-releated uses of [WGS](https://h600.org/wiki/WGS) tests. The **personal, sub-$500, Direct-to-Consumer (DTC), 30x Whole Genome Sequence ([WGS](https://h600.org/wiki/WGS)) tests** are delivered with basic data files and reports. This tool serves to bridge the gap between the [WGS data files](https://h600.org/wiki/Sequencing+File+Formats) delivered and the present day [genetic genealogy community tools](https://h600.org/wiki/Third+Party+Analysis+Tools). Many health analysis sites accept the microarray and VCF files generated from your WGS test by this tool.
 
 >Still waiting for your [WGS](https://h600.org/wiki/WGS) test results?  Want to get started today?  See the [International Genome Sample Resource (1K Genome archive)](https://www.internationalgenome.org/data) for [BAM or CRAM](https://h600.org/wiki/Sequencing+File+Formats) files that you can download and play with to learn the tool while waiting for your results.
 
-This tool is designed to be a simple, push-button manipulation of [WGS files](https://h600.org/wiki/Sequencing+File+Formats) from any source. It hides the installation and scripting of complex bioinformatic tools and automatically determines the needed parameters based on the data within your files.  For more control over your pipeline, either learn to use the underlying tools directly or seek out a Galaxy server (such as [UseGalaxy](https://usegalaxy.org/)).
+This tool is designed to be a simple, push-button manipulation of [WGS files](https://h600.org/wiki/Sequencing+File+Formats) from any source. It hides the installation and scripting of complex bioinformatic tools and automatically adapts based on the data within your files.  For more control over your pipeline, either learn to use the underlying tools directly or seek out a Galaxy server (such as [UseGalaxy](https://usegalaxy.org/)).
 
 [Dante Labs](https://genome.dantelabs.com), [Nebula Genomics](https://nebula.org/), [Sequencing](https://sequencing.com/), and [ySeq](https://yseq.net/) are test results most commonly used with this tool. [Full Genomes Corp](https://fullgenomes.com/]), [GeneDX](https://www.genedx.com/), [Sano Genetics](https://sanogenetics.com) and [Veritas (historical)](https://veritasgenetics.com) are other test providers whose output is processed here. These are all results from [Illumina](https://illumina.com) or [MGI](https://en.mgi-tech.com/) next generation sequencers.  Results from [Oxford Nanopore](https://nanoporetech.com/) and [PacBio HiFi](https://www.pacb.com/smrt-science/smrt-sequencing/hifi-reads-for-highly-accurate-long-read-sequencing/) and [Revio](https://www.pacb.com/revio/) third generation sequencers can also be used; as can [FamilyTreeDNA](https://familytreedna.com/)'s BigY output. (This is not an endorsement of any company or service; simply reporting what is commonly used with the tool.)
 
@@ -34,7 +34,7 @@ With v4, we have opened the following three release tracks to all: Beta, Alpha a
 
 If you want to change release tracks at anytime, simply edit the release.json file in the installation directory to change to the desired release track and then rerun the installer. Or overlay the new installer downloaded from above onto your existing installation. The only difference in each installer is the release.json file and its track setting inside. Your current, installed version is displayed at the top of the program when run.
 
-We bring you v4 some 13 months after v3.  The original, first 2 years [v1 and v2 historical release](https://github.com/WGSExtract/WGSExtract-Historical) from Marko is documented there. v3 went into Alpha on the 18th June 2020 and was finally released as Beta on the 15th June 2021. v4 entered Alpha on 1 April 2022 and has yet to be formally Beta released.
+We bring you v4 some 13 months after v3.  v3 and the original, first 2 years [v1 and v2 historical release](https://github.com/WGSExtract/WGSExtract-Historical) from Marko are documented there. v3 went into Alpha on the 18th June 2020 and was finally released as Beta on the 15th June 2021. v4 entered Alpha on 1 April 2022 and has yet to be formally Beta released.
 
 This page is located at [https://WGSExtract.github.io/](https://WGSExtract.github.io/) and serves as the WWW home for the tool. As the need develops, we will create our own Facebook Group for users to raise issues outside of the local [User Issues Section](https://github.com/WGSExtract/WGSExtract.github.io/issues) already mentioned.
 
