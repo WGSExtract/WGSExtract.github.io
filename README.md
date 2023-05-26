@@ -6,7 +6,7 @@ is a desktop tool for verifying, analyzing and manipulating your **Personal 30x 
 __Latest Releases__ you can install on the [supported platforms](#supported-platforms) are:
 * **[BETA v4 Installer](https://bit.ly/WGSE-Beta_latest_installer)**
 * **[ALPHA v4 Installer](https://bit.ly/WGSE-Alpha_latest_installer)**
-* **[Dev(eloper) v4+ Installer](https://bit.ly/WGSE-DevTrack-Latest-Installer)**
+* **[Dev(eloper) v4+ Installer](https://bit.ly/WGSE-Dev_latest_installer)**
 
 >On the 15 Jan 2023, we discovered the 7 Dec 2022 v44 release of the program subpackage used in the Dev track introduced a bug that prevented microarray file generation from Build 38 BAMs / CRAMs. This is fixed in the v45 release (which may not yet be available in all tracks). We apologize for the inconvenience. 
 
