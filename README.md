@@ -4,9 +4,9 @@ is a desktop tool for verifying, analyzing and manipulating your **Personal 30x 
 **WGS Extract** **User Manual**: [v4 Alpha](https://bit.ly/3JCyZNa) (Google Doc)
 
 __Latest Releases__ you can install on the [supported platforms](#supported-platforms) are:
-* **[BETA v4 Installer](https://bit.ly/3Ow0GJG)**
-* **[ALPHA v4 Installer](https://bit.ly/3B8MK5s)**
-* **[Dev(eloper) v4+ Installer](https://bit.ly/3z7nGZQ)**
+* **[BETA v4 Installer](https://bit.ly/WGSE-Beta_latest_installer)**
+* **[ALPHA v4 Installer](https://bit.ly/WGSE-Alpha_latest_installer)**
+* **[Dev(eloper) v4+ Installer](https://bit.ly/WGSE-DevTrack-Latest-Installer)**
 
 >On the 15 Jan 2023, we discovered the 7 Dec 2022 v44 release of the program subpackage used in the Dev track introduced a bug that prevented microarray file generation from Build 38 BAMs / CRAMs. This is fixed in the v45 release (which may not yet be available in all tracks). We apologize for the inconvenience. 
 
@@ -57,6 +57,8 @@ In v4, this is a full, BASE environment of Cygwin64 captured as of the stated re
 
 The CygWin64 tools natively compiled to a Windows platform can be slower than native Linux binaries on the same platform.  The Windows **WSLG** environment with Ubuntu Linux using the Linux versions of the bioinformatic tools can be installed and used also.  Once **WSLG** becomes more complete and supported in Windows 11, we will likely avoid delivering Windows executables all together and simply ask Windows users to install and use **WSLG** for running **WGS Extract**. At which time we can consider becoming a Bioconda package as well.  We do not provide support for the use of **WSGE** on **WSLG** at this time. Recent changes in the **WSL2** file system in the last year finally made **WGSE** possible and generally faster than the Cygwin64 native binaries. This occurs because the Windows kernel cannot support some fundamental features from Unix / Linux that the bioinformatic tools rely on (e.g. memory mapped files).
 
+# Movement of Releases
+We started out hosting everything on a paid Google Drive account.  What a disaster.  Google starting lowering further and further the maximum size of a file that could be downloaded with a direct link.  And then thwarted the attempts to get around that.  Even with paid accounts, they clearly only want to support sharing of Google Docs files and maybe backup repositories that are shared between google accounts.  Not public acess files not requiring registration.  Luckily, we discovered MS OneDrive does not have these issues and restrictions.  But are use of Bot.ly shortened links could not be used on MS Onedrive files (some legal spat between the companies).  This was finally lifted sometime in early 2023 so we could completely transfer over to MS Onedrive and direct link downloads.  Historical pages and releases will likely have non-functional Google Drive links which have to be rediscovered. We have taken release v1, v2 and v3 offline now.
 ```
 SHA256:   TBD
  *WGSExtract-Alphav35_31Jul2022_installer.zip (may not be same version available above)
