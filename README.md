@@ -1,17 +1,16 @@
 # WGS Extract
 is a desktop tool for verifying, analyzing and manipulating your **Personal 30x [WGS](https://h600.org/wiki/WGS) test** result. It can also be used with any human genome based [BAM or CRAM](https://h600.org/wiki/Sequencing+File+Formats) file including [WES](https://h600.org/wiki/WES) test results.
 
-**WGS Extract** **User Manual**: [v4 Alpha](https://bit.ly/3JCyZNa) (Google Doc)
->In trying to restore a few reference genome files that went missing from our Onedrive server, we have inadvertently changed other share links. We are working to restore all the links for download, install and operation of the program. Please excuse the inconvenience which we hope to resolve quickly.  17 Jun 2023
+**WGS Extract** **User Manual**: [v4 Alpha](https://get.wgse.io/WGSExtract_v4_User_Manual) (Google Doc)
 
 __Latest Releases__ you can install on the [supported platforms](#supported-platforms) are:
-* **[BETA v4 Installer](https://bit.ly/WGSE-Beta_latest_installer)**
-* **[ALPHA v4 Installer](https://bit.ly/WGSE-Alpha_latest_installer)**
-* **[Dev(eloper) v4+ Installer](https://bit.ly/WGSE-Dev_latest_installer)**
+* **[BETA v4 Installer](https://get.wgse.io/WGSExtract-Beta_latest_installer.zip)**
+* **[ALPHA v4 Installer](https://get.wgse.io/WGSExtract-Alpha_latest_installer.zip)**
+* **[Dev(eloper) v4+ Installer](https://get.wgse.io/WGSExtract-Dev_latest_installer.zip)**
 
-These are just the installer scripts.  You need to download, unpack and run the installer for your OS. See the **Installation Section** in the [v4 Alpha](https://bit.ly/3JCyZNa) manual for more details about how to install on your platform.  See the **v4 Release Notes** in the installation directory for more information about the updates in the current release. The initial program installation is just under 1GB but can grow in size as more reference libraries are loaded. This program size is miniscule compared to the 50+ GB BAM files it operates on.
+These are just the installer scripts.  You need to download, unpack and run the installer for your OS. See the **Installation Section** in the [v4 Alpha](https://get.wgse.io/WGSExtract_v4_User_Manual) manual for more details about how to install on your platform.  See the **v4 Release Notes** in the installation directory for more information about the updates in the current release. The initial program installation is just under 1GB but can grow in size as more reference libraries are loaded. This program size is miniscule compared to the 50+ GB BAM files it operates on.
 
->As of the 31 July 2022 release, the **WGS Extract** program itself will now update if you run the installer again. Not just updating the environment the tool depends on.
+>As of the 31 July 2022 release, the **WGS Extract** program will now update itself when you run the installer again. Not just updating the environment the tool depends on.
 
 This tool is geared toward the needs of [genetic genealogy](https://h600.org/wiki/Genetic+Genealogy) and [Ancient DNA](https://h600.org/wiki/Deep+Ancestry) (aDNA) studies but may be helpful for those looking into health-releated uses of [WGS](https://h600.org/wiki/WGS) tests. The **personal, sub-$500, Direct-to-Consumer (DTC), 30x Whole Genome Sequence ([WGS](https://h600.org/wiki/WGS)) tests** are delivered with basic data files and reports. This tool serves to bridge the gap between the [WGS data files](https://h600.org/wiki/Sequencing+File+Formats) delivered and the present day [genetic genealogy community tools](https://h600.org/wiki/Third+Party+Analysis+Tools). Many health analysis sites accept the microarray and VCF files generated from your WGS test by this tool.
 
@@ -50,14 +49,12 @@ The tool has the potential to be a simple install in a [BioConda environment](ht
 * To the [Github community](https://github.com/) for their free support to open source projects like this one
 
 # Windows Release Users
-Some have downloaded the **WGSE** tool solely to gain access to the Win10 native executables of the Bioinformatic Tools that we make available.  These are installed on Windows systems.  You can use these Bioinformatic tools independently after installing the **WGS Extract** program on Windows.  Look in the cygwin64/usr/local folder for all the bioinformatic tools. Just add cygwin/bin and cygwin/usr/local/bin to your PATH to make the programs available in the command line of CMD, Powershell or the native BASH there. 
+Some have downloaded the **WGS Extract** tool solely to gain access to the MS Windows native executables of the Bioinformatic Tools we include.  You can use these Bioinformatic tools independent of the **WGS Extract** program.  Look in the cygwin64/usr/local folder for the bioinformatic tools. Just add cygwin/bin and cygwin/usr/local/bin to your PATH to make the programs available from the command line of CMD, Powershell or the native BASH included there (not the very old BASH supplied with Windows). 
 
-In v4, this is a full, BASE environment of Cygwin64 captured as of the stated release date.  The bioinformatic tools are compiled to this same versions on that release date. So do not update the cygwin64 libraries direftly else the bioinformatic tools may break.
+In v4, this is a full, BASE environment of Cygwin64 that is captured as of the stated release date.  The bioinformatic tools are compiled to this same version on that release date. So do not update the cygwin64 libraries else the bioinformatic tools may break.
 
-The CygWin64 tools natively compiled to a Windows platform can be slower than native Linux binaries on the same platform.  The Windows **WSLG** environment with Ubuntu Linux using the Linux versions of the bioinformatic tools can be installed and used also.  Once **WSLG** becomes more complete and supported in Windows 11, we will likely avoid delivering Windows executables all together and simply ask Windows users to install and use **WSLG** for running **WGS Extract**. At which time we can consider becoming a Bioconda package as well.  We do not provide support for the use of **WSGE** on **WSLG** at this time. Recent changes in the **WSL2** file system in the last year finally made **WGSE** possible and generally faster than the Cygwin64 native binaries. This occurs because the Windows kernel cannot support some fundamental features from Unix / Linux that the bioinformatic tools rely on (e.g. memory mapped files).
+Windows 11 **WSLG** with Ubuntu Linux Desktop (not server from the Microsoft Store) can be used to install and run **WGS Extract**. You have to tune **WSLG** parameters to get effective use of your disk space, CPU cores and memory.  But this can sometimes be better than the native Windows executables. This occurs because the Windows kernel cannot support some fundamental features from Unix / Linux that the bioinformatic tools rely on (e.g. memory mapped files).
 
-# New Cloud Hosting Server
-We started life by hosting everything on a paid Google Drive account in 2020.  But it has been frought with issues for years. Google keeps lowering the maximum size of a direct-link, downloaded file.  And then thwarts the work-arounds to get around that so programs can download large files internally.  Thise even when using a paid account. Google clearly only want to support sharing of tiny Google Docs files.  Not public access files without first requiring interactive registration.  Luckily, we discovered MS OneDrive does not have these issues and restrictions.  But are use of Bot.ly shortened links could not be used on MS Onedrive files (some legal spat between the companies).  This restriction was finally lifted sometime in Spring 2023. Allowing us to completely transfer all file storage and serving operations to MS Onedrive with direct link downloads.  Historical pages and releases will likely have non-functional Google Drive links which have to be patched. The v1, v2 and v3 releases may appear offline as a result. 2 weeks after this revamp, it was discovered a few reference genomes did not make the transition. In trying to restore those, we messed up the share links for other files. We really need to just get our own server to avoid the cryptic share links and limitations or personal cloud storage providers.
 ```
 SHA256:   TBD
  *WGSExtract-Alphav35_31Jul2022_installer.zip (may not be same version available above)
