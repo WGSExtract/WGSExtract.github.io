@@ -32,15 +32,17 @@ With v4, we have opened the following three release tracks to all: Beta, Alpha a
 
 If you want to change release tracks at anytime, simply edit the release.json file in the installation directory to change to the desired release track and then rerun the installer. Or overlay the new installer downloaded from above onto your existing installation. The only difference in each installer is the release.json file and its track setting inside. Your current, installed version is displayed at the top of the program when run.
 
-We bring you v4 some 13 months after v3.  v3 and the original, first 2 years [v1 and v2 historical release](https://github.com/WGSExtract/WGSExtract-Historical) from Marko are documented there. v3 went into Alpha on the 18th June 2020 and was finally released as Beta on the 15th June 2021. v4 entered Alpha on 1 April 2022 and has yet to be formally Beta released.
+There is a separate Reference Genome Library manager that can be run to check and update the library.  Or you can simply wait for the program to determine what it needs something and it will prompt you to install it then.  The tool now verifies checksums of all library downloads and final, installed versions. This and startup activites to check the latest versions of files (and possibly update), are the only network access requirements to run the tool. Otherwise the tool is standalone. There is an uninstaller to unwind all the changes made by the program. As such, you should never locate your data files within the installation folder.
+
+We bring you v5 some 13 months after v4.  v3 and the original, first 2 years [v1 and v2 historical release](https://github.com/WGSExtract/WGSExtract-Historical) from Marko are documented in the bistorical release section. v3 went into Alpha on the 18th June 2020 and was finally released as Beta on the 15th June 2021. v4 entered Alpha on 1 April 2022 and was formally Beta released on 6th November 2022. v5 entered Developer mode release on 10 March 2023 and had a first real release in July 2023.
 
 This page is located at [https://WGSExtract.github.io/](https://WGSExtract.github.io/) and serves as the WWW home for the tool. As the need develops, we will create our own Facebook Group for users to raise issues outside of the local [User Issues Section](https://github.com/WGSExtract/WGSExtract.github.io/issues) already mentioned.
 
 # Supported Platforms
 64 bit OS and processor platforms tested as part of the release process are:
-* Microsoft Windows 10 and 11 on Intel and AMD 64 bit processors; WSLG in Win11 looks promising but is not fully supported yet.
+* Microsoft Windows 10 and 11 on Intel and AMD 64 bit processors. WSLG in Win11 with Ubuntu Desktop (not server) can be used to install the Ubuntu release of this tool.
 * Apple MacOS 10.15 (Catalina), 11 (Big Sur), 12 (Monterrey) and 13 (Ventura) on Intel and Apple M1/M2 processors. (note: We rely on Macports which has dropped support for Mojave and earlier already)
-* Ubuntu Linux LTS 18.04, 20.04, and 22.04. We recommend 22.04 to get the latest Samtools release. (note: 18.04 is deprecated by many bioinformatic tool ports already.)
+* Ubuntu Linux LTS 18.04, 20.04, and 22.04. We recommend 22.04 to get the latest Samtools release. (note: 18.04 is deprecated by many bioinformatic tool ports.)
 
 The tool has the potential to be a simple install in a [BioConda environment](https://anaconda.org/bioconda) as it is mostly just a [Python package](https://www.python.org/). But a majority of our users are on Microsoft Windows 10/11 systems. Bioconda nor the bioinformatic tools are supported there. So we currently deliver the tool with our own installer and Windows executables. This may change going forward after we find a Windows package manager to separately supply the bioinformatic tool ports we currently create. This is the only source of recent bioinformatic tool releases on a Windows system (that we are aware of). Docker packages are either not usable across all the platforms or too ineffecient for these large file and program needs. But could play a role in the future.
 
@@ -53,7 +55,7 @@ Some have downloaded the **WGS Extract** tool solely to gain access to the MS Wi
 
 In v4, this is a full, BASE environment of Cygwin64 that is captured as of the stated release date.  The bioinformatic tools are compiled to this same version on that release date. So do not update the cygwin64 libraries else the bioinformatic tools may break.
 
-Windows 11 **WSLG** with Ubuntu Linux Desktop (not server from the Microsoft Store) can be used to install and run **WGS Extract**. You have to tune **WSLG** parameters to get effective use of your disk space, CPU cores and memory.  But this can sometimes be better than the native Windows executables. This occurs because the Windows kernel cannot support some fundamental features from Unix / Linux that the bioinformatic tools rely on (e.g. memory mapped files).
+Windows 11 **WSLG** with Ubuntu Linux Desktop (not server) can be used to install and run **WGS Extract**. You have to tune **WSLG** parameters to get effective use of your disk space, CPU cores and memory under WSLG.  But this can sometimes be better than the native Windows executables. This occurs because the Windows kernel cannot support some fundamental features from Unix / Linux that the bioinformatic tools rely on (e.g. memory mapped files). And the WSL file I/O has dramatically improved in speed to remove that limitation.
 
 ```
 SHA256:   TBD
