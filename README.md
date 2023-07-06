@@ -40,9 +40,11 @@ This page is located at [https://WGSExtract.github.io/](https://WGSExtract.githu
 
 # Supported Platforms
 64 bit OS and processor platforms tested as part of the release process are:
-* Microsoft Windows 10 and 11 on Intel and AMD 64 bit processors. WSLG in Win11 with Ubuntu Desktop (not server) can be used to install the Ubuntu release of this tool.
+* Microsoft Windows 10 and 11 on Intel and AMD 64 bit processors. WSLG in Win11 with Ubuntu Desktop (not server) can be used to install the Ubuntu release of this tool. We install Cygwin to support the tool.
 * Apple MacOS 10.15 (Catalina), 11 (Big Sur), 12 (Monterrey) and 13 (Ventura) on Intel and Apple M1/M2 processors. (note: We rely on Macports which has dropped support for Mojave and earlier already)
 * Ubuntu Linux LTS 18.04, 20.04, and 22.04. We recommend 22.04 to get the latest Samtools release. (note: 18.04 is deprecated by many bioinformatic tool ports.)
+
+We are experimenting with a more generalized Linux installer based on micromamba to support a wider range of Linux desktop release versions that already support the bioinformatic tool packages.
 
 The tool has the potential to be a simple install in a [BioConda environment](https://anaconda.org/bioconda) as it is mostly just a [Python package](https://www.python.org/). But a majority of our users are on Microsoft Windows 10/11 systems. Bioconda nor the bioinformatic tools are supported there. So we currently deliver the tool with our own installer and Windows executables. This may change going forward after we find a Windows package manager to separately supply the bioinformatic tool ports we currently create. This is the only source of recent bioinformatic tool releases on a Windows system (that we are aware of). Docker packages are either not usable across all the platforms or too ineffecient for these large file and program needs. But could play a role in the future.
 
