@@ -7,7 +7,7 @@ __Latest Releases__ you can install on the [supported platforms](#supported-plat
 * **[BETA v4 Installer](https://get.wgse.io/WGSExtract-Beta_latest_installer.zip)**
 * **[ALPHA v4 Installer](https://get.wgse.io/WGSExtract-Alpha_latest_installer.zip)**
 * **[Dev(eloper) v4+ Installer](https://get.wgse.io/WGSExtract-Dev_latest_installer.zip)**
->NOTE: If your release states it is v44 from December 2022 or January 2023, then the microarray generator for Build 38 files (Nebula default) will not work properly (nor report an error). Rerun your installer to get the latest release after January 2023. This mostly only affected people doing a Beta or Alpha install between 25 June and 9 July and who are trying to process build 38 BAMs/CRAMs (Nebula default deliverable).
+>NOTE: If your release states it is v44 from December 2022 or January 2023, then the microarray generator for Build 38 files (Nebula default) will not work properly (nor report an error). Rerun your installer to get the latest release dated February 2023 or later. This only affected people doing a Beta or Alpha install between 25 June and 9 July 2023 and who are trying to process build 38 BAMs/CRAMs (the Nebula default deliverable).
 
 These are just the installer scripts.  You need to download, unpack and run the installer for your OS. See the **Installation Section** in the [v4 Alpha](https://get.wgse.io/WGSExtract_v4_User_Manual) manual for more details about how to install on your platform.  See the **v4 Release Notes** in the installation directory for more information about the updates in the current release. The initial program installation is just under 1GB but can grow in size as more reference genomes are loaded into the library. This program size is miniscule compared to the 50+ GB BAM files it operates on.
 
@@ -37,7 +37,7 @@ There is a separate Reference Genome Library manager that can be run to check an
 
 We bring you v5 some 13 months after v4.  v3 and the original, first 2 years [v1 and v2 historical release](https://github.com/WGSExtract/WGSExtract-Historical) from Marko are documented in the bistorical release section. v3 went into Alpha on the 18th June 2020 and was finally released as Beta on the 15th June 2021. v4 entered Alpha on 1 April 2022 and was formally Beta released on 6th November 2022. v5 entered Developer mode release on 10 March 2023 and had a first real release in July 2023.
 
-This page is located at [https://WGSExtract.github.io/](https://WGSExtract.github.io/) and serves as the WWW home for the tool. As the need develops, we will create our own Facebook Group for users to raise issues outside of the local [User Issues Section](https://github.com/WGSExtract/WGSExtract.github.io/issues) already mentioned.
+This page is currently located at [https://WGSExtract.github.io/](https://WGSExtract.github.io/) and serves as the WWW home for the tool. As the need develops, we will create our own Facebook Group for users to raise issues outside of the local [User Issues Section](https://github.com/WGSExtract/WGSExtract.github.io/issues) already mentioned.  The user interface / front will soon change to [WGSE.bio](https://wgse.bio/) and the developers and delivery platform to [WGSE.io](https://wgse.io/) (note the slight difference; they will cross reference each other).
 
 # Supported Platforms
 64 bit OS and processor platforms tested as part of the release process are:
