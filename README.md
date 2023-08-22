@@ -1,17 +1,20 @@
 # WGS Extract
 is a desktop tool for verifying, analyzing and manipulating your **Personal 30x [WGS](https://h600.org/wiki/WGS) test** result. It can also be used with any human genome based [BAM or CRAM](https://h600.org/wiki/Sequencing+File+Formats) file including [WES](https://h600.org/wiki/WES) test results.
 
-**WGS Extract** **User Manual**: [v4 Alpha](https://get.wgse.io/WGSExtract_v4_User_Manual) (Google Doc)
+**WGS Extract** **User Manual**: [v4 User Manual](https://get.wgse.io/WGSExtract_v4_User_Manual) (Google Doc)
 
 __Latest Releases__ you can install on the [supported platforms](#supported-platforms) are:
 * **[BETA v4 Installer](https://get.wgse.io/WGSExtract-Beta_latest_installer.zip)**
 * **[ALPHA v4 Installer](https://get.wgse.io/WGSExtract-Alpha_latest_installer.zip)**
 * **[Dev(eloper) v4+ Installer](https://get.wgse.io/WGSExtract-Dev_latest_installer.zip)**
+
+These are just the installer scripts.  You need to download, unpack and run the installer for your OS. See the **Installation Section** in the [user manual](https://get.wgse.io/WGSExtract_v4_User_Manual) for details about installing on your platform.  See the **v4 Release Notes** in the installation directory for more information about the updates in the current release.
+
+>As of the 31 July 2022 release, the **WGS Extract** program will now update itself when you run the installer again. Not just updating the environment the tool depends on. As of the November 2022 release, the program is broken up into four packages. Making it easier to do patch releases without reinstalling the whole system.
+
 >NOTE: If your release states it is v44 from December 2022 or January 2023, then the microarray generator for Build 38 files (Nebula default) will not work properly (nor report an error). Rerun your installer to get the latest release dated February 2023 or later. This only affected people doing a Beta or Alpha install between 25 June and 9 July 2023 and who are trying to process build 38 BAMs/CRAMs (the Nebula default deliverable).
 
-These are just the installer scripts.  You need to download, unpack and run the installer for your OS. See the **Installation Section** in the [v4 Alpha](https://get.wgse.io/WGSExtract_v4_User_Manual) manual for more details about how to install on your platform.  See the **v4 Release Notes** in the installation directory for more information about the updates in the current release. The initial program installation is just under 1GB but can grow in size as more reference genomes are loaded into the library. This program size is miniscule compared to the 50+ GB BAM files it operates on.
-
->As of the 31 July 2022 release, the **WGS Extract** program will now update itself when you run the installer again. Not just updating the environment the tool depends on.
+>NOTE: When re-running the installer to update, you will see program package error "44.2: syntax error: invalid arithmetic operator" when checking for the latest program package.  No worry. When we next update the installer package, it will fix the error and allow the program package to update. We will not update the program package before the installer is fixed.
 
 This tool is geared toward the needs of [genetic genealogy](https://h600.org/wiki/Genetic+Genealogy) and [Ancient DNA](https://h600.org/wiki/Deep+Ancestry) (aDNA) studies but may be helpful for those looking into health-releated uses of [WGS](https://h600.org/wiki/WGS) tests. The **personal, sub-$500, Direct-to-Consumer (DTC), 30x Whole Genome Sequence ([WGS](https://h600.org/wiki/WGS)) tests** are delivered with basic data files and reports. This tool serves to bridge the gap between the [WGS data files](https://h600.org/wiki/Sequencing+File+Formats) delivered and the present day [genetic genealogy community tools](https://h600.org/wiki/Third+Party+Analysis+Tools). Many health analysis sites accept the microarray and VCF files generated from your WGS test by this tool.
 
@@ -60,6 +63,7 @@ In v4, this is a full, BASE environment of Cygwin64 that is captured as of the s
 
 Windows 11 **WSLG** with Ubuntu Linux Desktop (not server) can be used to install and run **WGS Extract**. You have to tune **WSLG** parameters to get effective use of your disk space, CPU cores and memory under WSLG.  But this can sometimes be better than the native Windows executables. This occurs because the Windows kernel cannot support some fundamental features from Unix / Linux that the bioinformatic tools rely on (e.g. memory mapped files). And the WSL file I/O has dramatically improved in speed to remove that limitation.
 
+(we have not updated the hashes since spliting to multiple program packages.  We should get to it soon.  Only the installers that you download directly will need hashes that you can checl.  The other packages will be checked by the installer at download time using a public / private key mechanism that only we can generate offline.)
 ```
 SHA256:   TBD
  *WGSExtract-Alphav35_31Jul2022_installer.zip (may not be same version available above)
