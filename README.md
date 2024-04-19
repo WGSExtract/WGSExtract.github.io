@@ -4,6 +4,7 @@ is a desktop tool for verifying, analyzing and manipulating your **Personal 30x 
 **WGS Extract** **User Manual**: [v4 User Manual](https://get.wgse.io/WGSExtract_v4_User_Manual) (Google Doc)
 
 __Latest Releases__ you can install on the [supported platforms](#supported-platforms) are:
+
 | Track | Version | Date | md5 hash signature |
 | :--- | :---: | :---: | :---: |
 | **[BETA v4](https://get.wgse.io/WGSExtract-Beta_latest_installer.zip)** | 44.2 | 28 Feb 2023 | ab2abb496432d7810f98f6df53ea30bc |
