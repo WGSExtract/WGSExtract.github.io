@@ -7,12 +7,11 @@ __Latest Releases__ you can install on the [supported platforms](#supported-plat
 
 | Track | Version | Date | md5 hash signature |
 | :--- | :---: | :---: | :---: |
-| **[BETA v4](https://get.wgse.io/WGSExtract-Beta_latest_installer.zip)** | 44.2 | 28 Feb 2023 | ab2abb496432d7810f98f6df53ea30bc |
-| **[ALPHA v4](https://get.wgse.io/WGSExtract-Alpha_latest_installer.zip)** | 44.3 | 30 Oct 2023 | 1a15c0eeddea162605c4f52f3e76254d |
-| **[Dev(eloper) v4+](https://get.wgse.io/WGSExtract-Dev_latest_installer.zip)** | 44.4 | 30 Mar 2024 | 1df34162f0c49c345d744e8fc883b078 |
+| **[BETA v4](https://get.wgse.io/WGSExtract-Beta_latest_installer.zip)** | 44.5 | 13 Jun 2024 | fbe59361caaf8cdb6f23df16a249c552 |
+| **[ALPHA v4](https://get.wgse.io/WGSExtract-Alpha_latest_installer.zip)** | 44.5 | 13 Jun 2024 | c3c6a283dec9fa0dce66a6210adfb04d |
+| **[Dev(eloper) v4+](https://get.wgse.io/WGSExtract-Dev_latest_installer.zip)** | 44.5 | 13 Jun 2024 | 23edbf45d448993e747400d4fd58d74e |
 
 These are just the installer scripts.  You need to download, unpack and run the installer for your OS. See the **Installation Section** in the [user manual](https://get.wgse.io/WGSExtract_v4_User_Manual) for details about installing on your platform.  See the **v4 Release Notes** in the installation directory for more information about the updates in the current release. You should periodically re-run the installer to update to the latest release in the track you select. There is information available on how to use [hashes to verify the Installer you download](https://www.howtogeek.com/67241/htg-explains-what-are-md5-sha-1-hashes-and-how-do-i-check-them/).
->* (ALL releases, ALL platforms) An incompatible update in a dependent library has broken installations.  If you cannot start the program due to a "wakepy" issue, then you can fix this by (a) running the uninstaller and selecting only the Python program, and then (b) rerun the installer to reinstall Python and its dependent packages.  Or, if familiar to you, in a shell from the installation folder use the the following command: `python -m pip uninstall wakepy ; python -m pip install wakepy==0.7.2` . Note that "python" may require a path component added to it that is dependent on your platform. The patch to the intallers has changed the MD5 Hash signature above. INSTALLER PATCH FORTHCOMING.
 
 >* (ALL releases, MacOS Sonoma 14.5) With the latest update, Apple MacOS regressed and turned off allowing unsigned apps to be downloaded and run from outside their store through the GUI.  You can no longer enable it directly in settings either (the anywhere option disappered). To re-enable this is and allow apps like ours to run with a GUI click you must open a terminal and use the command `sudo spctl --master-disable`.
 
