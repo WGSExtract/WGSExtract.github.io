@@ -9,7 +9,7 @@ __Latest Releases__ you can install on the [supported platforms](#supported-plat
 | :--- | :---: | :---: | :---: |
 | **[BETA v4](https://get.wgse.io/WGSExtract-Beta_latest_installer.zip)** | 44.5 | 13 Jun 2024 | fbe59361caaf8cdb6f23df16a249c552 |
 | **[ALPHA v4](https://get.wgse.io/WGSExtract-Alpha_latest_installer.zip)** | 44.6 | 20 Jun 2024 | c3c6a283dec9fa0dce66a6210adfb04d |
-| **[Dev(eloper) v4+](https://get.wgse.io/WGSExtract-Dev_latest_installer.zip)** | 44.6 | 20 Jun 2024 | 23edbf45d448993e747400d4fd58d74e |
+| **[Dev(eloper) v4+](https://get.wgse.io/WGSExtract-Dev_latest_installer.zip)** | 44.8 | 30 Jun 2024 | b0d03c16d7d152062d71d6ddd16f1a34 |
 
 These are just the installer scripts.  You need to download, unpack and run the installer for your OS. See the **Installation Section** in the [user manual](https://get.wgse.io/WGSExtract_v4_User_Manual) for details about installing on your platform.  See the **v4 Release Notes** in the installation directory for more information about the updates in the current release. You should periodically re-run the installer to update to the latest release in the track you select. There is information available on how to use [hashes to verify the Installer you download](https://www.howtogeek.com/67241/htg-explains-what-are-md5-sha-1-hashes-and-how-do-i-check-them/).
 
