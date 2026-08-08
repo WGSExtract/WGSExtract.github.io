@@ -5,9 +5,9 @@ __Latest Releases__ you can install on the [supported platforms](#supported-plat
 
 | Track | Version | Date | md5 hash signature |
 | :--- | :---: | :---: | :---: |
-| **[BETA v4](https://get.wgse.io/WGSExtract-Beta_latest_installer.zip)** | 44.5 | 13 Jun 2024 | fbe59361caaf8cdb6f23df16a249c552 |
-| **[ALPHA v4](https://get.wgse.io/WGSExtract-Alpha_latest_installer.zip)** | 44.10 | 8 Oct 2024 | 6c8e16d029cbff1ef687bbca70ec571a |
-| **[Dev(eloper) v4+](https://get.wgse.io/WGSExtract-Dev_latest_installer.zip)** | 44.12 | 7 Aug 2026 | xxxx |
+| **[BETA v4](https://get.wgse.io/WGSExtract-Beta_latest_installer.zip)** | 44.10 | 8 Oct 2024 | dd80f62c60f5847aa2da17e60638c7c6 |
+| **[ALPHA v4](https://get.wgse.io/WGSExtract-Alpha_latest_installer.zip)** | 44.11 | 19 Sep 2025 | 7ac6b94eb4e87ba5dcc92144d3381886 |
+| **[Dev(eloper) v4+](https://get.wgse.io/WGSExtract-Dev_latest_installer.zip)** | 44.12 | 7 Aug 2026 | d82baa4b041332a89c5a78002c98ec84 |
 
 See the [Installation Notes below](#installation-notes) for platform support of different versions.  
 Facebook group [Personal WGS](https://www.facebook.com/groups/PersonalWGS/) for discussions on the tool.  
