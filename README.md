@@ -7,7 +7,7 @@ __Latest Releases__ you can install on the [supported platforms](#supported-plat
 | :--- | :---: | :---: | :---: |
 | **[BETA v4](https://get.wgse.io/WGSExtract-Beta_latest_installer.zip)** | 44.10 | 8 Oct 2024 | dd80f62c60f5847aa2da17e60638c7c6 |
 | **[ALPHA v4](https://get.wgse.io/WGSExtract-Alpha_latest_installer.zip)** | 44.11 | 19 Sep 2025 | 7ac6b94eb4e87ba5dcc92144d3381886 |
-| **[Dev(eloper) v4+](https://get.wgse.io/WGSExtract-Dev_latest_installer.zip)** | 44.12 | 7 Aug 2026 | a847bc3da77219f3bf2fac443bbda32c |
+| **[Dev(eloper) v4+](https://get.wgse.io/WGSExtract-Dev_latest_installer.zip)** | 44.13 | 30 Sep 2026 | 87f3400ba086c39ff496d22077ee48c7 |
 
 See the [Installation Notes below](#installation-notes) for platform support of different versions.  
 Facebook group [Personal WGS](https://www.facebook.com/groups/PersonalWGS/) for discussions on the tool.  
@@ -15,7 +15,8 @@ Facebook group [Personal WGS](https://www.facebook.com/groups/PersonalWGS/) for 
 
 >* MacOS 14 Sonoma and Ubuntu 24 requires WGSE release 44.6 or later.  
 MacOS 15 Sequoia requires WGSE release 44.10 or later.  
-MacOS 26 Tahoe requires WGSE release 44.11 or later.  
+MacOS 26 Tahoe requires WGSE release 44.11 or later.
+MacOS 27 Golden Gate requires WGSE release 44.13 or later.
 Ubuntu 26 requires WGSE release 44.12 or later.
 
 While we strived from the start to be the best, simplest tool available, we have not had much time to develop the past 2-3 years.  See the [Developers Page](https://github.com/WGSExtract/WGSExtract-Dev/) for up-and-coming, newer developments that may work for you.
@@ -51,9 +52,9 @@ The ZIP archives linked above are just the installer scripts.  You need to downl
 **64 bit OS and processor platforms** tested as part of the release process are:
 * **Microsoft Windows 10 and 11 on Intel and AMD 64 bit processors** using either **Cygwin64** or **Msys2** for the bioinformatic tools (you choose).  
 (note: WSLG in Win11 with a Linux Desktop (not server) can be used to install the Ubuntu or Linux release of this tool.)
-* **Apple MacOS 12 (Monterrey) through 26 (Tahoe) on Intel and Apple Mn processors** using either **Macports** or **Homebrew** for the bioinformatic tools (you choose).  
-(note: Big Sur and earlier has lost MacPorts support already; which we rely on. MacOS will soon drop support for the Intel processor.)
-* **Ubuntu Linux LTS 20.04 through 26.04**. We recommend 26.04 to get the latest Samtools release.  
+* **Apple MacOS 15 (Sequoia) through 27 (Golden Gate) on Intel and Apple Mx processors** using either **Macports** or **Homebrew** for the bioinformatic tools (you choose).
+(note: Sonoma and earlier has lost tools support. MacOS 27 dropped support for the Intel processor.)
+* **Ubuntu Linux LTS 20.04 through 26.04**. We recommend 26.04 to get the latest native Samtools release.  
 (note: 18.04 is deprecated due to dropped support for needed tool ports.)
 * **Any Linux by using Conda** (actually micromamba and bioconda) on **Intel, AMD or Arm** processors. This will soon deprecate the Ubuntu installer.
 
