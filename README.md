@@ -13,10 +13,10 @@ See the [Installation Notes below](#installation-notes) for platform support of 
 Facebook group [Personal WGS](https://www.facebook.com/groups/PersonalWGS/) for discussions on the tool.  
 **WGS Extract** **User Manual**: [v4 User Manual](https://get.wgse.io/WGSExtract_v4_User_Manual) (Google Doc)
 
->* MacOS 14 Sonoma and Ubuntu 24 requires WGSE release 44.6 or later.  
+>* Ubuntu 24 requires WGSE release 44.6 or later.  
 MacOS 15 Sequoia requires WGSE release 44.10 or later.  
-MacOS 26 Tahoe requires WGSE release 44.11 or later.
-MacOS 27 Golden Gate requires WGSE release 44.13 or later.
+MacOS 26 Tahoe requires WGSE release 44.11 or later.  
+MacOS 27 Golden Gate requires WGSE release 44.13 or later.  
 Ubuntu 26 requires WGSE release 44.12 or later.
 
 While we strived from the start to be the best, simplest tool available, we have not had much time to develop the past 2-3 years.  See the [Developers Page](https://github.com/WGSExtract/WGSExtract-Dev/) for up-and-coming, newer developments that may work for you.
@@ -46,7 +46,7 @@ The tool home page is [WGSE.bio](https://wgse.bio/). With the developers and del
 The ZIP archives linked above are just the installer scripts.  You need to download, unpack and run the installer script for your OS. See the **Installation Section** in the [user manual](https://get.wgse.io/WGSExtract_v4_User_Manual) for specific details about installing on your platform.  See the **v4 Release Notes** in the installation directory for more information about the updates in the current release. You should periodically re-run the installer to update to the latest release in the track you select. There is information available on how to use [hashes to verify the Installer you download](https://www.howtogeek.com/67241/htg-explains-what-are-md5-sha-1-hashes-and-how-do-i-check-them/).
 
 >* There was a temporary problem during March 2025 in Python's system libraries that new installs encountered. See [Issue 29 for a fix](https://github.com/WGSExtract/WGSExtract.github.io/issues/29) for details and a work around. Since now being resolved, simply reinstalling will get around the issue.
->* Starting with **MacOS Sequoia 15.0**, Apple has permanently removed the option to allow for non-signed installs. The only way to run non-app-store and non-apple "notarized" apps is, within 30 minutes of downloading and trying to open the first time (and clicking **Done** in the pop-up that comes when you try to run it), you must navigate to **systems settings** / **privacy & security** and scroll all the way down to the **Security** section.  You should see **"Install_macos.command" was blocked to protect your Mac.** with a button next to it that says "Open Anyway". Once clicked there, you will then get the old "open anyway" pop-up to finally approve the program. You will also be required to enter your password in a follow-on pop-up to approve the action.  You must do this each time you download and install an update as well. With **MacOS Sonoma 14.5**, Apple regressed and turned off allowing unsigned apps to be downloaded and run from outside their store.  You can no longer enable this for directly in settings == the "anywhere" option disappeared from system settings / privacy & security / security / "allow applications from". To re-enable this in Sonoma and allow apps like ours to run with a GUI click, you must open a terminal and use the command `sudo spctl --master-disable`. For older releases, the first time you run the app, follow the Ctrl-Click process from before as described in the manual.
+>* Starting with **MacOS Sequoia 15.0**, Apple has permanently removed the option to allow for non-signed installs. The only way to run non-app-store and non-apple "notarized" apps is, within 30 minutes of downloading and trying to open the first time (and clicking **Done** in the pop-up that comes when you try to run it), you must navigate to **systems settings** / **privacy & security** and scroll all the way down to the **Security** section.  You should see **"Install_macos.command" was blocked to protect your Mac.** with a button next to it that says "Open Anyway". Once clicked there, you will then get the old "open anyway" pop-up to finally approve the program. You will also be required to enter your password in a follow-on pop-up to approve the action.  You must do this each time you download and install an update as well.
 
 # Supported Platforms
 **64 bit OS and processor platforms** tested as part of the release process are:
