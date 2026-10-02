@@ -7,7 +7,7 @@ __Latest Releases__ you can install on the [supported platforms](#supported-plat
 | :--- | :---: | :---: | :---: |
 | **[BETA v4](https://get.wgse.io/WGSExtract-Beta_latest_installer.zip)** | 44.10 | 8 Oct 2024 | dd80f62c60f5847aa2da17e60638c7c6 |
 | **[ALPHA v4](https://get.wgse.io/WGSExtract-Alpha_latest_installer.zip)** | 44.11 | 19 Sep 2025 | 7ac6b94eb4e87ba5dcc92144d3381886 |
-| **[Dev(eloper) v4+](https://get.wgse.io/WGSExtract-Dev_latest_installer.zip)** | 44.13 | 30 Sep 2026 | 87f3400ba086c39ff496d22077ee48c7 |
+| **[Dev(eloper) v4+](https://get.wgse.io/WGSExtract-Dev_latest_installer.zip)** | 44.13 | 02 Oct 2026 | 2527d3c5c1c85e24c538a1543ca238c2 |
 
 See the [Installation Notes below](#installation-notes) for platform support of different versions.  
 Facebook group [Personal WGS](https://www.facebook.com/groups/PersonalWGS/) for discussions on the tool.  
