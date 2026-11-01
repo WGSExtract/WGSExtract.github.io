@@ -7,7 +7,7 @@ __Latest Releases__ you can install on the [supported platforms](#supported-plat
 | :--- | :---: | :---: | :---: | :---: |
 | **[v4](https://get.wgse.io/WGSExtract-Dev_latest_installer.zip)** | 44.15 |20 Oct 2026 | 8e54cf339d0a3407d5dd82d081747fbe | [v4](https://get.wgse.io/WGSExtract_v4_User_Manual) |
 | **[v5](https://get.wgse.io//WGSExtract-Dev48_30Apr2024_installer.zip )** | 48| 30 Apr 2024 |  | [v5](https://get.wgse.io/WGSExtract_v5_User_Manual) |
-| **[v6](https://theontho.github.io/gui-for-cli/)** | 0.3.x | 30 Oct 2026 | | N.A. |
+| **[v6](https://theontho.github.io/gui-for-cli/)** | 0.6.x | 30 Oct 2026 | | N.A. |
 
 * v4 is the latest, stable release. v5 is likely unusable for the moment. Tracks have been removed.
 * v6 is a bundled installer with a new [gui-for-cli typescript](https://github.com/theontho/gui-for-cli) front-end with a rewritten [wgsextract-cli-only](https://github.com/theontho/wgsextract-cli) backend. Application documentation not yet available.
