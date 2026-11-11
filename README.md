@@ -9,10 +9,10 @@ __Latest Releases__ you can install on the supported platforms ([pre-v6](#suppor
 | **[v5](https://get.wgse.io//WGSExtract-Dev48_30Apr2024_installer.zip )** | 48 | 30 Apr 2024 | (not yet available) | [v5](https://get.wgse.io/WGSExtract_v5_User_Manual) |
 | **[v6](https://wgsextract.github.io/wgsextract-cli/app/)** | 0.8.6 | 10 Nov 2026 | (signed, self-checking installers) | N.A. |
 
-* v4 is the latest, stable release. v5 is unavailable for the moment. "Tracks" have been removed. Served from [get.wgse.io](https://get.wgse.io/).
-* v6 is a [bundled installer](https://wgsextract.github.io/wgsextract-cli/app/) on all [major platforms](#supported-platforms-v6) with a newly separated [GUI, webapi](https://wgsextract.github.io/wgsextract-cli/gui.html) front-end and a [shell-style CLI-only](https://wgsextract.github.io/wgsextract-cli/cli.html) back-end. The back-end can be [installed stand-alone](https://wgsextract.github.io/wgsextract-cli/install.html) on a server and driven from scripts.
+* v4 is the latest, stable release (think Beta). v5 is unavailable for the moment (think Alpha). "Tracks" have been removed. Served from [get.wgse.io](https://get.wgse.io/).
+* v6 is a [bundled installer](https://wgsextract.github.io/wgsextract-cli/app/) on all [major platforms](#supported-platforms-v6) with a newly separated [WebUI based GUI](https://wgsextract.github.io/wgsextract-cli/gui.html) front-end and a [shell-style CLI-only](https://wgsextract.github.io/wgsextract-cli/cli.html) back-end. The back-end can be [installed stand-alone](https://wgsextract.github.io/wgsextract-cli/install.html) on a server and driven from scripts. (Think old Dev track)
 
-The new v6 is a heavy-AI rewrite of the original with a big expansion of capability. All bioinformatic tools are natively re-compiled as stand-alone, optimized, and vetted. New application documentation is not yet available. The CLI can be discovered by command-line querying. The old user manual can be helpful for GUI users trying to understand previous, common functions still available.
+The new v6 is a rewrite of the original with a big expansion of capability. All bioinformatic tools are natively re-compiled stand-alone, optimized, and vetted. New user documentation is not yet available. The CLI can be discovered by command-line querying (`wgsextract --help`). The old user manual can be helpful for GUI users trying to understand previous, common functions still available.
 
 For v4 and v5: Version and Date above is for the Program package.  The installer version and date is different.  
 See the [Installation Notes below](#installation-notes) for platform support of different versions.  
@@ -46,7 +46,7 @@ v6 was very preliminarily released in Feb 2026 and encourage for general use sta
 The tool home page is [WGSE.bio](https://wgse.bio/). With the v4-5 delivery platform using [WGSE.io](https://wgse.io/) (note the slight difference; they will cross reference each other). v6 is delivered directly from [github]()https://github.com]. Currently, both point to this page located at [https://WGSExtract.github.io/](https://WGSExtract.github.io/).
 
 # Supported Platforms v6
-* **v6** is meant to be a native, signed installer for all current Microsoft Windows, Apple MacOS and Linux platforms on 64 bit Intel/AMD, ARM 64, and Apple M* CPU's. It has also been optimized to take advantage of GPU's when available (optional enabling). Care has been taken to make the tools useable on a wide performance range of systems.  But bioinformatics is often demanding. Requiring a minimum of 16 GB of main memory and 300 GB of free disk space during some operations.
+* **v6** is meant to be a native, signed installer for all current Microsoft Windows, Apple MacOS and Linux platforms on 64 bit Intel/AMD, ARM 64, and Apple M* CPU's. It has been optimized to take advantage of GPU's (when available, optional enabling). Care has been taken to make the tools useable on a wide performance range of systems.  But bioinformatics is often demanding. Requiring a minimum of 16 GB of main memory and 300 GB of free disk space during some operations.
 
 # Supported Platforms pre-v6
 * **v6** is meant to be a native, signed installer for all current Microsoft Windows, Apple MacOS and Linux platforms.
