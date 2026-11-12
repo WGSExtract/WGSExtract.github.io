@@ -7,7 +7,7 @@ __Latest Releases__ you can install on the supported platforms ([pre-v6](#suppor
 | :--- | :---: | :---: | :---: | :---: |
 | **[v4](https://get.wgse.io/WGSExtract-Dev_latest_installer.zip)** | 44.15 |20 Oct 2026 | 8e54cf339d0a3407d5dd82d081747fbe | [v4](https://get.wgse.io/WGSExtract_v4_User_Manual) |
 | **[v5](https://get.wgse.io//WGSExtract-Dev48_30Apr2024_installer.zip )** | 48 | 30 Apr 2024 | (not yet available) | [v5](https://get.wgse.io/WGSExtract_v5_User_Manual) |
-| **[v6](https://wgsextract.github.io/wgsextract-cli/app/)** | 0.8.6 | 10 Nov 2026 | (signed, self-checking installers) | N.A. |
+| **[v6](https://wgsextract.github.io/wgsextract-cli/app/)** | 0.8.7 | 12 Nov 2026 | (signed, self-checking installers) | N.A. |
 
 * v4 is the latest, stable release (think Beta). v5 is unavailable for the moment (think Alpha). "Tracks" have been removed. Served from [get.wgse.io](https://get.wgse.io/).
 * v6 is a [bundled installer](https://wgsextract.github.io/wgsextract-cli/app/) on all [major platforms](#supported-platforms-v6) with a newly separated [WebUI based GUI](https://wgsextract.github.io/wgsextract-cli/gui.html) front-end and a [shell-style CLI-only](https://wgsextract.github.io/wgsextract-cli/cli.html) back-end. The back-end can be [installed stand-alone](https://wgsextract.github.io/wgsextract-cli/install.html) on a server and driven from scripts. (Think old Dev track)
