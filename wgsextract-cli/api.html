@@ -120,7 +120,7 @@ next checkpoint. A token belongs to one operation.</p>
 <code>sequencer</code>, <code>avg_read_len</code>, <code>metrics</code>, ...); <code>metrics</code> holds the
 headline numbers.</p>
 <p><code>InfoParams</code>: Identify the reference build, file integrity and sequencing metrics of a
-BAM/CRAM. Metrics are cached next to the outputs as
+BAM/CRAM. Metrics are cached in the output folder's <code>manifests/</code> as
 <code>&lt;input&gt;.wgse_info.json</code>.</p>
 <div class="table-wrap"><table>
 <thead>
@@ -152,7 +152,7 @@ BAM/CRAM. Metrics are cached next to the outputs as
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>detailed</code></td>
@@ -173,7 +173,7 @@ BAM/CRAM. Metrics are cached next to the outputs as
 <td><code>bool</code></td>
 <td><code>True</code></td>
 <td><code>--cache</code></td>
-<td>Save the metrics as <code>&lt;input&gt;.wgse_info.json</code> for later runs; an existing cache is read either way.</td>
+<td>Save the metrics as <code>manifests/&lt;input&gt;.wgse_info.json</code> for later runs; an existing cache is read either way.</td>
 </tr>
 </tbody>
 </table></div>
@@ -231,7 +231,7 @@ variants in it with their annotations, and read depth over its exons.
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>build</code></td>
@@ -299,7 +299,7 @@ reports <code>with_bins</code> writes are <code>current</code> (both newer than 
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>region</code></td>
@@ -386,7 +386,7 @@ reports <code>with_bins</code> writes are <code>current</code> (both newer than 
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>region</code></td>
@@ -486,7 +486,7 @@ reads called haploid with bcftools and applied to the reference's chrM.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -539,7 +539,7 @@ metric counts them).</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -591,7 +591,7 @@ metric counts them).</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -644,7 +644,7 @@ limited to a region or gene.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -720,7 +720,7 @@ whose chrY reads are mismapped.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -788,7 +788,7 @@ metric counts them).</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -849,7 +849,7 @@ in <code>&lt;input&gt;_Y_MT_associated.bam</code>.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -910,7 +910,7 @@ for the FASTQs that have reads).</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -973,7 +973,7 @@ and holds each read once.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -1056,7 +1056,7 @@ are mismapped.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -1151,7 +1151,7 @@ checks that the temporary and final files fit on disk.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -1266,7 +1266,7 @@ checks that the temporary and final files fit on disk.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 </tbody>
 </table></div>
@@ -1305,7 +1305,7 @@ or gene.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -1379,7 +1379,7 @@ gene.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -1442,7 +1442,7 @@ than one read group, which FASTQ can't keep apart.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -1598,7 +1598,7 @@ merged file's autosomal depth.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the first input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the first input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -1682,7 +1682,7 @@ without read groups gets one from <code>sample</code>, <code>library</code> and
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -1820,7 +1820,7 @@ rate and duplication rate are metrics.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the R1 file's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the R1 file's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -1875,7 +1875,7 @@ the read count are metrics (<code>r2_</code>-prefixed for <code>r2</code>). With
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -1915,7 +1915,7 @@ with MultiQC's AI summaries off.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input folder, or the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input folder, or the input's folder).</td>
 </tr>
 <tr>
 <td><code>force</code></td>
@@ -1954,7 +1954,7 @@ metrics in WGS Extract result manifests; MultiQC isn't needed.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input folder, or the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input folder, or the input's folder).</td>
 </tr>
 </tbody>
 </table></div>
@@ -1994,7 +1994,7 @@ latter wins.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 </tbody>
 </table></div>
@@ -2038,7 +2038,7 @@ ancestry PCs; recorded as the sample's <code>contamination</code> fact. Optional
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -2109,7 +2109,7 @@ is optional (<code>pixi install -e somalier</code>) and unavailable on Windows.<
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the first input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the first input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -2192,7 +2192,7 @@ and the <code>ancestry</code> fact; see docs/ancestry.md.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -2287,7 +2287,7 @@ chromosome came from, and it isn't a diagnosis. See docs/roh.md.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>sample</code></td>
@@ -2412,7 +2412,7 @@ reference when there is one.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the current folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the current folder).</td>
 </tr>
 </tbody>
 </table></div>
@@ -2528,7 +2528,7 @@ sent to Oxford Nanopore). Without it, use a local model directory.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the POD5 file's folder, or the POD5 folder's parent).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the POD5 file's folder, or the POD5 folder's parent).</td>
 </tr>
 </tbody>
 </table></div>
@@ -2680,7 +2680,7 @@ workspace.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder, else the reads').</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder, else the reads').</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -2902,7 +2902,7 @@ settings and tools are unchanged.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -2984,7 +2984,7 @@ required; the CLI's <code>--genome</code> may fill it in from a sample workspace
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the reads' folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the reads' folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -3052,7 +3052,7 @@ A file or folder name alone does not select a ploidy table.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -3153,7 +3153,7 @@ A file or folder name alone does not select a ploidy table.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -3254,7 +3254,7 @@ A file or folder name alone does not select a ploidy table.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -3314,7 +3314,7 @@ A file or folder name alone does not select a ploidy table.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -3431,7 +3431,7 @@ see docs/exon-callability.md.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>gene_list</code></td>
@@ -3506,7 +3506,7 @@ see docs/exon-callability.md.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -3719,7 +3719,7 @@ see docs/exon-callability.md.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 </tbody>
 </table></div>
@@ -3759,7 +3759,7 @@ see docs/exon-callability.md.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -3867,7 +3867,7 @@ records and left-aligns indels. Each repair is a structured warning.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -3943,7 +3943,7 @@ Covering gVCF reference blocks are assessed when a matching --ref is given.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -4052,7 +4052,7 @@ their own confidence table, not the consensus pathogenic subset.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -4126,7 +4126,7 @@ their own confidence table, not the consensus pathogenic subset.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -4193,7 +4193,7 @@ their own confidence table, not the consensus pathogenic subset.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -4261,7 +4261,7 @@ their own confidence table, not the consensus pathogenic subset.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -4335,7 +4335,7 @@ their own confidence table, not the consensus pathogenic subset.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -4403,7 +4403,7 @@ their own confidence table, not the consensus pathogenic subset.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -4492,7 +4492,7 @@ CNV carrier frequencies and cross-type INS/DUP matches are excluded.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -4593,7 +4593,7 @@ CNV carrier frequencies and cross-type INS/DUP matches are excluded.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -4656,7 +4656,7 @@ unless <code>research_acmg</code> is set; GRCh38 only.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -4737,7 +4737,7 @@ unless <code>research_acmg</code> is set; GRCh38 only.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -4804,7 +4804,7 @@ unless <code>research_acmg</code> is set; GRCh38 only.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -4874,7 +4874,7 @@ no sample data is sent to its public reference publisher.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -4971,7 +4971,7 @@ journal lets interrupted chains resume from their last completed step.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -5088,7 +5088,7 @@ journal lets interrupted chains resume from their last completed step.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -5166,7 +5166,7 @@ or <code>pacbio</code>), else delly. The <code>caller_reason</code> metric says 
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -5274,7 +5274,7 @@ command writes: <code>snps.vcf.gz</code> (<code>vcf snp</code>), <code>indels.vc
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -5410,7 +5410,7 @@ command writes: <code>snps.vcf.gz</code> (<code>vcf snp</code>), <code>indels.vc
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -5470,7 +5470,7 @@ command writes: <code>snps.vcf.gz</code> (<code>vcf snp</code>), <code>indels.vc
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -5576,7 +5576,7 @@ Google's ULTIMA GPU image runs the stages with call_variants on the GPU.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -5727,7 +5727,7 @@ Google's ULTIMA GPU image runs the stages with call_variants on the GPU.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -5819,7 +5819,7 @@ HP/PS tags to <code>haplotagged.bam</code> (or <code>.cram</code>).</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -5917,7 +5917,7 @@ the output doesn't depend on how many.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -5990,7 +5990,7 @@ the output doesn't depend on how many.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
@@ -6035,7 +6035,7 @@ the output doesn't depend on how many.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>extra_vcf</code></td>
@@ -6108,7 +6108,7 @@ the output doesn't depend on how many.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the VCF's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
 </tr>
 <tr>
 <td><code>pedigree</code></td>
@@ -6211,7 +6211,7 @@ the output doesn't depend on how many.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the working folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the working folder).</td>
 </tr>
 </tbody>
 </table></div>
@@ -6319,7 +6319,7 @@ or <code>vcf_input_paths</code> supply them.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the current folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the current folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -6425,7 +6425,7 @@ confirm as the rCRS is warned of (<code>mt_reference_unconfirmed</code>).</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>tree</code></td>
@@ -6516,7 +6516,7 @@ or single-sample VCF/BCF. Outputs go to <code>yleaf/</code> in the output folder
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>pos_file</code></td>
@@ -6640,7 +6640,7 @@ FamilyTreeDNA-order CSV).</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>panel</code></td>
@@ -6728,7 +6728,7 @@ and pass strict allele-fraction, read and quality gates. Outputs go to
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>build</code></td>
@@ -6829,7 +6829,7 @@ methylation_combine_strands, else CpG, 5mC only and strands combined.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -6909,7 +6909,7 @@ methylation_combine_strands, else CpG, 5mC only and strands combined.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>build</code></td>
@@ -7045,7 +7045,7 @@ chains require <code>download</code>; lifting sample coordinates stays local.</p
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -8495,7 +8495,7 @@ accept it. A CRAM is decoded with <code>ref</code>, else the reference it names.
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 </tbody>
 </table></div>
@@ -8538,7 +8538,7 @@ are kept in <code>INFO/FTDNA_FILTER</code>. See docs/ftdna-vcf-repair.md.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 </tbody>
 </table></div>
@@ -8778,7 +8778,7 @@ Custom scoring files take precedence over Catalog selection.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 </tbody>
 </table></div>
@@ -8855,7 +8855,7 @@ outside call. Metrics: <code>cyp2d6_genotype</code>, <code>cyp2d6_filter</code>,
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -8910,7 +8910,7 @@ median depth no calls are reported (files kept as
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -8958,7 +8958,7 @@ with clear depth evidence. This is a screen, not a diagnosis.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -9019,7 +9019,7 @@ calls and explicit no-calls. ONT is experimental and unvalidated.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -9088,7 +9088,7 @@ decoys and chr6 ALT contigs. Metrics: diplotypes of HLA-A, -B, -C,
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -9149,7 +9149,7 @@ all-weak or incomplete call,
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -9255,7 +9255,7 @@ plus a findings table, from the result manifests in its folder.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the sample folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the sample folder).</td>
 </tr>
 <tr>
 <td><code>results</code></td>
@@ -10018,7 +10018,7 @@ reference library's build, else the VCF's contigs. See docs/vep-engines.md.</p>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>output_directory</code>)</td>
 <td><code>--outdir</code>, <code>-o</code></td>
-<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the input's folder).</td>
 </tr>
 <tr>
 <td><code>threads</code></td>

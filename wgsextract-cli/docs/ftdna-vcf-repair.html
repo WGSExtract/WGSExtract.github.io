@@ -39,7 +39,7 @@
         <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Repairing FTDNA VCF files</span></nav>
 <h1 id="repairing-ftdna-vcf-files">Repairing FTDNA VCF files</h1>
 <p>Older FamilyTreeDNA (FTDNA) Big Y <code>variants.vcf</code> files write expressions such as <code>DP=1</code> or <code>QUAL=12.5</code> in the FILTER column. VCF allows only IDs there, each declared by a <code>##FILTER</code> header line, so bcftools, VEP and other tools reject or misread those records. <code>wgsextract repair ftdna-vcf</code> rewrites the column into declared IDs that keep the failure's meaning:</p>
-<pre><code class="language-sh">wgsextract repair ftdna-vcf --input variants.vcf        # writes wgse/variants_repaired.vcf
+<pre><code class="language-sh">wgsextract repair ftdna-vcf --input variants.vcf        # writes WGSEv6/variants_repaired.vcf
 bcftools view variants.vcf | wgsextract repair ftdna-vcf &gt; fixed.vcf</code></pre>
 <p>The repair runs offline and needs no reference data. It reads plain, gzipped or BCF input (BCF needs bcftools) and writes plain VCF.</p>
 <h2 id="filter-mapping">FILTER mapping<a class="heading-anchor" href="#filter-mapping" aria-label="Link to section">#</a></h2>

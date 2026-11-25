@@ -46,7 +46,7 @@
 <section><div class="wrap"><p>WGS Extract reads its settings from config.toml: <code>wgsextract config</code> prints where it is and every setting's value, and <code>--config PATH</code> picks another file for one run. Command-line options override settings for a run.</p>
 <p>config.toml lives in the users workspace, <code>~/wgs-extract</code> (<code>%USERPROFILE%\wgs-extract</code> on Windows), beside the default My Genomes library (<code>mygenomes/</code>): the folders you manage and may want on another disk. An install that already keeps config.toml where earlier versions did (the per-user config folder, <code>~/.config/wgsextract</code> on macOS) keeps using it. Reference data, reference genomes and temporary files stay in the CLI's own data folder unless config.toml names other folders. The WGS Extract desktop app keeps its settings in the same folder, so the two share them.</p>
 <p>If both a legacy CLI config and a users-workspace config exist, the CLI keeps using the legacy file and warns with both paths. Use <code>--config PATH</code> to select the other explicitly. Opening the desktop app does not change this precedence or erase saved advanced settings.</p>
-<p>Without output_directory, a command writes to a <code>wgse/</code> folder beside its input from the lab (a BAM or CRAM, else FASTQs, else a VCF, else a raw microarray file), or beside an input already in a <code>wgse/</code> folder. The folder of the lab's original files stays untouched: only indexes that must sit beside their files are written there, and writing a BAM, CRAM, FASTQ, VCF or microarray file into it warns (<code>primary_overwrite</code>).</p>
+<p>Without output_directory, a command writes to a <code>WGSEv6/</code> folder beside its input from the lab (a BAM or CRAM, else FASTQs, else a VCF, else a raw microarray file), or beside an input already in a <code>WGSEv6/</code> folder. The folder of the lab's original files stays untouched: only indexes that must sit beside their files are written there, and writing a BAM, CRAM, FASTQ, VCF or microarray file into it warns (<code>primary_overwrite</code>). Machine-readable manifests (<code>*.manifest.json</code>) and info caches (<code>*.wgse_info.json</code>) go into a <code>manifests/</code> subfolder inside the output directory.</p>
 <p>Every value is checked when the file loads: a value of the wrong type, outside its range or not one of its choices stops the run with an error that names the setting and what it expects. An unknown setting is ignored with a warning that suggests the closest name.</p>
 <h2>Choosing and editing a config</h2>
 <p><code>--config FILE</code> works anywhere on the command line and selects the file for
@@ -186,7 +186,7 @@ display sleep is allowed. Report-only help/config/deps never inhibit sleep.</p>
 <td><code>output_directory</code></td>
 <td>string, path (<code>~</code> expands)</td>
 <td>unset</td>
-<td>Default output directory (default: wgse/ beside the primary input BAM, CRAM, FASTQ, VCF or microarray file, or that folder if already wgse/)</td>
+<td>Default output directory (default: WGSEv6/ beside the primary input BAM, CRAM, FASTQ, VCF or microarray file, or that folder if already WGSEv6/)</td>
 </tr>
 <tr>
 <td><code>temp_directory</code></td>

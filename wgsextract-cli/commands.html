@@ -68,7 +68,7 @@
 <tr>
 <td><code>info</code></td>
 <td>Check a BAM/CRAM: reference build, file health, coverage.</td>
-<td>Prints a summary and caches it as &lt;input file name&gt;.wgse_info.json; with --format also &lt;input file name&gt;_chromosomes and _qc (QC stats) as .tsv or .parquet.</td>
+<td>Prints a summary and caches it as manifests/&lt;input file name&gt;.wgse_info.json; with --format also &lt;input file name&gt;_chromosomes and _qc (QC stats) as .tsv or .parquet.</td>
 <td>samtools; depending on options and inputs, also: bcftools; seconds on a 30x genome</td>
 <td><code>wgsextract info --input sample.cram</code></td>
 </tr>
