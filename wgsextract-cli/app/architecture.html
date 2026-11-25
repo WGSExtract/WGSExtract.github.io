@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="WGS Extract GUI is one TypeScript app, packaged with Tauri for Windows, macOS, and Linux." />
+    <title>WGS Extract GUI architecture</title>
+    <meta property="og:site_name" content="WGS Extract GUI" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="WGS Extract GUI architecture" />
+    <meta property="og:description" content="WGS Extract GUI is one TypeScript app, packaged with Tauri for Windows, macOS, and Linux." />
+    <meta property="og:url" content="https://wgsextract.github.io/wgsextract-cli/app/architecture.html" />
+    <meta property="og:image" content="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
+    <meta property="og:image:secure_url" content="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="WGSExtract social preview showing the desktop app screenshot." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
+    <meta name="twitter:image:alt" content="WGSExtract social preview showing the desktop app screenshot." />
+    <link rel="canonical" href="https://wgsextract.github.io/wgsextract-cli/app/architecture.html" />
+    <link rel="image_src" href="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".82em" font-size="84">%E2%8C%98</text></svg>' />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a href="index.html">Home</a><a class="active" href="architecture.html">GUI Architecture</a><a href="wgsextract.html">WGSExtract</a><a href="docs.html">Docs</a><a href="https://wgsextract.github.io/wgsextract-cli/">WGSExtract CLI</a><a href="whats-different.html">What's Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main>
+      <header class="page-hero">
+        <div class="wrap">
+          <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> GUI Architecture</p>
+          <h1>One TypeScript app, three desktops.</h1>
+          <p class="lede">WGS Extract GUI renders a CLI-tool bundle with a TypeScript Web UI and a local Node backend, and Tauri packages both as a native desktop app for Windows, macOS, and Linux.</p>
+          <div class="actions"><a class="btn primary" href="wgsextract.html">WGS Extract GUI story</a><a class="btn" href="docs.html">Documentation</a></div>
+        </div>
+      </header>
+<section>
+<div class="wrap">
+<div class="grid three">
+<article class="card">
+<div class="kicker">Runtime</div>
+<h3>Shared TypeScript</h3>
+<p>Bundle loading, localization, rendering, setup state, configuration, and command execution live in one TypeScript codebase.</p>
+</article>
+<article class="card">
+<div class="kicker">Backend</div>
+<h3>Local Node server</h3>
+<p>A Node server runs bundle actions and platform-specific setup scripts, streams terminal output, and serves the Web UI on a loopback port behind a per-launch token. Packaged apps include Node; users do not need a separate Node installation.</p>
+</article>
+<article class="card">
+<div class="kicker">Desktop</div>
+<h3>Tauri shell</h3>
+<p>Tauri wraps the Web UI in a native window, bundles the Node runtime, and adds native menus, file pickers, installers, and signed self-updates.</p>
+</article>
+</div>
+</div>
+</section>
+<section>
+<div class="wrap">
+<h2>From bundle to desktop</h2>
+<ul>
+<li><code>app/shared</code> holds shared rendering, localization, and types; <code>app/web/src/client</code> is the browser UI and <code>app/web/src/server</code> owns loading, setup, actions, and config.</li>
+<li>Every bundle load validates its manifest and pages. <strong>Load Bundle...</strong> opens a <code>manifest.json</code> or a <code>.zip</code>, <code>.tar</code>, <code>.tar.gz</code>/<code>.tgz</code>, or gzipped manifest archive on all three platforms.</li>
+<li>Bundle scripts resolve by host platform, with distro-specific Linux folders and a POSIX fallback. The WGSExtract CLI runs natively on Windows without WSL or MSYS2.</li>
+<li>Configuration and workspaces stay in platform-standard app data directories. WGSExtract settings preserve TOML boolean and numeric types; invalid saved types warn and use defaults without rewriting the file.</li>
+<li><code>app/web/packagers/tauri</code> supplies the Rust desktop shell. Installers take their app name and version from the embedded bundle; the WGSExtract app's version is the release tag of the CLI it bundles.</li>
+</ul>
+<p>Tagged releases build on Windows, macOS, and Linux with a signed Tauri updater feed. macOS has separate signed, notarized Apple Silicon and Intel builds, not a universal DMG. Windows and Linux packages are x64; native ARM64 packaging for those platforms is still a follow-up.</p>
+<p><a href="devdocs/distribution.html">Distribution details</a> cover packaging, signing, updates, and uninstall hooks. Earlier SwiftUI, Sparkle, and Electron implementations are not part of the current app.</p>
+</div>
+</section>
+<section>
+<div class="wrap">
+<h2>Privacy and network boundary</h2>
+<p>WGS Extract separates two different user needs across two layers:</p>
+<ul>
+<li><strong>CLI back-end (<code>wgsextract</code>):</strong> Strictly offline by default. Ordinary analysis, inspection, and reporting commands never initiate network traffic, never check for updates, and never install tools or reference files silently. Network access happens only through explicit install/download subcommands or explicit opt-in flags (<code>--download</code>, <code>--online</code>, <code>--remote-sizes</code>, or <code>allow_reference_downloads = true</code>).</li>
+<li><strong>Desktop GUI front-end:</strong> Acts as an interactive assistant on the user's behalf across four transparent tiers: (1) lightweight, opt-out automatic update/catalog checks in Settings (no sample data; IP/header visibility disclosed), (2) interactive <strong>Cancel / Continue / Install and Continue</strong> prompts for missing public reference data, (3) user-clicked Setup, Install, Download, and documentation links, and (4) explicit per-action opt-in for any sample-derived remote feature such as the remote Genome Viewer.</li>
+</ul>
+<p>Read the full contract in <a href="devdocs/architecture.html#privacy-and-network-boundary">GUI Architecture (privacy boundary)</a> and the user-facing <a href="docs/privacy.html">Desktop App Privacy guide</a>.</p>
+</div>
+</section>
+<section>
+<div class="wrap">
+<h2>Running it</h2>
+<pre data-language="bash"><code>make setup    # user-level tools, locked dependencies, hooks, smoke check
+make run      # Web UI in a browser
+make tauri    # desktop app in dev mode
+make package  # installers for this host</code></pre>
+<p>On Windows, use <code>powershell -ExecutionPolicy Bypass -File .\make.ps1 &lt;target&gt;</code> with the same target names. Setup never elevates or installs system packages; see <a href="devdocs/developer_setup.html">developer setup</a> for OS prerequisites.</p>
+</div>
+</section>
+<section>
+<div class="wrap">
+<h2>Earlier experiments</h2>
+<p>Before settling on one app, the project prototyped native SwiftUI and AppKit apps, a Swift CLI, Electron, and renderers in Rust, Go, C++, .NET, Dart, Kotlin, Python, and Mojo, with benchmarks across all of them. That work is preserved on the <a href="https://github.com/theontho/gui-for-cli/tree/old-experimental"><code>old-experimental</code></a> branch.</p>
+</div>
+</section>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>One codebase</strong><p>Bundle behavior lives in the shared TypeScript runtime; Tauri only hosts the window, menus, pickers, and updates.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli">Source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WGS Extract CLI documentation | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/index.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>WGS Extract CLI documentation</span></nav>
+<h1 id="wgs-extract-cli-documentation">WGS Extract CLI documentation</h1>
+<blockquote>
+<p><strong>Scope:</strong> This <code>docs/</code> folder documents <strong>WGS Extract CLI</strong> — the command-line back-end, Python API and local server.</p>
+<p>Looking for the desktop app (GUI front-end)? See the <strong><a href="../app/docs/index.html">desktop app user guides</a></strong> (<a href="https://wgse.bio/wgsextract-cli/app/docs/index.html" target="_blank" rel="noopener noreferrer">rendered web docs</a>) or the <a href="../app/devdocs/index.html">desktop app developer docs</a>.</p>
+</blockquote>
+<p>Start with the <a href="../readme.html#quick-start">README quick start</a>, the <a href="https://wgse.bio/wgsextract-cli/" target="_blank" rel="noopener noreferrer">CLI documentation site</a>, or <code>wgsextract help --all</code>. This index lists every top-level CLI guide; the <a href="https://wgse.bio/wgsextract-cli/commands.html" target="_blank" rel="noopener noreferrer">command reference</a>, <a href="https://wgse.bio/wgsextract-cli/api.html" target="_blank" rel="noopener noreferrer">API</a> and <a href="https://wgse.bio/wgsextract-cli/configuration.html" target="_blank" rel="noopener noreferrer">configuration reference</a> are generated from their sources.</p>
+<h2 id="set-up-and-run">Set up and run<a class="heading-anchor" href="#set-up-and-run" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Guide</th><th>Task</th></tr></thead>
+<tbody>
+<tr><td><a href="installation.html">Installation</a></td><td>Install, pin versions, update or uninstall</td></tr>
+<tr><td><a href="migrating-from-v4.html">Migrating from v4</a></td><td>Map WGS Extract v4 buttons to current pages/commands and read what changed</td></tr>
+<tr><td><a href="usage.html">Running commands</a></td><td>Discover help, understand outputs/progress, log runs or report a problem</td></tr>
+<tr><td><a href="privacy.html">Privacy</a></td><td>Review network permissions and destinations</td></tr>
+<tr><td><a href="windows.html">Windows</a></td><td>Use native Windows tools and GATK</td></tr>
+<tr><td><a href="linux-arm64.html">Linux ARM64</a></td><td>Check supported tools and qualification</td></tr>
+<tr><td><a href="hardware.html">Hardware</a></td><td>Choose CPU/native/GPU acceleration and align safely</td></tr>
+<tr><td><a href="resource_estimates.html">Resource estimates</a></td><td>Plan RAM/disk and benchmark workflows</td></tr>
+<tr><td><a href="apple-silicon-16gb.html">Apple Silicon 16 GB</a></td><td>Read constrained-memory measurements</td></tr>
+<tr><td><a href="https://wgsextract.github.io/wgsextract-cli/configuration.html" target="_blank" rel="noopener noreferrer">Configuration</a></td><td>Set paths, resources, temp placement and keep-awake</td></tr>
+<tr><td><a href="sample-workspace.html">Sample workspace</a></td><td>Organise the dataset library, example genomes and sample facts</td></tr>
+<tr><td><a href="reference-genomes.html">Reference genomes</a></td><td>List, install, verify and delete references; inspect source rights</td></tr>
+<tr><td><a href="calling-reference.html">Calling reference</a></td><td>Choose and verify a reference for calling</td></tr>
+<tr><td><a href="resource-mirrors.html">Download mirrors</a></td><td>Review resource provenance and redistribution rights</td></tr>
+<tr><td><a href="step-resume.html">Step resume</a></td><td>Recover interrupted workflows</td></tr>
+</tbody>
+</table></div>
+<h2 id="export-and-interpret">Export and interpret<a class="heading-anchor" href="#export-and-interpret" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Guide</th><th>Task</th></tr></thead>
+<tbody>
+<tr><td><a href="https://wgsextract.github.io/wgsextract-cli/commands.html" target="_blank" rel="noopener noreferrer">Commands</a></td><td>Find a command starting from your input</td></tr>
+<tr><td><a href="fastq-archive.html">FASTQ archives</a></td><td>Compress and restore reads offline without changing FASTQ bytes</td></tr>
+<tr><td><a href="microarray.html">Microarray</a></td><td>Export consumer files with explicit call/identity policies</td></tr>
+<tr><td><a href="microarray-indels.html">Microarray indels</a></td><td>Supply sequence-defined insertion/deletion probes</td></tr>
+<tr><td><a href="microarray-chm13.html">CHM13 microarrays</a></td><td>Project qualified CHM13 input to hg19/rCRS</td></tr>
+<tr><td><a href="microarray-benchmarks.html">Microarray benchmarks</a></td><td>Review concordance and parallel parity</td></tr>
+<tr><td><a href="aadr.html">AADR</a></td><td>Export research panels as PLINK/EIGENSTRAT</td></tr>
+<tr><td><a href="lineage.html">Lineage</a></td><td>Extract Y/mtDNA, call haplogroups/STRs, set up yBrowse and review data licences</td></tr>
+<tr><td><a href="ftdna-vcf-repair.html">FTDNA VCF repair</a></td><td>Turn legacy Big Y FILTER expressions into declared IDs</td></tr>
+<tr><td><a href="variants.html">Variant workflows</a></td><td>Call/annotate, analyse trios and type pharmacogenes/repeats</td></tr>
+<tr><td><a href="variant-confidence.html">Variant confidence</a></td><td>Understand technical evidence labels and caller accuracy</td></tr>
+<tr><td><a href="../app/docs/genome-viewer.html">Built-in genome viewer</a></td><td>Inspect local reads and variants, or open an extraction result at its locus</td></tr>
+<tr><td><a href="../app/docs/gene-page.html">Gene page</a></td><td>One gene's transcripts, your variants in it and its exon coverage, offline</td></tr>
+<tr><td><a href="caller-ploidy.html">Caller ploidy</a></td><td>Handle sex, PARs and policy masks</td></tr>
+<tr><td><a href="reference-evidence.html">Reference evidence</a></td><td>Distinguish assessed reference from absent calls</td></tr>
+<tr><td><a href="genotype-qc.html">Genotype QC</a></td><td>Interpret depth, homozygosity and no-call warnings</td></tr>
+<tr><td><a href="ont.html">ONT/PacBio</a></td><td>Align, basecall, call, phase and read methylation</td></tr>
+<tr><td><a href="deepvariant-arm64.html">DeepVariant ARM64</a></td><td>Build and validate the native CPU image</td></tr>
+<tr><td><a href="vep-engines.html">VEP engines</a></td><td>Annotate with vep-rs or Ensembl VEP</td></tr>
+<tr><td><a href="exon-callability.html">Exon callability</a></td><td>See which coding exons a gVCF read, and what an unreported gene means</td></tr>
+<tr><td><a href="sv-frequency.html">SV frequencies</a></td><td>Match structural variants to population frequencies</td></tr>
+<tr><td><a href="acmg.html">ACMG</a></td><td>Use research-only classification with fastVEP</td></tr>
+<tr><td><a href="panel.html">Research panels</a></td><td>Write and check a research panel file of genes, filters, sites and haplotypes</td></tr>
+<tr><td><a href="personal-report.html">Personal report</a></td><td>Read findings with links to evidence, not diagnoses</td></tr>
+<tr><td><a href="lookup.html">Lookup</a></td><td>Check a genotype, its evidence and report findings at an rsID, locus or gene</td></tr>
+<tr><td><a href="recheck-and-delta.html">Recheck and delta</a></td><td>Check for newer ClinVar releases; see what changed between reports</td></tr>
+<tr><td><a href="contamination.html">Contamination</a></td><td>Screen for another person's DNA</td></tr>
+<tr><td><a href="relate.html">Relatedness</a></td><td>Check sex, relatedness and continental ancestry</td></tr>
+<tr><td><a href="ancestry.html">Ancestry</a></td><td>Estimate HGDP+1KG component proportions</td></tr>
+<tr><td><a href="roh.html">Runs of homozygosity</a></td><td>Find ROH with population frequencies; review isodisomy flags</td></tr>
+<tr><td><a href="imputation.html">Imputation</a></td><td>Review phasing/imputation workflows and limits</td></tr>
+<tr><td><a href="pgs.html">Polygenic scores</a></td><td>Calculate research scores and inspect their limitations</td></tr>
+</tbody>
+</table></div>
+<h2 id="integrate">Integrate<a class="heading-anchor" href="#integrate" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Guide</th><th>Task</th></tr></thead>
+<tbody>
+<tr><td><a href="interop.html">Professional pipelines / MultiQC</a></td><td>Hand off BAM/CRAM, bring back VCFs and combine QC</td></tr>
+<tr><td><a href="https://wgsextract.github.io/wgsextract-cli/api.html" target="_blank" rel="noopener noreferrer">Python API</a></td><td>Call typed operations from Python</td></tr>
+<tr><td><a href="server.html">Local server</a></td><td>Use HTTP/JSON or MCP with allowed-path restrictions</td></tr>
+<tr><td><a href="result-manifest.html">Result manifest</a></td><td>Consume structured results, warnings and provenance</td></tr>
+<tr><td><a href="output-contracts.html">Output contracts</a></td><td>Know which output fields are stable, experimental or internal</td></tr>
+<tr><td><a href="variant-table.html">Variant table</a></td><td>Query TSV/SQLite output</td></tr>
+<tr><td><a href="parquet.html">Parquet</a></td><td>Use typed tables with DuckDB, Polars or other tools</td></tr>
+</tbody>
+</table></div>
+<h2 id="contribute-and-maintain">Contribute and maintain<a class="heading-anchor" href="#contribute-and-maintain" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Guide</th><th>Task</th></tr></thead>
+<tbody>
+<tr><td><a href="developer_setup.html">Developer setup</a></td><td>Prepare environments, change code and run tests</td></tr>
+<tr><td><a href="install_testing.html">Install testing</a></td><td>Exercise installation and removal</td></tr>
+<tr><td><a href="ci_routing.html">CI routing</a></td><td>Understand selection, certification and readiness</td></tr>
+<tr><td><a href="ci_failures.html">CI failures</a></td><td>Observe failures and apply audited retries</td></tr>
+<tr><td><a href="compiler_caches.html">Compiler caches</a></td><td>Understand build-cache boundaries</td></tr>
+<tr><td><a href="site_generation.html">Site generation</a></td><td>Edit and build website sources</td></tr>
+<tr><td><a href="releasing.html">Releasing</a></td><td>Release the CLI and desktop app together</td></tr>
+<tr><td><a href="bootstrap_compression_results.html">Bootstrap compression results</a></td><td>Read historical compression measurements</td></tr>
+</tbody>
+</table></div>
+<p>Release notes: <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/release-notes/unreleased/README.md" target="_blank" rel="noopener noreferrer">unreleased</a>, <a href="release-notes/v0.8.10.html">v0.8.10</a>, <a href="release-notes/v0.8.9.html">v0.8.9</a>, <a href="release-notes/v0.8.8.html">v0.8.8</a>, <a href="release-notes/v0.8.7.html">v0.8.7</a>, <a href="release-notes/v0.8.6.html">v0.8.6</a>, <a href="release-notes/v0.8.5.html">v0.8.5</a>. Documentation inputs under <code>data/</code> include the <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/data/configuration-guide.md" target="_blank" rel="noopener noreferrer">configuration guide source</a> (rendered into <code>configuration.md</code>) and the <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/data/ont_hg002_manifest.json" target="_blank" rel="noopener noreferrer">ONT HG002 manifest</a>. Desktop app user guides start at <a href="../app/docs/index.html">gui/docs/README.md</a>; developer documentation is in <a href="../app/devdocs/index.html">gui/devdocs/README.md</a> and <a href="../app/readme.html">gui/README.md</a>.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/README.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/README.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

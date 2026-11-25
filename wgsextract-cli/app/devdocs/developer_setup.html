@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Developer setup | WGS Extract GUI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/app/devdocs/developer_setup.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../architecture.html">GUI Architecture</a><a href="../wgsextract.html">WGSExtract</a><a class="active" href="../docs.html">Docs</a><a href="../../index.html">WGSExtract CLI</a><a href="../whats-different.html">What&#x27;s Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract GUI</a> / <a href="index.html">Developer Docs</a> / <span>Developer setup</span></nav>
+<h1 id="developer-setup">Developer setup</h1>
+<p>The app lives in the <code>gui/</code> folder of the wgsextract-cli repository. Clone it, then run one command from <code>gui/</code> (or <code>just gui-setup</code> from the root):</p>
+<pre><code class="language-sh">git clone https://github.com/WGSExtract/wgsextract-cli.git
+cd wgsextract-cli/gui
+make setup</code></pre>
+<p>On Linux/macOS without <code>make</code>, use <code>sh scripts/dev_setup.sh</code> instead. On Windows, use <strong>Windows PowerShell 5.1</strong>, not WSL:</p>
+<pre><code class="language-powershell">git clone https://github.com/WGSExtract/wgsextract-cli.git
+cd wgsextract-cli\gui
+powershell -ExecutionPolicy Bypass -File .\make.ps1 setup</code></pre>
+<h2 id="what-setup-does">What setup does<a class="heading-anchor" href="#what-setup-does" aria-label="Link to section">#</a></h2>
+<ul>
+<li>Installs missing <strong>user-level</strong> uv, Node.js (22+; bootstraps 24.15.0), and Rust/Cargo (minimal stable toolchain). uv supplies Python 3.11+ when needed. Node archives are verified against the publisher's SHA-256 checksums.</li>
+<li>Runs <code>uv sync --locked</code> and <code>npm --prefix app ci</code>; does not rewrite lockfiles.</li>
+<li>Checks tool versions and locked Cargo metadata, compiles TypeScript, starts the real GitHelper server on an ephemeral loopback port, verifies HTTP 200, and stops it. Smoke children use a private app-support container under <code>tmp/dev-setup/</code>, removed afterward; existing GUI sessions are untouched. The smoke log is in <code>tmp/dev-setup/smoke.log</code>.</li>
+<li>Advises about GitHub CLI authentication and an optional AI-agent CLI. It does <strong>not</strong> install or authenticate these, or change your Git identity.</li>
+</ul>
+<p>Safe to rerun. Open a <strong>new terminal</strong> if prompted: setup persists user tool directories for future terminals, but cannot change its parent's PATH. The notice appears when tools or persisted shell/PATH settings changed, or the invoking terminal cannot find uv, Node, or Cargo. This includes an unchanged rerun in the same terminal after installing a missing system prerequisite. On Windows, a pre-existing machine-wide Node can shadow the user-installed Node in a new terminal. Setup warns if that Node is older: remove or upgrade it, or reorder PATH so the printed setup directory comes first. The warning includes a session-only PATH command; setup never changes the machine PATH or execution policy. Existing Bash login profiles (<code>.bash_profile</code> / <code>.bash_login</code>) are updated too. Downloads/installers are from the tools' official HTTPS endpoints; review the scripts before running if your organization requires approval.</p>
+<p>Skip only the quick smoke check with <code>sh scripts/dev_setup.sh --skip-smoke</code> or <code>powershell -ExecutionPolicy Bypass -File scripts\dev_setup.ps1 -SkipSmoke</code>. For browser-only work, add <code>--web-only</code> / <code>-WebOnly</code> to waive desktop prerequisite checks (Rust is still installed). Default setup exits nonzero if desktop system prerequisites are missing, after preparing the Web UI.</p>
+<h2 id="several-worktrees-on-one-machine">Several worktrees on one machine<a class="heading-anchor" href="#several-worktrees-on-one-machine" aria-label="Link to section">#</a></h2>
+<p>Each branch can have its own worktree of the repository, so work in progress on one branch never spills into another. From the repository root (not <code>gui/</code>), run <code>git worktree add ../wgsextract-cli-my-change -b my-change</code>, then run <code>just gui-setup</code> from the new worktree's root. Setup in a new worktree reuses the per-user toolchains and does not reinstall them. What each worktree does repeat:</p>
+<ul>
+<li><code>npm ci</code> into its own <code>app/node_modules</code>, from npm's shared download cache.</li>
+<li>The first <code>make build-tauri</code> or <code>make tauri</code>, which compiles the Rust shell and its several hundred crates into that worktree's <code>target/</code> directory.</li>
+</ul>
+<p>The bundled Node runtime the desktop build ships is downloaded once per user, to <code>~/Library/Caches/wgsextract-gui-dev</code> (macOS), <code>%LOCALAPPDATA%\wgsextract-gui-dev\Cache</code> (Windows), or <code>$XDG_CACHE_HOME/wgsextract-gui-dev</code> (Linux, default <code>~/.cache</code>).</p>
+<p>To avoid recompiling the same crates in every worktree, set up <a href="https://github.com/mozilla/sccache" target="_blank" rel="noopener noreferrer">sccache</a> once. It caches compiled crates per user, so a new worktree's first desktop build reuses them:</p>
+<pre><code class="language-sh">cargo install sccache --locked</code></pre>
+<p>Then add this to Cargo's user config, <code>~/.cargo/config.toml</code> (<code>%USERPROFILE%\.cargo\config.toml</code> on Windows; if a file named just <code>config</code> exists there, Cargo reads that one instead, so edit it):</p>
+<pre><code class="language-toml">[build]
+rustc-wrapper = &quot;sccache&quot;</code></pre>
+<p>sccache's cache keys include absolute paths, so a crate compiled in one worktree only matches in another once each worktree's root, or a folder above them all, is listed in <code>basedirs</code> in sccache's config file (<code>~/.config/sccache/config</code> on Linux, <code>~/Library/Application Support/Mozilla.sccache/config</code> on macOS, <code>%APPDATA%\Mozilla\sccache\config\config</code> on Windows; see <a href="https://github.com/mozilla/sccache/blob/main/docs/Configuration.md" target="_blank" rel="noopener noreferrer">sccache's configuration</a>):</p>
+<pre><code class="language-toml">basedirs = [&#x27;/home/me/src&#x27;]</code></pre>
+<p>On Windows, write the path in single quotes, which TOML takes literally; in double quotes each backslash must be doubled:</p>
+<pre><code class="language-toml">basedirs = [&#x27;C:\Users\me\src&#x27;]</code></pre>
+<p><code>SCCACHE_BASEDIRS</code>, if set, replaces this list. Setup prints an advisory with the line to add until both are configured, and says so if sccache's config isn't valid TOML. Pointing every worktree at one shared <code>target-dir</code> instead is not recommended: Cargo locks the directory, so builds in different worktrees wait on each other, and alternating branches with different dependencies rebuilds them anyway.</p>
+<p>Most changes don't need a desktop build at all. Changes to TypeScript, bundles, and localized strings are checked with <code>make lint</code>, <code>make test</code>, and <code>make dev</code>; build the desktop app only after changing the Tauri shell or packaging.</p>
+<h2 id="manual-prerequisites">Manual prerequisites<a class="heading-anchor" href="#manual-prerequisites" aria-label="Link to section">#</a></h2>
+<p>Setup never runs sudo, elevates, or installs system packages. You need Git and a network connection. Linux/macOS also need curl, tar, and a SHA-256 tool (<code>sha256sum</code> or macOS <code>shasum</code>).</p>
+<ul>
+<li><strong>Debian/Ubuntu:</strong> an administrator runs <code>sudo apt-get update &amp;&amp; sudo apt-get install build-essential pkg-config libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf</code>.</li>
+<li><strong>Fedora:</strong> an administrator runs <code>sudo dnf install gcc gcc-c++ make pkgconf-pkg-config webkit2gtk4.1-devel gtk3-devel libappindicator-gtk3-devel librsvg2-devel patchelf</code>.</li>
+<li><strong>macOS:</strong> <code>xcode-select --install</code>, and accept the Command Line Tools dialog. Signing/notarization credentials are unnecessary for ordinary development.</li>
+<li><strong>Windows:</strong> <a href="https://git-scm.com/download/win" target="_blank" rel="noopener noreferrer">Git for Windows</a>, <a href="https://visualstudio.microsoft.com/visual-cpp-build-tools/" target="_blank" rel="noopener noreferrer">Visual Studio Build Tools</a> with <strong>Desktop development with C++</strong> and a Windows 10/11 SDK, and <a href="https://developer.microsoft.com/microsoft-edge/webview2/" target="_blank" rel="noopener noreferrer">WebView2 Evergreen Runtime</a> (normally included with Windows 11). These may require an administrator. Setup checks SDK UM/UCRT libraries separately from the C++ compiler component.</li>
+</ul>
+<p>The script detects missing desktop prerequisites and prints installation instructions; see also the <a href="https://v2.tauri.app/start/prerequisites/" target="_blank" rel="noopener noreferrer">Tauri prerequisite guide</a>.</p>
+<p>There is <strong>no required sibling wgsextract-cli checkout</strong> for UI development. Start with <code>examples/GitHelper</code>, which uses Git already on PATH. The default WGSExtract bundle's genome actions have separate CLI/runtime/data requirements; install those through its documented bundle setup when you need that workflow. Developer setup does not download genomes or run extraction.</p>
+<h2 id="change-check-pr">Change → check → PR<a class="heading-anchor" href="#change-check-pr" aria-label="Link to section">#</a></h2>
+<pre><code class="language-sh">git switch -c my-change
+make dev BUNDLE=examples/GitHelper
+# Open http://127.0.0.1:8787. Edit a bundle page or a localized string.
+# Stop the server with Ctrl-C before running the checks.
+make lint
+make test
+git add &lt;the-files-you-changed&gt;
+git commit -m &quot;Describe the change&quot;
+git push -u origin my-change
+gh pr create --fill</code></pre>
+<p>Windows: replace each <code>make &lt;target&gt;</code> with <code>powershell -ExecutionPolicy Bypass -File .\make.ps1 &lt;target&gt;</code>. For example:</p>
+<pre><code class="language-powershell">powershell -ExecutionPolicy Bypass -File .\make.ps1 dev BUNDLE=examples/GitHelper
+powershell -ExecutionPolicy Bypass -File .\make.ps1 lint
+powershell -ExecutionPolicy Bypass -File .\make.ps1 test</code></pre>
+<p><code>dev</code> runs the TypeScript watcher and reloadable server on all three platforms. Use Ctrl-C to stop both. The process-scoped execution-policy bypass is required on fresh Windows clients where the default policy is Restricted.</p>
+<p>To work on the GUI and the CLI together, serve the WGSExtract bundle with its CLI running from this checkout (after <code>pixi install</code> at the repository root), so a browser refresh picks up edits to both. Run these from <code>gui/</code>, like the commands above:</p>
+<pre><code class="language-sh">sh scripts/dev-checkout-cli.sh            # Linux/macOS</code></pre>
+<pre><code class="language-powershell">powershell -ExecutionPolicy Bypass -File scripts\dev-checkout-cli.ps1</code></pre>
+<p>It uses your normal users workspace and settings. The repository's <code>.claude/launch.json</code> starts either script in the Claude desktop app's browser pane (<code>wgsextract-gui-dev</code> on Windows, <code>wgsextract-gui-dev-posix</code> elsewhere). For a fork, push to your fork and open a PR against <code>WGSExtract/wgsextract-cli</code>. The repository's pre-commit hooks (installed by the root's developer setup, <code>docs/developer_setup.md</code>) scan staged changes for secrets and run <code>make lint</code> when <code>gui/</code> changes; CI (<code>.github/workflows/gui-*.yml</code>) runs lint and tests on every platform. Run <code>make build-tauri</code> after changing the Tauri shell or packaging. <code>make tauri</code> runs the desktop UI.</p>
+<h2 id="make-an-ai-directed-change">Make an AI-directed change<a class="heading-anchor" href="#make-an-ai-directed-change" aria-label="Link to section">#</a></h2>
+<p>Install and authenticate your preferred agent CLI using its official instructions. Run it from this repository so it reads <code>AGENTS.md</code> / <code>CLAUDE.md</code>. Pick an issue from the <a href="https://github.com/WGSExtract/wgsextract-cli/labels/good%20first%20issue" target="_blank" rel="noopener noreferrer">good-first-issue list</a> and give it a bounded request, for example:</p>
+<blockquote>
+<p>Fix #N. Read the issue and repository instructions, confirm the behavior, implement the acceptance criteria with a regression test, run <code>make lint</code> and <code>make test</code>, and open a PR. Do not merge. Summarize the checks and any limitations.</p>
+</blockquote>
+<p>Review the diff, try the change yourself, and wait for CI before requesting review. The Developer setup CI matrix exercises this setup on fresh Ubuntu, macOS, and Windows runners without tool-setup actions, including reruns, a new-shell PATH check, and a debug desktop build. Hosted runners supply the OS-level prerequisites; the script itself never installs those.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract GUI</strong><p>Rendered from <code>gui/devdocs/developer_setup.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/gui/devdocs/developer_setup.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

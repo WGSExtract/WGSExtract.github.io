@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Documentation map for WGS Extract GUI: the app, bundles, distribution, and static site generation." />
+    <title>WGS Extract GUI documentation map</title>
+    <meta property="og:site_name" content="WGS Extract GUI" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="WGS Extract GUI documentation map" />
+    <meta property="og:description" content="Documentation map for WGS Extract GUI: the app, bundles, distribution, and static site generation." />
+    <meta property="og:url" content="https://wgsextract.github.io/wgsextract-cli/app/docs.html" />
+    <meta property="og:image" content="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
+    <meta property="og:image:secure_url" content="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="WGSExtract social preview showing the desktop app screenshot." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
+    <meta name="twitter:image:alt" content="WGSExtract social preview showing the desktop app screenshot." />
+    <link rel="canonical" href="https://wgsextract.github.io/wgsextract-cli/app/docs.html" />
+    <link rel="image_src" href="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".82em" font-size="84">%E2%8C%98</text></svg>' />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a href="index.html">Home</a><a href="architecture.html">GUI Architecture</a><a href="wgsextract.html">WGSExtract</a><a class="active" href="docs.html">Docs</a><a href="https://wgsextract.github.io/wgsextract-cli/">WGSExtract CLI</a><a href="whats-different.html">What's Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main>
+      <header class="page-hero">
+        <div class="wrap">
+          <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Documentation</p>
+          <h1>Where to go next.</h1>
+          <p class="lede">Start with v0.8.10 downloads or one-command developer setup. Workflow details, distribution, and schemas live close to the code.</p>
+          <div class="actions"><a class="btn primary" href="docs/index.html">User Documentation</a><a class="btn" href="devdocs/index.html">Developer Docs</a><a class="btn" href="architecture.html">GUI Architecture</a></div>
+        </div>
+      </header>
+<section>
+<div class="wrap">
+<div class="grid two">
+<article class="card">
+<div class="kicker">End users</div>
+<h3>User Documentation</h3>
+<p>Guides for Basic and Advanced mode, Reference Data, Reference Genomes, Tools, Settings, Privacy, the built-in Genome Viewer, and the Gene Page.</p>
+<a class="inline-link" href="docs/index.html">Open User Docs</a>
+<a class="inline-link" href="docs/privacy.html">Privacy &amp; network access</a>
+</article>
+<article class="card">
+<div class="kicker">Product</div>
+<h3>Developer README</h3>
+<p>The <code>gui/README.md</code> describes the app layout, setup, common commands, bundles, workspaces, and distribution packaging.</p>
+<a class="inline-link" href="readme.html">Open gui/README</a>
+<a class="inline-link" href="devdocs/index.html">Developer Docs Index</a>
+</article>
+<article class="card">
+<div class="kicker">Development</div>
+<h3>One-command setup</h3>
+<p>Clone the repo and run <code>make setup</code> on Linux/macOS, or <code>powershell -ExecutionPolicy Bypass -File .\make.ps1 setup</code> in Windows PowerShell 5.1. Without make on Linux/macOS, use <code>sh scripts/dev_setup.sh</code>.</p>
+<p>Setup prepares missing user-level uv, Node, and Rust tools, locked dependencies, hooks, and a real Web UI smoke check. It never elevates or installs system packages; the guide lists manual desktop prerequisites. No sibling WGSExtract CLI checkout or genome download is needed for UI development: start with <code>examples/GitHelper</code>.</p>
+<a class="inline-link" href="devdocs/developer_setup.html">Open developer setup</a>
+</article>
+<article class="card">
+<div class="kicker">Releases</div>
+<h3>Current app and CLI: v0.8.10</h3>
+<p>Each WGSExtract CLI release carries the app's installers and the CLI it bundles, with one set of release notes. App releases up to v0.6.6 stay on the former gui-for-cli repository. The changelog tracks the move to one Tauri app, native Windows setup, macOS notarization, and bundle improvements.</p>
+<a class="inline-link" href="https://github.com/WGSExtract/wgsextract-cli/releases">Open releases</a>
+<a class="inline-link" href="docs/CHANGELOG.html">Open changelog</a>
+</article>
+<article class="card">
+<div class="kicker">WGSExtract</div>
+<h3>Current workflows</h3>
+<p>Nanopore handling in existing actions, Clair3 and methylation controls, plus opt-in MultiQC, expanded microarray/AADR exports, targeted Y analysis, and resource requirements. See what is in the app and what is still CLI only.</p>
+<a class="inline-link" href="wgsextract.html">WGSExtract workflows</a>
+<a class="inline-link" href="devdocs/wgsextract-post-v063.html">Post-v0.6.3 feature details</a>
+</article>
+<article class="card">
+<div class="kicker">Schemas</div>
+<h3>Bundle schemas</h3>
+<p><code>manifest.json</code> and page files are described by JSON Schemas in <code>gui/devdocs/schema/</code>.</p>
+<a class="inline-link" href="https://github.com/WGSExtract/wgsextract-cli/tree/main/gui/devdocs/schema">Open schemas on GitHub</a>
+</article>
+<article class="card">
+<div class="kicker">Archive</div>
+<h3>Earlier experiments</h3>
+<p>The SwiftUI app, Swift CLI, prototype renderers, and benchmark reports live on the <code>old-experimental</code> branch.</p>
+<a class="inline-link" href="https://github.com/WGSExtract/gui-for-cli/tree/old-experimental">Open the archive branch</a>
+</article>
+<article class="card">
+<div class="kicker">Distribution</div>
+<h3>Packaging</h3>
+<p>Signing, notarization, Tauri packages for each OS, release artifacts, self-updates, and embedded bundle defaults.</p>
+<a class="inline-link" href="devdocs/distribution.html">Open distribution doc</a>
+</article>
+</div>
+</div>
+</section>
+<section>
+<div class="wrap">
+<h2>Generate this site</h2>
+<p>Edit Markdown in <code>site_src/</code>, then run:</p>
+<pre data-language="bash"><code>python3 scripts/validate_site_sources.py
+python3 scripts/build_site.py
+open site/index.html</code></pre>
+<p>The dependency-free generator writes HTML to <code>site/</code> for GitHub Pages. Commit regenerated HTML alongside source changes; <code>make site</code> is also available.</p>
+<a class="inline-link" href="devdocs/site_generation.html">Site generation guide</a>
+</div>
+</section>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>Documentation map</strong><p>End-user guides live in gui/docs/; developer and bundle docs live in gui/devdocs/.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli">Source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

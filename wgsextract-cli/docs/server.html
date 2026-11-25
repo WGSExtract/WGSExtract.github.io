@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Server mode: HTTP/JSON and MCP | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/server.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Server mode: HTTP/JSON and MCP</span></nav>
+<h1 id="server-mode-httpjson-and-mcp">Server mode: HTTP/JSON and MCP</h1>
+<p><code>wgsextract serve</code> offers WGS Extract's operations to other programs on the same computer: desktop apps, scripts and AI agents. It speaks either a small HTTP/JSON API or the <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener noreferrer">Model Context Protocol</a> (MCP), on stdio or over streamable HTTP.</p>
+<p>Both are generated from the <a href="https://wgsextract.github.io/wgsextract-cli/api.html" target="_blank" rel="noopener noreferrer">typed Python API</a>: the same <code>*Params</code> fields, defaults, config.toml settings, result manifests and error kinds as the CLI. So an operation joins the server as soon as its command moves onto the API. Today they are <code>info</code>, <code>info calculate-coverage</code>, <code>info coverage-sample</code>, <code>info chip</code>, <code>vcf snp</code>, <code>vcf indel</code>, the three <code>lineage</code> commands, <code>microarray</code>, <code>report</code>, <a href="lookup.html"><code>lookup</code></a> and <code>sample show</code>/<code>set</code>/<code>unset</code>.</p>
+<pre><code class="language-console">$ wgsextract serve --allow ~/wgs
+WGS Extract server on http://127.0.0.1:41873/v1
+Token: 3q2Kx...
+  (also in ~/.../state/server/server.json, readable by you only)
+Allowed folders: /home/me/wgs
+Try: curl -H &#x27;Authorization: Bearer 3q2Kx...&#x27; http://127.0.0.1:41873/v1/ops
+Stop with Ctrl-C.</code></pre>
+<p>On macOS and Linux, Ctrl-C or SIGTERM stops either HTTP server with exit status 0 and removes its discovery file, even during the startup announcement.</p>
+<h2 id="security">Security<a class="heading-anchor" href="#security" aria-label="Link to section">#</a></h2>
+<p>The server runs analyses with your permissions, so it only answers programs you start yourself:</p>
+<ul>
+<li>It listens on loopback by default. You can opt into another numeric interface with <code>server.listen</code> or <code>--listen ADDRESS[:PORT]</code>; see <a href="#remote-http-access">Remote HTTP access</a>.</li>
+<li>Every request except <code>GET /v1/health</code> needs <code>Authorization: Bearer &lt;token&gt;</code>. The token is new each time the server starts. It is printed to stderr and saved in <code>&lt;state&gt;/server/server.json</code> (mode 0600), along with the URL and process id, so local clients can find it. Discovery files are published atomically: an interrupted write cannot leave partial JSON or destroy an earlier server's discovery file. The file is removed when the server stops, unless a newer server has replaced it.</li>
+<li>Requests whose <code>Host</code> header isn't <code>127.0.0.1:&lt;port&gt;</code> or <code>localhost:&lt;port&gt;</code>, and requests whose <code>Origin</code> is a different site, are refused. This stops a web page in your browser from reaching the server through DNS rebinding or cross-site requests.</li>
+<li><strong>Paths are guarded.</strong> Every path parameter must be absolute. Network and device paths (<code>\\host\share</code>, <code>//host/share</code>, <code>\\?\…</code>, <code>\\.\…</code>) are refused on every system before anything is opened, since Windows sends your sign-in credentials to any host whose share it opens. A path must lie inside an allowed folder as written (with <code>..</code> removed); only then are its symlinks resolved, and the result must lie inside one too. The allowed folders are those given with <code>--allow</code>, the <code>server_allowed_paths</code> setting, and the <code>dataset_library</code>, <code>reference_library</code>, <code>reference_genome_library</code> and <code>output_directory</code> settings. Of the settings, only the folders that exist are allowed; a missing <code>--allow</code> folder stops the server. Folders a command derives from a path are checked too: a <code>ref</code> FASTA in a <code>genomes</code> folder names the library above it, which must also be allowed. A leading <code>~</code> in a path is expanded before it is checked; a text value that may name a file (a region, an output name) must give it as an absolute path, without <code>~</code>. A symlink inside an allowed folder that points outside it is refused. That holds for the paths a request names; the files a command finds inside a named folder (a reference library's genomes, a model folder's weights, a checkpoint's files) aren't generally checked one by one. The yBrowse installer checks the paths it derives for snapshots, the liftover chain and its staging files, and the reference FASTA and its indexes. The guard limits what a client can name. It is not a sandbox against other programs running as you, which can change the allowed folders (for example retarget a symlink) whatever the server does.</li>
+<li><strong>Paths recorded in manifests.</strong> <code>report</code> reads the outputs that earlier runs' manifests list. Run by the server, it reads only those inside the allowed folders, so a manifest can't lead it to other files.</li>
+<li><strong>Regions can't pass for options.</strong> A <code>region</code> item that starts with <code>-</code> is refused (on the CLI and the API too), and commands pass regions to samtools and tabix after <code>--</code>.</li>
+<li><strong>Deleting needs an opt-in.</strong> Requests that delete data a command didn't make are refused (403 <code>destructive</code>) unless the server was started with <code>--allow-destructive</code>: <code>bam unindex</code>, <code>sample unset</code>, <code>ref library-delete</code> (<code>ref library --delete</code>), and <code>ref gene-map</code>, <code>ref dense-sa</code> and <code>ref test-genome</code> with <code>delete</code>. Over MCP, <code>bam_unindex</code>, <code>sample_unset</code> and <code>ref_library_delete</code> are offered only then, and their tools carry <code>destructiveHint</code>. Regenerating a command's own outputs (<code>restart</code>, <code>force_*</code>) isn't deleting in this sense.</li>
+<li>Parameters that name programs to run, such as <code>haplogrep_path</code>, or that hide paths inside other text, such as <code>indel_manifest</code>, can't be set by a request. They come from config.toml as usual.</li>
+<li>Supplied paths are checked before output inference can inspect an input archive. The effective output folder is then checked too, including its real path. Other host-only config defaults stay trusted execution settings; they do not become client-supplied paths.</li>
+<li><code>ref download</code>, which fetches any URL, and <code>ref bootstrap</code>, which saves config.toml, aren't offered.</li>
+<li>Request bodies are limited to 1 MB and must be <code>application/json</code>. Unknown parameters are rejected rather than ignored.</li>
+<li>HTTP connection admission includes unauthenticated peers and defaults to 32 concurrent sockets (<code>server.max_connections</code>). Excess connections close without allocating a request thread. Request headers and keep-alive idle connections have an absolute 10-second deadline (<code>server.header_timeout_seconds</code>); dripping bytes does not extend it. Completed headers cancel this deadline, so long job waits, event streams and file responses can continue.</li>
+<li>Over MCP, only read-only queries are offered unless you pass <code>--allow-jobs</code>. Without it, they save nothing: parameters that would save files (<code>outdir</code>, <code>table_format</code>, and <code>info</code>'s <code>detailed</code>, which saves the coverage table) are left out of the tool schemas and refused with <code>read_only</code>, and <code>info</code> runs with <code>cache: false</code>, so it reads an existing <code>&lt;input&gt;.wgse_info.json</code> but doesn't write one. Result cards are off, even with <code>--card</code> or <code>result_card = true</code>.</li>
+<li>Job records and logs (<code>&lt;state&gt;/server/jobs/</code>) are readable by you only.</li>
+</ul>
+<h2 id="http-api">HTTP API<a class="heading-anchor" href="#http-api" aria-label="Link to section">#</a></h2>
+<p>Responses are compact JSON, except viewer file bytes. Errors are <code>{&quot;error&quot;: {&quot;code&quot;: &quot;...&quot;, &quot;message&quot;: &quot;...&quot;}}</code> with an HTTP status code:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Status</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td>400</td><td>Bad parameters: <code>usage</code>, <code>bad_json</code> or <code>bad_length</code></td></tr>
+<tr><td>401</td><td>Missing or wrong token</td></tr>
+<tr><td>403</td><td>A path outside the allowed folders (<code>path_not_allowed</code>), a request that deletes data (<code>destructive</code>), or a bad Host or Origin</td></tr>
+<tr><td>404</td><td>Unknown operation or job</td></tr>
+<tr><td>409</td><td>Cancelling a finished job</td></tr>
+<tr><td>411</td><td>Missing <code>Content-Length</code> on an operation submission</td></tr>
+</tbody>
+</table></div>
+<p>A failed analysis is not an HTTP error. Its job finishes with status <code>failed</code> and the manifest's <code>error</code>.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Request</th><th>Does</th></tr></thead>
+<tbody>
+<tr><td><code>GET /v1/health</code></td><td><code>{&quot;ok&quot;: true, &quot;version&quot;: ...}</code>; needs no token</td></tr>
+<tr><td><code>GET /v1</code></td><td>Index and the allowed folders</td></tr>
+<tr><td><code>GET /v1/openapi.json</code></td><td>The OpenAPI 3.1 document, also <code>wgsextract serve --openapi</code></td></tr>
+<tr><td><code>GET /v1/ops</code></td><td>Operations: <code>op</code>, <code>kind</code> (<code>query</code> or <code>job</code>), <code>destructive</code> when a request may delete data, and a one-line summary</td></tr>
+<tr><td><code>GET /v1/ops/{op}</code></td><td>One operation and the JSON Schema of its parameters</td></tr>
+<tr><td><code>POST /v1/ops/{op}?wait=S&amp;card=1</code></td><td>Start the operation as a job; the body is its parameters. <code>card</code> asks for its result card (or not), overriding <code>serve --card</code> and <code>result_card</code></td></tr>
+<tr><td><code>GET /v1/jobs?status=</code></td><td>Jobs, newest last</td></tr>
+<tr><td><code>GET /v1/jobs/{id}?wait=S&amp;full=1</code></td><td>A job; with <code>wait</code>, block up to S seconds (≤600) for it to finish</td></tr>
+<tr><td><code>GET /v1/jobs/{id}/events</code></td><td>Server-sent events: status changes and progress; ends when the job does</td></tr>
+<tr><td><code>GET /v1/jobs/{id}/log?tail=N</code></td><td>The last N lines of the job's log (default 200; 0 for all)</td></tr>
+<tr><td><code>DELETE /v1/jobs/{id}</code></td><td>Cancel a queued or running job</td></tr>
+<tr><td><code>POST /v1/jobs/{id}/rerun</code></td><td>Start a new job with the same parameters</td></tr>
+<tr><td><code>GET /v1/manifest?path=&amp;full=1</code></td><td>A result manifest (<code>*.manifest.json</code>); <code>provenance</code> only with <code>full=1</code></td></tr>
+<tr><td><code>GET /v1/variants?path=&amp;gene=&amp;rsid=&amp;region=&amp;clinvar=&amp;min_confidence=&amp;columns=&amp;limit=&amp;cursor=</code></td><td>Rows of a <code>vcf table</code> output; see <a href="#lookups">Lookups</a></td></tr>
+<tr><td><code>GET /v1/report?path=&amp;section=</code></td><td>A sample's personal report; see <a href="#lookups">Lookups</a></td></tr>
+<tr><td><code>GET</code> / <code>HEAD /v1/viewer-file?path=</code></td><td>Read a guarded file or byte range, only with <code>server.viewer_files = true</code></td></tr>
+</tbody>
+</table></div>
+<p>Operation names are the CLI command with <code>/</code> between words: <code>info</code>, <code>info/chip</code>, <code>vcf/snp</code>, <code>lineage/mt-haplogroup</code>, <code>sample/show</code>. Parameters are the API's Params fields, for example:</p>
+<pre><code class="language-sh">curl -H &quot;Authorization: Bearer $TOKEN&quot; -H &#x27;Content-Type: application/json&#x27; \
+  &quot;$URL/ops/vcf/snp&quot; -d &#x27;{&quot;input&quot;: &quot;/home/me/wgs/HG002.cram&quot;, &quot;region&quot;: &quot;chrM&quot;, &quot;ploidy&quot;: &quot;1&quot;}&#x27;
+# 202 {&quot;id&quot;:&quot;20260105-100425-986af7&quot;,&quot;op&quot;:&quot;vcf/snp&quot;,&quot;kind&quot;:&quot;job&quot;,&quot;status&quot;:&quot;running&quot;,...}
+curl -N -H &quot;Authorization: Bearer $TOKEN&quot; &quot;$URL/jobs/20260105-100425-986af7/events&quot;
+curl -H &quot;Authorization: Bearer $TOKEN&quot; &quot;$URL/jobs/20260105-100425-986af7?wait=600&quot;</code></pre>
+<p>A submission can include <code>X-WGSE-Job-ID</code> with a client-generated lowercase UUIDv4. The HTTP server advertises this as <code>&quot;client_job_ids&quot;: true</code> in its discovery file and <code>--ready-json</code> output. If the reply is lost, look up the original job with <code>GET /v1/jobs/{id}</code>. After reading the request body, the server returns <code>409</code> if that ID already exists, without decoding the JSON or starting a second job. A lookup that does not find the job is not proof that a submission still in flight was rejected.</p>
+<p><code>POST</code> answers 200 if the job has finished by the end of <code>wait</code>, otherwise</p>
+<ol>
+<li>A job record holds <code>status</code> (<code>queued</code>, <code>running</code>, <code>succeeded</code>,</li>
+</ol>
+<p><code>failed</code>, <code>cancelled</code> or <code>interrupted</code>), the latest <code>progress</code>, the <code>exit_code</code> and <code>error</code>, and the operation's result manifest as <code>result</code>. The manifest's <code>provenance</code> (tool versions and the full parameters) appears only with <code>full=1</code>, to keep responses short.</p>
+<p>Operation submissions require <code>Content-Length</code> (use <code>0</code> for an empty body). Requests using <code>Transfer-Encoding</code> are rejected with 400. The server closes the connection if it cannot read the complete request body within 10 seconds.</p>
+<p>The event stream keeps the latest 1,024 events per job for active jobs and the 128 most recently finished jobs. Reconnecting with an older event ID returns only the events still in memory. Older job records and logs remain available on disk, but their events are not replayed. Job listings use a compact on-disk index rebuilt from the records on startup.</p>
+<h3 id="lookups">Lookups<a class="heading-anchor" href="#lookups" aria-label="Link to section">#</a></h3>
+<p>The server answers three read-only lookups itself, without a job, over HTTP (<code>GET /v1/manifest</code>, <code>/v1/variants</code>, <code>/v1/report</code>) and MCP (tools <code>read_manifest</code>, <code>query_variants</code>, <code>report_section</code>). Their paths must be in an allowed folder.</p>
+<p>Manifest and report readers check the document identifier and the object containers they use, not the complete writer schema. Returned field values remain opaque rather than being coerced or cast to canonical writer models. Canonical result/report writer records are generated separately for clients in <code>gui/app/shared/generated/result-records.ts</code> and <code>report-records.ts</code>; those complete contracts must not be substituted for compact or unvalidated loaded documents in server responses. Manifest lookups preserve unknown fields and their values, except that <code>provenance</code> is omitted unless <code>full=1</code>. Report responses project a header with the report file's <code>path</code> plus <code>generated</code>, <code>sample</code> and <code>disclaimer</code>; other top-level report fields are omitted, even when requesting a section. Without <code>section</code>, each section is projected to only <code>status</code> and <code>summary</code>. With <code>section</code>, all fields of the selected section, including unknown extension fields, are merged into that projected header (section fields win on key collisions).</p>
+<ul>
+<li><strong>Variants.</strong> <code>path</code> is a <a href="variant-table.html"><code>vcf table</code></a> output: <code>*_variants.sqlite</code>, <code>.tsv</code> or <code>.parquet</code> (needs pyarrow). The filters combine: <code>gene</code> (symbol), <code>rsid</code> (one rsID), <code>region</code> (<code>chr1</code>, <code>chr1:1000</code> or <code>chr1:1000-2000</code>, named as in the table), <code>clinvar</code> (a ClinVar significance term such as <code>Pathogenic</code>, case-insensitive) and <code>min_confidence</code> (<code>low</code>, <code>moderate</code> or <code>high</code>). <code>columns</code> picks columns (comma-separated over HTTP); empty values are left out. An answer has at most <code>limit</code> rows (default 50, at most 1000); pass its <code>next_cursor</code> as <code>cursor</code> for the next page. The SQLite database is fastest: it uses its gene and position indexes, and starts a page at its cursor. A TSV or Parquet table is read from the start for every page, so use SQLite for paging through large tables. A page whose rows have automated ACMG classes (<code>acmg_*</code> columns, from <a href="acmg.html"><code>vcf acmg</code></a>) also has <code>disclaimer</code>: they are research only, not a diagnosis. Boolean query parameters take <code>true</code>/<code>false</code>, <code>yes</code>/<code>no</code> or <code>1</code>/<code>0</code>.</li>
+<li><strong>Report.</strong> <code>path</code> is a sample folder, whose newest <code>*_personal_report.json</code> is read, or the report JSON itself (run the <code>report</code> operation first). Without <code>section</code>, the answer lists each section's <code>status</code> and <code>summary</code>; with <code>section</code> (for example <code>pharmacogenomics</code>), it is that section in full, with its findings.</li>
+</ul>
+<pre><code class="language-sh">curl -H &quot;Authorization: ******&quot; \
+  &quot;$URL/variants?path=/home/me/wgs/HG002/HG002_variants.sqlite&amp;clinvar=Pathogenic&amp;min_confidence=high&quot;
+# 200 {&quot;path&quot;: &quot;...&quot;, &quot;rows&quot;: [{&quot;chrom&quot;: &quot;chr17&quot;, &quot;pos&quot;: 43094464, &quot;gene&quot;: &quot;BRCA1&quot;, ...}], &quot;next_cursor&quot;: null}</code></pre>
+<h3 id="jobs">Jobs<a class="heading-anchor" href="#jobs" aria-label="Link to section">#</a></h3>
+<ul>
+<li><strong>Queries and jobs.</strong> Quick queries (<code>info</code>, <code>info/chip</code>, <code>sample/show</code>, <code>ref/status</code>, <code>ref/library-list</code>) start at once. Other operations queue: <code>--max-jobs</code> (setting <code>server_max_jobs</code>, default 1) of them run at a time. Jobs that save to the same folder run one after another, since commands use fixed file names there. <code>ref/index</code>, <code>ref/count-ns</code> and <code>ref/verify</code> save beside their FASTA, so they need no <code>outdir</code>; given a library folder, they also hold its <code>genomes</code> folder. The library installers hold their library and its <code>genomes</code> folder.</li>
+<li><strong>Isolation.</strong> Each job runs the API function in its own worker process. A crash or a cancel affects only that job. Its log, at the CLI's log level (<code>--debug</code> for more), is <code>&lt;state&gt;/server/jobs/&lt;id&gt;.log</code>. A worker gets its job only once the job is recorded as running. If the worker can't be started, recorded or given its job (a full disk, say), the job fails with the reason in its <code>error</code>, the worker is stopped and the slot freed.</li>
+<li><strong>Cancelling.</strong> A queued job is cancelled immediately. A running job gets the API's <code>CancelToken</code>: tools stop, including running containers, and the manifest is written with status <code>cancelled</code> (exit code 130). If the job is still running 30 seconds later, it is killed. As on the CLI, partial outputs are kept unless the <code>atomic_outputs</code> setting is on. <code>align</code> is an always-atomic exception: its failed or cancelled validation/writes preserve previous completed outputs.</li>
+<li><strong>Persistence.</strong> Job records are kept in <code>&lt;state&gt;/server/jobs/&lt;id&gt;.json</code>, so a restarted server still lists the earlier jobs and their results. A finished job whose record can't be saved yet stays listed and is saved once the disk recovers, when another job finishes. Jobs that were queued or running when a server stopped are marked <code>interrupted</code>. Start them again with <code>rerun</code>; commands with step-level resume (<a href="step-resume.html">step-resume.md</a>) continue from their last finished step. One HTTP server uses a state folder at a time; a second one refuses to start.</li>
+</ul>
+<h3 id="remote-http-access">Remote HTTP access<a class="heading-anchor" href="#remote-http-access" aria-label="Link to section">#</a></h3>
+<p>You choose the listening interface. The HTTP/JSON listener accepts numeric IPv4 or IPv6 addresses without forward or reverse DNS resolution. <code>--listen</code> overrides <code>server.listen</code>. An explicit <code>--port</code> overrides any port embedded in either listen value. Without <code>--port</code>, an embedded listen port overrides <code>server_port</code>. Use <code>[::1]:8080</code> for IPv6 with a port. MCP listeners remain loopback-only.</p>
+<p>For a remote connection, configure the HTTP server before starting it:</p>
+<pre><code class="language-toml">[server]
+listen = &quot;0.0.0.0:8080&quot;
+public_url = &quot;https://genomes.example&quot;
+allowed_hosts = [&quot;genomes.example:8080&quot;, &quot;genomes.example&quot;]
+allowed_origins = [&quot;https://app.example&quot;]
+viewer_files = true</code></pre>
+<p>Non-loopback binds require a nonempty bearer token, an explicit Host list and <code>server.public_url</code> (or <code>--public-url</code>). Set this advertised origin to the connectable URL clients should use, including HTTPS and the external port when you have a TLS proxy. Its canonical authority must appear in <code>allowed_hosts</code>. It cannot be a wildcard bind address. The setting publishes an address; it does not configure TLS or expand the request Host allowlist. Discovery, ready JSON, curl hints and OpenAPI use this public URL; <code>bind_url</code> in non-loopback discovery and the startup warning identify the actual listening interface separately. The public URL option is for non-loopback listeners only. A loopback bind with a saved public URL refuses to start rather than advertise an authority its strict Host policy would reject. An explicit loopback <code>--listen</code> selects local mode and ignores the saved public URL unless you also pass <code>--public-url</code>. The bundled desktop server pins <code>--listen 127.0.0.1 --port 0</code>; its client accepts only numeric loopback ready URLs and refuses redirects before sending tokens or sample parameters. The separately configured remote viewer is an explicit opt-in and does not change ordinary job destinations.</p>
+<p>The CLI generates a fresh token at startup; give it to the remote client through a private channel. Remote health requests also require it. The startup warning names the interface and exposed API: anyone with this token can start jobs, cancel them, read logs and lookups, and read viewer files when enabled. Existing destructive-operation and path guards still apply.</p>
+<p>Use HTTPS outside a trusted encrypted tunnel. The built-in listener speaks HTTP, not TLS: you provide a TLS reverse proxy and its certificate, including certificate renewal. For example, keep <code>listen = &quot;127.0.0.1:8080&quot;</code> behind a loopback proxy, or bind a private backend interface and firewall it so only your proxy can reach it. A loopback backend retains strict loopback Host/Origin checks; configure the proxy to send the backend's exact loopback Host and omit Origin for backend-to-backend requests. For a non-loopback backend, preserve an authority in <code>allowed_hosts</code>. Neither mode trusts <code>Forwarded</code> or <code>X-Forwarded-*</code> to expand its allowlist. Install your operator-provided certificate on the proxy; the CLI does not fetch certificates or configure it. Plaintext HTTP exposes tokens and genomic bytes to anyone who can observe traffic. Limit network access and proxy logs, especially query strings containing genome paths, to your intended clients.</p>
+<p>Non-loopback listeners accept only exact <code>allowed_hosts</code> entries and configured <code>allowed_origins</code> when a request includes Origin. List scheme, hostname and port (if present) for each origin; no wildcard, userinfo, path or trailing slash. Native backend clients can omit Origin. A loopback listener keeps its existing same-origin checks for the job API regardless of these lists.</p>
+<p><strong>Viewer files are off by default.</strong> Enable them with <code>server.viewer_files</code>. Clients send a bearer token in a header, not a URL or cookie. You allow file paths through <code>server.guard.roots</code>: the same canonical roots established by <code>--allow</code>, <code>server_allowed_paths</code> and existing configured libraries. The endpoint rejects <code>..</code>, network/device paths, symlink escapes, directories and other non-regular files. It provides no directory listing.</p>
+<p>On Windows, use an absolute path under a canonical allowed root on a local drive. UNC paths and mapped network drives are not supported. The server opens each component relative to a pinned directory handle and refuses symlinks, junctions and other reparse points along the path, even if they point inside an allowed root. Use the file's direct local path instead.</p>
+<p>On Unix, the server pins the canonical path with directory-relative, no-follow opens. On platforms without a safe open method, file serving fails closed with 503 <code>viewer_unavailable</code>; the job API remains available. The path guard is not a sandbox against other programs running as you.</p>
+<p>Send <code>Range: bytes=START-END</code> for a closed byte range. The endpoint supports suffix and open-ended ranges too; those and whole-file reads have a 32 MiB fallback limit. Closed ranges can exceed that limit and stream in 64 KiB chunks. An invalid, multipart, unsatisfiable or oversized fallback range returns 416 with <code>Content-Range: bytes */SIZE</code>. <code>HEAD</code> returns the same metadata without bytes, except that a <code>HEAD</code> with no <code>Range</code> returns 200 and the full <code>Content-Length</code> for a file of any size. Read/seek failures after response headers abort the connection instead of inserting an error response into the genomic bytes. Clients must reject an incomplete body. For browser requests, only an exact configured app origin receives CORS access, including preflight for <code>Authorization</code> and <code>Range</code>. The endpoint sends no wildcard CORS or credential/cookie permission. Keep the general API token in your trusted client backend; do not give it to a genome viewer page.</p>
+<h2 id="mcp">MCP<a class="heading-anchor" href="#mcp" aria-label="Link to section">#</a></h2>
+<p><code>wgsextract serve --mcp</code> speaks MCP over stdin and stdout: one JSON-RPC message per line, protocol versions 2024-11-05 to 2025-11-25. It needs no extra packages. Logs go to stderr. Configure your client to start it, for example:</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;wgsextract&quot;: {
+      &quot;command&quot;: &quot;wgsextract&quot;,
+      &quot;args&quot;: [&quot;serve&quot;, &quot;--mcp&quot;, &quot;--allow&quot;, &quot;/home/me/wgs&quot;]
+    }
+  }
+}</code></pre>
+<p>Tools are named after the operations, with <code>_</code> between words: <code>info</code>, <code>info_chip</code>, <code>lookup</code>, <code>sample_show</code>, and with <code>--allow-jobs</code> also <code>vcf_snp</code>, <code>lineage_mt_haplogroup</code> and the others. Each tool's input schema is its Params' JSON Schema. These tools are always offered:</p>
+<ul>
+<li><code>read_manifest</code>, <code>query_variants</code> and <code>report_section</code>: the <a href="#lookups">lookups</a>.</li>
+<li><code>list_jobs</code>: list the jobs.</li>
+<li><code>job_status</code>: a job's status and result. <code>wait_seconds</code> waits for the job to finish.</li>
+</ul>
+<p>With <code>--allow-jobs</code>, <code>cancel_job</code> is offered too. Each MCP session has its own jobs, so several agents can run servers at once. When the client disconnects, its running jobs are cancelled and the session's job records are removed; outputs and their manifests stay where the jobs saved them.</p>
+<ul>
+<li><strong>Query tools</strong> wait for the result. They send <code>notifications/progress</code> when the client gives a <code>progressToken</code>, and are cancelled by <code>notifications/cancelled</code>.</li>
+<li><strong>Job tools</strong> return the started job at once. Follow it with <code>job_status</code>.</li>
+</ul>
+<p>Results are the job record, as <code>structuredContent</code> and as compact JSON text. A failed analysis or a refused path is a result with <code>isError: true</code> that says why, so the agent can correct itself.</p>
+<h3 id="mcp-over-streamable-http">MCP over streamable HTTP<a class="heading-anchor" href="#mcp-over-streamable-http" aria-label="Link to section">#</a></h3>
+<p><code>wgsextract serve --mcp-transport http</code> serves the same tools over MCP's streamable HTTP transport, for clients that connect to a running server rather than start one. It needs the optional <code>mcp</code> package, the official MCP Python SDK: <code>pip install &#x27;wgsextract-cli[mcp]&#x27;</code>, or <code>pixi run -e mcp</code> from a source checkout (the <code>dev</code> environment has it too). Without it, the command stops and says so; stdio needs nothing extra.</p>
+<pre><code class="language-console">$ wgsextract serve --mcp-transport http --allow ~/wgs
+WGS Extract MCP server (streamable HTTP) on http://127.0.0.1:41874/mcp (read-only queries)
+Token: 9fJw2...
+  (also in ~/.../state/server/mcp.json, readable by you only)
+Allowed folders: /home/me/wgs</code></pre>
+<p>Point your client at the URL and send the token as a bearer token, for example:</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;wgsextract&quot;: {
+      &quot;type&quot;: &quot;http&quot;,
+      &quot;url&quot;: &quot;http://127.0.0.1:41874/mcp&quot;,
+      &quot;headers&quot;: { &quot;Authorization&quot;: &quot;Bearer 9fJw2...&quot; }
+    }
+  }
+}</code></pre>
+<p>The token and port are new each launch unless you fix the port with <code>--port</code> or <code>server_mcp_port</code>; a client can read both from <code>mcp.json</code>. The server is guarded like the HTTP API: it listens on 127.0.0.1 only, refuses requests without the token (401 <code>unauthorized</code>) or with a foreign <code>Host</code> or <code>Origin</code> (403 <code>bad_host</code>, <code>bad_origin</code>), and limits request bodies to 1 MB. The tools, <code>--allow-jobs</code>, <code>--allow-destructive</code> and the path guard are the same as on stdio.</p>
+<p>Unlike stdio, every client of one server shares its job list: anyone with the token sees and, with <code>--allow-jobs</code>, can cancel all of its jobs. A query whose call is cancelled, or whose client disconnects, cancels its job. Started jobs run until they finish or the server stops, which cancels the running ones and removes the job records, as on stdio.</p>
+<h2 id="settings-and-options">Settings and options<a class="heading-anchor" href="#settings-and-options" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Setting</th><th>Option</th><th>Default</th></tr></thead>
+<tbody>
+<tr><td><code>server_port</code></td><td><code>--port</code></td><td>0: any free port</td></tr>
+<tr><td><code>server.listen</code></td><td><code>--listen ADDRESS[:PORT]</code> (HTTP/JSON only)</td><td>127.0.0.1</td></tr>
+<tr><td><code>server.public_url</code></td><td><code>--public-url ORIGIN</code></td><td>unset; required for non-loopback</td></tr>
+<tr><td><code>server.max_connections</code></td><td></td><td>32</td></tr>
+<tr><td><code>server.header_timeout_seconds</code></td><td></td><td>10 seconds, headers and keep-alive idle only</td></tr>
+<tr><td><code>server.allowed_hosts</code></td><td></td><td>none; required for non-loopback</td></tr>
+<tr><td><code>server.allowed_origins</code></td><td></td><td>none; exact app-origin CORS for viewer files</td></tr>
+<tr><td><code>server.viewer_files</code></td><td></td><td>false</td></tr>
+<tr><td><code>server_allowed_paths</code></td><td><code>--allow DIR</code> (adds)</td><td>none, plus the library and output folders</td></tr>
+<tr><td><code>server_max_jobs</code></td><td><code>--max-jobs</code></td><td>1</td></tr>
+<tr><td><code>server_mcp_transport</code></td><td><code>--mcp-transport stdio|http</code> (implies <code>--mcp</code>)</td><td>stdio</td></tr>
+<tr><td><code>server_mcp_port</code></td><td><code>--port</code>, for MCP over HTTP</td><td>0: any free port</td></tr>
+<tr><td></td><td><code>--allow-destructive</code></td><td>off: requests that delete data are refused</td></tr>
+<tr><td></td><td><code>--ready-json</code></td><td>off: the address is only printed to stderr and saved</td></tr>
+</tbody>
+</table></div>
+<p>Workers use the same config.toml as the server (<code>--config</code>). A request parameter that is left out takes its setting, as on the CLI.</p>
+<p>A program that starts the server itself, such as a desktop app, passes <code>--ready-json</code>. Once the server listens, it prints <code>{&quot;url&quot;: ..., &quot;token&quot;: ..., &quot;pid&quot;: ...}</code> as one JSON line on stdout, so the program needn't parse the banner or find the state folder. It works for the HTTP API and MCP over HTTP, not MCP over stdio, and not with <code>--json</code>. If the server can't start, for example because another server holds the state folder, it prints <code>{&quot;error&quot;: {&quot;message&quot;: ...}}</code> instead and exits. Such a program should also pass the global <code>--parent-pid</code> with its own process ID (<code>wgsextract --parent-pid PID serve ...</code>), so the server exits when the program dies, even when it is killed.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/server.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/server.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

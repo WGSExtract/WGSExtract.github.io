@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Developer setup | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/developer_setup.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Developer setup</span></nav>
+<h1 id="developer-setup">Developer setup</h1>
+<h2 id="set-up-a-machine">Set up a machine<a class="heading-anchor" href="#set-up-a-machine" aria-label="Link to section">#</a></h2>
+<p>macOS or Linux:</p>
+<pre><code class="language-bash">git clone https://github.com/WGSExtract/wgsextract-cli.git
+cd wgsextract-cli
+./scripts/dev_setup.sh</code></pre>
+<p>Windows (PowerShell; no WSL or MSYS2 needed):</p>
+<pre><code class="language-powershell">git clone https://github.com/WGSExtract/wgsextract-cli.git
+cd wgsextract-cli
+powershell -ExecutionPolicy Bypass -File scripts\dev_setup.ps1</code></pre>
+<p>The script needs only git (and the Xcode Command Line Tools on macOS). It:</p>
+<ol>
+<li>Installs <a href="https://pixi.sh" target="_blank" rel="noopener noreferrer">Pixi</a> for your user if it's missing. Pixi provides Python and every bioinformatics tool.</li>
+<li>Installs the <code>default</code> and <code>dev</code> Pixi environments exactly as locked in <code>pixi.lock</code>. The first run downloads a few GB.</li>
+<li>Installs <a href="https://just.systems" target="_blank" rel="noopener noreferrer">just</a> with <code>pixi global install just</code> if it's missing.</li>
+<li>Installs the pre-commit hooks (ruff, shellcheck, gitleaks, whitespace).</li>
+<li>Runs <code>wgsextract --version</code>, <code>wgsextract deps check</code> and the quick smoke tests.</li>
+<li>Lists anything else worth having: a git identity, the GitHub CLI (<code>gh</code>), and an AI coding agent.</li>
+</ol>
+<p>Pixi <strong>0.82.0 or newer</strong> is required (declared in <code>pixi.toml</code>, kept in agreement with CI). Setup checks existing installations before loading the manifest; it never updates them automatically. If yours is older, run <code>pixi self-update</code> and rerun setup.</p>
+<p><code>deps check</code> marks tools in optional Pixi environments (GATK, VEP, DeepVariant, ...) as missing. That's expected: install one when you need it with the <code>pixi install</code> command <code>deps check</code> prints. When the script installs Pixi or <code>just</code>, open a new terminal before using them (or add <code>~/.pixi/bin</code>, <code>%USERPROFILE%\.pixi\bin</code> on Windows, to <code>PATH</code>). Rerun the script at any time; <code>just setup</code> does the same once <code>just</code> is installed. <code>--skip-tests</code> (<code>-SkipTests</code> on Windows) skips the smoke tests.</p>
+<h3 id="pixi-environments">Pixi environments<a class="heading-anchor" href="#pixi-environments" aria-label="Link to section">#</a></h3>
+<p>Optional tools live in separate environments. From a source checkout or the installed <code>wgsextract-cli/app/</code>, run <code>pixi install --locked -e &lt;environment&gt;</code> explicitly before use. Feature commands never install dependencies: missing tools name the exact install command, including the app manifest path so it works from any directory. Installed tools outside PATH launch with <code>pixi run --no-install -e &lt;environment&gt;</code>. You may also run a whole command inside its installed environment.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Environment</th><th>Used for</th></tr></thead>
+<tbody>
+<tr><td><code>default</code></td><td>Standard commands</td></tr>
+<tr><td><code>pacbio</code></td><td>pbmm2, pbsv, Sniffles; <code>pixi run -e pacbio wgsextract vcf sv --pacbio</code></td></tr>
+<tr><td><code>vep-rs</code></td><td>Default <code>vep run</code> / <code>vep download</code>, all platforms; <a href="vep-engines.html">engines</a></td></tr>
+<tr><td><code>vep</code></td><td><code>vep run --engine ensembl</code>, not native Windows</td></tr>
+<tr><td><code>cyrius</code>, <code>smn</code>, <code>t1k</code>, <code>expansionhunter</code>, <code>longtr</code>, <code>strkit</code></td><td>CYP2D6, SMN, HLA and repeat typing, Linux/macOS; <a href="variants.html#pharmacogenomics-and-repeat-typing">requirements/licences</a></td></tr>
+<tr><td><code>pharmcat</code></td><td>PharmCAT Python/Java/bcftools runtime</td></tr>
+<tr><td><code>modkit</code></td><td>Methylation pileup, Linux/macOS</td></tr>
+<tr><td><code>verifybamid2</code></td><td>Contamination QC, Linux/macOS</td></tr>
+<tr><td><code>parquet</code></td><td>pyarrow for <code>--format parquet</code>, e.g. <code>pixi run -e parquet wgsextract vcf table ... --format parquet</code>; no Windows ARM64; <a href="parquet.html">details</a></td></tr>
+<tr><td><code>dev</code></td><td>pytest, Ruff, mypy; automatically selected by development tasks</td></tr>
+</tbody>
+</table></div>
+<p>Other optional environments are documented with their features: <a href="hardware.html">hardware</a>, <a href="ont.html">ONT</a>, <a href="interop.html#multiqc">MultiQC</a>, <a href="relate.html">relatedness</a>, <a href="imputation.html">imputation</a> and <a href="acmg.html">ACMG</a>. Cyrius permits noncommercial use only, no distribution/modification, and is not bundled.</p>
+<p>On macOS, <code>bio-tools</code> environments and the separate <code>pharmcat</code> environment use Apple's Accelerate BLAS so <code>bcftools</code> does not load LLVM OpenMP through GSL. Before starting workers, pytest removes only current-user, unwritten OpenMP registration files whose PID is absent. For other tools and manual cleanup, see <a href="installation.html#macos-openmp-error-15-with-unknown-library">OpenMP troubleshooting</a>.</p>
+<h3 id="benchmarking-on-macos">Benchmarking on macOS<a class="heading-anchor" href="#benchmarking-on-macos" aria-label="Link to section">#</a></h3>
+<p>Setup creates <code>.metadata_never_index</code> in <code>out/</code>, <code>scratch/</code> and <code>tmp/</code> (safe to rerun). For existing indexed trees, also add those folders or the repository to <strong>System Settings → Spotlight → Search Privacy</strong>. Keep heavy benchmark inputs and outputs out of Photos libraries and Spotlight-indexed folders. Check volume indexing with <code>mdutil -s /</code> and thermal pressure with <code>pmset -g therm</code> before timing; wait for indexing and throttling to settle.</p>
+<h2 id="make-a-change">Make a change<a class="heading-anchor" href="#make-a-change" aria-label="Link to section">#</a></h2>
+<pre><code class="language-bash">git switch -c my-change
+# edit code
+just run info --input sample.bam   # try the CLI from this checkout
+just check                         # format, lint, typecheck, test
+just ci                            # what CI runs; do this before opening a PR
+git commit -am &quot;Describe the change&quot;
+gh pr create --fill</code></pre>
+<p><code>just</code> lists every recipe. Each wraps a <code>pixi run</code> task, so <code>pixi run test</code> and friends work without <code>just</code>.</p>
+<h3 id="checks-and-test-data">Checks and test data<a class="heading-anchor" href="#checks-and-test-data" aria-label="Link to section">#</a></h3>
+<p>Developer tasks select <code>dev</code> automatically:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Task</th><th>What it runs</th></tr></thead>
+<tbody>
+<tr><td><code>pixi run test</code></td><td>Unit/integration tests, excluding end-to-end suites</td></tr>
+<tr><td><code>pixi run test-ci</code></td><td>Parallel tests, timings/JUnit and non-gating coverage under <code>out/</code></td></tr>
+<tr><td><code>pixi run smoke-test</code></td><td>CLI smoke; <code>smoke-test-full</code> adds full-genome/pet tests</td></tr>
+<tr><td><code>pixi run test-e2e</code></td><td>Real-data end-to-end suites</td></tr>
+<tr><td><code>pixi run test-e2e-fake</code></td><td>Generated-data end-to-end (<code>pytest --fake-data</code>), also CI on Linux/macOS/Windows</td></tr>
+<tr><td><code>pixi run test-remote</code></td><td>Weekly live download availability, SpliceAI format and HG00096 kit/Omni concordance</td></tr>
+<tr><td><code>pixi run lint</code></td><td>Ruff, site-source and GitHub Actions validation</td></tr>
+<tr><td><code>pixi run format</code></td><td><code>ruff format .</code></td></tr>
+<tr><td><code>pixi run typecheck</code></td><td>Strict mypy on <code>src/wgsextract_cli</code></td></tr>
+<tr><td><code>pixi run site-build</code></td><td>Rebuild <a href="site_generation.html">site</a></td></tr>
+<tr><td><code>pixi run benchmark-dataset</code></td><td>Rebuild release-backed mini-genome</td></tr>
+<tr><td><code>pixi run stats</code></td><td>Statistics; install <a href="https://github.com/AlDanial/cloc" target="_blank" rel="noopener noreferrer">cloc</a> separately</td></tr>
+</tbody>
+</table></div>
+<p>With <a href="https://github.com/casey/just" target="_blank" rel="noopener noreferrer">just</a>, <code>just run &lt;args&gt;</code> runs the CLI. <code>just test</code>, <code>lint</code>, <code>fmt</code>, <code>typecheck</code> and <code>check</code> (all four) are aliases; <code>just ci</code> runs lint/type checks, regular tests and generated small/full-genome integration without formatting, keeping pytest scratch under <code>out/</code>.</p>
+<p>PR/main CI is bounded and cancels superseded runs. A separate lint-only environment runs Ruff, workflows and strict mypy without reference downloads; genomic jobs cache public hs38. A CI policy test keeps the mypy exemption baseline for <code>wgsextract_cli.core</code> empty: don't add overrides that match it or relax the global strict configuration in <code>pyproject.toml</code>. Action updates retain full commit SHAs and version comments from allow-listed sources, not a duplicate validator SHA table. See <a href="ci_routing.html">CI routing</a>.</p>
+<p>The weekly <strong>Pixi refresh</strong> resolves within manifest pins, restores declared archive digests and validates the lock candidate with a read-only token. It force-pushes validated changes to fixed <code>automation/pixi-refresh</code> and opens/updates one PR; no change opens none and closes a superseded PR. CI waits for maintainer approval (“Approve workflows to run” or the PR-body command), then runs normal checks. It never auto-merges dependencies. Numerical-tool updates still need public small/full-genome byte-parity checks.</p>
+<p>Real-data tests use pytest options or config:</p>
+<pre><code class="language-bash">pixi run pytest tests/test_smoke_real_basics.py \
+  --real-input /data/HG002.cram --real-ref /data/reference/hs38.fa --real-region chr20</code></pre>
+<p>Options include <code>--real-input</code>, <code>--real-ref</code>, <code>--real-vcf</code>, <code>--real-region</code>, <code>--real-targets</code>, <code>--real-fastq-r1</code>/<code>--real-fastq-r2</code>, <code>--fake-data</code> and <code>--full-data</code> (see <code>tests/conftest.py</code>). Or set <code>real_genome_test_path</code> and <code>real_genome_tests_enabled = true</code> in <code>[dev]</code> at the end of config.toml. <code>download_cache = true</code> caches downloads under <code>$XDG_CACHE_HOME/wgsextract/downloads</code> (default <code>~/.cache/wgsextract/downloads</code>), pruned after <code>download_cache_ttl_seconds</code> (default one week). Former top-level settings, including <code>dev_download_cache</code> and <code>dev_download_cache_ttl_seconds</code>, now fail with their <code>[dev]</code> replacement.</p>
+<p><code>wgsextract qc fake-data</code> generates BAM/CRAM/VCF/FASTQ for tests and reports; see <a href="https://wgsextract.github.io/wgsextract-cli/workflows.html#testing" target="_blank" rel="noopener noreferrer">testing workflows</a>.</p>
+<h3 id="filesystem-paths">Filesystem paths<a class="heading-anchor" href="#filesystem-paths" aria-label="Link to section">#</a></h3>
+<p>Use <code>pathlib.Path</code>. Shared helpers accept strings/<code>os.PathLike[str]</code> (<code>core.paths.PathInput</code>); keep Paths during manipulation, converting at string-based CLI/config/tool-wrapper/public-return boundaries. Use <code>input_stem</code>/<code>fasta_prefix</code> for compound genomic extensions and <code>append_suffix</code> for <code>.vcf.gz.tbi</code>/<code>.cram.crai</code> sidecars. <code>absolute_path</code> normalizes <code>..</code> without following symlinks; <code>Path.resolve()</code> compares real targets. Wrapper commands and samtools <code>out##idx##index</code> arguments stay strings; do not convert native Windows paths to POSIX spelling.</p>
+<h3 id="the-desktop-app">The desktop app<a class="heading-anchor" href="#the-desktop-app" aria-label="Link to section">#</a></h3>
+<p>The WGS Extract desktop app is in <code>gui/</code>. It has its own toolchain (uv, Node and Rust) and setup; see <a href="../app/devdocs/developer_setup.html">gui/devdocs/developer_setup.md</a>. From the repository root:</p>
+<pre><code class="language-bash">just gui-setup        # install uv, Node and Rust if missing, and the app&#x27;s locked dependencies
+just gui-run          # build and serve the Web UI in a browser
+just gui-tauri        # run the desktop app in dev mode
+just gui-ci           # the app&#x27;s lint and tests, as GUI CI runs them
+just gui-package      # build this platform&#x27;s installers into gui/out/release/tauri</code></pre>
+<p>Root ruff, mypy and pytest skip <code>gui/</code>; changes there run GUI CI instead of the CLI's CI, and changes elsewhere don't run GUI CI.</p>
+<p>When you add or rename a command:</p>
+<ul>
+<li>Give a new top-level command a tier (core, setup or advanced) and a short summary in <code>COMMAND_TIERS</code> in <code>src/wgsextract_cli/commands/registry.py</code>.</li>
+<li>Give every runnable command an example and an outputs line in its command group's module under <code>src/wgsextract_cli/commands/_help_catalog/</code>.</li>
+<li>Register its parser in <code>src/wgsextract_cli/cli/registration/</code>, keeping execution imports inside handlers. <code>cli/_lazy.py</code> defers loading command implementations until execution; help must not import scientific libraries. Add its required/optional external tools and runtime to <code>NEEDS</code> in the same registration module.</li>
+<li>Run <code>pixi run site-build</code> to preview the automatically generated command reference and the cards on the site's CLI page.</li>
+</ul>
+<p>The compact help index is not committed. <code>just regen</code> and developer setup warm it, and the first <code>help --all --json</code> after <code>pixi install</code> also builds it if needed. Managed installs keep it in the installation's writable cache so uninstall removes it; other installs use the platform's per-user cache. The cache expires when the package version or parser and registry sources change.</p>
+<p><code>tests/test_help_index.py</code> checks cache behavior; <code>tests/test_site_references.py</code> builds the site and checks the published references.</p>
+<p>Keep command-specific messages with the code that uses them. If registration and implementation both need the same strings, use the group's lightweight module under <code>src/wgsextract_cli/commands/_messages/</code>.</p>
+<h3 id="benchmark-fixture-ploidy">Benchmark fixture ploidy<a class="heading-anchor" href="#benchmark-fixture-ploidy" aria-label="Link to section">#</a></h3>
+<p>The <code>benchmark</code> timing workload explicitly calls SNPs, indels and microarray sites with uniform diploid ploidy for generated data and the <code>real</code> mini-genome archive. Scaled, regional and low-depth fixtures cannot reliably infer sex; the benchmark is not a karyotype or genotype-accuracy validation. This override is passed only to those child commands and does not change the sample's declared/observed sex or weaken normal Unknown-sex refusal. Full-reference <code>real-1x</code>/<code>real-30x</code> runs retain build-specific ploidy.</p>
+<h3 id="vcf-api-specifications">VCF API specifications<a class="heading-anchor" href="#vcf-api-specifications" aria-label="Link to section">#</a></h3>
+<p>For any typed command, re-export its <code>Params</code> from the API group's module under <code>src/wgsextract_cli/api/_exports/</code>. This keeps <code>api.SomeParams</code> available to both Python callers and type checkers.</p>
+<p><code>api/vcf.py</code> remains the public import and dispatch facade. Its parameter declarations live in <code>api/vcf_specs/</code>: shared field helpers, calling, file operations and annotations. Update the responsible specification module when adding fields, and retain its explicit facade export. Parameter types keep their physical source modules for introspection; facade aliases keep pre-split pickle lookups working. Facade declaration order keeps the generated API reference stable without duplicating parameter descriptions beside their handlers.</p>
+<h3 id="generated-references-and-parallel-prs">Generated references and parallel PRs<a class="heading-anchor" href="#generated-references-and-parallel-prs" aria-label="Link to section">#</a></h3>
+<p>Run <code>just regen</code> (or <code>pixi run python scripts/regen.py</code>) after changing CLI/API help. It warms the compact discovery cache. The <a href="site_generation.html">site build</a> generates the public references and CLI cards separately; they are not committed. If a branch still tracks a retired generated reference, <code>just regen-resolve</code> stages its deletion after you resolve source conflicts. In <code>site_src/cli.md</code>, keep the <code>&lt;!-- command cards --&gt;</code> placeholder, not the old generated cards. It also generates the public sample-workspace JSON Schema from the output types in <code>core/sample_document.py</code>. Output types use <code>TypedDict</code>, dataclasses and <code>Annotated</code> constraints; <code>core/output_schema.py</code> rejects unsupported annotations. Its supported subset is TypedDict, dataclasses, Literal, Annotated, primitives, unions, lists and string-keyed dicts; Enum, tuple and Mapping fields are not yet supported. Dataclasses describe complete <code>dataclasses.asdict</code>-style projections: every field, including nullable/defaulted and <code>init=False</code> fields, is required in the output. <code>ClassVar</code>, <code>InitVar</code> and <code>KW_ONLY</code> pseudo-fields are excluded before resolving annotations, including postponed Python 3.10 hints. Real fields resolve in their declaring module and class/MRO namespaces. Generation never constructs instances or calls default factories, and does not infer field omission or custom <code>to_dict</code> behavior. Use an explicit serialized model when a custom writer changes the field projection. For recursive fields on Python 3.10, postpone the whole annotation (<code>children: &quot;list[Tree]&quot;</code>), not only the element (<code>list[&quot;Tree&quot;]</code>): that version's <code>get_type_hints</code> leaves partial PEP 585 forward references unresolved. Definition names and extension-key policies are supplied explicitly to each generation call, never registered globally. Workspace reads retain unrecognised TOML data in <code>WorkspaceState</code>; new fact/override/output records are written through the typed document models rather than casting unvalidated loaded data to those types. Keep these committed: readers, release archives and freshness tests need them without running Python.</p>
+<p>The generators run by <code>scripts/regen.py</code> write LF on every platform, and <code>.gitattributes</code> keeps their fully generated files at LF on checkout. The setup scripts configure the <code>merge=generated</code> driver assigned to those files. For an existing checkout, configure it once:</p>
+<pre><code class="language-bash">git config merge.generated.name &quot;Keep generated references until regeneration&quot;
+git config merge.generated.driver true</code></pre>
+<p>This is an <strong>ours-style placeholder</strong>, not an automatic generator: a merge driver runs before all source files are merged, so regeneration there could silently use inconsistent sources. Merge locally with <code>git merge --no-commit origin/main</code>, resolve and stage source conflicts, then run <strong><code>just regen-resolve</code></strong> (or <code>pixi run python scripts/regen.py --resolve</code>). It regenerates all references from the combined sources and stages them; it refuses unresolved source conflicts. Review the diff, run the freshness tests and commit the merge. The same command resolves generated-file conflicts without the driver installed. Site command cards share a file with hand-written content, so resolve any <code>site_src/cli.md</code> conflict as a source conflict before regenerating.</p>
+<p>GitHub <strong>does not execute custom merge drivers</strong>. If it reports generated-file conflicts, use the local workflow above and push the resolution; don't choose one side in GitHub's conflict editor or expect its Update branch button to regenerate. No freshness checks are bypassed. Re-run regeneration after <em>every</em> merge, even if Git reported no conflicts.</p>
+<p>Help-size tests gate each command's JSON (12,000 characters maximum) and the average (3,000), rather than a global total that every new command changes. The JSON and text-index totals are reported as test properties, not gates; the text index's existing per-line width check still catches bloated entries. The compact discovery index has a separate 60,000-character ceiling and a 20,000-token approximation ceiling (word pieces plus JSON punctuation, without downloading a tokenizer model). Agents read this index first, then <code>wgsextract help &lt;command&gt; --json</code> for full schemas.</p>
+<p>The CLI help document is not the server protocol. HTTP discovery uses <code>GET /v1/ops</code> (summaries) then <code>GET /v1/ops/{op}</code> (full Params schema); MCP <code>tools/list</code> must include its protocol-required <code>inputSchema</code>. Both use the same typed Params definitions as per-command CLI help, not the compact help index, so their invocation schemas remain complete.</p>
+<p>Server response envelopes are writer-used TypedDicts in <code>server/transport.py</code>. <code>scripts/gen_server_contracts.py --check</code> checks the committed response JSON Schema bundle and result/report writer types. OpenAPI 3.1 and the GUI transport types are not committed. CLI developer setup builds OpenAPI under <code>out/contracts/</code> and <code>just regen</code> rebuilds both. The GUI build regenerates the transport declarations from OpenAPI before compiling. Wheel and sdist builds include the generated JSON under the CLI's schema assets. <code>wgsextract serve --openapi</code> generates the same default document without reading a file. Keep GUI presentation types and tolerant parsing adapters handwritten: they are not wire documents. Loaded result/report documents remain opaque in the server spec until their own writer models drive their public schemas; a schema ID check is not full document validation. Job projections still omit unset fields and compact results still omit provenance and empty values.</p>
+<p>The three read-only lookup inputs live in <code>server/lookup_inputs.py</code>. Their frozen dataclasses and annotated constraints drive both HTTP/MCP discovery schemas and request validation, and lookup readers consume the resulting typed objects. This deliberately supports strings, booleans, integers and string arrays; unsupported annotations fail closed. Optional <code>None</code> defaults represent omitted fields internally: explicitly supplied JSON null is still rejected. This input-specific adapter keeps its constructor/omission semantics separate from the output-schema generator's complete dataclass projections.</p>
+<p>The "Start from what you have" paths in both come from <code>JOURNEYS</code> in <code>registry.py</code>. To retire a command, don't delete it: add it to <code>DEPRECATIONS</code> there with its replacement and the next minor version as <code>remove_in</code>, and add it under <code>## Deprecated</code> in a release-note fragment in <code>docs/release-notes/unreleased/</code> (see its README). A deprecated command keeps working, warns <code>deprecated_command</code> when run, and is listed apart in the help and docs.</p>
+<h3 id="running-state-and-worker-threads">Running state and worker threads<a class="heading-anchor" href="#running-state-and-worker-threads" aria-label="Link to section">#</a></h3>
+<p>What a running command reads (its result, progress callback, cancel token, settings, where its tools' stdout goes) is on the <code>ExecutionContext</code> in <code>core/execution_context.py</code>, a <code>ContextVar</code>, so concurrent library calls keep apart. Reach it through <code>current_result()</code>, <code>report()</code>, <code>checkpoint()</code> and <code>settings</code> as before. Start worker threads with <code>context_thread</code> or <code>ContextThreadPoolExecutor</code>, which run them in the caller's context (a future's done-callbacks in the context they were added in); ruff rejects a bare <code>threading.Thread</code> or <code>ThreadPoolExecutor</code> in command code.</p>
+<h3 id="issue-report-package">Issue-report package<a class="heading-anchor" href="#issue-report-package" aria-label="Link to section">#</a></h3>
+<p>Issue-report internals live in <code>core/issue_report/</code>: <code>redaction.py</code> sanitizes text, <code>runs.py</code> loads local run records and discovers sensitive names, and <code>environment.py</code> collects installation diagnostics. The package initializer assembles reports and fits GitHub links; existing <code>core.issue_report</code> and <code>api.support</code> imports remain unchanged.</p>
+<h3 id="alignment-pipeline">Alignment pipeline<a class="heading-anchor" href="#alignment-pipeline" aria-label="Link to section">#</a></h3>
+<p>The <code>commands/align.py</code> command retains orchestration and existing job/helper imports. Its <code>alignment/</code> package separates shared jobs/reference primitives (<code>common.py</code>), native BWA/memory planning (<code>short_reads.py</code>), read/reference preflight (<code>preparation.py</code>), Parabricks dispatch (<code>gpu.py</code>) and Ultima, minimap2 and pbmm2 execution (<code>backends.py</code>). Existing read-source, read-group, selection and output helpers remain in the same package.</p>
+<h3 id="realignment-pipeline">Realignment pipeline<a class="heading-anchor" href="#realignment-pipeline" aria-label="Link to section">#</a></h3>
+<p>The <code>commands/realign.py</code> command retains orchestration and existing job/helper imports. Its <code>realignment/</code> package separates job/input qualification and FASTQ discovery (<code>preparation.py</code>), memory/disk/time planning (<code>resources.py</code>), journaled alignment/index publication (<code>mapping.py</code>), single-pass/chunked long-read execution (<code>long_reads.py</code>) and extraction/streaming/resumption (<code>steps.py</code>). The resumable workflow bodies remain intact; helper dependencies flow through these layers without importing the realign facade.</p>
+<h3 id="deepvariant-pipeline">DeepVariant pipeline<a class="heading-anchor" href="#deepvariant-pipeline" aria-label="Link to section">#</a></h3>
+<p>The <code>commands/vcf/deepvariant.py</code> command keeps orchestration and its existing helper import paths. Its <code>deepvariant_pipeline/</code> package separates model/image selection (<code>models.py</code>), host/postprocess resource planning (<code>resources.py</code>) and resumable stage execution (<code>stages.py</code>).</p>
+<h3 id="python-module-size-ratchet">Python module size ratchet<a class="heading-anchor" href="#python-module-size-ratchet" aria-label="Link to section">#</a></h3>
+<p><code>pixi run lint</code> checks Python files under <code>src/</code>, <code>tests/</code> and <code>scripts/</code>. New modules must stay at or below 800 physical lines. The desktop app (<code>gui/</code>) keeps its own policy; generated run outputs, scratch work and environments are not scanned.</p>
+<p>Existing oversized files have fixed, reviewable ceilings in <code>scripts/python_size_baseline.json</code>; exceeding one fails with <code>python_size_exceeded</code>. Split responsibilities rather than add or raise an exemption. The initial ceilings include the bounded positive growth already present in pinned, open pre-policy PRs, so introducing the guard does not break those in-flight changes.</p>
+<p>After shortening, splitting or deleting an outlier, run <code>pixi run python scripts/check_python_size.py --refresh</code> and commit the reduced baseline. Refresh only lowers/removes existing ceilings: it cannot grandfather a new megafile or increase a budget, and refuses to write while a new/growing module violates its ceiling. Removed files require their obsolete entries to be removed (<code>python_size_stale_baseline</code>); remove only that entry if other budgets still reserve in-flight work. Global refresh also removes exemptions for files reduced to 800 lines or less. Wait for reserved pre-policy versions to land before globally refreshing their budgets; individual ceilings may be edited downward in the meantime.</p>
+<p>The same guard runs in pre-commit, PR/main lint and exact-head generic certification. It uses no network, extra dependencies or environment settings. For a separate checkout, use the run-specific <code>--root</code>/<code>--baseline</code> arguments.</p>
+<h2 id="write-tests">Write tests<a class="heading-anchor" href="#write-tests" aria-label="Link to section">#</a></h2>
+<p>A good test fails when the behaviour a user relies on breaks, and survives a refactor that keeps that behaviour.</p>
+<p>Large DeepVariant, native-aligner, realign, personal-report and server/path suites are divided into focused <code>test_&lt;family&gt;_&lt;topic&gt;.py</code> modules. Their original <code>test_&lt;family&gt;.py</code> modules keep shared helpers and function-scoped fixtures, so existing imports and fixture behavior remain stable. New integration modules must retain their CI tier. Imported fixture aliases preserve autouse behavior too: report siblings retain <code>served_lists</code> so their gene-list downloads stay isolated behind the fake network. Modules using the shared <code>out/fake_30x</code> fixtures also retain a direct <code>ensure_fake_data</code> import: the loadgroup scheduler uses it to keep shared-data generation on one worker, even when the fixture itself is imported. The standalone <code>test_server_shared_data.py</code> guard names its source inputs with explicit repository-relative paths, so affected-test selection runs it whenever those consumer modules change. Its companion <code>test_server_shared_data_routing.py</code> checks that selection and runs when the worker guard changes; both guards stay outside the CI-only test list.</p>
+<p>CI routing and workflow-policy tests also have focused landing/required-gate and readiness/path-filter siblings. Original modules retain shared helper owners; all siblings stay in the CI-only and documentation selections, so splitting tests never removes their checks from readiness or certification.</p>
+<ul>
+<li><strong>Assert observable behaviour.</strong> That means:
+<ul>
+<li>output files and their content</li>
+<li>exit codes 0/1/2/3</li>
+<li>the result manifest</li>
+<li>structured warnings</li>
+<li>documented CLI and API behaviour</li>
+</ul></li>
+<li><strong>Use real tools on tiny data.</strong> Prefer the fake genomes and fixtures with real samtools and bcftools. The helpers live in <code>tests/htslib_helpers.py</code>, <code>tests/fake_tools.py</code> and <code>tests/smoke_utils.py</code>. For Pixi environments, the <code>fake_pixi</code> fixture runs a stand-in pixi with fake environments in a temporary folder. For disk-space preflights, <code>tests/disk_volumes.Volumes</code> puts folders on fake volumes with a set amount of free space and makes inputs look bigger than they are.</li>
+<li><strong>Mock only true boundaries:</strong> network, containers, GPU, very slow tools, the OS or platform, and the clock. Don't patch private helpers (<code>_name</code>) or the command runner to record what would have run.</li>
+<li><strong>Assert argv only where the flags are the scientific contract.</strong> For example, a caller's ploidy or a minimum mapping quality. Assert just those flags, with a <code># contract: &lt;why&gt;</code> comment.</li>
+<li><strong>Check message codes or key facts, not whole prose.</strong> Help text is checked once, by the generated-help and doc tests.</li>
+<li><strong>Name the bug in each regression test</strong> (<code>#123</code> or a short description), and check the symptom the user saw.</li>
+<li><strong>Don't restate constants, defaults or re-exports.</strong></li>
+</ul>
+<p><code>pixi run test-smells</code> lists private-internal patches and whole-argv asserts in test lines you added since <code>origin/main</code>. CI shows the same list as warnings on the PR. It is advisory and never fails.</p>
+<h2 id="make-a-change-with-an-ai-agent">Make a change with an AI agent<a class="heading-anchor" href="#make-a-change-with-an-ai-agent" aria-label="Link to section">#</a></h2>
+<p>The project is developed with AI coding agents. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/AGENTS.md" target="_blank" rel="noopener noreferrer">AGENTS.md</a> holds the rules they follow: test and run what they write, run ruff and mypy, keep outputs in <code>out/</code> or <code>tmp/</code>, keep defaults unchanged.</p>
+<ol>
+<li>Install an agent, for example GitHub Copilot CLI (<code>npm install -g @github/copilot</code>), and start it in the repository: <code>copilot</code>.</li>
+<li>Pick an issue from the <a href="https://github.com/WGSExtract/wgsextract-cli/labels/good%20first%20issue" target="_blank" rel="noopener noreferrer">good first issue</a> list and tell the agent the outcome, how to check it, and where to stop. For example:</li>
+</ol>
+<blockquote>
+<p>Fix issue #N. Add tests that fail without the change, run <code>just check</code>, then open a pull request that closes the issue.</p>
+</blockquote>
+<ol>
+<li>Review what it did: read the diff (<code>/diff</code> in Copilot CLI, or <code>git diff</code>), and check that the tests would fail without the change. Run the command yourself on real data when you have it.</li>
+<li>Have it push and open the pull request, then watch CI (<code>gh pr checks --watch</code>). Paste failures or review comments back to the agent until it's green.</li>
+</ol>
+<p>A job that fails with <strong>Upstream package mirror unreachable</strong> couldn't reach Ubuntu's package mirrors; that is an outage, not your change. Ubuntu packages come through <code>.github/actions/apt-install</code>, which tries several official mirrors, gives up within minutes, and installs from its cache when it has one. <code>rerun_lost_runners.yml</code> reruns such jobs up to twice, normally recording each request in the current week's pinned <strong>CI flake ledger</strong>. Audit outages are logged without blocking runner recovery. It also recovers lost runners, reports confirmed flaky tests as bugs, and blocks retries matching red main. See <a href="ci_failures.html">CI failure observation and retries</a> for the policy and the audited landing-script command.</p>
+<p>Keep each change small and state how you'll verify it. Most problems show up when the result is checked against real data, not in review.</p>
+<h2 id="retire-stale-agent-worktrees">Retire stale agent worktrees<a class="heading-anchor" href="#retire-stale-agent-worktrees" aria-label="Link to section">#</a></h2>
+<p>The post-work cleanup checklist does not schedule itself. On a Linux host, run these commands from the primary checkout on <code>main</code>:</p>
+<pre><code class="language-sh">python3 scripts/cleanup_worktrees.py                   # offline audit, no removals
+python3 scripts/cleanup_worktrees.py --github          # verify eligibility only
+python3 scripts/cleanup_worktrees.py --github --apply  # retire eligible worktrees
+python3 scripts/cleanup_worktrees.py --github --trim-caches  # preview cache trimming too</code></pre>
+<p><code>--github</code> uses an existing authenticated <code>gh</code> session to request PR metadata from github.com. Branch names and worktree contents are matched locally, never uploaded. A candidate must live directly under <code>scratch/</code>, and exactly match the head of its latest PR from this repository, merged into <code>main</code> at least a day ago and authored by the authenticated account. Git removes the worktree without <code>--force</code>; the branch stays. An authentication or state error stops the run. The private JSON report in <code>out/worktree-cleanup/</code> records skips, removals and errors.</p>
+<p>Dirty, locked, detached, active or linked worktrees are left alone. Tracked files must also match the exact committed Git blobs byte for byte, without relying on Git's cached file metadata. This can retain checkouts with locally converted line endings, smudge filters, or submodules, even if Git reports them clean. Activity is checked through Linux <code>/proc</code> across process UIDs. If Linux hides or denies inspection of a process, the run reports the error and does not remove unverified worktrees. Use the optional inspector below when unprivileged process visibility is insufficient. Use <code>git worktree lock</code> before starting work in a checkout that might be eligible for cleanup. Do not start work in an eligible checkout during cleanup. Symlinks are checked in this repository and its registered worktrees, including shared Git metadata and each checkout's effective <code>core.hooksPath</code>. If a symlinked Git metadata directory could hide dependencies, cleanup keeps the candidates. If any <code>hook.&lt;name&gt;.command</code> is configured, cleanup retains every candidate and reports the hook key: arbitrary hook commands can depend on paths that cleanup cannot verify. Lock a worktree if a hook script in a hooks directory or another project depends on its files. Nothing manages your reference library. Samples and other unknown files block removal. With <code>--trim-caches --apply</code>, the same PR and activity checks allow trimming verified generated Pixi, Ruff, mypy and pytest caches in retained worktrees. Unrecognized cache contents, unlocked Conda packages and links to a cache block trimming that cache. Pixi package files must match local installed Conda or wheel checksums; missing or mismatched checksums retain the environment without fetching metadata. Only the named cache directories are deleted; the checkout, branch and other files stay. Python bytecode blocks worktree retirement unless it can be reproduced from tracked or archived source. Unlisted bytecode in Pixi environments must match bytecode regenerated from verified installed source. A matching header is not enough; caches from another Python version or a source-rewriting tool such as pytest may therefore be retained. The report distinguishes cache trimming from worktree retirement. Small UTF-8 logs under <code>out/</code> and recognised Python, shell, Lua and R source files under <code>scratch/</code> (1 MiB per file, 32 MiB total) are copied to a private, local directory in <code>out/archive/</code> without following links. They are not executed. Do not put secrets in run logs or scratch sources.</p>
+<h3 id="install-the-read-only-activity-inspector-linux-administrator">Install the read-only activity inspector (Linux administrator)<a class="heading-anchor" href="#install-the-read-only-activity-inspector-linux-administrator" aria-label="Link to section">#</a></h3>
+<p>Linux can hide the cwd, mappings and file descriptors of services and login processes even from other processes of the same UID. The optional inspector reads this state across process UIDs without granting the cleanup command or Sheprd any elevated permissions. It accepts only inode-verified registered worktree names in one repository, checks the local Unix peer UID, and returns matching numeric PIDs or an unverifiable result, never process paths or arguments. The service cannot run Git, remove a checkout, or run caller-supplied commands. If a process's mount namespace or view of the root cannot be safely compared, it does not certify inactivity. A private root or masked <code>/home</code> alone does not prove inactivity: the inspector still checks retained descriptors, mappings, working directories and invocation paths, and rejects visible mount aliases.</p>
+<p>From the separately reviewed revision, as the ordinary repository owner, stage the exact committed blobs and prepare local settings under <code>out/</code>. Verify <code>pwd -P</code> is the registered <strong>primary</strong> checkout and <code>id -u</code> is its non-root owner:</p>
+<pre><code class="language-sh">reviewed=FULL_REVIEWED_COMMIT_SHA
+mkdir -p out/worktree-inspector-install
+git show &quot;$reviewed:scripts/worktree_activity_inspector.py&quot; \
+  &gt; out/worktree-inspector-install/inspector.py
+for unit in wgse-worktree-inspector.service wgse-worktree-inspector.socket; do
+  git show &quot;$reviewed:scripts/worktree-inspector/$unit&quot; \
+    &gt; &quot;out/worktree-inspector-install/$unit&quot; || break
+done
+printf &#x27;[Socket]\nSocketUser=%s\n&#x27; &quot;$(id -u)&quot; \
+  &gt; out/worktree-inspector-install/owner.conf</code></pre>
+<p>Create <code>out/worktree-inspector-install/config.toml</code> with these two entries, using the actual primary canonical path and numeric owner UID:</p>
+<pre><code class="language-toml">repository = &quot;/home/OWNER/src/wgsextract-cli&quot;
+uid = 1000</code></pre>
+<p>An administrator explicitly installs the reviewed files; no worktree script is executed as root. The example uses an existing authorized <code>sudo-session</code> grant. On updates, stop the socket and service before replacing their files. Use systemd and system Python 3.11 or newer. Stop on any failure; verify the installed service and socket against the reviewed commit and inspector SHA-256 against <code>INSPECTOR_SHA256</code> in the reviewed <code>scripts/cleanup_worktrees.py</code> <strong>before</strong> enabling the socket.</p>
+<pre><code class="language-sh">sudo-session run -- /usr/bin/install -d -m 0755 \
+  /usr/local/lib/wgse-worktree-inspector /etc/wgse-worktree-inspector \
+  /etc/systemd/system/wgse-worktree-inspector.socket.d
+sudo-session run -- /usr/bin/install -m 0644 \
+  out/worktree-inspector-install/inspector.py /usr/local/lib/wgse-worktree-inspector/inspector.py
+sudo-session run -- /usr/bin/install -m 0644 \
+  out/worktree-inspector-install/wgse-worktree-inspector.service \
+  out/worktree-inspector-install/wgse-worktree-inspector.socket /etc/systemd/system/
+sudo-session run -- /usr/bin/install -m 0644 out/worktree-inspector-install/config.toml \
+  /etc/wgse-worktree-inspector/config.toml
+sudo-session run -- /usr/bin/install -m 0644 out/worktree-inspector-install/owner.conf \
+  /etc/systemd/system/wgse-worktree-inspector.socket.d/owner.conf
+/usr/bin/sha256sum /usr/local/lib/wgse-worktree-inspector/inspector.py
+git show &quot;$reviewed:scripts/worktree-inspector/wgse-worktree-inspector.service&quot; \
+  | cmp - /etc/systemd/system/wgse-worktree-inspector.service
+git show &quot;$reviewed:scripts/worktree-inspector/wgse-worktree-inspector.socket&quot; \
+  | cmp - /etc/systemd/system/wgse-worktree-inspector.socket
+sudo-session run -- /usr/bin/systemd-analyze verify \
+  wgse-worktree-inspector.service wgse-worktree-inspector.socket
+sudo-session run -- /usr/bin/systemctl daemon-reload
+sudo-session run -- /usr/bin/systemctl enable --now wgse-worktree-inspector.socket</code></pre>
+<p>Before enabling any cleanup schedule, run <code>python3 scripts/cleanup_worktrees.py --github --inspector</code> from the primary checkout <strong>without</strong> <code>--apply</code>. Verify it identifies a live test process as busy and reports a clear, otherwise eligible worktree accurately. When the socket is unavailable, unverifiable, or serving a different inspector digest, <code>--inspector</code> never falls back or removes worktrees. Local inspection checks each live Linux task and rejects external bind mounts of the checkout or its contents. It stops if any task's filesystem view or references cannot be verified; use the installed inspector on such hosts. To suspend inspection, disable the socket and stop the service; pause the Sheprd schedule as well.</p>
+<h3 id="enable-or-disable-daily-cleanup-on-a-machine">Enable or disable daily cleanup on a machine<a class="heading-anchor" href="#enable-or-disable-daily-cleanup-on-a-machine" aria-label="Link to section">#</a></h3>
+<p>Scheduled cleanup is off by default. The plan in <code>scripts/worktree-inspector/</code> is a template outside Sheprd's automation directory. Enable it only on a Linux machine you choose (for example, <code>lin-big-omarchy</code>), as the owner of the primary checkout on <code>main</code>. Leave it off on other hosts. First verify the installed inspector and its busy/clear results as described above. Make sure the owner's Sheprd automation service is running, <code>agent-coord</code> is available, and <code>gh</code> is authenticated for the repository.</p>
+<pre><code class="language-sh">mkdir -p .herdr/automations
+install -m 0644 scripts/worktree-inspector/stale-worktrees.luau .herdr/automations/stale-worktrees.luau
+/usr/bin/sheprd-automate repo add &quot;$PWD&quot;
+/usr/bin/sheprd-automate check .herdr/automations/stale-worktrees.luau
+/usr/bin/sheprd automation approve .herdr/automations/stale-worktrees.luau
+/usr/bin/sheprd-automate status</code></pre>
+<p>The owner must approve the exact plan in Sheprd; agents must not approve it. Confirm <code>status</code> shows the next run. To turn scheduling off on that machine, use <code>sheprd-automate disable SCRIPT</code>, with the script ID from <code>sheprd-automate status</code>, and confirm no next run is listed. If a run is already active, <code>sheprd-automate stop RUN</code> stops it; disabling prevents future runs. To turn the same approved plan back on, rerun the prerequisites and use <code>sheprd-automate enable SCRIPT</code>.</p>
+<p>The scheduled run uses GitHub explicitly, runs no agents, and reports success or failure in Sheprd. It retires eligible worktrees and trims verified caches in retained worktrees, without pulling <code>main</code> or installing anything. If the inventory helper changes, update its SHA-256 in the janitor. When the janitor changes, update its hash in the template. On each enabled host, disable the old plan, copy and check the new one, and have the owner approve it before enabling it again. An inspector upgrade also needs a separately reviewed administrator install and matching digests.</p>
+<h2 id="release-a-change">Release a change<a class="heading-anchor" href="#release-a-change" aria-label="Link to section">#</a></h2>
+<p>Merged changes ship in the next release; see <a href="releasing.html">releasing.md</a>.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/developer_setup.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/developer_setup.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

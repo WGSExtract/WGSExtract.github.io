@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Table output: TSV or Parquet | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/parquet.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Table output: TSV or Parquet</span></nav>
+<h1 id="table-output-tsv-or-parquet">Table output: TSV or Parquet</h1>
+<p>Commands that write tables take <code>--format tsv|parquet</code>. Each one uses the same table writer (<code>wgsextract_cli.core.table_writer</code>), so every table gets the same columns, types and provenance in both formats.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Command</th><th>Table</th><th>TSV (default)</th><th>With <code>--format parquet</code></th></tr></thead>
+<tbody>
+<tr><td><code>vcf table</code></td><td>One row per variant allele (<a href="variant-table.html">docs</a>)</td><td><code>&lt;stem&gt;_variants.tsv</code></td><td><code>&lt;stem&gt;_variants.parquet</code>, in place of the TSV. The SQLite database is unchanged.</td></tr>
+<tr><td><code>methylation pileup</code></td><td>Per-modification summary</td><td><code>&lt;stem&gt;.&lt;context&gt;.methylation.tsv</code></td><td><code>&lt;stem&gt;.&lt;context&gt;.methylation.parquet</code></td></tr>
+<tr><td><code>methylation pileup</code></td><td>Every site in modkit's bedMethyl</td><td>Not written: <code>.bedmethyl.gz</code> is the source</td><td><code>&lt;stem&gt;.&lt;context&gt;.bedmethyl.parquet</code>, besides the bedMethyl</td></tr>
+<tr><td><code>methylation regions</code></td><td>RefSeq promoters or UCSC CpG islands</td><td><code>&lt;stem&gt;.&lt;build&gt;.&lt;preset&gt;.methylation.tsv</code></td><td><code>&lt;stem&gt;.&lt;build&gt;.&lt;preset&gt;.methylation.parquet</code></td></tr>
+<tr><td><code>methylation regions --partition-hp</code></td><td>The same regions, by haplotype</td><td><code>&lt;stem&gt;.&lt;build&gt;.&lt;preset&gt;.methylation.hp.tsv</code></td><td><code>&lt;stem&gt;.&lt;build&gt;.&lt;preset&gt;.methylation.hp.parquet</code></td></tr>
+<tr><td><code>info</code> (with <code>--format</code>, which implies <code>--detailed</code>), <code>info calculate-coverage</code>, <code>info coverage-sample</code></td><td>Per-chromosome counts and breadth</td><td>Written only with <code>--format</code></td><td><code>&lt;input&gt;_chromosomes.parquet</code></td></tr>
+<tr><td>The same</td><td>QC stats, one row: the manifest's <code>info</code> metrics</td><td>Written only with <code>--format</code></td><td><code>&lt;input&gt;_qc.parquet</code></td></tr>
+<tr><td><code>info calculate-coverage --bins</code></td><td>Depth bands per contig</td><td><code>&lt;input&gt;_coverage_bins.tsv</code></td><td><code>&lt;input&gt;_coverage_bins.parquet</code></td></tr>
+<tr><td><code>microarray</code></td><td>Every target's genotype, before liftover and vendor formatting (CHM13 inputs: projected to GRCh37)</td><td>Written only with <code>--format</code></td><td><code>&lt;stem&gt;_genotypes.parquet</code></td></tr>
+</tbody>
+</table></div>
+<p>The vendor kits, VCF, BAM/CRAM and bedMethyl files keep their own formats, because downstream tools need them exactly. <code>microarray --formats</code> still picks the vendor kits; <code>--format</code> only adds the genotype table.</p>
+<h2 id="what-the-parquet-files-contain">What the Parquet files contain<a class="heading-anchor" href="#what-the-parquet-files-contain" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong>Typed columns.</strong> Text, 64-bit integers, doubles and booleans. A missing value is null, where the TSV leaves the field empty. Each column's description is in its field metadata.</li>
+<li><strong>zstd compression,</strong> with column statistics, so engines can skip row groups by value.</li>
+<li><strong>Row groups of 131,072 rows,</strong> written as the command streams. A whole-genome variant table or a bedMethyl with tens of millions of sites never sits in memory.</li>
+<li><strong>Rows in the order the command produces them:</strong> the input's contig order, then position, for the variant table, the bedMethyl, and the chromosome and depth-band tables; the target list's order for microarray genotypes. Contig order is not lexicographic (<code>chr2</code> comes before <code>chr10</code>), so the order is recorded in the <code>sorted_by</code> metadata key instead of as Parquet sorting columns.</li>
+<li><strong>Provenance in the footer's key-value metadata:</strong></li>
+</ul>
+<div class="table-wrap"><table>
+<thead><tr><th>Key</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td><code>wgsextract_version</code></td><td>The version that wrote the file.</td></tr>
+<tr><td><code>created</code></td><td>UTC time, ISO 8601.</td></tr>
+<tr><td><code>command</code></td><td>The command, for example <code>vcf table</code>.</td></tr>
+<tr><td><code>command_line</code></td><td>The command line, with secrets redacted. From the Python API, <code>params</code> (the parameters as JSON) instead.</td></tr>
+<tr><td><code>input</code>, <code>input_fingerprint</code></td><td>The input's path and its <code>wgse-fp1:</code> fingerprint (the one the <a href="result-manifest.html">result manifest</a> uses).</td></tr>
+<tr><td><code>reference_build</code></td><td>For example <code>hg38</code>, when it is known.</td></tr>
+<tr><td><code>sorted_by</code></td><td>The row order.</td></tr>
+</tbody>
+</table></div>
+<p>Commands add their own keys: <code>vcf table</code> adds the sample, the region and the annotations it found, and <code>info</code> says how breadth was measured.</p>
+<p>Read the metadata with DuckDB or pyarrow:</p>
+<pre><code class="language-sh">duckdb -c &quot;SELECT decode(key), decode(value)
+           FROM parquet_kv_metadata(&#x27;sample_variants.parquet&#x27;)&quot;
+python -c &quot;import pyarrow.parquet as pq; print(pq.read_schema(&#x27;sample_variants.parquet&#x27;).metadata)&quot;</code></pre>
+<p>The TSV holds the same values as text. Reading the Parquet back and formatting each value gives the TSV's rows, and the tests check this.</p>
+<h2 id="installing-pyarrow">Installing pyarrow<a class="heading-anchor" href="#installing-pyarrow" aria-label="Link to section">#</a></h2>
+<p>Parquet needs <code>pyarrow</code>, which WGS Extract does not install by default. A command given <code>--format parquet</code> without it stops before doing any work, says which Python lacks it, and suggests <code>--format tsv</code>. To add it:</p>
+<ul>
+<li><strong>Pixi (an <code>install.sh</code> install or a source checkout):</strong> install the <code>parquet</code> environment with <code>pixi install --locked -e parquet</code> from the app directory (<code>wgsextract-cli/app/</code>) or the checkout, then run commands in it: <code>pixi run -e parquet wgsextract vcf table --vcf-input x.vcf.gz --format parquet</code>. The <code>dev</code> environment includes pyarrow too.</li>
+<li><strong>Your own Python environment:</strong> <code>pip install pyarrow</code>, or install this package with its <code>parquet</code> extra (<code>pip install &#x27;.[parquet]&#x27;</code> from a checkout).</li>
+</ul>
+<p>pyarrow publishes builds for Linux x86-64 and ARM64, macOS (Intel and Apple silicon) and Windows x86-64, which covers every Pixi platform WGS Extract supports. It has <strong>no Windows ARM64 build</strong> on PyPI or conda-forge, so on the native Windows ARM64 Python being qualified in <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/packaging/windows-arm64/README.md" target="_blank" rel="noopener noreferrer"><code>packaging/windows-arm64</code></a>, <code>--format parquet</code> fails with the error above. Use <code>--format tsv</code> there.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/parquet.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/parquet.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

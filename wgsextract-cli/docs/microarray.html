@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Consumer microarray exports | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/microarray.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Consumer microarray exports</span></nav>
+<h1 id="consumer-microarray-exports">Consumer microarray exports</h1>
+<p><code>microarray</code> simulates chip raw-data files from BAM/CRAM or VCF input. Start with <code>wgsextract help microarray</code> for options and examples; use <code>--help-all</code> for advanced controls. These are selected markers, not a complete genome or a clinical test.</p>
+<h2 id="formats-and-chip-identification">Formats and chip identification<a class="heading-anchor" href="#formats-and-chip-identification" aria-label="Link to section">#</a></h2>
+<p>Supported vendors include 23andMe, AncestryDNA, FTDNA (including separate GRCh38 Y files), Living DNA, MyHeritage, tellmeGen, Genera, MTHFR Genetics, meuDNA, SelfDecode and Nucleus. <code>--formats all</code> writes the combined CombinedKit v5; vendor revisions use letters, for example <code>ancestry_v2cd</code>. <a href="aadr.html">AADR research panels</a> (<code>aadr_1240k</code>, <code>aadr_ho</code>, <code>aadr_1240k+ho</code>) export PLINK and EIGENSTRAT instead.</p>
+<pre><code class="language-bash">wgsextract microarray --input sample.cram --formats 23andme_v5
+wgsextract info chip --input raw-data.zip
+wgsextract info chip --list</code></pre>
+<p><code>info chip</code> reads plain, gzip or ZIP raw data without changing or exporting it. Headers identify vendor/chip; marker lists identify silent same-version revisions. Identical markers give confidence 1; otherwise confidence is the marker-ID Jaccard similarity to the closest <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/src/wgsextract_cli/assets/microarray/revisions/README.md" target="_blank" rel="noopener noreferrer">catalogued revision</a>, halved for tied revisions. It names the matching <code>--formats</code> template, or the closest one and added/dropped markers. <code>--list</code> lists the catalogue; <code>--json</code> puts detection or catalogue in manifest <code>details</code>.</p>
+<h2 id="coordinates-and-targets">Coordinates and targets<a class="heading-anchor" href="#coordinates-and-targets" aria-label="Link to section">#</a></h2>
+<p>Nuclear exports use hg19 coordinates. The existing hg38 vendor route retains legacy Yoruba-to-hg19 mitochondrial chain shifts and gaps: those positions are <strong>not rCRS</strong>. CHM13v2 original-MT/masked-Y has a separate pinned hg19/rCRS projection; read <a href="microarray-chm13.html">CHM13 reference requirements and limits</a>.</p>
+<p>hg38 input never chooses among multiple hg19 placements. Unmapped, alternate-contig, multiply placed sites, and sites colliding with any other site's placements are omitted from the projected calls and exported as no-call (<code>--</code>). NCBI36 templates and the hg38 target also omit multiply placed markers. Inverted blocks complement once. Manifest counts are <code>liftover_lifted</code>, <code>liftover_unmapped</code>, <code>liftover_alt_contig</code>, <code>liftover_ambiguous</code> and <code>liftover_collision</code>; ambiguity or collision raises <code>liftover_ambiguous</code>. UCSC's pinned chains place each bundled chip marker at most once.</p>
+<p>All chips' markers are genotyped together against one genome-wide target list. <code>ref bootstrap</code> supplies no such list; first use builds <code>microarray/All_SNPs_&lt;build&gt;_ref.tab.gz</code> from templates and later runs reuse it. The hg38 list uses UCSC's <code>hg19ToHg38.over.chain.gz</code> to place the targets. GRCh38 input also needs <code>hg38ToHg19.over.chain.gz</code> to export hg19 coordinates, even if you supply an existing target list. Use <code>microarray --download</code> to fetch missing chains into the reference library. The input stays local; see <a href="privacy.html">network permissions</a>. Reads below MAPQ 10 are ignored: ambiguous mapping becomes a no-call, not a guessed homozygote.</p>
+<p>hg38 exports cache exact hg38-to-hg19 projections in the configured library's <code>microarray/hg19-coordinates/</code>. Keys include chain content, ordered source coordinates and format version; never IDs or genotypes. Changed inputs or damaged caches rebuild. Deleting the directory is safe. Without a configured, writable library, exports run uncached; an explicit FASTA does not choose the cache directory. Valid read-only caches work. Windows library paths deeper than 175 characters run uncached; see <a href="microarray-chm13.html">derived-cache notes</a>.</p>
+<h2 id="call-evidence">Call evidence<a class="heading-anchor" href="#call-evidence" aria-label="Link to section">#</a></h2>
+<p>Defaults require sample <strong>DP ≥10</strong>, <strong>GQ ≥20</strong>, and FILTER <code>PASS</code> or <code>.</code>. Missing required fields produce no-calls. For internally called single-sample BAM/CRAM reference calls only, bcftools' reference-call QUAL substitutes when it omits GQ. Supplied VCFs never use that fallback. Multi-sample VCFs require <code>--sample</code>. If sample selection encounters undeclared VCF contigs, it reads the contig names from the records and repairs the header in the working stream. The original VCF is not rewritten.</p>
+<p>VCF input may be bgzipped (<code>.vcf.gz</code>), a <code>.bcf</code>, or a plain <code>.vcf</code>. Indexed input is read in place, and an unindexed <code>.vcf.gz</code> is indexed beside itself unless <code>--sample</code> is given. Any other input (a plain VCF, an unindexed BCF, an unindexed <code>.vcf.gz</code> with <code>--sample</code>, or one that can't be indexed where it is because it is unsorted or in a read-only folder) is compressed and indexed as a working copy in the run's temporary work, never beside the input, so its chromosome naming (<code>1</code> or <code>chr1</code>, <code>MT</code> or <code>chrM</code>) is matched to the targets' and <code>--region</code> works as for indexed input. The copy keeps only the <code>--sample</code> you chose, and keeps the input's record order: only unsorted input is sorted.</p>
+<p>Absent VCF markers are <strong>no-calls</strong>, not reference genotypes: variant-only VCFs do not establish coverage. Explicit <code>0/0</code> records and gVCF reference-block interiors need the same gates as alternate calls. Block <code>MIN_DP</code>, when present, replaces block-start DP conservatively; uncovered gaps remain missing. See <a href="interop.html#bringing-vcfs-back">bringing VCFs back</a> for block precedence and build handling.</p>
+<p>Unsafe legacy absence-as-reference behaviour requires <code>--assume-hom-ref --min-dp 0 --min-gq 0</code>; <code>--no-exclude-filtered</code> additionally accepts failing FILTER records. These can invent calls at unassessed sites or retain weak evidence: use only with independently established callability. Indel-only or MNP records do not support a SNP call (<code>unsupported_allele</code>), even when the genotype is <code>0/0</code>. They do not make a chromosome count as called. A mixed SNP/indel record can still support a SNP call if the genotype uses only single-base alleles; a partially missing SNP genotype is a no-call (<code>missing_gt</code>). Imputed VCFs without DP/GQ also require explicit threshold overrides; their imputation-confidence mask still applies.</p>
+<p>Matching top-level <a href="https://wgsextract.github.io/wgsextract-cli/configuration.html" target="_blank" rel="noopener noreferrer">configuration</a> keys are <code>microarray_min_gq</code>, <code>microarray_min_dp</code>, <code>microarray_assume_hom_ref</code>, <code>microarray_exclude_filtered</code> and <code>microarray_call_reasons</code>. Explicit CLI values win, including <code>--min-gq 0</code>, <code>--assume-hom-ref</code>, <code>--no-exclude-filtered</code> and <code>--no-call-reasons</code>. Vendor haploid, allele-order, quoting and no-call conventions are unchanged. Declaring a vendor's I/D encoding does not enable indel calling: <a href="microarray-indels.html"><code>--indel-manifest FORMAT=PATH</code></a> is a separate opt-in caller for verified sequence-defined GRCh37 manufacturer probes, leaving the SNP CombinedKit unchanged. Repeat it for explicitly selected 23andMe, Ancestry or MyHeritage layouts. CSV, gzip and ZIP are supported; full reference contexts and DNA alleles must verify. Unsupported, absent or quality/identity- rejected probes stay missing; proprietary definitions and Ancestry probe order are not inferred.</p>
+<p>Commands warn about mean depths below 15x autosomal or 3x Y/mtDNA. After export, over 88% autosomal homozygosity or over 10% vendor no-calls also warns, without changing output. Depth uses the detailed-info cache, CRAM headers or BAM index. Configure <code>qc_*</code> thresholds or override depth for a run with <code>--qc-min-depth</code> (0 disables). See <a href="genotype-qc.html">genotype QC</a>.</p>
+<p>The kits match owners' real AncestryDNA/MyHeritage chips at about 99% of markers. Weekly tests compare HG00096 with its Omni chip; <a href="microarray-benchmarks.html">microarray benchmarks</a> cover all layouts against independent public chips, per-chromosome concordance/call rate and CPU, wall time, memory and export-byte parity. With <code>--threads</code> above 1, chromosomes run in parallel by default; sites deeper than 255 reads are recalled in one stream for exact single-stream calls. <code>--no-parallel</code> keeps one stream.</p>
+<h2 id="reuse-and-provenance">Reuse and provenance<a class="heading-anchor" href="#reuse-and-provenance" aria-label="Link to section">#</a></h2>
+<p>Each combined kit (<code>&lt;sample&gt;_CombinedKit.txt</code>), vendor kit and AADR panel has an <code>&lt;output&gt;.inputs.json</code>. It records:</p>
+<ul>
+<li>BAM/CRAM/VCF and reference path, size and modification time;</li>
+<li>target list, ploidy file, liftover chain and CLI version;</li>
+<li>genotype-changing options resolved through config: <code>--min-gq</code>, <code>--min-dp</code>, <code>--strand-ambiguous</code>, <code>--resolve-rsids</code>, <code>--quirks</code>, <code>--assume-hom-ref</code>, <code>--exclude-filtered</code>, <code>--call-reasons</code>, <code>--region</code>, <code>--sample</code>, AADR sample label/sex, <code>--indel-manifest</code> and requested AADR panels (their sites join the combined kit).</li>
+</ul>
+<p>Reuse requires matching recorded inputs and unchanged outputs; otherwise that output and sidecar regenerate. Adding a vendor format converts from the kept combined kit without recalling genotypes. Manifests mark kept outputs <code>reused</code>. Delete a sidecar to force its output to rebuild. CHM13 always regenerates.</p>
+<h2 id="explaining-no-calls">Explaining no-calls<a class="heading-anchor" href="#explaining-no-calls" aria-label="Link to section">#</a></h2>
+<p><code>--call-reasons</code> adds <code>&lt;sample&gt;_CombinedKit_reasons.tsv</code>, all targets with the usual four fields plus <code>CALL_REASON</code>, in the input build. GRCh37/38 manifests include <code>call_reason_&lt;reason&gt;</code> counts; CHM13 keeps counts in its report. Reasons distinguish <code>no_reads</code> (no aligned base under standard flag filters), <code>low_mapq</code> (evidence only below MAPQ 10), low/missing DP/GQ, <code>filtered</code>, <code>missing_gt</code>, unsupported alleles, absent VCF markers/contigs, and explicit <code>assumed_hom_ref</code>. CombinedKit/vendor schemas stay four-column.</p>
+<p>For BAM/CRAM this adds two depth passes per requested interval, indexed with <code>--region</code>; without a region it reads the whole alignment twice. It is off by default.</p>
+<h2 id="identity-and-vendor-strands">Identity and vendor strands<a class="heading-anchor" href="#identity-and-vendor-strands" aria-label="Link to section">#</a></h2>
+<p>These are opt-in identity checks, not probe-orientation validation:</p>
+<ul>
+<li><code>--strand-ambiguous no-call</code> masks known biallelic A/T or C/G input REF/ALT sites, including homozygotes. It cannot classify absent sites, reference-only records or multiallelics; it neither infers probe strands nor corrects mitochondrial complements. Default: <code>keep</code>; setting: <code>microarray_strand_ambiguous</code>.</li>
+<li><code>--resolve-rsids</code> uses bundled <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/src/wgsextract_cli/assets/microarray/rsid/README.md" target="_blank" rel="noopener noreferrer">dbSNP build157 history</a> for merged aliases in rsID vendor lookup; withdrawn, ambiguous or unresolved identities are excluded. IDs, coordinates and row order stay unchanged; alleles never flip. Conflicting aliases, including an explicit quality no-call versus a called allele, stay missing. Unlisted IDs are not certified active. This replaces neither NCBI36 liftover nor probe-allele validation. Default: <code>microarray_resolve_rsids = false</code>; <code>--no-resolve-rsids</code> overrides config. Call policies require one sample.</li>
+<li>Call reasons also include <code>strand_ambiguous</code>, <code>retired_rsid</code>, <code>ambiguous_rsid</code> and <code>unresolved_rsid</code> for native CombinedKit calls; additional vendor-projection conflicts are counted in the log.</li>
+<li><code>--quirks vendor</code> reproduces reverse-strand reports confirmed by other public revisions; <code>--quirks corrected</code> (default, <code>microarray_quirks</code>) keeps every call on GRCh37's forward strand. The openSNP-derived <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/src/wgsextract_cli/assets/microarray/revisions/README.md#strand-quirks-strandtsv" target="_blank" rel="noopener noreferrer">table</a> covers 32 markers across 23andMe V2/V3, AncestryDNA V1/V2 and FTDNA V2, and names later fixing revisions. It infers neither A/T or C/G markers, swapped probe alleles nor unconfirmed reports. <code>corrections.tsv</code> position fixes apply in both modes.</li>
+</ul>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/microarray.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/microarray.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

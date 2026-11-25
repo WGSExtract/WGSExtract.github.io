@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Resuming long workflows | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/step-resume.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Resuming long workflows</span></nav>
+<h1 id="resuming-long-workflows">Resuming long workflows</h1>
+<p>A whole-genome <code>realign</code>, <code>vcf deepvariant</code> or <code>analyze comprehensive</code> runs for hours as a series of steps. Each records its completion, so a run stopped by a crash, Ctrl-C, an out-of-memory kill or a reboot resumes when you rerun the same command. Steps that finished are skipped, and the run restarts at the first step that didn't.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Command</th><th>Steps</th><th>Journal</th></tr></thead>
+<tbody>
+<tr><td><code>realign</code></td><td><code>extract</code> (BAM/CRAM to FASTQ), <code>align</code> (map, mark duplicates, sort), <code>index</code></td><td><code>&lt;output&gt;.steps.json</code>, e.g. <code>sample_aligned.bam.steps.json</code></td></tr>
+<tr><td><code>vcf deepvariant</code></td><td><code>stage_reads</code> (CRAM 3.1 inputs only), <code>make_examples</code>, <code>call_variants</code>, <code>postprocess_variants</code></td><td><code>deepvariant.vcf.gz.steps.json</code></td></tr>
+<tr><td><code>analyze comprehensive</code></td><td><code>info</code>, <code>mt-haplogroup</code>, <code>y-haplogroup</code>, <code>snp</code>, <code>indel</code>, then <code>annotate:&lt;vcf&gt;</code> and <code>discovery:&lt;vcf&gt;</code> for each VCF</td><td><code>analyze.steps.json</code> in the output folder (each batch sample's own folder)</td></tr>
+<tr><td><code>vcf chain-annotate</code></td><td>Optional <code>select</code>, each annotation in order (e.g. <code>clinvar:1</code>), and <code>trim</code> if needed</td><td><code>chain_annotate.steps.json</code> in the output folder</td></tr>
+</tbody>
+</table></div>
+<h2 id="when-a-step-is-skipped">When a step is skipped<a class="heading-anchor" href="#when-a-step-is-skipped" aria-label="Link to section">#</a></h2>
+<p>When a step finishes, the journal (JSON, schema <code>wgsextract.steps/1</code>) records:</p>
+<ul>
+<li>a key made from its settings, the versions of the tools it ran and the version of the step itself</li>
+<li>the identity of each input (see <a href="#integrity-checks">Integrity checks</a> and <a href="#directory-inputs">Directory inputs</a>), and the run of the step that made it</li>
+<li>the identity of each output, including the files in an output folder (see <a href="#directory-outputs">Directory outputs</a>)</li>
+</ul>
+<p>For <code>analyze</code>, it also records the command run that did each step's work, so the workflow's result manifest can name it in <code>run.children</code> when a later run skips the step (see <a href="result-manifest.html#run-lineage-and-artifacts-pilot">Run lineage and artifacts</a>).</p>
+<p>The internal journal's <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/src/wgsextract_cli/assets/schemas/wgsextract.steps.1.schema.json" target="_blank" rel="noopener noreferrer">JSON Schema</a> is generated from the Python models used by its writers. Its <code>runningStep</code> and <code>completeStep</code> definitions describe newly written records. Historical records remain opaque at the read boundary, so unknown record fields survive an unrelated write and existing resume decisions do not change. Regenerate with <code>scripts/gen_output_schemas.py</code> (or <code>just regen</code>); <code>--check</code> detects drift.</p>
+<p>A rerun skips the step only if all of the following hold:</p>
+<ul>
+<li>the key is unchanged</li>
+<li>every input is unchanged, and no earlier step was rebuilt</li>
+<li>every output is still the one the step wrote</li>
+</ul>
+<p>Otherwise the step runs again, and so does every step that uses its outputs. The log gives the reason for each step, for example:</p>
+<pre><code class="language-text">Skipping step extract: complete (2026-11-05T02:16:41+00:00).
+Running step align: an earlier run was interrupted during it.
+Running step align: settings changed: sample None -&gt; &#x27;Bea&#x27;.
+Running step align: x_aligned.bam changed size (1048576 -&gt; 1048476 bytes; truncated or rewritten) since the step wrote it.
+Running step annotate: its vcf out/snps.vcf.gz changed (sha256 full digest differs).
+Skipping step index: complete (2026-11-05T03:02:11+00:00; checked 1 sha256 full, 1 wgse-fp1 sampled).</code></pre>
+<p>A skipped step's reason says how its inputs and outputs were checked, and the journal records each file's <code>digest</code> (<code>algorithm</code> and <code>strength</code>).</p>
+<p>Settings that don't change a step's output, such as threads and memory, are left out of its key. You can therefore resume with a different <code>--threads</code>.</p>
+<p><code>vcf chain-annotate</code> keeps intermediate VCFs on failure and removes them after success unless you pass <code>--keep-intermediates</code>. Rerun after a failure with the same output folder to reuse completed annotations. Use <code>--force-step clinvar</code> to rerun ClinVar and the steps that depend on it, or <code>--force</code> (<code>--restart</code>) to rerun the chain. With <code>--region</code> or <code>--bed</code>, the chain reads only relevant contigs for steps that can move a variant during normalization or compose one from neighboring records. It then trims to the requested intervals, so those variants are not lost at interval boundaries.</p>
+<p>Use <code>--dry-run</code> to see which steps would run or be reused, including publication and any requested table export. It writes the plan to <code>chain_annotate.plan.manifest.json</code> without running the steps or changing the resume journal or the published outputs.</p>
+<p>With <code>--tmp-dir</code> or <code>temp_directory</code>, a failed <code>realign</code> retains completed FASTQs in its run workspace. Rerunning the same command reuses those files after checking the journal's inputs, tools and output fingerprints, even though the new run gets a different workspace. On POSIX, the retained directory and FASTQs must belong to the current user and must not be writable by their group or other users; otherwise extraction runs again. Shared temporary roots must belong to this user or root and either disallow other writers or have the sticky bit set. Changed or missing FASTQs are also regenerated. Use <code>--force-extract</code>, <code>--force-step extract</code>, or <code>--force</code> to explicitly regenerate the pair. Temporary FASTQs are removed after the resumed alignment succeeds.</p>
+<p>Without <code>--tmp-dir</code>, <code>realign</code> keeps its FASTQs in the output folder between steps, since they are also usable inputs (<code>align --r1 --r2</code>). They stay there when a later step fails, so a rerun skips <code>extract</code>, and are removed once the alignment succeeds. <code>--keep-fastq</code> keeps them as results. Other commands keep all temporary work in the <code>--tmp-dir</code> workspace (or, without one, a hidden folder in the output folder removed when the command ends), and nothing is written beside an input except an index it needs.</p>
+<p>Plain VCFs and annotation tables are compressed into that temporary work, not beside their source files. Without a configured temporary directory, prepared copies use a hidden output subfolder cleaned when the run finishes, including on failure or cancellation. Only standalone preparation without an output/work folder falls back to system temporary storage. Persistent output names and provenance still describe the original inputs, including symlinks.</p>
+<p>A step's inputs include the data it reads, not just the sample: the reference FASTA, region BED files, DeepVariant checkpoint files and installed annotation data (a new ClinVar or gnomAD release reruns <code>annotate</code>). Tool versions include Haplogrep 3 (and haplocheck with <code>--contamination</code>) for <code>mt-haplogroup</code> and, for DeepVariant in Docker, the image's ID, so replacing an image under the same tag reruns every stage.</p>
+<h2 id="integrity-checks">Integrity checks<a class="heading-anchor" href="#integrity-checks" aria-label="Link to section">#</a></h2>
+<p>Each file a step reads or writes is recorded with its size, modification time (to the nanosecond) and a digest of one of two strengths:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Files</th><th>Digest</th><th>Strength</th><th>On resume</th></tr></thead>
+<tbody>
+<tr><td>up to 64 MiB</td><td>SHA-256 of the whole file</td><td><code>full</code></td><td>Hashed again on every check (about 40 ms for 64 MiB), so any change to its bytes reruns the step, even one that restores the size and modification time.</td></tr>
+<tr><td>over 64 MiB</td><td><code>wgse-fp1</code>: the size and the first, middle and last MiB</td><td><code>sampled</code></td><td>Three 1 MiB reads (tens of ms, whatever the file's size). Accepted only while the size, sampled blocks <strong>and modification time</strong> are unchanged: a new modification time alone reruns the step, with the reason <code>was modified</code>.</td></tr>
+</tbody>
+</table></div>
+<p>So an edit in place to a large BAM or FASTQ, even one between the sampled blocks, reruns the steps that read it, while a resume, the GUI or a render never rereads 100 GB just to decide that nothing changed. Moving a file (<code>mv</code>) keeps its modification time and doesn't rerun anything; copying it without times (<code>cp</code> without <code>-p</code>) does. A large file deliberately edited and then given back its old modification time (<code>touch -r</code>) isn't seen; use <code>--force-step</code> after such a change, or <code>wgsextract sign</code> for full-content checksums. A full digest is never taken on trust: it is recomputed, so one recorded earlier can't vouch for a file that has since changed. On Linux and macOS a full digest is reused within one process only while the file's size, modification and change times and inode are all unchanged; on Windows it is rehashed on every check. A file whose digest can't be read never matches, and an output replaced by something other than a regular file (a pipe or device) reruns the step without being read.</p>
+<p>A journal written before these digests runs each step once more, with the reason <code>was recorded by an earlier wgsextract without an integrity digest</code>.</p>
+<h2 id="directory-outputs">Directory outputs<a class="heading-anchor" href="#directory-outputs" aria-label="Link to section">#</a></h2>
+<p>A step whose output is a folder records the files in it. By default every file in the folder is required: adding, deleting, replacing or truncating one reruns the step, with a reason such as <code>report&#x27;s contents changed (12 files, 4096 bytes when written; now 11 files, 3900 bytes)</code>. Like <a href="#directory-inputs">directory inputs</a>, this uses each file's path, size and modification time, without reading it. Lock files and the hidden <code>.partial</code> files of unfinished writes are left out.</p>
+<p>A step can instead declare the folder's required members (<code>members=</code> when it reports the output). Each member then gets the <a href="#integrity-checks">file checks</a> above, and a missing or changed one reruns the step (<code>report/table.tsv, a required member, is missing</code>). Anything else in the folder is disposable, such as a cache, and adding or removing it reruns nothing. A step that declares a member it didn't write fails rather than being recorded complete.</p>
+<p>Today the only folders recorded as step outputs are those a command run by <code>analyze comprehensive</code> reports writing (an Ensembl VEP cache it installed), which use the default, every file required.</p>
+<h2 id="directory-inputs">Directory inputs<a class="heading-anchor" href="#directory-inputs" aria-label="Link to section">#</a></h2>
+<p>Some steps read a folder rather than a file: VEP's cache for <code>annotate</code>, or a folder a child command reports reading. The journal records such an input's identity from the path, size and modification time (to the nanosecond) of every file under it, following symbolic links and noting where each points. The rerun runs the step again when a file in the folder is added, removed, renamed, resized or rewritten, or a link in it is repointed, including when the whole folder is replaced by a new release at the same path. A folder that can't be listed is recorded as unreadable, so it reruns the step once it can be read again. Lock files (<code>*.lock</code>, <code>*.guard</code>) and the hidden <code>.partial</code> files of an unfinished download are left out, so another run using the same library doesn't force a rerun.</p>
+<p>No file is read, so checking a cache of tens of thousands of files costs one <code>stat</code> per file, not a pass over its gigabytes. The trade-off: an edit that keeps a file's size and also restores its modification time (<code>touch -r</code>, or a copy with <code>rsync -t</code> of a file the same size) isn't seen. Use <code>--force-step</code> after such a change. Copying a folder without keeping times (<code>cp -r</code>) changes every time, so it reruns the steps that read the folder.</p>
+<p>A journal written by a wgsextract older than this behaviour holds no contents identity for its directory inputs, so the steps that read one run once more, with the reason <code>is a directory whose contents an earlier wgsextract didn&#x27;t record</code>.</p>
+<h2 id="partial-outputs">Partial outputs<a class="heading-anchor" href="#partial-outputs" aria-label="Link to section">#</a></h2>
+<p>A step is marked <code>running</code> in the journal before it starts. It is marked <code>complete</code> only after all of its outputs are written. Outputs are written under temporary names and renamed into place when they are complete. A run killed mid-step therefore never leaves a step, or a file, that looks done. The rerun removes the half-written temporary files, and any output the killed step left, then redoes the step.</p>
+<p>Ensembl VEP and Parabricks DeepVariant stage each completed VCF together with its matching index before replacing either final file. A failed or interrupted cross-volume copy preserves the previous readable VCF/index pair.</p>
+<p>DeepVariant is the exception that keeps partial work. Until the VCF is final, its stages work in <code>.deepvariant.work</code> in the output folder. A <code>make_examples</code> run that was interrupted keeps its finished shards: GNU parallel's <code>--joblog</code> and <code>--resume-failed</code> rerun only the shards that hadn't finished. Those shards are kept only when the rerun has the same key and inputs. Otherwise the folder is cleared. A resume with a different <code>--threads</code> keeps the earlier run's shard count, and <code>--threads</code> sets only how many shards run at once. Once the VCF is written, the work folder is deleted. With <code>--reference-evidence gvcf</code> the gVCF and its index are <code>postprocess_variants</code>' outputs too: a missing one reruns it, and after the work folder is gone, every stage (see <a href="reference-evidence.html#deepvariant">reference-evidence.md</a>).</p>
+<h2 id="options">Options<a class="heading-anchor" href="#options" aria-label="Link to section">#</a></h2>
+<p>Each of the three commands takes these options:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Option</th><th>Effect</th></tr></thead>
+<tbody>
+<tr><td><code>--force</code> (alias <code>--no-resume</code>)</td><td>Rerun every step, ignoring the journal.</td></tr>
+<tr><td><code>--force-step STEP</code></td><td>Rerun <code>STEP</code> and the steps that use its outputs. Repeatable. For <code>analyze comprehensive</code>, <code>annotate</code> and <code>discovery</code> force the step for every VCF.</td></tr>
+<tr><td><code>--dry-run</code></td><td>Print each step, whether it would run or be skipped, and why. Runs nothing.</td></tr>
+</tbody>
+</table></div>
+<pre><code class="language-console">$ wgsextract realign --input sample_hg19.bam --ref hs38.fa --dry-run
+realign plan (sample_hg19_aligned.bam.steps.json):
+  extract  skip  complete (2026-11-05T02:16:41+00:00)
+  align    run   an earlier run was interrupted during it
+  index    run   step align runs before it</code></pre>
+<p>The plan is also in the run's <a href="result-manifest.html">result manifest</a> as <code>details.steps</code>, along with the metrics <code>steps_run</code> and <code>steps_skipped</code>. Library users see each decision as a <code>step</code> progress event (see the <a href="https://wgsextract.github.io/wgsextract-cli/api.html" target="_blank" rel="noopener noreferrer">API</a>).</p>
+<h2 id="one-run-at-a-time">One run at a time<a class="heading-anchor" href="#one-run-at-a-time" aria-label="Link to section">#</a></h2>
+<p>A run holds a lock on its journal (<code>.&lt;journal&gt;.lock</code>) until it ends. A second run into the same output fails at once and names the lock, instead of both writing one file. The operating system releases the lock when a run dies, even from SIGKILL.</p>
+<p>Tools run in their own process groups, so a SIGKILL or OOM kill of <code>wgsextract</code> alone can leave them running, still writing the step's files. Each step tags the processes it starts (<code>WGSEXTRACT_STEP_RUN</code> in their environment, a marker, not a setting) and its containers (a <code>wgsextract.step</code> label). A rerun lists the killed run's tools and containers that are still alive, then stops before running anything:</p>
+<pre><code class="language-console">$ wgsextract analyze comprehensive --input sample.bam --outdir out
+A killed analyze comprehensive run&#x27;s tools are still writing out: bcftools (pid 4242), ...</code></pre>
+<p>Wait for them to exit, or stop them (<code>kill PID</code>, <code>docker stop NAME</code>), then rerun.</p>
+<h2 id="limits">Limits<a class="heading-anchor" href="#limits" aria-label="Link to section">#</a></h2>
+<ul>
+<li>Resuming works within a step's boundaries. The rest of an interrupted <code>align</code> (one pipeline from FASTQ to sorted, duplicate-marked BAM) is redone from its start. Only DeepVariant's <code>make_examples</code> shards resume within a step.</li>
+<li><code>realign</code> keeps its extracted FASTQs only until the alignment is complete. When they are temporary, they are deleted after the alignment, and the journal notes that. A later <code>--force-step align</code> therefore extracts them again.</li>
+<li>A container of a DeepVariant stage in Docker outlives a SIGKILL of <code>wgsextract</code> (a Ctrl-C or SIGTERM stops it with <code>docker kill</code>). The rerun finds it by its <code>wgsextract.step</code> label and stops, as for other tools; stop it with <code>docker stop NAME</code>. If the engine doesn't answer <code>docker ps</code>, the rerun can't check, and goes ahead.</li>
+<li>The GPU (<code>--gpu</code>) DeepVariant path runs as one step, so it doesn't take <code>--dry-run</code> or <code>--force-step</code>.</li>
+</ul>
+<h2 id="chunk-assembly-implementation">Chunk assembly implementation<a class="heading-anchor" href="#chunk-assembly-implementation" aria-label="Link to section">#</a></h2>
+<p>Raw BAM/CRAM chunk assembly lives in <code>core/alignment/splice.py</code>, called by <code>core/chunked_alignment.py</code>. This binary I/O layer preserves encoded records and is separate from step-journal serialization.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/step-resume.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/step-resume.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

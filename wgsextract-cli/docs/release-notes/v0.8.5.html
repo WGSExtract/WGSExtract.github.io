@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WGS Extract 0.8.5 | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/release-notes/v0.8.5.html" />
+    <link rel="stylesheet" href="../../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../../index.html">Home</a><a href="../../install.html">Install CLI</a><a href="../../gui.html">GUI</a><a href="../../cli.html">CLI</a><a href="../../workflows.html">Workflows</a><a href="../../wgs-guide.html">WGS guide</a><a href="../../reference.html">Reference</a><a class="active" href="../index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../../index.html">WGS Extract CLI</a> / <a href="../index.html">CLI Docs</a> / <span>WGS Extract 0.8.5</span></nav>
+<h1 id="wgs-extract-085">WGS Extract 0.8.5</h1>
+<p>This release completes the v0.8.0 milestone and adds parts of v0.9.0. It is the first release that ships the WGS Extract desktop app next to the CLI.</p>
+<h2 id="new">New<a class="heading-anchor" href="#new" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong>The WGS Extract desktop app ships with the CLI:</strong> its source moved into this repository (<code>gui/</code>), and each release now carries the app's installers for Linux, macOS and Windows next to the CLI it bundles. Installed apps update from here; the app's site moved to <a href="https://wgsextract.github.io/wgsextract-cli/app/" target="_blank" rel="noopener noreferrer">https://wgsextract.github.io/wgsextract-cli/app/</a> (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/510" target="_blank" rel="noopener noreferrer">#510</a>).</li>
+<li><strong>Personal report:</strong> <code>wgsextract report</code> summarises a sample's results in one local HTML report (plus Markdown, JSON and a findings table), with depth-aware confidence labels on every finding. It can use selectable gene lists including ACMG SF v3.3, and it reports HLA alleles and carrier status for recessive genes. Nothing leaves your computer (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/353" target="_blank" rel="noopener noreferrer">#353</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/337" target="_blank" rel="noopener noreferrer">#337</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/397" target="_blank" rel="noopener noreferrer">#397</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/398" target="_blank" rel="noopener noreferrer">#398</a>).</li>
+<li><strong>Server mode for apps and AI agents:</strong> <code>wgsextract serve</code> runs a local HTTP/JSON API and an MCP server (over stdio or streamable HTTP) on top of the same commands. It listens only on 127.0.0.1 with a per-launch token, requests may only touch the folders you allow, deleting data needs <code>--allow-destructive</code>, and read-only lookups cover variants, reports and manifests (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/351" target="_blank" rel="noopener noreferrer">#351</a>).</li>
+<li><strong>Typed Python API:</strong> <code>wgsextract_cli.api</code> exposes every command with typed parameters and results, progress events and the human-readable report (<a href="https://github.com/WGSExtract/wgsextract-cli/blob/v0.8.5/docs/api.md" target="_blank" rel="noopener noreferrer">docs/api.md</a>; <a href="https://github.com/WGSExtract/wgsextract-cli/issues/346" target="_blank" rel="noopener noreferrer">#346</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/478" target="_blank" rel="noopener noreferrer">#478</a>).</li>
+<li><strong>Long runs resume:</strong> <code>realign</code> and <code>vcf deepvariant</code> record their completed steps, so rerunning after a crash or reboot continues where it stopped (<code>--no-resume</code> starts over) (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/350" target="_blank" rel="noopener noreferrer">#350</a>).</li>
+<li><strong>Easier help:</strong> <code>wgsextract help</code> groups commands into the usual path, setup and advanced tiers, and shows each command's tools and typical run time. The command reference (<a href="https://github.com/WGSExtract/wgsextract-cli/blob/v0.8.5/docs/commands.md" target="_blank" rel="noopener noreferrer">docs/commands.md</a>) and the site's CLI page start with the commands to run, in order, for a BAM/CRAM, FASTQ, VCF or consumer raw-data file (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/347" target="_blank" rel="noopener noreferrer">#347</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/352" target="_blank" rel="noopener noreferrer">#352</a>).</li>
+<li><strong>The desktop app reads each run's result manifest:</strong> WGS Extract actions list the files they wrote with <strong>Open</strong> and <strong>Show in Folder</strong>, and show their warnings and key metrics, instead of leaving them in the log. A refused option is shown next to the action, and a missing tool offers <strong>Open Setup</strong>. The global <code>--result-file PATH</code> option, which writes the document to PATH while keeping the human-readable output, is now documented (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/529" target="_blank" rel="noopener noreferrer">#529</a>).</li>
+<li><strong>Long reads (Nanopore and PacBio):</strong>
+<ul>
+<li><code>basecall</code> turns Nanopore POD5 signal into an unaligned BAM with methylation tags, using Dorado if it is installed (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/342" target="_blank" rel="noopener noreferrer">#342</a>).</li>
+<li><code>vcf phase</code> phases a sample's heterozygous calls with its reads (WhatsHap or LongPhase) (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/341" target="_blank" rel="noopener noreferrer">#341</a>).</li>
+<li><code>bam merge</code> safely combines several flow-cell runs of one sample (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/339" target="_blank" rel="noopener noreferrer">#339</a>).</li>
+<li><code>info</code> reports read N50, a read-length histogram and the mapped fraction, and measures long-read depth correctly (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/338" target="_blank" rel="noopener noreferrer">#338</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/427" target="_blank" rel="noopener noreferrer">#427</a>).</li>
+<li><code>realign</code> handles single-end PacBio BAM/CRAM input with minimap2 (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/388" target="_blank" rel="noopener noreferrer">#388</a>).</li>
+<li>Validated end to end on GIAB HG002 R10.4.1, with a real-read CI fixture (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/299" target="_blank" rel="noopener noreferrer">#299</a>).</li>
+</ul></li>
+<li><strong>Targeted sequencing:</strong> <code>panel bed</code> writes gene-region BEDs for Nanopore adaptive sampling, and <code>info calculate-coverage --by BED</code> reports per-target depth, on/off-target enrichment and targets below <code>--min-depth</code> (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/335" target="_blank" rel="noopener noreferrer">#335</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/336" target="_blank" rel="noopener noreferrer">#336</a>).</li>
+<li><strong>Lineage:</strong>
+<ul>
+<li><code>lineage mt-haplogroup</code> uses Haplogrep 3, with a choice of trees and haplocheck contamination QC (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/361" target="_blank" rel="noopener noreferrer">#361</a>).</li>
+<li><code>lineage y-haplogroup</code> uses a versioned YFull tree, refreshed to 14.06.0, and a tree registry that accepts custom trees (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/359" target="_blank" rel="noopener noreferrer">#359</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/360" target="_blank" rel="noopener noreferrer">#360</a>).</li>
+</ul></li>
+<li><strong>GPU:</strong>
+<ul>
+<li>Parabricks runs check GPU and host memory first, and switch to its low-memory modes automatically (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/365" target="_blank" rel="noopener noreferrer">#365</a>).</li>
+<li><code>vcf deepvariant --gpu</code> supports Ultima reads through Google's Ultima GPU image, and warns if that image changes the call_variants batch size (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/358" target="_blank" rel="noopener noreferrer">#358</a>).</li>
+</ul></li>
+<li><strong>Memory and disk checks:</strong> <code>align</code> and <code>realign</code> warn before minimap2 outgrows memory, and the long-read memory and disk estimates are calibrated against whole-genome runs (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/428" target="_blank" rel="noopener noreferrer">#428</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/474" target="_blank" rel="noopener noreferrer">#474</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/475" target="_blank" rel="noopener noreferrer">#475</a>).</li>
+<li><strong>Microarray:</strong> below 15x coverage, <code>microarray</code> warns that its calls become less accurate. The threshold comes from a 30x-to-1x downsampling benchmark (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/307" target="_blank" rel="noopener noreferrer">#307</a>).</li>
+<li><code>qc fastqc</code> fails if FastQC wrote no report, and warns (<code>no_reads</code>) when the input has no reads.</li>
+<li><strong>Faster alignment on Apple Silicon Macs:</strong> <code>align</code> and <code>realign</code> use WGS Extract's own builds of bwa, bwa-mem2 and minimap2 (<code>wgse-bwa</code>, <code>wgse-bwa-mem2</code> and <code>wgse-minimap2</code>) when they are on <code>PATH</code>. They write the same alignments as the upstream tools from the same index files, and <code>wgse-bwa</code> and <code>wgse-bwa-mem2</code> use the Metal GPU. On an M1 Pro, aligning 5M read pairs to hs38 went from 533 s to 147 s with an identical BAM. They are published as <code>macos-aligners-*</code> prereleases and aren't installed for you; <code>--native-aligners off</code> (or <code>native_aligners = &quot;off&quot;</code> in <code>config.toml</code>) turns this off. The result manifest records which build ran and whether it used the GPU (<a href="https://github.com/WGSExtract/wgsextract-cli/blob/v0.8.5/docs/hardware.md#apple-silicon-metal" target="_blank" rel="noopener noreferrer">docs/hardware.md</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/v0.8.5/native/README.md#installing" target="_blank" rel="noopener noreferrer">native/README.md</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/364" target="_blank" rel="noopener noreferrer">#364</a>).</li>
+<li><strong>No separate indexing pass after alignment:</strong> <code>align</code> and <code>realign</code> write the BAM or CRAM index while sorting instead of re-reading the file to index it. On a 30x genome this saves about 320 CPU-seconds and a full read of the BAM; the index is the same as <code>samtools index</code> writes (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/545" target="_blank" rel="noopener noreferrer">#545</a>).</li>
+</ul>
+<h2 id="fixes">Fixes<a class="heading-anchor" href="#fixes" aria-label="Link to section">#</a></h2>
+<ul>
+<li><code>vcf snp</code> and <code>vcf indel</code> with <code>--parallel</code> give the same calls as a single stream at very deep sites (more than 255 reads) (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/392" target="_blank" rel="noopener noreferrer">#392</a>).</li>
+<li><code>extract custom</code> sorts and merges out-of-order or overlapping regions, instead of writing a BAM that can't be indexed (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/434" target="_blank" rel="noopener noreferrer">#434</a>).</li>
+<li>A <code>--ref</code> FASTA outside the reference library no longer hides the library's resources, such as the hg38-to-hg19 chain that <code>microarray</code> needs (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/429" target="_blank" rel="noopener noreferrer">#429</a>).</li>
+<li>Variant callers no longer warn about low depth when <code>--region</code> limits a BAM that holds only that region (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/430" target="_blank" rel="noopener noreferrer">#430</a>).</li>
+<li><code>align</code> extracts long reads from a BAM <code>--r1</code> before giving them to minimap2, and sends short reads in a BAM to <code>realign</code> (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/447" target="_blank" rel="noopener noreferrer">#447</a>).</li>
+<li>On Windows, CHM13 microarray cache paths stay within <code>MAX_PATH</code> in deep library folders (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/419" target="_blank" rel="noopener noreferrer">#419</a>).</li>
+<li><code>report</code> treats a split 1/2 genotype with two pathogenic or likely pathogenic alleles as biallelic (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/483" target="_blank" rel="noopener noreferrer">#483</a>).</li>
+<li><code>wgsextract panel --help</code> no longer crashes (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/468" target="_blank" rel="noopener noreferrer">#468</a>).</li>
+<li><code>deps check</code> retries slow pixi queries instead of dropping install hints (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/518" target="_blank" rel="noopener noreferrer">#518</a>).</li>
+<li><strong>Licensing:</strong> the reference bootstrap no longer contains YBrowse data. The CC-BY-SA YBrowse snapshot is a separate optional download (<code>ref ybrowse</code>), and the YFull pack is split into separately licensed data modules (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/503" target="_blank" rel="noopener noreferrer">#503</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/509" target="_blank" rel="noopener noreferrer">#509</a>).</li>
+</ul>
+<h2 id="removed">Removed<a class="heading-anchor" href="#removed" aria-label="Link to section">#</a></h2>
+<p>Two commands that duplicated others are gone (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/352" target="_blank" rel="noopener noreferrer">#352</a>):</p>
+<ul>
+<li><code>wgsextract ref library-list</code>: use <code>wgsextract ref library --list</code>. The Python API's <code>api.ref.library_list</code> and the server's <code>ref/library-list</code> operation are unchanged.</li>
+<li>Running VEP with bare <code>wgsextract vep --input ...</code>: use <code>wgsextract vep run --input ...</code>. Bare <code>vep</code> now asks for a subcommand, like <code>vcf</code>.</li>
+</ul>
+<h2 id="desktop-app">Desktop app<a class="heading-anchor" href="#desktop-app" aria-label="Link to section">#</a></h2>
+<ul>
+<li>WGSExtract has controls for the newer CLI options:
+<ul>
+<li>DeepVariant model selection, including <code>ONT_R104</code>;</li>
+<li>long-read structural-variant modes and a tandem-repeat BED;</li>
+<li>Clair3 and methylation pileup (hidden on Windows);</li>
+<li>Y-STR panels and variant tables.</li>
+</ul></li>
+<li><strong>Report a problem:</strong> WGSExtract can preview a redacted bug report, and open GitHub's pre-filled new-issue form with it (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/528" target="_blank" rel="noopener noreferrer">#528</a>).</li>
+<li>WGSExtract's coverage actions run as jobs on <code>wgsextract serve</code>, with live progress and clean cancellation.</li>
+<li><strong>Workspace:</strong> the WGS Extract workspace is now a visible <code>wgs-extract</code> folder in your home folder, and holds temporary files and run logs too. Settings can move it to another disk. Existing workspaces aren't moved: run setup again. Uninstalling asks before deleting it (<a href="https://github.com/WGSExtract/wgsextract-cli/pull/531" target="_blank" rel="noopener noreferrer">#531</a>).</li>
+<li><strong>Run Yleaf</strong> works again, with options for the Y tree, ancient DNA and genotyped positions only (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/538" target="_blank" rel="noopener noreferrer">#538</a>).</li>
+<li>The Web UI server rejects an invalid <code>--port</code> with a clear error before it starts (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/527" target="_blank" rel="noopener noreferrer">#527</a>).</li>
+</ul>
+<p>See the app's <a href="https://github.com/WGSExtract/wgsextract-cli/blob/v0.8.5/gui/docs/CHANGELOG.md" target="_blank" rel="noopener noreferrer">CHANGELOG</a> for details.</p>
+<p><strong>Full changelog:</strong> <a href="https://github.com/WGSExtract/wgsextract-cli/compare/v0.6.6...v0.8.5" target="_blank" rel="noopener noreferrer">https://github.com/WGSExtract/wgsextract-cli/compare/v0.6.6...v0.8.5</a></p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/release-notes/v0.8.5.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/release-notes/v0.8.5.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

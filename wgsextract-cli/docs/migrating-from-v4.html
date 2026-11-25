@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Migrating from WGS Extract v4 (v44.2) | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/migrating-from-v4.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Migrating from WGS Extract v4 (v44.2)</span></nav>
+<h1 id="migrating-from-wgs-extract-v4-v442">Migrating from WGS Extract v4 (v44.2)</h1>
+<p>This guide is for people moving from the released WGS Extract v4 desktop program (v44.2, 28 Feb 2023, with the v8 reference library) to the current desktop app and <code>wgsextract</code> CLI. It maps each v4 action to its current page and command, lists changed defaults and what is not yet equivalent, and records the public-data comparison behind those statements.</p>
+<p>The comparison is release-qualified: it inspected and ran the released v44.2 program, not the older <code>WGSExtract-Dev</code> repository, which holds v33-era source and lacks actions that v4 shipped (alignment, FASTQ QC, WES extraction, whole-genome SNP and InDel VCFs). The research is in #994 (WGS Extract v4 before/after); this guide and its corpus are #1187.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Pin</th><th>Identity</th></tr></thead>
+<tbody>
+<tr><td>v44.2 program</td><td><a href="https://get.wgse.io/WGSExtract-v44.2_28Feb2023_program.zip" target="_blank" rel="noopener noreferrer"><code>WGSExtract-v44.2_28Feb2023_program.zip</code></a>, SHA-256 <code>ee7b57e042fb05626a6f3c6dc791bb86857a9802d48ecdbc8d1a1c4604b52a23</code></td></tr>
+<tr><td>v8 reference library</td><td><a href="https://get.wgse.io/WGSExtract-v8_30Jan2023_reflib.zip" target="_blank" rel="noopener noreferrer"><code>WGSExtract-v8_30Jan2023_reflib.zip</code></a>, SHA-256 <code>5cd199c7dfa68ec594e8b23cf1f19ef34aadd6973f22be14a6c1659ffb131365</code></td></tr>
+<tr><td>Development repository</td><td>WGSExtract-Dev <code>f0f50d867c1e395f33abf09d6291d708e7fd1aba</code> (stale v33-era tree)</td></tr>
+<tr><td>CLI source analysis</td><td><code>1cc62f3cbca69937df5499774bdbebd1453bb886</code></td></tr>
+<tr><td>CLI empirical run</td><td><code>6b676c17481d866a96229e8a2db654ecf88d1a3a</code></td></tr>
+<tr><td>Scientific tools</td><td>samtools, bcftools and htslib 1.24 on both sides</td></tr>
+</tbody>
+</table></div>
+<p>Both sides of the comparison ran the same modern samtools/bcftools 1.24. That isolates differences in program logic; it does not reproduce v4's historic bundled installers, and nothing here claims those older binaries behaved identically.</p>
+<h2 id="before-you-start">Before you start<a class="heading-anchor" href="#before-you-start" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong>Keep your v4 installation, its settings and your original files.</strong> The current app does not change them; keep them until you have checked the new outputs.</li>
+<li><strong>Write new outputs to a separate folder.</strong> By default each command writes to a <code>wgse/</code> folder beside its input; set another with <code>--outdir</code> (or the Advanced-mode Output Directory). Don't point it at v4's output folder: file names differ and you would mix results from two programs.</li>
+<li><strong>Don't reuse v4's <code>reference/</code> folder as the reference library.</strong> Its layout, the all-diploid <code>microarray/ploidy.txt</code>, the chains and the chip templates differ from what the CLI expects. Set up the current library with <code>wgsextract ref bootstrap</code> (an explicit download) and the Reference Genomes page, then check genomes with <code>wgsextract ref verify</code>. A reference genome FASTA you already have can be reused; verify it first.</li>
+<li><strong>Settings are not imported.</strong> v4 kept a few values in <code>~/.wgsextract</code> (JSON). Copy the ones you want into <code>config.toml</code> (see <a href="https://wgsextract.github.io/wgsextract-cli/configuration.html" target="_blank" rel="noopener noreferrer">Configuration</a>) or the Settings page:</li>
+</ul>
+<div class="table-wrap"><table>
+<thead><tr><th>v4 <code>~/.wgsextract</code> key</th><th>Current setting</th></tr></thead>
+<tbody>
+<tr><td><code>outdir.FP</code></td><td><code>output_directory</code> (or <code>--outdir</code>)</td></tr>
+<tr><td><code>reflib.FP</code></td><td>review, then <code>reference_library</code>; genomes go in <code>reference_genome_library</code></td></tr>
+<tr><td><code>tempf.FP</code></td><td><code>temp_directory</code></td></tr>
+<tr><td><code>BAM.file_FN</code></td><td><code>input_path</code>, or choose the file on the page</td></tr>
+<tr><td><code>lang.language</code></td><td>the desktop app's language setting (not <code>config.toml</code>)</td></tr>
+<tr><td><code>.wgsewslbwa</code> (Windows WSL BWA)</td><td>none: current Windows builds use native tools (<a href="windows.html">Windows</a>)</td></tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>Data terms differ from the program licence.</strong> Reference chains, chip templates, BEDs, Y trees and manuals carry their own terms; see <a href="resource-mirrors.html">Download mirrors</a> and the NOTICE file.</li>
+</ul>
+<h2 id="old-buttons-current-pages-and-commands">Old buttons, current pages and commands<a class="heading-anchor" href="#old-buttons-current-pages-and-commands" aria-label="Link to section">#</a></h2>
+<p>The desktop app has Basic and Advanced modes; Basic covers the familiar v4 tasks, Advanced adds every CLI option. Pages are named as in the app.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>v44.2 action</th><th>Desktop page</th><th>CLI command</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Select BAM, Stats</td><td>BAM: Detailed Info</td><td><code>info --detailed</code></td><td>Placed-unmapped reads are no longer counted as mapped</td></tr>
+<tr><td>Stats: WGS/WES/Poz coverage bins</td><td>BAM: Detailed Coverage</td><td><code>info calculate-coverage</code>, <code>--by BED</code></td><td>Bins and denominators differ</td></tr>
+<tr><td>Header (view, save)</td><td>BAM: Basic Info</td><td><code>bam identify</code>, <code>info</code></td><td>No header-text export</td></tr>
+<tr><td>Index, Sort, To BAM/CRAM</td><td>BAM / CRAM Management</td><td><code>bam index</code>, <code>bam sort</code>, <code>bam to-cram</code>, <code>bam to-bam</code></td><td></td></tr>
+<tr><td>Realign</td><td>Realign BAM/CRAM</td><td><code>realign</code></td><td></td></tr>
+<tr><td>Extract WES (TruSeq/xGen BED)</td><td>Extract: Custom Extract</td><td><code>extract custom --region targets.bed</code></td><td>Bring the BED; no named exome presets</td></tr>
+<tr><td>Microarray: formats, Recommended, Generate</td><td>Microarray: Generate</td><td><code>microarray --formats ...</code></td><td><code>all</code> means CombinedKit only (below)</td></tr>
+<tr><td>MT FASTA / BAM / VCF</td><td>Extract: MT-only</td><td><code>extract mito-fasta</code>, <code>extract mt-bam</code>, <code>extract mito-vcf</code></td><td></td></tr>
+<tr><td>Y BAM; Y+MT BAM</td><td>Extract: Y-only; Y and MT</td><td><code>extract ydna-bam</code>, <code>extract y-mt-extract</code></td><td>No <code>chrY_KI270740v1_random</code> reads (#1184)</td></tr>
+<tr><td>Y BAM (Poz)</td><td>Extract</td><td><code>extract ydna-bam --poz</code></td><td></td></tr>
+<tr><td>Targeted Y VCF (yBrowse)</td><td>Extract</td><td><code>extract ydna-vcf --ybrowse</code></td><td>GRCh38; GRCh37 after <code>ref ybrowse --install --grch37</code>, lifted from GRCh38, not YBrowse's GRCh37 file (<a href="lineage.html#grch37">lineage</a>)</td></tr>
+<tr><td>Y haplogroup (Yleaf)</td><td>Ancestry: Run Yleaf</td><td><code>lineage y-haplogroup</code></td><td>Yleaf 4.1.6-derived engine; trees selectable</td></tr>
+<tr><td>mt haplogroup (Haplogrep)</td><td>Ancestry: Run Mito Haplogrep</td><td><code>lineage mt-haplogroup</code></td><td>Haplogrep 3, not 2.4.0</td></tr>
+<tr><td>Unmapped export</td><td>Extract: Unmapped</td><td><code>extract unmapped</code>, <code>--fastq</code></td><td>Paired singletons kept as a separate output</td></tr>
+<tr><td>Unalign</td><td>BAM: Unalign to FASTQ</td><td><code>bam unalign</code></td><td></td></tr>
+<tr><td>Align (BWA, minimap2)</td><td>FASTQ: Run Align</td><td><code>align</code></td><td>Also BWA-MEM2 and pbmm2; platform checks</td></tr>
+<tr><td>fastp; FastQC (+MultiQC)</td><td>FASTQ: FastP; FastQC</td><td><code>qc fastp</code>, <code>qc fastqc --multiqc</code></td><td></td></tr>
+<tr><td>Whole-genome SNP VCF</td><td>VCF: BCFTools</td><td><code>vcf snp</code></td><td>Sex-aware ploidy</td></tr>
+<tr><td>InDel VCF</td><td>VCF: BCFTools</td><td><code>vcf indel</code></td><td>v44.2 wrote no indels (below)</td></tr>
+<tr><td>Annotate / Filter / VariantQC ("Coming Soon" in v4)</td><td>VCF; Annotate</td><td><code>vcf annotate</code>, <code>vcf filter</code>, <code>qc vcf</code></td><td>New in practice: v4's buttons were stubs</td></tr>
+<tr><td>CNV / SV (hidden in v4)</td><td>VCF (Advanced)</td><td><code>vcf cnv</code>, <code>vcf sv</code></td><td>New</td></tr>
+<tr><td>DEBUG: subset</td><td>Extract: BAM Subset</td><td><code>extract bam-subset --fraction 0.1</code></td><td></td></tr>
+<tr><td>DEBUG: parallel CombinedKit</td><td>Microarray</td><td><code>microarray</code> (parallel with <code>--threads</code> above 1)</td><td>v4 kept its parallel path off; its comments report about 1% wrong values</td></tr>
+<tr><td>DEBUG: memory/threads</td><td>Settings</td><td><code>cpu_threads</code>, <code>memory_limit</code>, <code>--threads</code></td><td></td></tr>
+<tr><td>Language, fonts, Save Window (JPEG)</td><td>Settings</td><td>none</td><td>No Finnish locale or screenshot save yet</td></tr>
+</tbody>
+</table></div>
+<h2 id="working-examples">Working examples<a class="heading-anchor" href="#working-examples" aria-label="Link to section">#</a></h2>
+<p>Each line is checked against the CLI's parser by <code>tests/test_v4_differential.py</code>.</p>
+<pre><code class="language-sh"># Stats and coverage
+wgsextract info --input sample.cram --detailed
+wgsextract info calculate-coverage --input sample.cram --by exome_targets.bed
+
+# v4&#x27;s &quot;Recommended&quot; microarray set: CombinedKit plus 23andMe V3, V5 and V35
+wgsextract microarray --input sample.cram --formats 23andme_v3,23andme_v5,23andme_v35 --outdir new_outputs
+
+# A low-coverage sample: see why each marker is a no-call
+wgsextract microarray --input sample.cram --formats 23andme_v3 --call-reasons --outdir new_outputs
+
+# mtDNA and Y-DNA
+wgsextract extract mito-vcf --input sample.cram --outdir new_outputs
+wgsextract extract y-mt-extract --input sample.cram --outdir new_outputs
+wgsextract lineage y-haplogroup --input sample.cram --outdir new_outputs
+wgsextract lineage mt-haplogroup --input sample.cram --outdir new_outputs
+
+# Exome-style subset from your own BED
+wgsextract extract custom --input sample.cram --region exome_targets.bed --outdir new_outputs
+
+# FASTQ QC, alignment and variant calling
+wgsextract qc fastqc --input sample_R1.fastq.gz --r2 sample_R2.fastq.gz --multiqc
+wgsextract align --r1 sample_R1.fastq.gz --r2 sample_R2.fastq.gz --ref hs38.fa
+wgsextract vcf snp --input sample.cram --outdir new_outputs
+wgsextract vcf indel --input sample.cram --outdir new_outputs</code></pre>
+<h2 id="changed-defaults">Changed defaults<a class="heading-anchor" href="#changed-defaults" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong><code>--formats all</code> is the CombinedKit only</strong>, not every vendor kit and not v4's Recommended set. Name the kits you want; the CombinedKit is always written alongside them.</li>
+<li><strong>Quality gates.</strong> Microarray calls ignore reads below MAPQ 10 and no-call sites below depth 10 or GQ 20 (configurable; see <a href="microarray.html">Microarray</a> and <a href="genotype-qc.html">Genotype QC</a>). v4 had no such gates, so a low-coverage sample gets many more no-calls. A no-call is not a failed run: add <code>--call-reasons</code> to see each marker's reason (<code>low_dp</code>, <code>low_mapq</code>, <code>no_reads</code>, ...). Lowering one threshold does not reproduce v4: its calling prior, ploidy and liftover also differ.</li>
+<li><strong>Sex-aware ploidy.</strong> v4's v8 <code>ploidy.txt</code> made every contig diploid for everyone. The CLI calls male non-PAR X and Y haploid and treats a female's Y as no-call, from the sample's sex (<code>sample set --sex</code> overrides it).</li>
+<li><strong>Haploid output formatting.</strong> Haploid calls are written as one letter where the vendor does (23andMe MT), so files can differ from v4's doubled letters.</li>
+<li><strong>Liftover.</strong> hg38 positions are converted to pyliftover's zero-based API and back, reverse-strand placements are complemented, and ambiguous placements are dropped as no-calls. v4 passed one-based positions directly, ignored strand and kept the first hit. Most markers are unaffected: the two origin errors cancel inside forward chain blocks.</li>
+<li><strong>mtDNA stays rCRS.</strong> MT markers keep their rCRS positions instead of being projected onto hg19's Yoruba chrM.</li>
+<li><strong>File names.</strong> Outputs are named after the input file, for example <code>sample_CombinedKit.txt</code>, <code>sample_CombinedKit_hg19.txt</code> and <code>sample_23andMe_V3.txt</code>, with a result manifest beside them (<a href="result-manifest.html">Result manifest</a>); v4 also zipped the CombinedKit. Compare files by content, not by name.</li>
+</ul>
+<h2 id="not-yet-equivalent">Not yet equivalent<a class="heading-anchor" href="#not-yet-equivalent" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>v44.2 capability</th><th>Current state</th></tr></thead>
+<tbody>
+<tr><td>Y and Y+MT BAMs keep <code>chrY_KI270740v1_random</code> reads on GRCh38</td><td>Not kept; #1184 (reference-aware Y-associated contigs)</td></tr>
+<tr><td>Named one-click exome presets (TruSeq, xGen) and Poz coverage bins</td><td>Supply the BED to <code>extract custom</code> / <code>info calculate-coverage --by</code>; <code>--poz</code> exists for Y</td></tr>
+<tr><td>Header text export, Save Window image, Finnish translation</td><td>Not available</td></tr>
+<tr><td>Haplogrep 2.4.0 / v4's Yleaf payload</td><td>Haplogrep 3 and a Yleaf 4.1.6-derived engine: haplogroups can differ, especially on older trees</td></tr>
+</tbody>
+</table></div>
+<p>Of the genealogy follow-ups from #994, #1185 (FTDNA VCF FILTER repair) and #1186 (GRCh37 targeted Y VCF) are done (<a href="ftdna-vcf-repair.html">FTDNA VCF repair</a>, <a href="lineage.html#grch37">GRCh37 yBrowse</a>); #1184 above is open.</p>
+<h2 id="fixes-since-the-comparison">Fixes since the comparison<a class="heading-anchor" href="#fixes-since-the-comparison" aria-label="Link to section">#</a></h2>
+<p>The #994 research found three current-CLI issues; all are fixed:</p>
+<ul>
+<li>#1042 (rCRS mtDNA export): MT markers are no longer lifted through the hg38 to hg19 chain on export.</li>
+<li>#1043 (microarray reuse identity): a rerun regenerates outputs when the effective sex/ploidy, template or chain content, or quality settings change, instead of reusing them.</li>
+<li>#1044 (gVCF block depth): a gVCF reference block's start-site depth no longer certifies the chip markers inside the block.</li>
+</ul>
+<h2 id="reading-the-outputs-the-public-comparison">Reading the outputs: the public comparison<a class="heading-anchor" href="#reading-the-outputs-the-public-comparison" aria-label="Link to section">#</a></h2>
+<p>On public 1000 Genomes HG00096 reads, GRCh38 chr20:10,000,000-10,100,000 (24,766 records), with the same 131 v8 targets, ploidy file, chain and 23andMe V3 template on both sides:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Observable</th><th>v44.2</th><th>CLI</th><th>Relation</th></tr></thead>
+<tbody>
+<tr><td>CombinedKit hg19 rows</td><td>131</td><td>131, 0 disagreements</td><td>parity</td></tr>
+<tr><td>23andMe V3 rows / called</td><td>959,286 / 57</td><td>959,286 / 57, 0 disagreements</td><td>parity</td></tr>
+<tr><td>10% subsample: called CombinedKit genotypes</td><td>124</td><td>1 (123 <code>low_dp</code>, 7 <code>no_reads</code>)</td><td>policy</td></tr>
+<tr><td>Mapped records</td><td>24,766</td><td>24,746 (+20 placed unmapped)</td><td>correction</td></tr>
+<tr><td>InDel VCF records</td><td>0</td><td>39</td><td>correction</td></tr>
+</tbody>
+</table></div>
+<p>How to read it:</p>
+<ul>
+<li>The 57 V3 calls are the template markers inside the slice; the other 959,286 rows are no-calls in both. This is 57 observed agreements, not 959,286.</li>
+<li>The low-depth difference is a quality policy, not an accuracy ranking: neither program's calls were checked against a truth set. Where both called a genotype, they agree.</li>
+<li>The 39 indels were not truth-checked either. v44.2's InDel button passed <code>mpileup -I</code> (skip indels), so it could not write any; its release notes say the author had not seen it produce indels.</li>
+<li>Tiny single runs on one core: v44.2 CombinedKit plus V3 conversion 6.6 s, CLI 6.0 s. Descriptive only, not a speed claim.</li>
+</ul>
+<h2 id="platform-qualification">Platform qualification<a class="heading-anchor" href="#platform-qualification" aria-label="Link to section">#</a></h2>
+<p>Feature availability is qualified per tool and platform, not per operating system family. A command existing on every platform does not mean every tool behind it does: check <a href="windows.html">Windows</a>, <a href="linux-arm64.html">Linux ARM64</a> and <a href="hardware.html">Hardware</a>, and run <code>wgsextract deps list</code> on your machine. For example, Ensembl VEP needs Linux or macOS while vep-rs runs on Windows (<a href="vep-engines.html">VEP engines</a>), and GATK and some GPU paths are gated on ARM64. v4's documents described Windows, macOS and Linux support at the level of the whole program; neither program has a single all-platform matrix.</p>
+<h2 id="the-differential-corpus">The differential corpus<a class="heading-anchor" href="#the-differential-corpus" aria-label="Link to section">#</a></h2>
+<p><code>tests/fixtures/v4_differential/corpus.json</code> records every comparison case: v44.2's behaviour with its release source lines, the current behaviour, the relation (parity, correction, policy or known gap) and the evidence. Its cases cover chain-block boundaries, strand, ambiguous placements, sex, the mtDNA reference, calling quality and genealogy (mtDNA VCF, Yoruba refusal, Y contigs).</p>
+<ul>
+<li><code>tests/test_v4_differential.py</code> runs real samtools/bcftools on synthetic genomes and applies the v44.2 rule to the same input for each case; normal test runs include it, offline.</li>
+<li><code>scripts/v4_differential_corpus.py synthetic --outdir out/v4-differential</code> reruns every case's evidence and writes tool versions, outcomes and the SHA-256 of each input and output file.</li>
+<li><code>scripts/v4_differential_corpus.py fetch --cache CACHE --download</code> fetches the pinned public inputs: the HG00096 slice streamed from EBI's CRAM, GRCh38 chr20 (or <code>--reference</code> to take it from your own GRCh38 FASTA) and the v8 reference library (254 MB), each checked against its pin. Nothing is downloaded without <code>--download</code>; the v4 library is not redistributed here.</li>
+<li><code>scripts/v4_differential_corpus.py public --cache CACHE --outdir out/v4-differential</code> reruns the CLI offline on the slice and compares it with the recorded v44.2 outputs (<code>tests/fixtures/v4_differential/hg00096_v44.2.tsv</code>).</li>
+</ul>
+<p>The 10% subsample is pinned by its read names: <code>samtools view --subsample</code> with the same seed keeps different reads on Linux x86-64 and macOS arm64.</p>
+<h2 id="provenance-and-credit">Provenance and credit<a class="heading-anchor" href="#provenance-and-credit" aria-label="Link to section">#</a></h2>
+<p>WGS Extract was written by City Farmer (2018-2020) and Randy Harr (2020-2022); its microarray generator grew out of Thomas Krahn's Extract23. The CombinedKit-to-chip-template design is theirs, and the CLI's template export and liftover are modified ports of v4's <code>aconv.py</code> and <code>hg38tohg19.py</code>, kept under GPL-3.0-or-later with their copyright notices. The desktop renderer's MIT licence does not cover GPL code. See NOTICE, and #864 for the source rights of shipped data.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/migrating-from-v4.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/migrating-from-v4.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

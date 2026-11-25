@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Local polygenic scores (research only) | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/pgs.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Local polygenic scores (research only)</span></nav>
+<h1 id="local-polygenic-scores-research-only">Local polygenic scores (research only)</h1>
+<p><strong>Research use only; not a diagnosis.</strong> A polygenic score is a weighted sum of alleles, not an absolute disease risk. Do not change treatment or screening based on it. Clinical disease scores carry this warning too.</p>
+<pre><code class="language-bash">wgsextract score pgs --input sample.vcf.gz --build GRCh38 --trait height --download
+wgsextract score pgs --input sample.vcf.gz --build GRCh38 --pgs-id PGS000018 --download --json</code></pre>
+<p>Genotypes stay on your machine. Only with <code>--download</code> is the score ID/build sent to the PGS Catalog, to download its metadata and harmonized weights. Without it, cached files are reused and missing public data causes an error naming <code>--download</code>. Explicit download permission also permits refreshing cached Catalog files. See <a href="privacy.html">privacy</a> for destinations and persistent configuration. No scoring files are bundled or mirrored. Downloads retry transient failures three times. Each attempt checks the advertised byte count (when present) and validates the complete gzip stream or metadata JSON before replacing a cached file. Failed or truncated responses never replace a previously good copy. <code>bcftools</code> must already be on PATH; the command checks, it never installs tools.</p>
+<h2 id="choosing-a-score">Choosing a score<a class="heading-anchor" href="#choosing-a-score" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th><code>--trait</code></th><th>PGS ID</th><th>Catalog trait</th></tr></thead>
+<tbody>
+<tr><td><code>cad</code></td><td>PGS000018</td><td>Coronary artery disease</td></tr>
+<tr><td><code>breast-cancer</code></td><td>PGS000004</td><td>Breast cancer</td></tr>
+<tr><td><code>height</code></td><td>PGS000297</td><td>Height</td></tr>
+<tr><td><code>t2d</code></td><td>PGS000020</td><td>Type 2 diabetes</td></tr>
+<tr><td><code>bmi</code></td><td>PGS005198</td><td>Body mass index (BMI)</td></tr>
+<tr><td><code>stroke</code></td><td>PGS000038</td><td>Stroke</td></tr>
+<tr><td><code>triglycerides</code></td><td>PGS000063</td><td>Triglycerides</td></tr>
+<tr><td><code>ldl-cholesterol</code></td><td>PGS000065</td><td>LDL cholesterol</td></tr>
+<tr><td><code>prostate-cancer</code></td><td>PGS000067</td><td>Prostate cancer</td></tr>
+<tr><td><code>lung-cancer</code></td><td>PGS000070</td><td>Lung cancer</td></tr>
+<tr><td><code>thyroid-cancer</code></td><td>PGS000087</td><td>Thyroid cancer</td></tr>
+</tbody>
+</table></div>
+<p>This is a convenience list, not a clinical recommendation or a ranking of predictive accuracy. Any <code>PGSnnnnnn</code> is accepted with <code>--pgs-id</code>; an uncurated ID emits <code>pgs_uncurated_score</code>. A Catalog score whose authors set their own licence emits <code>pgs_license_restricted</code> with it, unless the licence only asks for attribution (CC BY 4.0). The <code>bmi</code> score, PGS005198, is the GIANT consortium's multi-ancestry score (Smit et al. 2025, Nat Med), under CC BY 4.0. It replaced PGS000027 (Khera et al. 2019), which is only "freely available to the academic community for research use" (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/1165" target="_blank" rel="noopener noreferrer">#1165</a> compares the candidates). Review the publication, development ancestry, licence and limitations before using a score. A height score in raw score units is <strong>not</strong> height in centimetres; a disease score is <strong>not</strong> disease probability.</p>
+<p>Your own additive scoring TSV (optionally gzipped) overrides Catalog selection:</p>
+<pre><code class="language-bash">wgsextract score pgs --input sample.vcf.gz --build GRCh38 \
+  --scoring-file my_score.txt --min-match 0.9 --outdir scores</code></pre>
+<p>Persistent defaults go in <code>config.toml</code>:</p>
+<pre><code class="language-toml">pgs_min_match = 0.75
+# pgs_keep_ambiguous = false
+# pgs_scoring_file = &quot;/path/to/my_score.txt.gz&quot;</code></pre>
+<p>An explicit <code>--scoring-file</code> overrides the configured file. Custom files need <code>#genome_build=GRCh38</code> (or GRCh37), and columns <code>chr_name</code>, <code>chr_position</code> (1-based), <code>effect_allele</code>, <code>other_allele</code>, <code>effect_weight</code>. Catalog harmonized files instead use <code>hm_chr</code>, <code>hm_pos</code>, and <code>#HmPOS_build=...</code>; the harmonized build takes precedence over their original build. Include <code>#license=...</code>, <code>#citation=...</code>, and <code>#trait_reported=...</code> in custom files. Unknown licence or citation is reported explicitly, never guessed.</p>
+<h2 id="inputs-and-matching">Inputs and matching<a class="heading-anchor" href="#inputs-and-matching" aria-label="Link to section">#</a></h2>
+<ul>
+<li>Choose the <strong>same build</strong> as the VCF. Only GRCh37 and GRCh38 are supported. Known chromosome-1 lengths inconsistent with <code>--build</code> are refused.</li>
+<li>Select <code>--sample NAME</code> for a multi-sample VCF.</li>
+<li>An explicit diploid genotype can match. Missing records, <code>./.</code>, site- or sample-filtered (<code>FILTER</code> or <code>FORMAT/FT</code>) calls, unresolved alleles and ambiguous duplicate records are unmatched. <strong>Missing never means homozygous reference by default</strong>, even in WGS.</li>
+<li>Reference evidence: given a gVCF, or a variant VCF whose caller published a gVCF beside it (<code>--reference-evidence gvcf</code>, found through the caller's result manifest), a site is homozygous reference only where the gVCF calls it callable reference: enough depth and, where the gVCF has GQ, genotype quality (the <code>confidence_*</code> settings). Sites the gVCF calls <code>uncovered</code>, <code>low_quality_reference</code>, <code>filtered</code>, <code>no_call</code>, <code>variant</code>, <code>excluded_by_policy</code> or <code>not_assessed</code> stay missing, counted under that name. Sites the VCF doesn't list need an indexed <code>--ref</code> to check their alleles; <code>--ref</code> also gives the length of a contig the gVCF declares without one (otherwise its sites are <code>not_assessed</code>). See <a href="reference-evidence.html">reference-evidence.md</a>.</li>
+<li>For a variants-only callset with a same-sample, same-build confident BED, add <code>--confident-bed sample.confident.bed --ref reference.fa.gz</code>. Only positions inside the BED may be inferred reference; positions outside it are unmatched. Explicit no-calls, filtered calls and overlapping deletions are never rescued by the BED. The BED is an assertion of callability, not just a list of capture targets.</li>
+<li>The reference FASTA needs an existing <code>.fai</code> (also <code>.gzi</code> for BGZF); <code>samtools faidx reference.fa.gz</code> creates these. No reference is downloaded implicitly.</li>
+<li>This first version scores <strong>additive autosomal SNVs only</strong>, on the forward strand, with exact allele matching. Indels, sex chromosomes, unresolved harmonization and multi-allelic effect definitions count as unmatched. Non-additive, haplotype and dosage-specific scoring models are refused. Palindromic A/T and C/G SNPs are also unmatched by default, as in <code>pgsc_calc</code>: coordinate harmonization alone cannot determine their strand. <code>--keep-ambiguous</code> (or <code>pgs_keep_ambiguous = true</code>) is an expert override <strong>only</strong> after independently verifying forward-strand scoring alleles; it emits a structured warning. <code>--no-keep-ambiguous</code> overrides that setting. There is no strand guessing, liftover, normalization, imputation or mean-imputation. Arrays and low-pass inputs are not qualified.</li>
+</ul>
+<p>The native engine sums <code>effect_weight × observed effect-allele count</code> using NumPy in bounded batches. An on-disk genotype index keeps memory bounded even for large VCFs. Every scoring-file row counts in the match-rate denominator, including unsupported or unmapped rows. No matched variants produces a null score rather than a misleading zero.</p>
+<p><code>--plink2-check</code> optionally validates the <strong>same matched calls' arithmetic</strong> with an already-installed <code>plink2</code>, without mean-imputation. It is not an independent check of the matching policy. The JSON includes the PLINK sum, difference and text-rounding bound: PLINK's public score report uses six significant digits, so comparison allows that rounding plus <code>1e-6</code>.</p>
+<h2 id="outputs-and-percentiles">Outputs and percentiles<a class="heading-anchor" href="#outputs-and-percentiles" aria-label="Link to section">#</a></h2>
+<p>The command writes <code>&lt;input&gt;_&lt;PGS ID&gt;_pgs.json</code>, <code>.tsv</code>, and a result manifest. The input stem is the same for <code>.vcf</code>, <code>.vcf.gz</code>, <code>.vcf.bgz</code> and <code>.bcf</code>; compression and variant-file extensions are not part of the output name. The JSON and manifest details include score sum, matched/total counts, match rate and reason counts, build, sample, scoring-file SHA-256, licence, citation and research warning. <code>--json</code> prints the usual result-manifest document for scripts; the typed API is <code>api.score.pgs(api.ScorePgsParams(...))</code>.</p>
+<h3 id="ancestry-adjusted-percentiles">Ancestry-adjusted percentiles<a class="heading-anchor" href="#ancestry-adjusted-percentiles" aria-label="Link to section">#</a></h3>
+<p>For the curated scores on <strong>GRCh38</strong>, <code>score pgs</code> also places the score against the HGDP+1KG reference samples, adjusted for the sample's genetic ancestry, the way the PGS Catalog Calculator (<code>pgsc_calc</code>, its <code>pgscatalog.calc</code> 0.3.1 ancestry step) does:</p>
+<ol>
+<li><strong>The reference.</strong> The unrelated HGDP and 1000 Genomes samples the <a href="ancestry.html"><code>qc ancestry</code></a> PCA was trained on (gnomAD v3.1 HGDP+1KG, CC0) were scored with the same variant rules as your sample, on pgsc_calc's own HGDP+1kGP reference genotypes. That panel lacks 149 of the 3,129 samples, all 28 Oceanians among them (gnomAD's sample QC), so 2,980 remain: AFR 605, AMR 361, CSA 603, EAS 667, EUR 607, MID 137. There is no Oceanian group. Only the scoring-file rows the reference has (the <em>calibration set</em>) count toward the calibrated score; the published reference file holds those rows, their reference allele frequencies, the reference samples' scores and the fitted models, not genotypes or scoring files. It is the GitHub release <code>pgs-ref-2</code> (30 MB), downloaded into <code>&lt;library&gt;/pgs/</code> only with <code>--download</code>, and checked against a pinned SHA-256. Each score is tied to the SHA-256 of the Catalog file it was built from; if the Catalog changes that file, or you supply your own, there is no percentile.</li>
+<li><strong>Your ancestry.</strong> Your genotypes at the ~187,000 ancestry sites are projected onto the reference's 10 principal components (the <code>qc ancestry</code> PCA; <code>qc ancestry</code> reports the same <code>ancestry_pc1</code>…<code>ancestry_pc10</code>). Site- or sample-filtered calls are left out. With reference evidence (a gVCF input, or the gVCF the VCF's caller published), an absent site is homozygous reference only where the gVCF calls it callable reference; <code>ancestry_calibration.pca_missing_site_states</code> counts the absent sites' states. Without it, a whole-genome variants-only VCF's absent sites count as homozygous reference. Either way, only inside <code>--confident-bed</code> when one is given.</li>
+<li><strong>The adjustment</strong> (<code>pgscatalog.calc</code>'s methods, reimplemented):
+<ul>
+<li><strong>Adjusted percentile</strong> (headline): <code>Z_norm2</code>, your score minus a mean and divided by an SD that both depend on PCs 1-4, fitted jointly on the reference (Khan et al. 2022, Nat Med; eMERGE GIRA), and its normal percentile.</li>
+<li><code>z_norm1</code>: only the mean adjusted (Khera et al. 2019, Circulation).</li>
+<li><strong>Empirical percentile</strong>: your score's percentile among the reference samples of the region you are most similar to (Mahalanobis distance on PCs 1-5: AFR, AMR, CSA, EAS, EUR or MID), when that match isn't low-confidence (p &lt; 1e-10).</li>
+</ul></li>
+</ol>
+<p>Calibration rows your VCF has no genotype for are filled in with the mean dosage of the reference region you are most similar to, as pgsc_calc fills in missing genotypes with reference frequencies. The error this adds (<code>imputation_error_sd</code>, in units of <code>Z_norm2</code>'s fitted SD at your PCs) is the imputed rows' variance under that region's frequencies, inflated by the score's linkage disequilibrium there (the reference samples' score variance over the summed per-variant variance). Assuming the imputed rows share the whole score's LD makes it an upper bound for scores of many correlated variants: on real HG002 and HG005 gaps it is 0.06-0.18 SD where the measured error is 0.05-0.16 SD, and without the inflation it would be half the measured error for PGS000027 (version 1 of the reference, #617). <code>percentile_interval</code> is the resulting 95% interval. The percentile is <strong>withheld</strong> (<code>percentile_status</code>, and a <code>pgs_uncalibrated</code> warning saying why) when:</p>
+<div class="table-wrap"><table>
+<thead><tr><th><code>percentile_status</code></th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>calibrated</code></td><td>reported (not withheld)</td></tr>
+<tr><td><code>below_match_threshold</code></td><td>under <code>--min-match</code> of the scoring rows matched</td></tr>
+<tr><td><code>reference_calibration_unavailable</code></td><td>not a curated Catalog file on GRCh38 (custom files, uncurated IDs, GRCh37)</td></tr>
+<tr><td><code>reference_unavailable</code></td><td>a curated file, but the HGDP+1KG reference couldn't be downloaded or verified (the reason says why)</td></tr>
+<tr><td><code>calibration_coverage_too_low</code></td><td>more than 5% of the calibrated score's variance would be filled in</td></tr>
+<tr><td><code>ancestry_projection_unavailable</code></td><td>the VCF can't give ancestry genotypes (variants-only, not a whole genome, and without reference evidence)</td></tr>
+<tr><td><code>ancestry_projection_incomplete</code></td><td>under 90% of the ancestry sites have a genotype</td></tr>
+<tr><td><code>ancestry_outside_reference</code></td><td>your PCs are outside the reference samples' range (p &lt; 1e-10)</td></tr>
+</tbody>
+</table></div>
+<p>When it is reported, <code>confidence</code> is <code>medium</code>, or <code>low</code> with a <code>pgs_ancestry_mismatch</code> warning when the score was developed in ancestries other than the reference region you are most similar to. The development ancestry is pinned with each calibrated scoring file, so it holds for a <code>--scoring-file</code> copy without the Catalog's metadata. It is never <code>high</code>: a percentile says where your score falls among reference genomes, not your risk, and a score predicts less well outside the ancestry it was developed in, whatever the adjustment. At less than <code>--min-match</code> (default 0.75), <code>pgs_low_match</code> also warns, and confidence is <code>low</code>.</p>
+<p>The JSON's <code>ancestry_calibration</code> holds the calibrated score, calibration counts and imputed variance share, the PCs, the most similar population and its similarity, the empirical percentile and Z, <code>z_norm1</code>, <code>z_norm2</code>, <code>imputation_error_sd</code> and <code>percentile_interval</code>. The manifest's metrics add <code>percentile</code> and <code>z_adjusted</code>; the TSV adds <code>z_adjusted</code> and <code>percentile_status</code>.</p>
+<p><strong>Validation</strong> (#617, on lin-big, 2026-11-14, for version 1's 11 scores; version 2 copies ten of them unchanged):</p>
+<ul>
+<li><strong>Same rules as your sample.</strong> For 3 reference samples and all 11 scores, <code>score pgs</code>'s own scorer, run on their genotypes exported as a VCF, gives the reference sums to 2.7e-6 (plink2's printed precision).</li>
+<li><strong>Same adjustment as pgscatalog.calc 0.3.1.</strong> Given the same reference, PCs and scores, <code>compare_ancestry</code> (Mahalanobis) and <code>pgs_adjust</code> agree on the most similar region for every one of the 962 reference samples outside the training set and the GIAB samples, on Z_norm1 and Z_norm2 within 0.0024, and on the empirical percentile exactly (apart from ties within rounding). pgscatalog.calc's default RandomForest picks the same region for 97%.</li>
+<li><strong>Calibrated out of sample.</strong> Across those 962 samples, Z_norm2 has mean within ±0.3 and SD 0.82-1.10 in each region (MID: 21 samples), and 92-99% fall within ±1.96.</li>
+<li><strong>GIAB VCFs.</strong> HG001's GIAB v4.2.1 VCF and confident BED give calibrated scores within 0.18 SD of its genotypes in the reference panel, as expected from its imputed share.</li>
+</ul>
+<p><strong>Version 2</strong> (#1165, on macOS, 2026-11-22) rebuilt only <code>bmi</code>'s PGS005198. The same build reproduces version 1's height sums exactly, and the same checks hold:</p>
+<ul>
+<li><strong>Coverage.</strong> 1,202,909 of its 1,217,710 rows (98.8%) are calibration rows.</li>
+<li><strong>Same rules as your sample.</strong> <code>score pgs</code>'s scorer gives the reference sums of 3 reference samples to 3.9e-6.</li>
+<li><strong>Same adjustment as pgscatalog.calc 0.3.1.</strong> It agrees on the most similar region for all 962 out-of-training samples, on Z_norm1 and Z_norm2 within 0.0014, and on HG002 (Z_norm2 -2.302 against -2.303).</li>
+<li><strong>Calibrated out of sample.</strong> Z_norm2 has mean within ±0.1 and SD 0.90-1.09 in AFR, AMR, CSA, EAS and EUR, with 92-97% within ±1.96. MID's 21 samples have mean 0.55 (SD 1.17), and the score's development ancestries don't include MID, so such samples also get <code>pgs_ancestry_mismatch</code>.</li>
+</ul>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/pgs.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/pgs.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

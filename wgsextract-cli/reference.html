@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="WGS Extract glossary, file extension reference, tool reference, privacy notes, and troubleshooting guide." />
+    <title>Reference | WGS Extract CLI</title>
+    <meta property="og:site_name" content="WGS Extract CLI" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Reference | WGS Extract CLI" />
+    <meta property="og:description" content="WGS Extract glossary, file extension reference, tool reference, privacy notes, and troubleshooting guide." />
+    <meta property="og:url" content="https://wgsextract.github.io/wgsextract-cli/reference.html" />
+    <meta property="og:image" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta property="og:image:secure_url" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="WGSExtract CLI social preview showing the desktop app screenshot." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Reference | WGS Extract CLI" />
+    <meta name="twitter:description" content="WGS Extract glossary, file extension reference, tool reference, privacy notes, and troubleshooting guide." />
+    <meta name="twitter:image" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta name="twitter:image:alt" content="WGSExtract CLI social preview showing the desktop app screenshot." />
+    <link rel="canonical" href="https://wgsextract.github.io/wgsextract-cli/reference.html" />
+    <link rel="image_src" href="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".82em" font-size="84">🧬</text></svg>' />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="index.html">Home</a><a href="install.html">Install CLI</a><a href="gui.html">GUI</a><a href="cli.html">CLI</a><a href="workflows.html">Workflows</a><a href="wgs-guide.html">WGS guide</a><a class="active" href="reference.html">Reference</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-hero">
+        <div class="wrap">
+          <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Lookup pages</p>
+          <h1>Glossary, files, tools, privacy, data licences, and troubleshooting.</h1>
+          <p class="lede">Use this as a quick reference when a command mentions an unfamiliar acronym, file extension, external tool, reference-build concept, or common failure mode.</p>
+          <div class="toc"><a href="#glossary">Glossary</a><a href="#files">Files</a><a href="#tools">Tools</a><a href="#privacy">Privacy</a><a href="#licences">Data licences</a><a href="#troubleshooting">Troubleshooting</a></div>
+        </div>
+      </header>
+
+<section id="cli-references">
+<div class="wrap">
+<h2><abbr data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">CLI</abbr> references</h2>
+<ul>
+<li><a href="commands.html">Commands</a>: options, requirements, outputs and examples.</li>
+<li><a href="api.html">Python API</a>: typed parameters, functions and results.</li>
+<li><a href="configuration.html">Configuration</a>: <code>config.toml</code> settings and defaults.</li>
+</ul>
+</div>
+</section>
+<section id="glossary">
+<div class="wrap">
+<div class="section-head">
+<h2>Core glossary</h2>
+<p>Short definitions for terms you will see across <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract, <a class="term-link" href="https://www.htslib.org/">samtools</a>/<a class="term-link" href="https://samtools.github.io/bcftools/">bcftools</a>, variant annotation tools, and consumer <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip workflows.</p>
+</div>
+<p>This glossary is intentionally practical. The same words can have precise meanings in genomics papers, tool manuals, and consumer genealogy sites, but <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract users usually need to know what a term implies for files, commands, references, and interpretation.</p>
+<div class="grid three">
+<article class="card">
+<h3>Alignment</h3>
+<p>Mapping sequencing reads to a reference genome, producing a <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr> or <abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr>. Alignment decides where each read most likely came from, so reference choice and aligner behavior affect every downstream result.</p>
+</article>
+<article class="card">
+<h3>Allele</h3>
+<p>A version of a sequence at a genomic position. Humans usually have two alleles for autosomal positions, one inherited from each parent, but sex chromosomes, mitochondrial <abbr data-tooltip="DNA: Deoxyribonucleic Acid: the molecule that carries inherited genetic information." aria-label="DNA: Deoxyribonucleic Acid: the molecule that carries inherited genetic information.">DNA</abbr>, deletions, duplications, and mosaic or mixed signals can complicate that simple model.</p>
+</article>
+<article class="card">
+<h3>Annotation</h3>
+<p>Metadata added to variants, such as gene name, population frequency, predicted effect, transcript consequence, or known clinical significance. Annotation helps prioritize records, but it depends on databases, versions, transcripts, and reference builds.</p>
+</article>
+<article class="card">
+<h3>Build</h3>
+<p>The reference genome version used for coordinates, such as hg19, hg38, or <abbr data-tooltip="T2T: Telomere-to-Telomere: a newer reference approach that aims to represent chromosomes end to end." aria-label="T2T: Telomere-to-Telomere: a newer reference approach that aims to represent chromosomes end to end.">T2T</abbr>. Build mismatches are one of the easiest ways to produce plausible-looking but wrong results.</p>
+</article>
+<article class="card">
+<h3>Coverage</h3>
+<p>How many reads support a base or region. Depth describes how many reads cover a position; breadth describes how much of a region has usable coverage. Averages can hide gaps.</p>
+</article>
+<article class="card">
+<h3>Haplogroup</h3>
+<p>A lineage classification based on <abbr data-tooltip="Y-DNA: Y-chromosome DNA: DNA on the Y chromosome, often used for paternal-line genealogy." aria-label="Y-DNA: Y-chromosome DNA: DNA on the Y chromosome, often used for paternal-line genealogy.">Y-DNA</abbr> or mitochondrial <abbr data-tooltip="DNA: Deoxyribonucleic Acid: the molecule that carries inherited genetic information." aria-label="DNA: Deoxyribonucleic Acid: the molecule that carries inherited genetic information.">DNA</abbr> markers. Haplogroups are useful for genealogy and population history, but they are not the same as a complete ancestry estimate.</p>
+</article>
+<article class="card">
+<h3>Liftover</h3>
+<p>Coordinate conversion between reference builds, usually with chain files. Liftover can be useful for moving known positions between hg19 and hg38, but complex regions may fail or map ambiguously.</p>
+</article>
+<article class="card">
+<h3>Microarray / <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip</h3>
+<p>A fixed marker test that checks selected positions chosen by the chip design. <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract can simulate microarray / <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip raw-data files from sequencing data for tools that expect those formats.</p>
+</article>
+<article class="card">
+<h3>Ploidy</h3>
+<p>How many copies of a chromosome or region are expected, such as two autosomal copies or one Y chromosome in many male samples. Incorrect ploidy assumptions can affect variant calling and filtering.</p>
+</article>
+<article class="card">
+<h3>Reference</h3>
+<p>The genome sequence used as the coordinate system for alignment and comparison. A <abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr> may also need the exact reference to decode reads later.</p>
+</article>
+<article class="card">
+<h3>Variant</h3>
+<p>An observed difference from the reference. Variants include <abbr data-tooltip="SNPs: Single Nucleotide Polymorphisms: one-base markers or variants, commonly used by microarray SNP chips." aria-label="SNPs: Single Nucleotide Polymorphisms: one-base markers or variants, commonly used by microarray SNP chips.">SNPs</abbr>, insertions/deletions, structural variants, and copy-number changes.</p>
+</article>
+<article class="card">
+<h3>Variant caller</h3>
+<p>A tool that reads alignments and emits <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr> records for likely variants. Different callers optimize for different data types, variant classes, speed, and accuracy tradeoffs.</p>
+</article>
+</div>
+</div>
+</section>
+<section id="files">
+<div class="wrap">
+<div class="section-head">
+<h2>File extension reference</h2>
+<p>Genome projects create many sidecar files. Keep them with the primary file unless you know they can be regenerated.</p>
+</div>
+<p>Most genomics tools discover sidecar files by filename convention. Moving <code>sample.bam</code> without <code>sample.bam.bai</code>, or moving <code>calls.vcf.gz</code> without its index, can turn a previously working command into a slow or failing one. When archiving, move the primary file, index, reference metadata, and notes together.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Extension</th><th>What it is</th><th>Common sidecars</th></tr></thead>
+<tbody>
+<tr><td><code>.fastq</code>, <code>.fq</code>, <code>.fastq.gz</code></td><td>Raw sequencing reads with base quality scores. Often paired as read 1 and read 2 for paired-end sequencing.</td><td>R1/R2 mate files, quality-control reports.</td></tr>
+<tr><td><code>.sam</code></td><td><abbr data-tooltip="SAM: Sequence Alignment Map: a text alignment format that is usually converted to BAM or CRAM." aria-label="SAM: Sequence Alignment Map: a text alignment format that is usually converted to BAM or CRAM.">SAM</abbr>, a text alignment format. It is large and rarely kept long-term.</td><td>Usually converted to <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr> or <abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr>.</td></tr>
+<tr><td><code>.bam</code></td><td><abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>, binary aligned reads. Common input for <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract.</td><td><code>.bai</code> index.</td></tr>
+<tr><td><code>.cram</code></td><td><abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr>, reference-based compressed aligned reads. Good for storage.</td><td><code>.crai</code> index plus matching reference <abbr data-tooltip="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences." aria-label="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences.">FASTA</abbr>.</td></tr>
+<tr><td><code>.vcf</code>, <code>.vcf.gz</code></td><td><abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr>, variant calls and annotations.</td><td><code>.tbi</code> or <code>.csi</code> index for compressed <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr>.</td></tr>
+<tr><td><code>.bcf</code></td><td><abbr data-tooltip="BCF: Binary Call Format: a compact binary version of VCF used for efficient variant storage and processing." aria-label="BCF: Binary Call Format: a compact binary version of VCF used for efficient variant storage and processing.">BCF</abbr>, binary VCF-like format used by <a class="term-link" href="https://samtools.github.io/bcftools/">bcftools</a>.</td><td><code>.csi</code> index.</td></tr>
+<tr><td><code>.fa</code>, <code>.fasta</code>, <code>.fna</code></td><td><abbr data-tooltip="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences." aria-label="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences.">FASTA</abbr> reference or sequence file.</td><td><code>.fai</code>, sequence dictionary, <a class="term-link" href="https://github.com/lh3/bwa">bwa</a>/<a class="term-link" href="https://github.com/lh3/minimap2">minimap2</a> indexes.</td></tr>
+<tr><td><code>.bed</code></td><td><abbr data-tooltip="BED: Browser Extensible Data: a text format for genomic intervals such as regions, targets, or gene coordinates." aria-label="BED: Browser Extensible Data: a text format for genomic intervals such as regions, targets, or gene coordinates.">BED</abbr>, genomic intervals.</td><td>Build-specific coordinate notes.</td></tr>
+<tr><td><code>.chain</code></td><td>Liftover mapping between reference builds.</td><td>Source and target build documentation.</td></tr>
+<tr><td><code>.dict</code></td><td>Sequence dictionary describing reference contigs.</td><td>Usually paired with a reference <abbr data-tooltip="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences." aria-label="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences.">FASTA</abbr>.</td></tr>
+<tr><td><code>.txt</code>, <code>.csv</code>, <code>.tsv</code></td><td>Common text outputs, including microarray / <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip-style raw-data files.</td><td>Format documentation and reference build notes.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="tools">
+<div class="wrap">
+<div class="section-head">
+<h2>External tool reference</h2>
+<p><abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract orchestrates established tools instead of reimplementing every algorithm.</p>
+</div>
+<p>Tool names often become shorthand for whole classes of operations. When troubleshooting, keep track of both the <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract command and the external tool it wraps. The same input can behave differently if a tool version, reference build, thread count, or memory setting changes.</p>
+<div class="grid three">
+<article class="card">
+<h3><a class="term-link" href="https://www.htslib.org/">samtools</a> / <a class="term-link" href="https://www.htslib.org/">htslib</a></h3>
+<p>Alignment viewing, sorting, indexing, conversion, and many low-level operations around <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>, <abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr>, and <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr> files. If a file cannot be indexed, viewed, or queried, samtools-level checks are often the first place to look.</p>
+</article>
+<article class="card">
+<h3><a class="term-link" href="https://samtools.github.io/bcftools/">bcftools</a></h3>
+<p>Variant calling, filtering, annotation, indexing, and <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr>/<abbr data-tooltip="BCF: Binary Call Format: a compact binary version of VCF used for efficient variant storage and processing." aria-label="BCF: Binary Call Format: a compact binary version of VCF used for efficient variant storage and processing.">BCF</abbr> manipulation. It is useful for both generating calls and inspecting whether a compressed variant file is properly indexed.</p>
+</article>
+<article class="card">
+<h3><a class="term-link" href="https://github.com/lh3/bwa">bwa</a> / <a class="term-link" href="https://github.com/lh3/minimap2">minimap2</a></h3>
+<p>Read alignment for short reads and long reads respectively. The aligner influences mapping quality, duplicate behavior, and how reads in repetitive or structurally complex regions are represented.</p>
+</article>
+<article class="card">
+<h3><a class="term-link" href="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/">fastqc</a> / <a class="term-link" href="https://github.com/OpenGene/fastp">fastp</a></h3>
+<p>Raw read <abbr data-tooltip="QC: Quality Control: checks that help assess whether data and outputs are usable." aria-label="QC: Quality Control: checks that help assess whether data and outputs are usable.">QC</abbr> reports, adapter trimming, filtering, and preprocessing. These are most relevant when starting from <abbr data-tooltip="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores." aria-label="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores.">FASTQ</abbr> rather than an already aligned <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr> or <abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr>.</p>
+</article>
+<article class="card">
+<h3><a class="term-link" href="https://gatk.broadinstitute.org/" data-tooltip="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows." aria-label="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows.">GATK</a> / <a class="term-link" href="https://github.com/google/deepvariant">DeepVariant</a></h3>
+<p><a class="term-link" href="https://gatk.broadinstitute.org/" data-tooltip="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows." aria-label="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows.">GATK</a> and <a class="term-link" href="https://github.com/google/deepvariant">DeepVariant</a> are high-accuracy variant calling workflows with different runtime and model tradeoffs. They can be powerful, but they are also sensitive to references, resources, and platform assumptions.</p>
+<p>Native Windows x64 <a class="term-link" href="https://gatk.broadinstitute.org/" data-tooltip="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows." aria-label="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows.">GATK</a> now uses a pinned <abbr data-tooltip="GKL: Genomics Kernel Library: native numerical kernels used to accelerate GATK." aria-label="GKL: Genomics Kernel Library: native numerical kernels used to accelerate GATK.">GKL</abbr> sidecar for <abbr data-tooltip="AVX: Advanced Vector Extensions: x86 processor instructions used by native numerical kernels." aria-label="AVX: Advanced Vector Extensions: x86 processor instructions used by native numerical kernels.">AVX</abbr>/<abbr data-tooltip="OpenMP: Open Multi-Processing: an interface for parallel CPU execution used by GATK&#x27;s native PairHMM kernels." aria-label="OpenMP: Open Multi-Processing: an interface for parallel CPU execution used by GATK&#x27;s native PairHMM kernels.">OpenMP</abbr> PairHMM and <abbr data-tooltip="AVX2: Advanced Vector Extensions 2: extended x86 vector instructions required by some accelerated GATK kernels." aria-label="AVX2: Advanced Vector Extensions 2: extended x86 vector instructions required by some accelerated GATK kernels.">AVX2</abbr> Smith-Waterman. This does not imply parity on every <abbr data-tooltip="CPU: Central Processing Unit: the main processor that runs computation-heavy genomics commands." aria-label="CPU: Central Processing Unit: the main processor that runs computation-heavy genomics commands.">CPU</abbr> or dataset; see <a class="inline-link" href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/windows.md#gatk-on-native-windows">native Windows validation</a>. <a class="term-link" href="https://github.com/google/deepvariant">DeepVariant</a> needs an explicitly prepared local runner or Docker image, not a <a class="term-link" href="https://pixi.sh/">Pixi</a> <a class="term-link" href="https://github.com/google/deepvariant">DeepVariant</a> environment.</p>
+</article>
+<article class="card">
+<h3><a class="term-link" href="https://www.ensembl.org/info/docs/tools/vep/index.html" data-tooltip="VEP: Variant Effect Predictor: an annotation tool that predicts variant effects on genes and transcripts." aria-label="VEP: Variant Effect Predictor: an annotation tool that predicts variant effects on genes and transcripts.">VEP</a></h3>
+<p><a class="term-link" href="https://www.ensembl.org/info/docs/tools/vep/index.html" data-tooltip="VEP: Variant Effect Predictor: an annotation tool that predicts variant effects on genes and transcripts." aria-label="VEP: Variant Effect Predictor: an annotation tool that predicts variant effects on genes and transcripts.">VEP</a> annotations add consequences, genes, transcripts, impact, and plugin/cache-driven metadata. A <a class="term-link" href="https://www.ensembl.org/info/docs/tools/vep/index.html" data-tooltip="VEP: Variant Effect Predictor: an annotation tool that predicts variant effects on genes and transcripts." aria-label="VEP: Variant Effect Predictor: an annotation tool that predicts variant effects on genes and transcripts.">VEP</a> result should be interpreted with the cache version and reference build in mind.</p>
+</article>
+<article class="card">
+<h3>Cyrius / SMNCopyNumberCaller / T1K / ExpansionHunter / PharmCAT</h3>
+<p>Genotyping that a <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr> can't capture: CYP2D6 star alleles with copy-number changes and hybrids (Cyrius), SMN1/SMN2 copy number for SMA carrier status (SMNCopyNumberCaller), HLA alleles (T1K), and repeat expansions (ExpansionHunter), all from a whole-genome <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>/<abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr>. PharmCAT turns <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr> calls plus the CYP2D6 and HLA results into drug-response phenotypes.</p>
+</article>
+</div>
+</div>
+</section>
+<section id="privacy">
+<div class="wrap">
+<div class="section-head">
+<h2>Privacy and data handling</h2>
+<p>Whole genome data is uniquely identifying. Treat it as sensitive personal and family information.</p>
+</div>
+<p>Genetic data can reveal information about biological relatives who did not personally choose to share data. Even a small derived file, such as a microarray / <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip simulation or a filtered <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr>, can contain identifying information. Logs can also leak filenames, sample IDs, paths, or variant names.</p>
+<p>Local-first processing reduces exposure, but it does not remove the need for careful backups, disk encryption, access control, and deliberate sharing. Before uploading to a third-party service, consider whether the service allows deletion, whether relatives could be implicated, and whether a smaller or fake dataset would answer the question.</p>
+<div class="grid three">
+<article class="card">
+<h3>Prefer local processing</h3>
+<p><abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract is designed for local workflows. Be intentional before uploading <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>, <abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr>, <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr>, <abbr data-tooltip="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores." aria-label="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores.">FASTQ</abbr>, or microarray / <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip files to third-party sites.</p>
+</article>
+<article class="card">
+<h3>Keep raw data backed up</h3>
+<p>Preserve original <abbr data-tooltip="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores." aria-label="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores.">FASTQ</abbr>/<abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>/<abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr> files, reference build notes, checksums, and tool commands. <code>wgsextract sign create</code> writes a <code>SHA256SUMS</code> manifest (optionally signed with an SSH key) that <code>sign verify</code> checks later. Derived files can often be regenerated, but raw data may be expensive or impossible to replace.</p>
+</article>
+<article class="card">
+<h3>Share minimized outputs</h3>
+<p>When debugging, use fake data, region-limited extracts, or redacted logs instead of whole-genome files whenever possible. If real data is necessary, share the smallest region and least identifying output that can reproduce the problem.</p>
+</article>
+</div>
+<div class="callout">
+<strong>Not medical advice:</strong> Variant interpretation can be difficult and clinically consequential. Confirm medically relevant findings through qualified professionals and validated labs. Do not treat a consumer annotation, <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip report, or exploratory filter result as a diagnosis.
+</div>
+</div>
+</section>
+<section id="licences">
+<div class="wrap">
+<div class="section-head">
+<h2>Data licences</h2>
+<p><abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract is <abbr data-tooltip="GPL: GNU General Public License: the open-source license used by this project." aria-label="GPL: GNU General Public License: the open-source license used by this project.">GPL</abbr> software. The data it downloads comes as separate modules, each with its own licence.</p>
+</div>
+<p>Data modules are not part of the program, and their licences don't apply to it. Each is pinned by SHA-256 and fetched into the reference library only when a command needs it; the YFull modules print a one-line licence notice when first downloaded.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Data module</th><th>Used by</th><th>Licence</th></tr></thead>
+<tbody>
+<tr><td><code>yfull-tree</code></td><td><code>lineage y-haplogroup --tree yfull</code> (the default tree)</td><td>CC-BY-4.0, YFull</td></tr>
+<tr><td><code>yfull-ybrowse-positions</code></td><td>The same, unless <code>--pos-file</code> is given</td><td>CC-BY-SA (version not stated), Thomas Krahn YSEQ (2022)</td></tr>
+<tr><td><a class="term-link" href="https://github.com/genid/Yleaf">Yleaf</a> data <code>v4.1.6</code></td><td><code>lineage y-haplogroup</code> <abbr data-tooltip="QC: Quality Control: checks that help assess whether data and outputs are usable." aria-label="QC: Quality Control: checks that help assess whether data and outputs are usable.">QC</abbr> tables and the other trees</td><td>GPL-3.0-or-later, <a class="term-link" href="https://github.com/genid/Yleaf">Yleaf</a></td></tr>
+<tr><td>YBrowse <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr></td><td><code>ref ybrowse --install</code>, <code>extract ydna-vcf --ybrowse</code></td><td>CC-BY-SA, Thomas Krahn YSEQ; downloaded from ybrowse.org on request, not redistributed (and not in the reference bootstrap since v0.2.0)</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="troubleshooting">
+<div class="wrap">
+<div class="section-head">
+<h2>Troubleshooting checklist</h2>
+<p>Most failures come from missing tools, mismatched references, absent indexes, unsorted files, permissions, or jobs that need more disk/<abbr data-tooltip="RAM: Random Access Memory: working memory used by tools while processing large genomics files." aria-label="RAM: Random Access Memory: working memory used by tools while processing large genomics files.">RAM</abbr>/time.</p>
+</div>
+<p>Troubleshooting is faster when you reduce the problem. Run a command on a tiny region, confirm the file opens with the expected tool, check indexes, and verify that chromosome names match. Save the exact command and the first meaningful error message; later lines often describe follow-on failures rather than the root cause.</p>
+<div class="grid two">
+<article class="card">
+<h3>Command not found</h3>
+<p>Use the launcher that matches your install (see <a class="inline-link" href="install.html#running" data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">Running the CLI</a>). Then run <code>wgsextract deps check</code>; it lists missing tools and exits 1 if a mandatory one is absent. If a wrapped external tool is missing, verify that the expected <a class="term-link" href="https://pixi.sh/">Pixi</a> environment is installed.</p>
+</article>
+<article class="card">
+<h3>Reference errors</h3>
+<p>Verify the <abbr data-tooltip="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences." aria-label="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences.">FASTA</abbr> exists, is indexed, and matches the build used by the input <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>, <abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr>, or <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr>. <code>wgsextract ref verify --ref &lt;fasta&gt;</code> checks the index and sequence-dictionary signature. A <abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr> may fail even when the path looks correct if the reference content does not match.</p>
+</article>
+<article class="card">
+<h3>Region not found</h3>
+<p>Check chromosome naming. Some files use <code>chrM</code>, <code>chrY</code>, <code>chr1</code>; others use <code>MT</code>, <code>Y</code>, <code>1</code>. Use file headers and index stats to confirm the available contig names.</p>
+</article>
+<article class="card">
+<h3>Variant caller fails</h3>
+<p>Confirm the alignment is coordinate sorted, indexed, readable, and aligned to the same reference passed with <code>--ref</code>. Also check memory, temporary disk space, and whether the selected caller supports the sequencing technology.</p>
+<p>For <a class="term-link" href="https://github.com/google/deepvariant">DeepVariant</a> <abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr> 3.1 decoding errors before v0.6.6, use <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr> or convert to indexed <abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr> 3.0; v0.6.6 stages <abbr data-tooltip="CPU: Central Processing Unit: the main processor that runs computation-heavy genomics commands." aria-label="CPU: Central Processing Unit: the main processor that runs computation-heavy genomics commands.">CPU</abbr> input automatically, see <a class="inline-link" href="workflows.html#variants">calling notes</a>. Linux <abbr data-tooltip="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers." aria-label="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers.">ARM64</abbr> still gates <a class="term-link" href="https://gatk.broadinstitute.org/" data-tooltip="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows." aria-label="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows.">GATK</a> and Parabricks, but supports native <abbr data-tooltip="CPU: Central Processing Unit: the main processor that runs computation-heavy genomics commands." aria-label="CPU: Central Processing Unit: the main processor that runs computation-heavy genomics commands.">CPU</abbr> <a class="term-link" href="https://github.com/google/deepvariant">DeepVariant</a> <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> with a locally built <abbr data-tooltip="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers." aria-label="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers.">ARM64</abbr> image. Other models and <code>--checkpoint</code> are refused; no Java or x86 emulation fallback is silently used.</p>
+</article>
+<article class="card">
+<h3>Job is too slow</h3>
+<p>Run a small <code>--region</code> first, then increase threads and output disk. Whole-genome callers can take hours. If performance changes unexpectedly, compare input size, compression format, storage location, and thread count.</p>
+</article>
+<article class="card">
+<h3><abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip output looks sparse</h3>
+<p>Microarray / <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip simulations only include requested target markers. Missing calls can come from low coverage, build mismatch, chromosome naming differences, or target markers that are not represented in the input data.</p>
+</article>
+<article class="card">
+<h3>Windows tool issues</h3>
+<p>On Windows, run <code>pixi run wgsextract deps check</code> from the checkout; reopen <a class="term-link" href="https://learn.microsoft.com/powershell/">PowerShell</a> first if <a class="term-link" href="https://pixi.sh/">Pixi</a> was newly installed. For missing standard tools or the <a class="term-link" href="https://gatk.broadinstitute.org/" data-tooltip="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows." aria-label="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows.">GATK</a> sidecar, rerun <code>install_windows.bat</code>. <a class="term-link" href="https://www.ensembl.org/info/docs/tools/vep/index.html" data-tooltip="VEP: Variant Effect Predictor: an annotation tool that predicts variant effects on genes and transcripts." aria-label="VEP: Variant Effect Predictor: an annotation tool that predicts variant effects on genes and transcripts.">VEP</a>, <a class="term-link" href="https://github.com/google/deepvariant">DeepVariant</a>, Delly, <a class="term-link" href="https://github.com/freebayes/freebayes">FreeBayes</a>, bigWig-backed annotation and specialized typing are not supported natively; missing optional tools do not necessarily mean installation failed. Old <abbr data-tooltip="WSL: Windows Subsystem for Linux: a Windows feature for running Linux environments." aria-label="WSL: Windows Subsystem for Linux: a Windows feature for running Linux environments.">WSL</abbr>/<a class="term-link" href="https://www.msys2.org/" data-tooltip="MSYS2: Minimal SYStem 2: a Windows environment that provides Unix-like tools and package management." aria-label="MSYS2: Minimal SYStem 2: a Windows environment that provides Unix-like tools and package management.">MSYS2</a> settings are ignored. Windows may scan newly installed tools before first use.</p>
+</article>
+<article class="card">
+<h3>Output files are confusing</h3>
+<p>Use a separate <code>--outdir</code> per sample or workflow. Keep command logs and reference-build notes beside generated files so you can distinguish raw inputs, intermediate files, final outputs, and exploratory experiments.</p>
+</article>
+<article class="card">
+<h3>Report a problem</h3>
+<p><code>wgsextract report-issue</code> turns the last run's error, warnings and log tail, plus versions, <abbr data-tooltip="OS: Operating System: the platform running the application, such as macOS, Linux, or Windows." aria-label="OS: Operating System: the platform running the application, such as macOS, Linux, or Windows.">OS</abbr>, <abbr data-tooltip="CPU: Central Processing Unit: the main processor that runs computation-heavy genomics commands." aria-label="CPU: Central Processing Unit: the main processor that runs computation-heavy genomics commands.">CPU</abbr>, <abbr data-tooltip="RAM: Random Access Memory: working memory used by tools while processing large genomics files." aria-label="RAM: Random Access Memory: working memory used by tools while processing large genomics files.">RAM</abbr> and tools, into a pre-filled <a class="term-link" href="https://github.com/WGSExtract/wgsextract-cli">GitHub</a> issue. Names, paths, reads, genotypes and secrets are removed first; you see the report before the browser opens, and you submit it yourself. Add <code>--last-failed</code> for the last failed run, or <code>--print</code> to only print it.</p>
+</article>
+</div>
+</div>
+</section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract Reference</strong><p>Glossary, files, tools, and troubleshooting.</p></div>
+        <p><a href="index.html">Back home</a></p>
+      </div>
+    </footer>
+    <script>
+      (() => {
+        const copyText = async (text) => {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            return;
+          }
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "fixed";
+          textarea.style.left = "-9999px";
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          textarea.remove();
+        };
+
+        document.addEventListener("click", async (event) => {
+          const button = event.target.closest(".copy-button");
+          if (!button) return;
+          const panel = button.closest(".code-panel");
+          const code = panel?.querySelector("pre code");
+          if (!code) return;
+          const previous = button.textContent;
+          try {
+            await copyText(code.innerText);
+            button.textContent = "Copied";
+          } catch {
+            button.textContent = "Failed";
+          }
+          window.setTimeout(() => {
+            button.textContent = previous;
+          }, 1400);
+        });
+
+        let tooltip;
+        let activeTooltipTarget;
+        let tooltipTimer;
+
+        const ensureTooltip = () => {
+          if (!tooltip) {
+            tooltip = document.createElement("div");
+            tooltip.className = "site-tooltip";
+            tooltip.hidden = true;
+            tooltip.setAttribute("role", "tooltip");
+            document.body.appendChild(tooltip);
+          }
+          return tooltip;
+        };
+
+        const positionTooltip = () => {
+          if (!tooltip || !activeTooltipTarget) return;
+          const rect = activeTooltipTarget.getBoundingClientRect();
+          const tipRect = tooltip.getBoundingClientRect();
+          const margin = 12;
+          let left = rect.left + rect.width / 2 - tipRect.width / 2;
+          left = Math.max(margin, Math.min(left, window.innerWidth - tipRect.width - margin));
+          let top = rect.top - tipRect.height - 10;
+          if (top < margin) top = rect.bottom + 10;
+          tooltip.style.left = `${Math.round(left + window.scrollX)}px`;
+          tooltip.style.top = `${Math.round(top + window.scrollY)}px`;
+        };
+
+        const showTooltip = (target) => {
+          const text = target.dataset.tooltip;
+          if (!text) return;
+          activeTooltipTarget = target;
+          const tip = ensureTooltip();
+          tip.textContent = text;
+          tip.hidden = false;
+          tip.classList.remove("visible");
+          window.requestAnimationFrame(() => {
+            positionTooltip();
+            tip.classList.add("visible");
+          });
+        };
+
+        const scheduleTooltip = (target) => {
+          window.clearTimeout(tooltipTimer);
+          tooltipTimer = window.setTimeout(() => showTooltip(target), 120);
+        };
+
+        const hideTooltip = () => {
+          window.clearTimeout(tooltipTimer);
+          activeTooltipTarget = undefined;
+          if (!tooltip) return;
+          tooltip.classList.remove("visible");
+          tooltip.hidden = true;
+        };
+
+        document.addEventListener("mouseover", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (!target || target === activeTooltipTarget) return;
+          scheduleTooltip(target);
+        });
+
+        document.addEventListener("mouseout", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (!target || target.contains(event.relatedTarget)) return;
+          hideTooltip();
+        });
+
+        document.addEventListener("focusin", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (target) scheduleTooltip(target);
+        });
+        document.addEventListener("focusout", hideTooltip);
+        window.addEventListener("scroll", positionTooltip, { passive: true });
+        window.addEventListener("resize", positionTooltip);
+      })();
+    </script>
+  </body>
+</html>

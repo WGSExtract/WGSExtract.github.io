@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lookup: a genotype, its evidence and what your results say | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/lookup.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Lookup: a genotype, its evidence and what your results say</span></nav>
+<h1 id="lookup-a-genotype-its-evidence-and-what-your-results-say">Lookup: a genotype, its evidence and what your results say</h1>
+<p><code>wgsextract lookup</code> answers one question about one sample: what is its genotype at an rsID, a position or a gene, how sure can we be, and what do the analyses already run on it say there? It reads local files only and writes none; nothing is sent over the network.</p>
+<pre><code class="language-console">$ wgsextract lookup --input HG002.vcf.gz --rsid rs429358
+$ wgsextract lookup --input HG002.vcf.gz --locus GRCh38:chr19:44908684:T&gt;C
+$ wgsextract lookup --input HG002.vcf.gz --gene APOE --json</code></pre>
+<p>The same lookup is <code>api.lookup.lookup(api.LookupParams(...))</code> in the <a href="https://wgsextract.github.io/wgsextract-cli/api.html" target="_blank" rel="noopener noreferrer">typed API</a> and the read-only <code>lookup</code> operation of <a href="server.html"><code>wgsextract serve</code></a>: <code>POST /v1/ops/lookup</code> over HTTP and the <code>lookup</code> tool over MCP, offered without <code>--allow-jobs</code>. All three return the same <code>wgsextract.lookup/1</code> document as the result's <code>details</code>.</p>
+<h2 id="inputs">Inputs<a class="heading-anchor" href="#inputs" aria-label="Link to section">#</a></h2>
+<ul>
+<li><code>--input</code>: the sample's VCF or BCF, variants-only or a gVCF. A multi-sample file needs <code>--sample</code>; the first sample is never assumed.</li>
+<li>Reference evidence: an explicit <code>--gvcf</code>, else the input itself when it is a gVCF, else the gVCF its run published beside it (<a href="reference-evidence.html#commands-that-read-it">reference evidence</a>). Without one, a site the VCF doesn't list is <strong>not assessed</strong>, because a variants-only VCF can't show that a base was read as reference; the run warns <code>lookup_no_reference_evidence</code>.</li>
+<li><code>--report</code>: the sample's <a href="personal-report.html">personal report</a> JSON, or its folder. By default the one report in the input's folder is used; with several, none is chosen and the answer lists them. A report found there but made from another VCF isn't joined (<code>report_for_other_input</code>), nor is any report for a multi-sample VCF's second or later sample, because reports judge its first (<code>report_for_other_sample</code>). A section made on another build joins nothing (<code>build_mismatch</code>).</li>
+<li><code>--build</code>: only when the input's header doesn't show its build (chr1's length or <code>##reference</code>). A different <code>--build</code>, or a <code>--locus</code> on another build, is refused: lookup never converts coordinates between builds.</li>
+</ul>
+<h2 id="what-to-look-up">What to look up<a class="heading-anchor" href="#what-to-look-up" aria-label="Link to section">#</a></h2>
+<ul>
+<li><code>--locus BUILD:CHROM:POS</code>, <code>BUILD:CHROM:START-END</code> (a region of at most 10 Mb) or <code>BUILD:CHROM:POS:REF&gt;ALT</code>, for example <code>GRCh38:chr19:44908684:T&gt;C</code>. Contigs match with or without <code>chr</code>.</li>
+<li><code>--rsid</code>: resolved through the packaged dbSNP build 157 identity history (a merged ID follows to its current ID; a withdrawn one is refused), then placed by the reference library's genome-wide microarray targets (<code>microarray/All_SNPs_&lt;build&gt;_ref.tab.gz</code>, which <code>wgsextract ref microarray-targets</code> builds offline from the <code>ref bootstrap</code> chip templates). They list the sites of consumer genotyping chips, about 2.3 million rsIDs on GRCh37 and GRCh38, not all of dbSNP: another rsID is an error that suggests <code>--locus</code>. A missing table is an error naming the command that builds it; it is never fetched.</li>
+<li><code>--gene</code>: a symbol or alias in the packaged NCBI RefSeq annotation (the one <code>panel bed</code> uses, for GRCh37, GRCh38 and CHM13v2.0). Its calls come in pages of <code>--limit</code> (default 50, at most 1000); <code>--cursor</code> takes the previous page's <code>next_cursor</code>.</li>
+</ul>
+<p>An identifier with several matches (an rsID listed at two positions, a merge history dbSNP calls ambiguous, an alias of several genes, a gene on both chrX and chrY) is never answered with the first match. The <code>resolution</code> has <code>status: &quot;ambiguous&quot;</code> and its <code>candidates</code>, the run warns <code>lookup_ambiguous</code>, and <code>--locus</code> (beside <code>--rsid</code> or <code>--gene</code>) or the gene's symbol chooses one.</p>
+<p>There is no remote identifier search: no lookup sends anything anywhere.</p>
+<h2 id="the-answer">The answer<a class="heading-anchor" href="#the-answer" aria-label="Link to section">#</a></h2>
+<p>A site's <code>status</code>:</p>
+<div class="table-wrap"><table>
+<thead><tr><th><code>status</code></th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>confident_call</code></td><td>A non-reference genotype, FILTER passing, labelled high or moderate confidence.</td></tr>
+<tr><td><code>confident_reference</code></td><td>Reference: every base <code>callable_reference</code> in the gVCF, or an explicit <code>0/0</code> call labelled high or moderate.</td></tr>
+<tr><td><code>weak_evidence</code></td><td>A call or reference below the thresholds: a low-confidence or filtered call, or <code>low_quality_reference</code>.</td></tr>
+<tr><td><code>no_call</code></td><td>The caller recorded a missing genotype (<code>./.</code>), or only part of one (<code>1/.</code>, evidence state <code>partial_call</code>).</td></tr>
+<tr><td><code>not_assessed</code></td><td>No evidence: no reads (<code>uncovered</code>), outside the region the caller assessed, ploidy 0 for this sample, or a variants-only VCF without a gVCF.</td></tr>
+</tbody>
+</table></div>
+<p><code>evidence_state</code> gives the finer reason: <code>variant</code>, <code>reference_call</code>, <code>filtered</code>, <code>no_call</code>, or a <a href="reference-evidence.html#evidence-states">reference evidence state</a>. Confidence labels and thresholds are those of <a href="variant-confidence.html">variant confidence labels</a> (<code>--confidence-depth</code>, <code>--confidence-gq</code>).</p>
+<p>Each call lists its genotype as written (<code>0|1</code>) and as alleles, its depth, genotype quality, allele depths, FILTER and IDs, its phase (<code>phased</code>, <code>phase_set</code> and, when phased, <code>haplotypes</code>: the allele on each copy) and <code>variants</code>: each carried allele in its minimal representation (shared bases trimmed, one anchor base kept for an indel) with its type. A multiallelic record keeps every allele. Labels use the caller's recorded ploidy policy (a haploid chrX call's halved depth thresholds) and, in a multi-sample VCF, only the chosen sample's own counts. A reference site's genotype is the gVCF block's own (<code>0/0</code>, or <code>0</code> where the caller called one copy); filtered or no-call evidence gives none. A <code>--locus</code> with <code>REF&gt;ALT</code> adds <code>query_allele_copies</code>: the copies of that allele, 0 at confident reference, and none when the evidence can't say. With <code>--rsid</code> or <code>--gene</code>, an allele-qualified <code>--locus</code> keeps all of its REF's bases.</p>
+<p>A region (<code>--gene</code>, or a <code>--locus</code> range) has its calls and <code>call_states</code>, its bases per evidence state (<code>evidence.bases</code>, with the first non-callable spans) and <code>phase_sets</code>: the phased calls of each phase set, with the alleles on each copy in order.</p>
+<h2 id="what-the-results-say">What the results say<a class="heading-anchor" href="#what-the-results-say" aria-label="Link to section">#</a></h2>
+<p><code>interpretation</code> joins the personal report and attributes it (<code>report.path</code>, <code>generated</code>, version and disclaimer). It copies, unchanged, the findings of the variant and gene sections (<code>clinvar</code>, <code>acmg_research</code>, <code>pharmacogenomics</code>, <code>carrier_screening</code>, <code>structural_variants</code>) at the site (<code>match: &quot;site&quot;</code>; a structural variant matches across its recorded interval) or about the gene (<code>match: &quot;gene&quot;</code>), each with its own confidence label, reasons, evidence file and disclaimer. Lookup adds no classification of its own. A site lookup also matches findings without a position (a diplotype, a copy number) about the genes at the site, but not the gene's other variants.</p>
+<p>Each section is listed with its <code>status</code>. A section that was <code>not_run</code> lists the commands that would run it (<code>missing</code>), so "no finding" is never taken for "not looked at"; <code>limitations</code> says what an empty section doesn't mean. Without a report the answer says how to make one (<code>wgsextract report --input ...</code>). A report older than the input warns <code>lookup_report_older_than_input</code>.</p>
+<p>A server job reads only inside its allowed folders: a report or a manifest's gVCF found beside the input but outside them is skipped.</p>
+<h2 id="provenance">Provenance<a class="heading-anchor" href="#provenance" aria-label="Link to section">#</a></h2>
+<p><code>resources</code> names every resource used: the dbSNP history's release and terms, the rsID placements file, and the gene annotation's release, licence and source. The result manifest lists the input, gVCF, report and placements as inputs, with their fingerprints. Results stay on this computer.</p>
+<h2 id="measured">Measured<a class="heading-anchor" href="#measured" aria-label="Link to section">#</a></h2>
+<p>HG002 (Oxford Nanopore, GRCh38), <code>vcf snp --reference-evidence gvcf</code> on chr20:10.0-10.5 Mb, looking up each of the 618 chip rsIDs placed there against GIAB v4.2.1:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>GIAB</th><th><code>confident_call</code></th><th><code>confident_reference</code></th><th><code>weak_evidence</code></th></tr></thead>
+<tbody>
+<tr><td>variant (239)</td><td>237, all the same genotype</td><td>1 (a SNV bcftools missed at 25x)</td><td>1</td></tr>
+<tr><td>reference, confident region (373)</td><td>0</td><td>371</td><td>2</td></tr>
+</tbody>
+</table></div>
+<p>Six sites outside GIAB's confident regions aren't counted. With GIAB's variants-only truth VCF as the input, its sites without a variant were <code>not_assessed</code>, not reference. A lookup took about 0.4 s.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/lookup.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/lookup.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

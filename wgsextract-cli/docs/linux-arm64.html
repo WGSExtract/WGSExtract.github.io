@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Native Linux ARM64 (phase 1) | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/linux-arm64.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Native Linux ARM64 (phase 1)</span></nav>
+<h1 id="native-linux-arm64-phase-1">Native Linux ARM64 (phase 1)</h1>
+<p>Use a native 64-bit ARM Linux host, such as Ubuntu 24.04 on Cobalt 100 or Ampere, and the <a href="../readme.html#install">documented installer</a>. Pixi selects the locked <code>linux-aarch64</code> packages automatically; no x86 emulator or container is needed. Dependencies are installed during setup, never by running a feature. For a source checkout:</p>
+<pre><code class="language-sh">pixi install --locked
+pixi run wgsextract deps check
+pixi run wgsextract --help</code></pre>
+<p>For unreleased code, choose the branch explicitly with the existing <code>WGSEXTRACT_REF</code> installer option. The default installer installs the latest published release, which may predate ARM64 support. The installer validates the downloaded workspace's ARM64 platform before installing Pixi or changing an existing app; unsupported refs fail cleanly. Inline and multi-line platform arrays are accepted. Refusal preserves existing installations and removes an empty destination created for a fresh attempt.</p>
+<h2 id="supported-phase-1-commands">Supported phase-1 commands<a class="heading-anchor" href="#supported-phase-1-commands" aria-label="Link to section">#</a></h2>
+<p>The default environment includes native BWA, bwa-mem2, minimap2, samtools, HTSlib, bcftools, fastp, samblaster, Haplogrep 3 and haplocheck, alongside native Yleaf-derived Y-DNA analysis (reference tables download on demand). This covers <code>align</code>, <code>realign</code>, BAM/CRAM sorting/indexing/conversion, bcftools calling, microarray export, <code>info</code>/coverage and Y/mtDNA lineage commands. BWA uses NEON KSW; bwa-mem2's native ARM build uses sse2neon (an intrinsics translation library, not an x86 emulator); minimap2 uses its NEON backend. With the optional <code>bwa-mem3</code> environment (<code>pixi install --locked -e bwa-mem3</code>), bwa-mem3 writes bwa's or bwa-mem2's exact records about five times as fast, in their place (<a href="hardware.html#bwa-mem3-on-linux">bwa-mem3 on Linux</a>).</p>
+<p>VEP is available separately: run <code>pixi install --locked -e vep</code> before annotation, just as on Linux x86_64. The CLI only validates that the environment already exists. Reference data/cache requirements are unchanged.</p>
+<p>Choose <code>--aligner bwa</code> or <code>--aligner bwa-mem2</code> explicitly for reproducible comparisons. Both retain the existing fixed batch-size policy, <code>-K 100000000</code>; no ARM-specific scientific defaults are introduced. MEM2's full-human index construction can require about 90 GB; reuse the verified public index where available or use a sufficiently large native machine. Alignment needs much less RAM, and the usual preflight still applies.</p>
+<p>The upstream MEM2 v2.3 source archive still reports <code>2.2.1</code> from its executable. Use the locked package version and upstream source checksum as well as <code>--version</code> when matching a scientific golden; the reported version alone is not evidence that two builds use the same source.</p>
+<h2 id="deliberately-unavailable">Deliberately unavailable<a class="heading-anchor" href="#deliberately-unavailable" aria-label="Link to section">#</a></h2>
+<p>GATK commands fail fast on Linux ARM64, including <code>--gpu</code>: the pinned GKL PairHMM and Smith-Waterman kernels require x86 AVX. No slow pure-Java fallback is silently enabled. DeepVariant CPU has an explicit <a href="deepvariant-arm64.html">native source-build path</a> for the pinned 1.10.0 release; the image must already exist and pass native engine/image checks. Only DeepVariant's default WGS model is enabled: other models, <code>--wes</code>, <code>--pacbio</code>, <code>--checkpoint</code> and <code>--gpu</code> remain unavailable. The phase-2 explanation is shown for gated commands, version probes, selected <code>deps check --tool</code> requests and missing optional tools in <code>deps check</code>. Unavailable tools are marked missing, without an unusable installation hint. Use bcftools for phase-1 variant calling.</p>
+<p>Ultima alignment/realignment is outside phase 1 because flow-based duplicate marking uses GATK. Explicit <code>--platform ultima</code> and automatically detected Ultima read groups fail before alignment/reference/output preparation, even when GATK is installed. GATK-free Ultima data transformations are unaffected.</p>
+<p>GPU alignment/realignment also fails before preparing inputs or inspecting Docker: the Parabricks image is not qualified natively on ARM64. Use the native CPU aligners; x86 containers are not an ARM64 fallback.</p>
+<p>PharmCAT, Cyrius, SMNCopyNumberCaller, T1K, ExpansionHunter and PacBio-specific binaries are not qualified as part of phase 1. Their existing platform restrictions are not a promise of ARM64 support. Native GKL and DeepVariant are separate #236 phase-2 work; a Java JIT or an ARM TensorFlow package alone does not satisfy that gate.</p>
+<p>CI runs the generated small-genome end-to-end suite on GitHub's native <code>ubuntu-24.04-arm</code> runner. Full 30x exactness and performance acceptance require native, appropriately sized machines and matched pinned inputs, references, versions, fixed batch size, CPU/memory limits and local storage. Compare decoded records, not compressed CRAM bytes or command-line provenance headers.</p>
+<h2 id="qualification-status">Qualification status<a class="heading-anchor" href="#qualification-status" aria-label="Link to section">#</a></h2>
+<p>Fresh Ubuntu 24.04 ARM installation, native unit tests and generated-genome tests pass. Full public HG00096 MEM2 output (779,820,884 decoded records) and bcftools calling (4,408,885 records, including all genotypes) exactly match the same-source x64 control. Full BWA 30x output also exactly matches the x64 #189 golden: 779,820,884 ordered records and 370,846,991,252 decoded bytes, including matching portable headers, flagstat and idxstats. Native small-genome and complete-pair public pilots pass. Stock ARM MEM2 index construction is 39.1% slower in the measured comparison. This one-time reference-preparation cost is not an acceptance blocker. A bounded native 50 Mb indexing experiment found only a 1.1% median improvement from Neoverse-N2 compiler flags, smaller than run variation; all five index members remained byte-identical. Native profiling identified suffix-array sorting/FM-index construction rather than NEON alignment or compression as the hot path. No CPU-specific rebuild or unqualified sorting replacement is enabled by default.</p>
+<p>BWA took 20,980.295 seconds on ARM versus the historical x64 control's 26,380.628 seconds (20.47% faster). Both use 16 vCPU, 128 GiB and local NVMe; ARM has 16 physical cores, x64 eight cores with SMT. This is explicitly a historical full x64 comparison, not a fresh same-branch full benchmark. Full MEM2 is 19.84% slower (within 20%); clean full bcftools calling is 30.61% faster. Regional pricing and core topology affect performance/USD.</p>
+<p>See <a href="https://github.com/WGSExtract/wgsextract-cli/pull/273" target="_blank" rel="noopener noreferrer">PR #273</a> and <a href="https://github.com/WGSExtract/wgsextract-cli/issues/236" target="_blank" rel="noopener noreferrer">issue #236</a> for measured hardware, controls and qualification limits. Support here does not imply that an untested ARM tool or x86-emulated executable is qualified.</p>
+<p>The <a href="deepvariant-arm64.html">native DeepVariant follow-up</a> separately qualifies the original 1.10.0 WGS path: complete chr20 genotypes match, and all 7,709,239 whole-genome sites and PASS genotypes match. One filtered hom-reference no-call and rare confidence/model-routing boundaries are disclosed with actual probability evidence. Whole-genome wall time is 7.72% slower than the matched 16-vCPU x64 guest; this does not qualify other models or close the BWA gate.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/linux-arm64.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/linux-arm64.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Working with professional pipelines | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/interop.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Working with professional pipelines</span></nav>
+<h1 id="working-with-professional-pipelines">Working with professional pipelines</h1>
+<p>WGS Extract is a desktop toolkit, not a pipeline framework. For production cohort work, the community-standard Nextflow pipelines are <a href="https://nf-co.re/sarek" target="_blank" rel="noopener noreferrer">nf-core/sarek</a> for short reads and EPI2ME's <a href="https://github.com/epi2me-labs/wf-human-variation" target="_blank" rel="noopener noreferrer">wf-human-variation</a> for Oxford Nanopore. This page covers three things:</p>
+<ul>
+<li>handing our BAM/CRAM files to those pipelines (or to GATK directly);</li>
+<li>bringing their VCFs back for the consumer-facing features, such as microarray kits, haplogroups and reports;</li>
+<li>putting our metrics into the same MultiQC report as everything else.</li>
+</ul>
+<h2 id="our-files">Our files<a class="heading-anchor" href="#our-files" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Output</th><th>Format and conventions</th></tr></thead>
+<tbody>
+<tr><td><code>align</code>, <code>realign</code></td><td>Coordinate-sorted, indexed BAM or CRAM (<code>--format</code>). There is one read group: <code>ID</code> is the reads' file stem, <code>SM</code>/<code>LB</code> come from <code>--sample</code>, and <code>PL</code> comes from <code>--platform</code>. Duplicates are marked with samblaster on short reads. There is no base quality recalibration.</td></tr>
+<tr><td>CRAM</td><td>Decodes only with the exact FASTA it was written against, which is the one in your reference library (<code>ref library --list</code>). Pass the same file to every downstream tool. A different "GRCh38" (for example GATK's <code>Homo_sapiens_assembly38.fasta</code> against our <code>hs38DH</code>) has different extra contigs and cannot decode it. When in doubt, convert with <code>bam to-bam</code>. Tools we run never fetch a CRAM's reference over the network: while a command runs, htslib's <code>REF_PATH</code> keeps only your local entries (http, https and ftp entries are dropped), or is htslib's local <code>hts-ref</code> cache folder when you have none, so a missing reference fails instead of being looked up on EBI's server.</td></tr>
+<tr><td><code>vcf snp</code>/<code>indel</code>/<code>gatk</code>/<code>deepvariant</code>/...</td><td>bgzipped, tabix-indexed, single-sample VCF named after the input, with chromosome names as in the reference.</td></tr>
+<tr><td><code>vcf table</code></td><td><code>&lt;stem&gt;_variants.tsv</code> and <code>&lt;stem&gt;_variants.sqlite</code>: one row per carried ALT allele with fixed, typed columns (position, gene, consequence, HGVS, ClinVar, gnomAD AF, genotype, depth, ...). See <a href="variant-table.html">Variant table</a>.</td></tr>
+<tr><td><code>--format parquet</code></td><td>Typed, zstd-compressed Parquet copies of our tables (variant table, methylation, <code>info</code>, microarray genotypes) with provenance in the footer, for DuckDB, Polars, Spark or pandas. See <a href="parquet.html">Parquet output</a>.</td></tr>
+<tr><td><code>*.manifest.json</code></td><td>The <a href="result-manifest.html">result manifest</a> of each run: inputs, outputs, metrics, warnings and provenance.</td></tr>
+<tr><td><code>wgsextract.sample.toml</code></td><td>The <a href="sample-workspace.html">sample workspace</a> of a genome folder: detected sex, platform, build and depth per input, and your overrides.</td></tr>
+<tr><td><code>*.steps.json</code></td><td>The <a href="step-resume.html">step journal</a> of a resumable workflow: each completed step's settings key and input and output fingerprints.</td></tr>
+</tbody>
+</table></div>
+<p>Run <code>wgsextract info --detailed</code> on a BAM/CRAM before handing it off. It reports the reference build and model, read length, insert size, duplicate rate and inferred sex, which are what the pipelines below ask for.</p>
+<h2 id="nf-coresarek">nf-core/sarek<a class="heading-anchor" href="#nf-coresarek" aria-label="Link to section">#</a></h2>
+<p>Sarek takes a CSV samplesheet. Our CRAM is already aligned and duplicate-marked, so start at the step after duplicate marking:</p>
+<pre><code class="language-bash">wgsextract info --detailed --input sample.cram     # build, sex (XX/XY)
+printf &#x27;patient,sex,status,sample,cram,crai\n&#x27; &gt; samplesheet.csv
+printf &#x27;P1,XY,0,P1_N,%s,%s\n&#x27; &quot;$PWD/sample.cram&quot; &quot;$PWD/sample.cram.crai&quot; &gt;&gt; samplesheet.csv
+
+nextflow run nf-core/sarek -r &lt;VERSION&gt; -profile docker \
+  --input samplesheet.csv --outdir sarek \
+  --step variant_calling --tools haplotypecaller,deepvariant \
+  --igenomes_ignore --fasta /path/to/reference/genomes/hs38DH.fa</code></pre>
+<ul>
+<li><strong>Which step.</strong>
+<ul>
+<li><code>--step variant_calling</code> skips base quality recalibration. That is right for DeepVariant, and acceptable for HaplotypeCaller on modern data.</li>
+<li>To recalibrate, use <code>--step prepare_recalibration</code> and give sarek its known-sites resources (<code>--dbsnp</code>, <code>--known_indels</code>).</li>
+<li>Starting from FASTQ instead (<code>--step mapping</code>, with columns <code>patient,sample,lane,fastq_1,fastq_2</code>) re-aligns everything with sarek's own reference.</li>
+</ul></li>
+<li><strong>Reference.</strong> Pass the FASTA your CRAM was written against, decompressed with its <code>.fai</code>, plus <code>--igenomes_ignore</code>. Sarek builds the rest of the indexes it needs.
+<ul>
+<li><code>--genome GATK.GRCh38</code> only works for CRAMs aligned to that exact FASTA.</li>
+<li>Re-align to it first with <code>wgsextract realign</code> if you want sarek's bundled resources.</li>
+</ul></li>
+<li><strong>Several samples.</strong> Add a row per sample and <code>--joint_germline</code> to get a joint-called VCF.</li>
+</ul>
+<p>Sarek's germline outputs, and what to do with them here:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Sarek output</th><th>Bring back with</th></tr></thead>
+<tbody>
+<tr><td><code>variant_calling/&lt;tool&gt;/&lt;sample&gt;/&lt;sample&gt;.&lt;tool&gt;.vcf.gz</code></td><td><code>microarray --input ...</code>, <code>lineage ...</code>, <code>vcf annotate</code>/<code>vcf clinvar</code>, <code>vcf to-fasta</code></td></tr>
+<tr><td><code>variant_calling/deepvariant/&lt;sample&gt;/&lt;sample&gt;.deepvariant.g.vcf.gz</code>, <code>.../haplotypecaller/&lt;sample&gt;/&lt;sample&gt;.haplotypecaller.g.vcf.gz</code> (gVCF)</td><td><code>microarray --input ...</code> (see <a href="#bringing-vcfs-back">Bringing VCFs back</a>)</td></tr>
+<tr><td><code>variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz</code> (multi-sample)</td><td><code>microarray --input ... --sample P1_N</code>, <code>vcf to-fasta --sample P1_N</code></td></tr>
+<tr><td><code>preprocessing/recalibrated/&lt;sample&gt;/&lt;sample&gt;.recal.cram</code></td><td>Any BAM/CRAM command, such as <code>lineage</code>, <code>microarray</code>, <code>extract</code>, <code>typing</code> and <code>info</code>. Use sarek's reference (<code>--ref</code>).</td></tr>
+<tr><td><code>multiqc/multiqc_data/</code> and the report</td><td>Combine with ours; see <a href="#multiqc">MultiQC</a> below.</td></tr>
+</tbody>
+</table></div>
+<h2 id="wf-human-variation-oxford-nanopore">wf-human-variation (Oxford Nanopore)<a class="heading-anchor" href="#wf-human-variation-oxford-nanopore" aria-label="Link to section">#</a></h2>
+<pre><code class="language-bash">wgsextract bam to-bam --input sample.cram --outdir handoff    # if you have a CRAM
+nextflow run epi2me-labs/wf-human-variation -profile standard \
+  --bam handoff/sample.bam --ref /path/to/reference/genomes/hs38DH.fa \
+  --sample_name SAMPLE --snp --sv --out_dir wf-hv</code></pre>
+<ul>
+<li><strong>Reads and methylation.</strong> Our <code>align</code>/<code>realign</code> keep the MM/ML methylation tags on ONT reads, so <code>--mod</code> works on our BAMs.</li>
+<li><strong>Reference.</strong> Pass the same reference the BAM was aligned to.</li>
+<li><strong>gVCF.</strong> Add <code>--GVCF</code> for a gVCF alongside the VCF.</li>
+<li><strong>Outputs to bring back.</strong>
+<ul>
+<li><code>SAMPLE.wf_snp.vcf.gz</code> (short variants) works with <code>microarray</code>, <code>lineage</code> and the <code>vcf</code> annotation commands.</li>
+<li><code>SAMPLE.wf_sv.vcf.gz</code> holds structural variants.</li>
+<li>Unaligned input comes back aligned as <code>SAMPLE.cram</code>.</li>
+</ul></li>
+</ul>
+<h2 id="gatk-directly">GATK directly<a class="heading-anchor" href="#gatk-directly" aria-label="Link to section">#</a></h2>
+<p>Our BAM/CRAM already carries what GATK requires:</p>
+<ul>
+<li>a read group with <code>SM</code>, <code>LB</code> and <code>PL</code>;</li>
+<li>coordinate sorting and an index;</li>
+<li>duplicate marking.</li>
+</ul>
+<p>For example:</p>
+<pre><code class="language-bash">gatk HaplotypeCaller -R hs38DH.fa -I sample.cram -O sample.g.vcf.gz -ERC GVCF</code></pre>
+<p><code>wgsextract vcf gatk</code> runs HaplotypeCaller for you. <code>bam to-ubam</code> writes the unaligned BAM that GATK's Best Practices preprocessing starts from.</p>
+<h2 id="bringing-vcfs-back">Bringing VCFs back<a class="heading-anchor" href="#bringing-vcfs-back" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong>Multi-sample VCFs</strong>, such as a joint-called cohort or a trio:
+<ul>
+<li><code>microarray</code> refuses them unless you choose a sample with <code>--sample</code>. The error lists the samples.</li>
+<li>The kit and its manifest are named <code>&lt;vcf&gt;_&lt;sample&gt;_...</code>, and the manifest records the sample. <code>vcf to-fasta</code> takes <code>--sample</code> the same way.</li>
+</ul></li>
+<li><strong>gVCF input.</strong>
+<ul>
+<li><code>microarray</code> recognises gVCFs by their reference blocks (<code>&lt;NON_REF&gt;</code>, <code>&lt;*&gt;</code> or <code>.</code> with <code>END=</code>, as GATK, DeepVariant and DRAGEN write them; Sequencing.com's "genome" VCFs are DRAGEN gVCFs) and reads each target SNP from the block or variant covering it.</li>
+<li>A target inside a <code>0/0</code> block is a reference call only when the block passes the same DP/GQ/FILTER gates as alternate calls (default DP ≥10, GQ ≥20, no failing FILTER). <code>MIN_DP</code>, when available, supplies block-wide minimum depth instead of block-start DP. A target inside a <code>./.</code> block is a no-call, and so is a target that no record covers. Where a block overlaps a variant record, the variant wins.</li>
+<li>This applies to GRCh37, GRCh38 and T2T/CHM13 gVCFs alike.</li>
+<li>Absent sites in plain VCFs are also no-calls by default. Unsafe legacy absence-as-reference output requires <code>--assume-hom-ref --min-dp 0 --min-gq 0</code> (or matching <code>microarray_*</code> settings in <code>config.toml</code>). This does not establish that a site was assessed, in either a VCF or a gVCF.</li>
+</ul></li>
+<li><strong>Builds.</strong>
+<ul>
+<li>Microarray kits need the VCF's build in your reference library; pass it with <code>--ref</code>. Reference-block bases come from that FASTA, whose <code>chr1</code> or <code>1</code> naming needn't match the VCF's.</li>
+<li>GRCh38 VCFs are lifted to the kits' hg19 coordinates exactly as our own calls are.</li>
+</ul></li>
+</ul>
+<h2 id="multiqc">MultiQC<a class="heading-anchor" href="#multiqc" aria-label="Link to section">#</a></h2>
+<p><a href="https://multiqc.info" target="_blank" rel="noopener noreferrer">MultiQC</a> is how professional pipelines (including both of the above) summarise a run. Our metrics can join that report in two ways.</p>
+<p><strong>Without MultiQC installed</strong>, write MultiQC custom-content files from the manifests and hand them to any MultiQC run, such as sarek's own:</p>
+<pre><code class="language-bash">wgsextract info --detailed --json --input sample.cram &gt; runs/sample.info.json
+wgsextract lineage mt-haplogroup --input sample.cram --outdir runs
+wgsextract qc multiqc-metrics --input runs --outdir runs/multiqc
+multiqc sarek/ runs/multiqc            # our sections join sarek&#x27;s report</code></pre>
+<p><code>qc multiqc-metrics</code> reads every <code>*.manifest.json</code>, plus saved <code>--json</code> output, under <code>--input</code>. <code>info</code> writes no manifest, so save its <code>--json</code>. It writes:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>File</th><th>Content</th></tr></thead>
+<tbody>
+<tr><td><code>wgsextract_alignment_mqc.json</code></td><td><code>info</code>: sex, depth, reads mapped, read length, insert size, duplicates, build/model, sequencer</td></tr>
+<tr><td><code>wgsextract_lineage_mqc.json</code></td><td><code>lineage</code>: mtDNA and Y haplogroups (with quality), Y-STR panel coverage</td></tr>
+<tr><td><code>wgsextract_microarray_mqc.json</code></td><td><code>microarray</code>: autosomal calls, homozygosity, kits, worst no-call rate</td></tr>
+<tr><td><code>wgsextract_variants_mqc.json</code></td><td>Record counts of the VCFs our callers and extractors wrote</td></tr>
+<tr><td><code>wgsextract_warnings_mqc.json</code></td><td>Count and codes of the structured warnings each sample raised</td></tr>
+<tr><td><code>wgsextract_general_stats_mqc.json</code></td><td>Sex, depth, % mapped, duplicates, haplogroups and warnings in MultiQC's General Statistics table</td></tr>
+</tbody>
+</table></div>
+<p>How samples, runs and stale files are handled:</p>
+<ul>
+<li><strong>Sample names.</strong> Rows are keyed by sample: the input's file name without its type extension, or the <code>--sample</code> chosen from a multi-sample VCF. Name your inputs as the pipeline names its samples (sarek's <code>sample</code> column), and the rows line up.</li>
+<li><strong>Repeated runs.</strong> When a command ran more than once for a sample, the latest successful run wins.</li>
+<li><strong>Stale files.</strong> Rerunning replaces the files and removes ones whose section no longer has data.</li>
+<li><strong>MultiQC options.</strong> These are standard <a href="https://docs.seqera.io/multiqc/custom_content" target="_blank" rel="noopener noreferrer">custom-content</a> files, so MultiQC options such as <code>--sample-names</code> and <code>--ignore</code> apply.</li>
+</ul>
+<p><strong>With MultiQC installed</strong> (<code>pixi install -e multiqc</code>, version 1.32 or newer, below 2), <code>qc multiqc --input DIR</code> converts the manifests itself and writes one offline <code>multiqc_report.html</code>. The report includes:</p>
+<ul>
+<li>FastQC reports;</li>
+<li><code>bcftools stats</code> output, as written by <code>qc vcf</code>;</li>
+<li>our sections.</li>
+</ul>
+<p>For example:</p>
+<pre><code class="language-bash">wgsextract qc fastqc --input sample_R1.fastq.gz --outdir out/fastqc
+wgsextract qc fastqc --input sample_R2.fastq.gz --outdir out/fastqc
+wgsextract qc multiqc --input out/fastqc --outdir out/combined</code></pre>
+<p>Or <code>qc fastqc --input sample_R1.fastq.gz --r2 sample_R2.fastq.gz --multiqc</code> processes both mates and replaces <code>multiqc_report.html</code> in its output directory in one run.</p>
+<p><code>qc multiqc</code> is opt-in: it combines existing reports without rerunning tools or changing their outputs. <code>--input</code> accepts a file or directory; without <code>--outdir</code>, output goes beside the file or into the directory. The output is one standalone <code>multiqc_report.html</code>, never a parsed-data directory, and inherited titles cannot change its filename. Replacing it requires <code>--force</code>; failed replacement preserves the old report. Non-force publication uses atomic hard links against concurrent overwrites; filesystems without them need another <code>--outdir</code> or explicit <code>--force</code>.</p>
+<p>The CLI validates <a href="https://github.com/MultiQC/MultiQC" target="_blank" rel="noopener noreferrer">MultiQC</a>, never installs it. The optional <code>multiqc</code> Pixi environment is explicit user-managed setup; dev environments include it for tiny real-tool tests. MultiQC is an external GPLv3 tool, not a bundled dataset. Only FastQC, bcftools and custom-content modules run. Version checks, MegaQC uploads, AI summaries and report controls are disabled; no browser opens. The subprocess's standard <code>TMPDIR</code> points to an owned report workspace, not a new application configuration option.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/interop.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/interop.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Automated ACMG classification (research only) | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/acmg.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Automated ACMG classification (research only)</span></nav>
+<h1 id="automated-acmg-classification-research-only">Automated ACMG classification (research only)</h1>
+<p><strong>Research use only; not a diagnosis.</strong> <code>vcf acmg</code> adds automated ACMG/AMP classes (P, LP, VUS, LB, B) to a VCF annotated by <code>vep run</code>. They come from <a href="https://github.com/Huang-lab/fastVEP" target="_blank" rel="noopener noreferrer">fastVEP</a>'s classifier and public databases only. It has no clinical, family or functional evidence (PS3/BS3, PS4, PP1, PP4), BP3 needs an optional RepeatMasker track, and a VUS can mean that nothing was checked. Don't act on a class without a clinical genetics professional.</p>
+<p>The command is off unless you ask for it: it refuses to run without <code>--research-acmg</code> (<code>research_acmg</code> in the API and server), and nothing else runs it for you.</p>
+<pre><code class="language-bash">wgsextract ref acmg-data --dry-run    # plan and terms, offline
+wgsextract ref acmg-data --download   # download and build, once
+wgsextract vep run --input sample.vcf.gz --engine vep-rs
+wgsextract vcf acmg --vcf-input sample_vep.vcf.gz --research-acmg</code></pre>
+<h2 id="what-it-writes">What it writes<a class="heading-anchor" href="#what-it-writes" aria-label="Link to section">#</a></h2>
+<ul>
+<li><code>acmg_annotated.vcf.gz</code> (+ <code>.tbi</code> or <code>.csi</code>): the input VCF, vep-rs consequences unchanged, with three INFO fields per ALT allele: <code>ACMG_CLASS</code>, <code>ACMG_CRITERIA</code> (the criteria met, joined by <code>&amp;</code>) and <code>ACMG_TRANSCRIPT</code>. The optional record-level <code>ACMG_GNOMAD_REGION</code> note shows <code>lcr</code>, <code>segdup</code>, or <code>lcr&amp;segdup</code> at the written VCF position when those masks were used for that chromosome and the local tracks are still available. fastVEP does not write withheld criteria to <code>ACMG_CRITERIA</code>. The note is not proof that a given allele lost evidence: the veto requires a matching gnomAD allele, and an indel's lookup may use a left-aligned position. The header carries the disclaimer in <code>##WGSE_ACMG</code>. Classifying an <code>acmg_annotated.vcf.gz</code> again replaces its earlier classes. The new VCF and index are published only after indexing succeeds; a failed index build leaves any previous VCF and its index unchanged.</li>
+<li><code>acmg_summary.json</code>: the disclaimer, the fastVEP version, the databases (files, sources, assemblies, sizes, dates), the optional sources not loaded, the criteria never evaluated, and the counts of classes, criteria and transcript choices.</li>
+<li>The result manifest lists both (roles <code>annotated_vcf</code> and <code>acmg_summary</code>), the class counts as metrics (<code>acmg_p</code>, <code>acmg_lp</code>, ...), and the warning <code>acmg_research_only</code>.</li>
+<li>When RepeatMasker is missing, the header, summary and manifest say BP3 was not evaluated (<code>acmg_bp3_not_evaluated</code>). When the gnomAD region flags are missing, they list affected flags and contigs (<code>acmg_gnomad_region_flags_not_evaluated</code>). The population criteria still run, but their low-complexity/segmental duplication veto is incomplete. The region veto is only evaluated for alleles with a matching gnomAD record; in particular, fastVEP can still assign PM2_Supporting to an unmatched allele in one of these regions.</li>
+</ul>
+<p><a href="variant-table.html"><code>vcf table</code></a> of <code>acmg_annotated.vcf.gz</code> has the columns <code>acmg_class</code>, <code>acmg_criteria</code> and <code>acmg_transcript</code>, with the disclaimer in its metadata. <a href="personal-report.html"><code>report</code></a> then adds a research-only section: the classes of the alleles the sample carries, and its P/LP calls in the gene list's genes. In the desktop app, <code>vcf acmg</code> is an action of the VCF page's annotations that runs only once you tick that you understand it is research use only.</p>
+<h2 id="how-it-works">How it works<a class="heading-anchor" href="#how-it-works" aria-label="Link to section">#</a></h2>
+<p>vep-rs stays the consequence engine. fastVEP reads the same records with its own transcript models (the Ensembl GFF3), the reference FASTA and the databases, with <code>--acmg --pick-allele --pick-order mane_select,canonical,biotype,rank</code>. Each allele's class is the one fastVEP gives on the transcript <a href="variant-table.html"><code>vcf table</code></a> picks; when fastVEP has no row for that transcript, its own pick is used and <code>transcript_choice.other_transcript</code> counts it. fastVEP's own consequences and annotations are discarded.</p>
+<p>fastVEP doesn't fail when a database is missing: the criteria it drives don't fire and the variant reads as VUS. <code>vcf acmg</code> refuses instead, before reading any record, when the databases lack one of the eight sources below, when a database isn't built for GRCh38, when fastVEP skips a database file, or when the gnomAD database holds nothing of an autosome, X or Y the input has records on (by default those chromosomes' gnomAD is read per run instead; see <a href="#gnomad-and-spliceai-per-run">gnomAD and SpliceAI per run</a>). Records on other contigs gnomAD holds nothing of (chrM, which gnomAD v4.1 lacks, and unplaced, alt or decoy contigs) are left unclassified, with the warning <code>acmg_contigs_not_classified</code>, and listed in the summary's <code>contigs_not_classified</code>.</p>
+<h2 id="requirements">Requirements<a class="heading-anchor" href="#requirements" aria-label="Link to section">#</a></h2>
+<ul>
+<li>GRCh38 only, with its reference FASTA (<code>--ref</code> or the reference library).</li>
+<li>fastVEP 0.5.0: <code>pixi install -e fastvep</code> on Linux (x86-64 and ARM64), macOS (Intel and Apple Silicon), or Windows x86-64. WGS Extract builds the CLI-only packages from the pinned upstream release, with portable CPU targets and upstream/third-party licence notices, and pins each package by URL and SHA-256. The CLI uses the installed environment automatically; it never installs it or downloads databases during classification.</li>
+<li>An Ensembl GRCh38 GFF3 of the same release as the vep-rs cache, such as <code>Homo_sapiens.GRCh38.116.gff3.gz</code> from <a href="https://ftp.ensembl.org/pub/release-116/gff3/homo_sapiens/" target="_blank" rel="noopener noreferrer">https://ftp.ensembl.org/pub/release-116/gff3/homo_sapiens/</a>. fastVEP writes a transcript cache beside it on first use.</li>
+<li>The folder of fastVEP databases and the GFF3 that <code>wgsextract ref acmg-data</code> builds (below). <code>vcf acmg</code> reads them from the reference library unless <code>--sa-dir</code> and <code>--gff3</code> (or <code>acmg_sa_dir</code> and <code>acmg_gff3</code> in config.toml) name others. A folder built with <code>fastvep sa-build</code> yourself (see fastVEP's <code>docs/ACMG_SETUP.md</code>) works too, one database per source, all with <code>--assembly GRCh38</code>. A RepeatMasker track (<code>--source custom_bed --name repeatmasker</code>, an <code>.osi</code>) is optional and lets fastVEP evaluate BP3.</li>
+</ul>
+<h2 id="building-the-databases-ref-acmg-data">Building the databases: <code>ref acmg-data</code><a class="heading-anchor" href="#building-the-databases-ref-acmg-data" aria-label="Link to section">#</a></h2>
+<p><code>wgsextract ref acmg-data --download</code> downloads the sources and the Ensembl GFF3 from their publishers, checks them, shows their terms and builds the databases with <code>fastvep sa-build</code>:</p>
+<ul>
+<li>The GFF3 goes in <code>downloads/acmg/</code> in the library, the downloads in <code>downloads/acmg/sources/</code> and the databases in <code>downloads/acmg/sa/</code>, or in <code>--sa-dir</code> (<code>acmg_sa_dir</code>). <code>--ensembl-release</code> (default 116) should match your vep-rs cache.</li>
+<li>Each download is checked against the checksum its publisher gives: the <code>.md5</code> files of NCBI, UCSC's <code>md5sum.txt</code>, the MD5 Google Cloud Storage gives for gnomAD and Ensembl's <code>CHECKSUMS</code>. ClinGen and REVEL publish none. A file that fails is removed, and the run says so. <code>acmg_data.json</code> beside the databases records each file's URL, release, size, SHA-256 and check (the SpliceAI VCF's too, and where it came from: Ensembl, <code>--spliceai-file</code> or a file already in the library), and each database's record count and SHA-256.</li>
+<li>gnomAD's joint sites (877 GB) are streamed, one chromosome at a time, never stored: bcftools keeps the INFO fields fastVEP reads (AC, AN, AF and nhomalt, faf95, the population AFs and each callset's filters), filtered sites included. A dropped connection resumes at the byte it stopped at.</li>
+<li>The joint release has no <code>lcr</code> or <code>segdup</code> flags. The build marks gnomAD records whose POS is in the two GRCh38 interval tracks published by gnomAD; fastVEP uses those flags to withhold unreliable frequency evidence for BA1, BS1, BS2 and PM2_Supporting. An allele absent from the source has no gnomAD record to flag. The same tracks, when installed, are applied to per-run site databases. <code>ref status</code> lists installed tracks and flagged library chromosomes.</li>
+<li>BP3 uses UCSC RepeatMasker <code>Simple_repeat</code> and <code>Low_complexity</code> intervals on the primary nuclear chromosomes. Other repeat classes are not assumed to be non-functional. Neither track membership nor a BP3 assignment is proof that an interval has no known function.</li>
+<li>SpliceAI is the library's <code>spliceai_hg38.vcf.gz</code> (<code>ref spliceai</code>, from Ensembl), downloaded when missing, or <code>--spliceai-file</code>: Illumina's own files need a BaseSpace login and licence acceptance, so download them yourself and pass the file. It must be GRCh38 and tabix-indexed.</li>
+<li><code>--chromosomes</code> (such as <code>chr22</code>, or <code>chr1-22,chrX</code>; default all) limits gnomAD, SpliceAI, REVEL and phyloP; the others are genome-wide. <code>vcf acmg</code> can read gnomAD and SpliceAI per run only with explicit opt-in (below).</li>
+<li><code>--site-data per-run</code> doesn't build gnomAD and SpliceAI at all (below); the folder remembers it, and <code>ref status</code> says so.</li>
+<li>It's resumable: a rerun builds only what is missing, resuming interrupted downloads (a failed run keeps them), and a source that failed doesn't stop the others. Ctrl-C stops the builds running and starts no more. To take a new ClinVar or ClinGen release, delete its database (<code>clinvar.osa2</code>, <code>clinvar_protein.oga</code>, <code>omim.oga</code>) and its download, and rerun.</li>
+<li>On an existing library, <code>--download --chromosomes chr22</code> adds the tracks and rebuilds gnomAD for chr22 only if it lacks current region flags. It reuses unaffected databases. Upgrading all chromosomes can re-stream the entire joint release; use <code>--site-data per-run</code> to prepare just the tracks for opted-in per-run use without rebuilding library gnomAD.</li>
+<li><code>--dry-run</code> prints the plan and terms without reaching the network. With <code>--download</code> it queries publisher servers for sizes without downloading files. Without <code>--download</code>, a non-preview run names missing sources and stops without reaching the network. the build refuses to start without the free space it needs on each drive it writes (the library's, and <code>--sa-dir</code>'s when that is elsewhere). <code>--threads</code> sets how many chromosomes build at a time (default 4); REVEL is cut into per-chromosome files only as fast as they are built.</li>
+</ul>
+<div class="table-wrap"><table>
+<thead><tr><th>Source</th><th>Download</th><th>Database (chr22; whole genome, estimated)</th><th>Terms</th></tr></thead>
+<tbody>
+<tr><td>Ensembl GRCh38 GFF3 (release 116)</td><td>108 MB</td><td>(fastVEP caches 151 MB beside it)</td><td>no restrictions</td></tr>
+<tr><td>ClinVar VCF</td><td>202 MB</td><td><code>clinvar.osa2</code>, 43 MB</td><td>NCBI, no restrictions</td></tr>
+<tr><td>ClinVar <code>variant_summary.txt.gz</code></td><td>458 MB</td><td><code>clinvar_protein.oga</code>, 20 MB</td><td>NCBI, no restrictions</td></tr>
+<tr><td>gnomAD v4.1 joint sites</td><td>streams 877 GB (chr22: 15.6 GB)</td><td><code>gnomad_chr22.osa2</code>, 211 MB; about 12 GB</td><td>CC0</td></tr>
+<tr><td>gnomAD v4.1 constraint metrics</td><td>96 MB</td><td><code>gnomad_genes.oga</code>, 1.5 MB</td><td>CC0</td></tr>
+<tr><td>ClinGen gene-disease validity</td><td>1.1 MB</td><td><code>omim.oga</code>, 0.5 MB</td><td>CC0; credit ClinGen and give the access date</td></tr>
+<tr><td>REVEL v1.3</td><td>667 MB</td><td><code>revel_chr22.osa2</code>, 4 MB; about 0.4 GB</td><td>free for non-commercial use; others contact the authors</td></tr>
+<tr><td>SpliceAI (Illumina, MANE SNVs via Ensembl)</td><td>28.9 GB</td><td><code>spliceai_chr22.osa2</code>, 228 MB; about 15 GB</td><td>academic and not-for-profit use only</td></tr>
+<tr><td>UCSC phyloP100way</td><td>5.5 GB (chr22: 69 MB)</td><td><code>phylop_chr22.osa2</code>, 75 MB; about 6 GB</td><td>freely available for public use</td></tr>
+<tr><td>UCSC hg38 RepeatMasker</td><td>156 MB</td><td><code>repeatmasker.osi</code>, 14 MB</td><td><a href="https://genome.ucsc.edu/goldenPath/credits.html" target="_blank" rel="noopener noreferrer">UCSC data terms</a>; cite UCSC and RepeatMasker</td></tr>
+<tr><td>gnomAD GRCh38 LCRFromHengHg38 / GRCh38_segdups</td><td>50 MB / 0.18 MB</td><td><code>gnomad_lcr.bed.gz</code> / <code>gnomad_segdup.bed.gz</code>, 13 MB / 0.07 MB</td><td>CC0; cite gnomAD</td></tr>
+</tbody>
+</table></div>
+<p>You download these yourself and their terms apply to you; WGS Extract never mirrors them or the databases built from them, and you shouldn't share the databases either. The run shows each source's terms and warns <code>acmg_data_terms</code> about REVEL's and SpliceAI's.</p>
+<p>Measured with <code>--chromosomes chr22</code> on a 6-core Linux machine, two at a time: 89 minutes and 2.6 GB of memory at most. Most of it was the 28.9 GB SpliceAI download (54 minutes at 9 MB/s) and gnomAD's chromosome 22 (31 minutes): bcftools reads the joint release at about 8.5 MB/s per stream, held back by parsing its 11 KB records, and more bcftools threads don't help. A whole genome streams 877 GB, about 29 hours of one core, or 7 at 4 chromosomes at a time where the network keeps up; <code>--dry-run</code> says it needs about 80 GB (75 GiB) free: 47 GiB for the databases and their staging, 27 GiB for the SpliceAI download in the library's <code>downloads/</code> and 1.4 GiB for the other downloads.</p>
+<h2 id="gnomad-and-spliceai-per-run">gnomAD and SpliceAI per run<a class="heading-anchor" href="#gnomad-and-spliceai-per-run" aria-label="Link to section">#</a></h2>
+<p>A whole genome's gnomAD database takes an 877 GB stream to build, and SpliceAI a 29 GB download, for about 27 GB of databases. <code>vcf acmg</code> can instead read only the input's own sites of them, from the publishers' indexed files: gnomAD v4.1's joint sites on Google Cloud Storage, and the library's <code>spliceai_hg38.vcf.gz</code> or else Ensembl's copy of it. It builds them into small databases for the run with the same <code>fastvep sa-build</code> and INFO fields as <code>ref acmg-data</code>, so every variant finds what it would find in the full database: fastVEP looks gnomAD and SpliceAI up by the variant's own position and alleles, never a neighbour's (no criterion reads a nearby record of them).</p>
+<ul>
+<li><code>--site-data library</code> (the default) uses the library's gnomAD and SpliceAI databases, stays offline, and refuses missing sources or nuclear chromosomes with guidance to build them using <code>ref acmg-data --download</code>. <code>auto</code> is an offline alias. Only explicit <code>--site-data per-run</code> opts in to remote lookups, leaving the library's gnomAD/SpliceAI databases out. <strong>This sends input-derived variant positions through byte-range requests to Google Cloud Storage (gnomAD) and Ensembl (SpliceAI unless configured locally), revealing access patterns even though the VCF is not uploaded.</strong> The run warns <code>acmg_site_data_privacy</code>. <code>ref acmg-data --download --site-data per-run</code> builds the other sources only; classification still requires explicit <code>vcf acmg --site-data per-run</code>.</li>
+<li>A custom <code>ref acmg-data --spliceai-file PATH</code> is recorded and reused, including with <code>--site-data per-run</code>; a missing chosen source is refused, never silently replaced with Ensembl's. Local VCFs require a <code>.tbi</code> index. Older manifests recording a custom source without the choice must record it again with <code>ref acmg-data --download --site-data per-run --spliceai-file PATH</code>.</li>
+<li>A site is each record's span, one base wider on each side, both as written and left-aligned by <code>bcftools norm</code> against the reference, as fastVEP left-aligns an indel before it looks gnomAD up.</li>
+<li>A tabix index only places records to 16 kb windows, about 5 MB of gnomAD, so each site is found within its window by searching the compressed file: 2.9 requests and about 52 KB a site on gnomAD. Every BGZF block's CRC-32 is checked, and a file that changes during the run (<code>If-Range</code>) stops it.</li>
+<li>A source or chromosome that can't be read is refused as a missing database is. A chromosome whose sites have no gnomAD record gets its first record, so the database says it holds that chromosome and its sites read as absent from gnomAD, as they are.</li>
+<li>The databases are cached in the databases folder's <code>sites/</code> (in the run's temporary folder when that can't be written), keyed on the sites and the file's strong ETag or size and modification date; remote files without a usable validator are refused. Local files are checked for replacement or modification throughout the read. The 200 most recently used databases are kept, with a two-day grace period for active runs. A rerun checks remote identity but reads no records. Concurrent builders reuse a completed winner without deleting it. A server job refuses a <code>sites/</code> folder, SpliceAI VCF or its <code>.tbi</code> index that leads outside its allowed folders, and holds the job lock on <code>sites/</code> while it writes there.</li>
+<li><code>acmg_summary.json</code>'s <code>site_data</code> lists, per source and chromosome, the file read, its release, ETag and date, the sites, records, bytes and requests read, and whether the cache had it. SpliceAI read per run warns <code>acmg_data_terms</code> with its terms.</li>
+</ul>
+<p>Measured on HG002's chromosome 22 (50,284 records, 49,239 sites) with 4 threads (64 connections to Google Cloud Storage, 16 to Ensembl, which refuses more), the two sources read side by side:</p>
+<div class="table-wrap"><table>
+<thead><tr><th></th><th>gnomAD v4.1 joint</th><th>SpliceAI (Ensembl)</th><th>Whole genome, estimated</th></tr></thead>
+<tbody>
+<tr><td>Read</td><td>2.6 GB of 15.6 GB in 141,959 requests, 208 s</td><td>355 MB of 452 MB in 12,917 requests, 136 s</td><td>gnomAD about 250 GB, 14 million requests, 5.6 hours; SpliceAI about 23 GB beside it</td></tr>
+<tr><td>Database</td><td>8.7 MB, 217,251 records</td><td>1.8 MB, 231,900 records</td><td>about 1 GB together</td></tr>
+</tbody>
+</table></div>
+<p>The run took 249 s (40 s with the library's databases, 44 s from the cache), at most 6.8 GB of memory, fastVEP's. The whole-genome estimate scales chromosome 22 by HG002's 97 times as many variants; reading is bound by round trips, not bandwidth. That is a quarter of gnomAD's 877 GB stream and leaves no 27 GB of databases on disk, but a genome takes hours, so a library that classifies many genomes is better off building them once.</p>
+<h2 id="validation">Validation<a class="heading-anchor" href="#validation" aria-label="Link to section">#</a></h2>
+<p>ClinVar 2026-11-08, chromosome 22 variants with 2+ review stars, with these eight sources (gnomAD, SpliceAI, REVEL and phyloP built for chromosome 22):</p>
+<div class="table-wrap"><table>
+<thead><tr><th>ClinVar</th><th>Same direction</th><th>VUS</th><th>Opposite direction</th></tr></thead>
+<tbody>
+<tr><td>P/LP (1,960)</td><td>75.4% P/LP</td><td>24.5%</td><td>2</td></tr>
+<tr><td>B/LB (8,231)</td><td>77.2% B/LB</td><td>22.8%</td><td>1</td></tr>
+</tbody>
+</table></div>
+<p>The same check with the databases <code>ref acmg-data</code> built for chromosome 22 (REVEL v1.3 rather than ANNOVAR's REVEL, and the whole of gnomAD's chromosome 22 rather than the test's sites) gives 75.4% and 77.2%, with 1 opposite call each way, and the same classes for HG002.</p>
+<p>ClinVar itself feeds some criteria (the PM2 backstop, PM5, PM1, PS1), so these numbers are an optimistic upper bound. GIAB HG002's chromosome 22 (50,284 records) gets no P/LP call; 0.7% of its genic alleles are classified on fastVEP's own transcript. A chromosome 22 run takes about a minute on two cores, most of it loading the whole-genome GFF3 and FASTA, and peaks at about 7 GB of memory.</p>
+<h3 id="effect-of-the-gnomad-region-flags-on-hg002-chr22">Effect of the gnomAD region flags on HG002 chr22<a class="heading-anchor" href="#effect-of-the-gnomad-region-flags-on-hg002-chr22" aria-label="Link to section">#</a></h3>
+<p>The gnomAD v4 release pipeline [looks up both flags at the variant locus][gnomad-flags]. The joint sites VCF omits them, so <code>ref acmg-data</code> restores the flags using those same two masks. It does not change gnomAD's FILTER or discard any records. The flags are optional inputs to fastVEP 0.5.0. When present, its default [<code>gnomad_region_flags_block_frequency</code>][fastvep-setting] setting makes [<code>data_blocker</code>][fastvep-gate] withhold BA1, BS1, BS2 and PM2_Supporting when either flag is set on a matched gnomAD allele, even if it passed gnomAD QC.</p>
+<p>[ClinGen SVI's BA1 recommendation][clingen-ba1] specifies frequency, allele count and exceptions; it does not prescribe a blanket region veto. [gnomAD flags these sites rather than filtering them][gnomad-policy], and its [interpretation guide][gnomad-guide] advises using population evidence cautiously in these regions. The automatic veto is fastVEP's conservative implementation of that caution. A flag is not proof that an individual call or frequency is wrong.</p>
+<p>On the same GIAB HG002 v4.2.1 chr22 input (50,284 records), 8,669 classified alleles moved from B to VUS (17.0% of 50,861 classified alleles). Every move lost the population evidence shown below. No move lost BP4 or other non-population evidence. Two gained BP3; it fired three times overall.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>gnomAD mask</th><th>BA1 only lost</th><th>BA1 + BS2 lost</th><th>BS1 + BS2 lost</th><th>B → VUS</th></tr></thead>
+<tbody>
+<tr><td>Low complexity only</td><td>282</td><td>4,909</td><td>32</td><td>5,223</td></tr>
+<tr><td>Segmental duplication only</td><td>27</td><td>3,274</td><td>12</td><td>3,313</td></tr>
+<tr><td>Both</td><td>1</td><td>131</td><td>1</td><td>133</td></tr>
+<tr><td>Total</td><td>310</td><td>8,314</td><td>45</td><td>8,669</td></tr>
+</tbody>
+</table></div>
+<p>Across all classified alleles, B went from 47,376 to 38,604, LB from 475 to 557, and VUS from 3,010 to 11,700; P and LP stayed at zero. In a seeded random sample of 20 B→VUS alleles, none had a two-star or higher ClinVar benign/likely benign classification, and none had any exact allele match in ClinVar (2026-11-15 GRCh38, after splitting and left-normalizing both files). This sample does not validate the accuracy of the change.</p>
+<p>[gnomad-flags]: https://github.com/broadinstitute/gnomad_qc/blob/ff3a6a4c10323803210b2e1e766fc28a33418df8/gnomad_qc/v4/create_release/create_release_sites_ht.py#L520-L536 [fastvep-setting]: https://github.com/Huang-lab/fastVEP/blob/v0.5.0/crates/fastvep-classification/src/config.rs#L321-L333 [fastvep-gate]: https://github.com/Huang-lab/fastVEP/blob/v0.5.0/crates/fastvep-classification/src/criteria/frequency_gate.rs#L245-L290 [clingen-ba1]: https://pmc.ncbi.nlm.nih.gov/articles/PMC6188666/ [gnomad-policy]: https://discuss.gnomad.broadinstitute.org/t/reference-bias-in-variant-calling/579/2 [gnomad-guide]: https://pmc.ncbi.nlm.nih.gov/articles/PMC9160216/</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/acmg.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/acmg.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

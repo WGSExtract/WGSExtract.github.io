@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gene page | WGS Extract GUI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/app/docs/gene-page.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../architecture.html">GUI Architecture</a><a href="../wgsextract.html">WGSExtract</a><a class="active" href="../docs.html">Docs</a><a href="../../index.html">WGSExtract CLI</a><a href="../whats-different.html">What&#x27;s Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract GUI</a> / <a href="index.html">User Docs</a> / <span>Gene page</span></nav>
+<h1 id="gene-page">Gene page</h1>
+<p><strong>Gene page</strong>, in the WGS Extract sidebar below <strong>Genome viewer</strong>, shows one gene from your own files: its transcripts and exons, your variants in it with their annotations, and how well your reads cover each exon. Everything is read on this computer by the WGS Extract CLI (<code>wgsextract info gene</code>); nothing is downloaded, and nothing about your genome is sent anywhere.</p>
+<h2 id="opening-a-gene">Opening a gene<a class="heading-anchor" href="#opening-a-gene" aria-label="Link to section">#</a></h2>
+<p>Enter a gene symbol or alias (NCBI RefSeq, such as <code>BRCA1</code>) and, optionally:</p>
+<ul>
+<li><strong>Aligned reads (BAM or CRAM)</strong>: for read depth over each exon. It starts from the BAM/CRAM chosen in the app.</li>
+<li><strong>Variants (VCF)</strong>: for the variant table. Choose the VCF your annotation steps wrote (VEP, ClinVar, gnomAD, ACMG) to fill those columns.</li>
+<li><strong>Callable depth</strong>: the reads an exon base needs to count as callable; empty uses the <code>confidence_min_depth</code> setting.</li>
+</ul>
+<p><strong>Show gene</strong> runs <code>wgsextract info gene</code> and shows:</p>
+<ul>
+<li><strong>Transcripts and exons</strong>: the RefSeq transcripts <code>wgsextract ref gene-map</code> installed, longest coding sequence first. The diagram draws the chosen transcript's exons along the gene, green when every base reaches the callable depth, red when some don't, grey without reads, with your variants as ticks.</li>
+<li><strong>Read coverage</strong>: the gene's mean depth and callable share, and each exon of the chosen transcript, numbered from its 5' end, with its mean and lowest depth and the share of its bases at the callable depth.</li>
+<li><strong>Your variants</strong>: the alleles you carry in the gene, with consequence, impact, HGVS, zygosity, depth, ClinVar significance, gnomAD frequency and the research-only ACMG class. <strong>Show</strong> filters them: rare (gnomAD below 1%) with high or moderate impact, ClinVar pathogenic or likely pathogenic, or ACMG pathogenic or likely pathogenic. The CLI tags each row, so the page and the export apply the same rules. <strong>Where each annotation comes from</strong> lists the VCF header lines (tool versions, the files annotated from) behind each column.</li>
+<li><strong>Export TSV</strong> writes the shown rows with <code>info gene --export</code> as <code>&lt;vcf stem&gt;_&lt;GENE&gt;_&lt;filter&gt;_variants.tsv</code>, in the <code>wgse/</code> folder beside your files or your output folder, and <strong>Show in folder</strong> reveals it.</li>
+<li><strong>Open in genome viewer</strong> opens the <a href="genome-viewer.html">genome viewer</a> at the gene with your reads or variants, its gene span and the RefSeq transcripts track; <strong>Back to the gene page</strong> returns.</li>
+</ul>
+<p>ACMG classes are fastVEP's automated classification, for research only and not a diagnosis.</p>
+<h2 id="missing-data">Missing data<a class="heading-anchor" href="#missing-data" aria-label="Link to section">#</a></h2>
+<p>Each missing input or resource is listed under <strong>Missing data</strong>, with the command that provides it:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Missing</th><th>Command</th></tr></thead>
+<tbody>
+<tr><td>Transcript and exon models (hg19 and hg38, about 17 MB from UCSC)</td><td><code>wgsextract ref gene-map</code></td></tr>
+<tr><td>Consequences and impacts</td><td><code>wgsextract vep run --vcf-input VCF</code></td></tr>
+<tr><td>ClinVar significance</td><td><code>wgsextract vcf clinvar --vcf-input VCF</code></td></tr>
+<tr><td>gnomAD frequencies (needed to pick out rare variants)</td><td><code>wgsextract vcf gnomad --vcf-input VCF</code></td></tr>
+<tr><td>Research-only ACMG classes</td><td><code>wgsextract vcf acmg --vcf-input VCF</code></td></tr>
+<tr><td>A VCF</td><td><code>wgsextract vcf call --input BAM</code></td></tr>
+</tbody>
+</table></div>
+<p>When required reference files are missing (such as <strong>Gene Maps</strong> from <code>wgsextract ref gene-map</code> or the CRAM reference genome), <strong>Show gene</strong> stops before running and offers <strong>Cancel</strong>, <strong>Continue</strong> (if you installed them elsewhere), or <strong>Install and Continue</strong> — matching other desktop commands. Missing VCF annotation columns (VEP, ClinVar, gnomAD, ACMG) are listed under <strong>Missing data</strong> without blocking the page or prompting to download anything. T2T references have gene spans but no transcript models.</p>
+<h2 id="checking-it">Checking it<a class="heading-anchor" href="#checking-it" aria-label="Link to section">#</a></h2>
+<p><code>node gui/app/scripts/verify-gene-page.mjs --out out/gene-page</code> (after <code>npm run build</code> in <code>gui/app</code>, with the CLI's Pixi environment installed) builds synthetic hg38 fixtures with the CLI's code, serves the app, and drives the gene page and the viewer opened from it in Chromium with every non-local request aborted. It checks the exon coverage, the filters, the export and the viewer's transcript track, and fails on any outside request, content security policy violation or console error. Screenshots and <code>gene-page-proof.json</code> are written to <code>--out</code>.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract GUI</strong><p>Rendered from <code>gui/docs/gene-page.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/gui/docs/gene-page.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

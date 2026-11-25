@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tools | WGS Extract GUI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/app/docs/tools.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../architecture.html">GUI Architecture</a><a href="../wgsextract.html">WGSExtract</a><a class="active" href="../docs.html">Docs</a><a href="../../index.html">WGSExtract CLI</a><a href="../whats-different.html">What&#x27;s Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract GUI</a> / <a href="index.html">User Docs</a> / <span>Tools</span></nav>
+<h1 id="tools">Tools</h1>
+<p>The <strong>Tools</strong> page (near the bottom of the sidebar) shows every bioinformatics tool that WGS Extract uses — both the <strong>mandatory core tools</strong> installed during initial Setup and the <strong>optional tools</strong> for specialized workflows (such as variant callers, annotation engines, phasing/imputation, and long-read analysis).</p>
+<h2 id="how-tools-are-managed">How tools are managed<a class="heading-anchor" href="#how-tools-are-managed" aria-label="Link to section">#</a></h2>
+<p>WGS Extract bundles and runs its tools through isolated, version-locked <strong>Pixi</strong> environments managed by the CLI:</p>
+<ul>
+<li>Opening the <strong>Tools</strong> page runs <code>wgsextract deps list</code> locally to inspect installed versions and platform availability. It does <strong>not</strong> download or install anything automatically.</li>
+<li>Because probing every installed tool version takes a moment (especially on first launch or on Windows), the table may show a loading indicator briefly.</li>
+<li>Hover over any row to view a provenance tooltip with the tool's purpose, upstream homepage, authoring organization, and software license.</li>
+</ul>
+<h2 id="columns">Columns<a class="heading-anchor" href="#columns" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong>Name:</strong> Tool name (such as <code>samtools</code>, <code>bcftools</code>, <code>bwa-mem2</code>, <code>minimap2</code>, <code>gatk</code>, <code>vep-rs</code>, <code>clair3</code>, <code>modkit</code>).</li>
+<li><strong>Details:</strong> Installed version, status, or platform/availability notes.</li>
+<li><strong>Environment:</strong> Which Pixi environment provides the tool (or whether it is provided externally / by the OS).</li>
+</ul>
+<h2 id="row-actions">Row actions<a class="heading-anchor" href="#row-actions" aria-label="Link to section">#</a></h2>
+<p>The action button on each row reflects what WGS Extract can do on your computer:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Action</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><strong>Install</strong></td><td>Runs <code>wgsextract deps install &lt;tool&gt;</code> to install an optional Pixi-managed tool environment. Streams progress to the terminal pane.</td></tr>
+<tr><td><strong>Uninstall</strong></td><td>Asks for confirmation and runs <code>wgsextract deps uninstall &lt;tool&gt;</code> to remove an optional environment and free disk space.</td></tr>
+<tr><td><strong>Install it yourself</strong> (disabled)</td><td>This tool is managed outside Pixi (for example, Docker-based DeepVariant or a separately installed runtime). Hover over the button to read the CLI's install instructions.</td></tr>
+<tr><td><strong>Not available</strong> (disabled)</td><td>This tool is not supported on your current operating system or CPU architecture (for example, certain Linux-only callers on Windows or x86-64-only models on Apple Silicon). Hover over the button for details.</td></tr>
+</tbody>
+</table></div>
+<h2 id="core-tools-and-setup">Core tools and Setup<a class="heading-anchor" href="#core-tools-and-setup" aria-label="Link to section">#</a></h2>
+<p>Mandatory tools (<code>samtools</code>, <code>bcftools</code>, <code>tabix</code>, <code>bgzip</code>, <code>bwa</code>, <code>minimap2</code>, etc.) are installed together when you run <strong>Setup</strong> on the <a href="settings.html">Settings</a> page. If a core tool is missing or broken (for example, after moving accounts on Windows), rerun <strong>Setup</strong> from <a href="settings.html">Settings</a>.</p>
+<p>If you run a command that requires an optional tool you have not installed yet, the command reports the missing tool rather than silently downloading it during an analysis run. Install it here (or via <code>wgsextract deps install &lt;tool&gt;</code>) and rerun the action.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract GUI</strong><p>Rendered from <code>gui/docs/tools.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/gui/docs/tools.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

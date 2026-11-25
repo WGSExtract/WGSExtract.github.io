@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Runs of homozygosity (qc roh) | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/roh.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Runs of homozygosity (qc roh)</span></nav>
+<h1 id="runs-of-homozygosity-qc-roh">Runs of homozygosity (<code>qc roh</code>)</h1>
+<p>A run of homozygosity (ROH) is a stretch of a chromosome where both copies are identical. Short runs are in everyone's genome. Long runs on many chromosomes usually mean the parents share ancestry. A single long run over an imprinted region can mean both copies came from one parent (uniparental isodisomy), which for a few regions causes a known imprinting disorder. <code>qc roh</code> finds the runs in a VCF and flags that last case for review, using population allele frequencies you have on disk.</p>
+<pre><code class="language-sh">wgsextract qc roh --input sample.vcf.gz \
+  --af-file gnomad.genomes.v4.1.sites.chr15.vcf.bgz --af-tag AF --regions chr15
+wgsextract qc roh --input sample.vcf.gz --af-file 1kgp_af.tab.gz --af-build hg38</code></pre>
+<p>It needs bcftools, bgzip and tabix, and runs offline: nothing is downloaded, and no sample data leaves the computer.</p>
+<h2 id="population-allele-frequencies">Population allele frequencies<a class="heading-anchor" href="#population-allele-frequencies" aria-label="Link to section">#</a></h2>
+<p><code>bcftools roh</code> scores each site with its population allele frequency (AF), so the frequencies change the answer. On HG00096's chromosome 20 a constant AF of 0.4 (OwnGenome's choice) found 4.5 times as many runs as real 1000 Genomes frequencies at the same sites, including two of 1-4 Mb (<a href="#validation">comparison</a>). <code>qc roh</code> therefore needs real frequencies: <code>--af-file</code> is required, and there is no constant fallback.</p>
+<p><code>--af-file</code> takes either:</p>
+<ul>
+<li>a sites VCF/BCF with an AF field in INFO (<code>--af-tag</code>, default <code>AF</code>), such as gnomAD's or a 1000 Genomes release; a population-specific field (gnomAD's <code>AF_nfe</code>, say) is closer for a sample of that ancestry;</li>
+<li>or a <code>bcftools roh</code> table: tab-separated <code>CHROM</code>, <code>POS</code>, <code>REF,ALT</code>, <code>AF</code>, which has no header to tell its build, so <code>--af-build</code> is required.</li>
+</ul>
+<p>Its build must be the sample's. A VCF's build is read from its contig lengths (else give <code>--af-build</code>), and a file on another build is refused (<code>roh_af_build_mismatch</code>). Contig names (<code>chr15</code> or <code>15</code>) are matched to the sample. Record the release with <code>--af-release &quot;gnomAD v4.1 genomes&quot;</code>; the file's size and digest are recorded in any case.</p>
+<p>gnomAD's per-chromosome VCFs are large. To keep only what <code>qc roh</code> reads, stream one through bcftools once:</p>
+<pre><code class="language-sh">bcftools view -G -m2 -M2 -v snps \
+  https://storage.googleapis.com/gcp-public-data--gnomad/release/4.1/vcf/genomes/gnomad.genomes.v4.1.sites.chr15.vcf.bgz \
+  | bcftools annotate -x &#x27;^INFO/AF,INFO/AF_nfe&#x27; -Oz -o gnomad.v4.1.chr15.af.vcf.gz
+tabix -p vcf gnomad.v4.1.chr15.af.vcf.gz</code></pre>
+<p>Use <code>bcftools concat</code> to join chromosomes into one file for a whole-genome run.</p>
+<p><strong>Reuse.</strong> The first run makes the <code>bcftools roh</code> table from the file (biallelic SNVs with 0 &lt; AF &lt; 1, on the chromosomes in scope) and, when <code>reference_library</code> is set, keeps it in <code>&lt;library&gt;/roh/&lt;key&gt;/</code> with the file's identity. Later runs reuse it (<code>&quot;prepared&quot;: &quot;reused&quot;</code> in the report) until the file changes, for example a new release saved under the same name, which rebuilds it and says why (<code>prepared_reason</code>). A run holds a lock on the table while it uses it, so a run started on the new release waits rather than replace the table under it. Without a reference library the table is made for each run.</p>
+<p><strong>Terms.</strong> gnomAD's primary data are CC0, with attribution requested; its SpliceAI annotations are CC BY-NC, and <code>qc roh</code> doesn't use them. 1000 Genomes data are available without embargo, cited as the project asks. Snapshots of both terms are in <code>src/wgsextract_cli/assets/resource_terms/</code>. You download the file yourself; WGS Extract doesn't redistribute it.</p>
+<p>bcftools' own code is MIT/Expat, but the Bioconda build that pixi installs (1.24) links the GNU Scientific Library, which makes that binary GPL-3.0-or-later (its package metadata says so). WGS Extract runs it as a separate program, and is GPL-3.0-or-later itself, so the terms are compatible either way. The <code>qc roh</code> code is new, not adapted from OwnGenome.</p>
+<h2 id="markers-and-model">Markers and model<a class="heading-anchor" href="#markers-and-model" aria-label="Link to section">#</a></h2>
+<p>The markers are the sample's biallelic SNV calls with <code>PASS</code> (or no) <code>FILTER</code> at sites of the AF table. A call without a genotype, or with GQ below <code>--min-gq</code> (20) or no GQ of its own, is left out and counted (<code>missing_genotype</code>, <code>weak_genotype</code>), so a weak heterozygous call doesn't split a run. A VCF without GQ (a genotype export, say) is refused (<code>roh_no_gq</code>) unless you pass <code>--min-gq 0</code> to accept its genotypes without a quality floor. Genotypes are used, not likelihoods (<code>bcftools roh --GTs-only 30</code>), so callers' differently calibrated PLs don't change the result. The HMM's transition probabilities are bcftools' defaults, passed explicitly.</p>
+<p>A run ends where two consecutive markers are more than 1 Mb apart, as in PLINK's <code>--homozyg-gap</code>: a centromere or an uncalled stretch carries no evidence. Without that, HG002's chromosome 9 had one 21.8 Mb "run" across its centromere. A run also ends at the edge of each <code>--regions</code> range, so bases left out between two ranges count neither in a run nor in F_ROH.</p>
+<p>A VCF of variants only (most callers' output) has no hom-ref calls, so runs are found from heterozygous and hom-alt calls; their ends are less precise (<code>roh_variants_only</code> warning). A VCF with hom-ref calls at the AF sites (a multi-sample or all-sites VCF) gives more markers. A gVCF is refused; give the VCF of its calls.</p>
+<h2 id="scope-and-f_roh">Scope and F_ROH<a class="heading-anchor" href="#scope-and-f_roh" aria-label="Link to section">#</a></h2>
+<p><code>--regions</code> declares what is assessed: autosomes (<code>chr20</code>) or ranges (<code>chr15:20000000-30000000</code>). By default it is every autosome in the VCF header. Sex chromosomes are left out: a man's X is all "homozygous".</p>
+<p>F_ROH is the length of runs of at least 1.5 Mb divided by the bases the markers cover: on each assessed chromosome, from its first to its last marker, less gaps over 1 Mb. That denominator is the assessed scope's, not the genome's. <code>scope.whole_genome</code> is true only when all 22 autosomes are in scope whole and have markers; otherwise the report says that F_ROH covers the scope only. A chromosome in scope without markers is reported (<code>roh_contigs_without_markers</code>) and adds nothing to the denominator.</p>
+<h2 id="isodisomy-review-flag">Isodisomy review flag<a class="heading-anchor" href="#isodisomy-review-flag" aria-label="Link to section">#</a></h2>
+<p>A run is flagged "investigate possible isodisomy" only when it overlaps one of the imprinted regions below and is long enough:</p>
+<ul>
+<li>5 Mb (<code>--flag-terminal-mb</code>) when it reaches a chromosome end: the last marker, or the first except on the acrocentric chromosomes 13-15, 21 and 22, whose first markers are at the centromere, and that marker is within 1 Mb of the end. This is decided only when the whole chromosome is in scope. A run in a partial range, or one reaching a last marker that stops short of the end (the VCF or the AF file has no sites beyond it), counts as interstitial (<code>position: undetermined</code>).</li>
+<li>10 Mb (<code>--flag-interstitial-mb</code>) otherwise.</li>
+</ul>
+<p>It also needs 100 markers and an average bcftools quality of 30. These are the screening lengths clinical microarray laboratories use to suspect UPD (a telomeric run of 5 Mb, or an interstitial run of 10 Mb on chromosome 6, 7, 11, 14, 15 or 20; Kim et al., <em>Ann Lab Med</em> 2026;46:83, and Del Gaudio et al. 2020).</p>
+<p>A run is only labelled with a region it overlaps: a run elsewhere on chromosome 20 never gets GNAS's conditions. The flag names the region, its genes and the conditions associated with its UPD, and says what a run can't tell. It is not a diagnosis:</p>
+<ul>
+<li>parents who share ancestry, or a deletion of one copy, also make runs;</li>
+<li>a run can't show which parent the region came from, so it can't tell apart the two conditions most regions have;</li>
+<li>heterodisomy (two different copies from one parent) leaves no run at all.</li>
+</ul>
+<p>Methylation or parental testing, through a clinical genetics service, can tell. Several long runs on different chromosomes are noted as more typical of shared ancestry than of UPD.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Region</th><th>Genes</th><th>Conditions (UPD)</th></tr></thead>
+<tbody>
+<tr><td>6q24.2</td><td>PLAGL1, HYMAI</td><td>6q24-related transient neonatal diabetes (paternal UPD6)</td></tr>
+<tr><td>7p12.1</td><td>GRB10</td><td>Silver-Russell syndrome (maternal UPD7)</td></tr>
+<tr><td>7q32.2</td><td>MEST</td><td>Silver-Russell syndrome (maternal UPD7)</td></tr>
+<tr><td>11p15.5</td><td>H19, IGF2, KCNQ1OT1, CDKN1C</td><td>Beckwith-Wiedemann (paternal), Silver-Russell (maternal UPD11p15)</td></tr>
+<tr><td>14q32.2</td><td>DLK1, MEG3, RTL1, MEG8</td><td>Temple (maternal), Kagami-Ogata (paternal UPD14)</td></tr>
+<tr><td>15q11.2-q13</td><td>MKRN3, MAGEL2, NDN, SNRPN, UBE3A</td><td>Prader-Willi (maternal), Angelman (paternal UPD15)</td></tr>
+<tr><td>20q13.32</td><td>GNAS</td><td>Pseudohypoparathyroidism 1B (paternal UPD20q), growth restriction (maternal UPD20)</td></tr>
+</tbody>
+</table></div>
+<p>The list (<code>src/wgsextract_cli/assets/roh/imprinted_regions.json</code>) is curated from Eggermann et al., <em>Clin Epigenetics</em> 2015;7:123, Del Gaudio et al., <em>Genet Med</em> 2020;22:1133 and Mulchandani et al., <em>Genet Med</em> 2016;18:309; gene and condition names are facts, not copied text. Each region spans its genes in the bundled NCBI RefSeq gene table for the sample's build (public domain; GRCh37, GRCh38 and T2T), so its coordinates always match the build. <code>--imprinted-regions</code> takes your own BED (chrom, start, end, name, <code>;</code>-separated conditions) whose <code>track</code> line declares its build (<code>track name=imprinted db=hg38</code>); a BED for another build is refused (<code>roh_regions_build_mismatch</code>), as is a row whose start isn't before its end (<code>roh_regions_unreadable</code>).</p>
+<h2 id="outputs">Outputs<a class="heading-anchor" href="#outputs" aria-label="Link to section">#</a></h2>
+<p>In the output folder, named after the input (<code>sample.vcf.gz</code> gives <code>sample.roh.*</code>):</p>
+<div class="table-wrap"><table>
+<thead><tr><th>File</th><th>Contents</th></tr></thead>
+<tbody>
+<tr><td><code>&lt;stem&gt;.roh.tsv</code></td><td>One run per row: chrom, start, end (first and last marker), length_bp, markers, quality, position, imprinted_regions, flagged</td></tr>
+<tr><td><code>&lt;stem&gt;.roh.json</code></td><td>The <code>wgsextract.roh/1</code> document (<a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/src/wgsextract_cli/assets/schemas/wgsextract.roh.1.schema.json" target="_blank" rel="noopener noreferrer">schema</a>): runs, flags, marker counts, scope and denominator, summary, parameters, and the AF file's path, release, build, digest and reuse</td></tr>
+<tr><td><code>&lt;stem&gt;.roh.markers.tsv.gz</code></td><td>Every modelled marker: chrom, pos, state (AZ or HW), bcftools' quality</td></tr>
+<tr><td><code>&lt;stem&gt;.roh.manifest.json</code></td><td>The <a href="result-manifest.html">result manifest</a>; its <code>details</code> is the document</td></tr>
+</tbody>
+</table></div>
+<p>Metrics: <code>roh_segments</code>, <code>roh_total_bp</code>, <code>roh_longest_bp</code>, <code>roh_froh</code>, <code>roh_markers</code>, <code>roh_flags</code>, <code>roh_whole_genome</code> and <code>roh_af_prepared</code>. Each flag is also a warning (<code>investigate_possible_isodisomy</code>).</p>
+<p>Errors have codes: <code>roh_af_missing</code>, <code>roh_af_build_mismatch</code>, <code>roh_af_build_unknown</code>, <code>roh_af_tag_missing</code>, <code>roh_af_unreadable</code>, <code>roh_af_unsorted</code>, <code>roh_af_index_failed</code>, <code>roh_regions_build_mismatch</code>, <code>roh_regions_build_unknown</code>, <code>roh_regions_unreadable</code>, <code>roh_no_gq</code>, <code>roh_gvcf</code> and <code>roh_no_markers</code>.</p>
+<p><code>roh_af_unsorted</code> means tabix found descending positions or a contig split across multiple blocks in the prepared frequency table. Other tabix indexing failures report <code>roh_af_index_failed</code> with the tool's diagnostic.</p>
+<h2 id="validation">Validation<a class="heading-anchor" href="#validation" aria-label="Link to section">#</a></h2>
+<p><strong>HG00096, chromosome 20.</strong> The OwnGenome comparison (#821) repeated with public data: HG00096's chromosome 20 genotypes (hom-ref included) from the gnomAD v3.1.2 HGDP+1kGP callset, and AFs from its 3,123 1000 Genomes samples, at the same 1,403,289 sites in each run. <code>scratch/1174_compare.sh</code> keeps the marker lists and parameters.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Markers</th><th>AF</th><th>Runs</th><th>Total</th><th>Longest</th></tr></thead>
+<tbody>
+<tr><td>All genotyped sites</td><td>1000 Genomes</td><td>176</td><td>20.5 Mb</td><td>0.70 Mb</td></tr>
+<tr><td>All genotyped sites</td><td>constant 0.4</td><td>800</td><td>58.3 Mb</td><td>3.91 Mb</td></tr>
+<tr><td>Variants only (73,266)</td><td>1000 Genomes</td><td>98</td><td>9.1 Mb</td><td>0.66 Mb</td></tr>
+<tr><td>Variants only (73,266)</td><td>constant 0.4</td><td>139</td><td>10.4 Mb</td><td>0.52 Mb</td></tr>
+</tbody>
+</table></div>
+<p>Real frequencies gave 78% fewer runs (30% with variants only) and 65% less ROH (12%) than a constant 0.4; the OwnGenome comparison reported 42% and 31% on the NYGC callset. No run reached 5 Mb either way. <code>qc roh --min-gq 0</code> (the export has no GQ) gives the first row; its F_ROH (0) is chromosome 20's alone.</p>
+<p><strong>HG002, whole genome.</strong> The GIAB v4.2.1 benchmark VCF (variants only, GRCh38) with the same 1000 Genomes frequencies: 3,979 runs from 3,314,317 markers (22,089 calls without their own GQ left out), the longest 3.3 Mb, F_ROH 0.45%, no flags. The first run took 98 s (50 s preparing the 66.5 million-site table) and 160 MB of memory; with the table reused, 40 s.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/roh.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/roh.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

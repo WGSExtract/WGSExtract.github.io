@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="WGSExtract v0.8.10 workflows and how the first real app shaped GUI-for-CLI." />
+    <title>WGSExtract and GUI-for-CLI</title>
+    <meta property="og:site_name" content="WGS Extract GUI" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="WGSExtract and GUI-for-CLI" />
+    <meta property="og:description" content="WGSExtract v0.8.10 workflows and how the first real app shaped GUI-for-CLI." />
+    <meta property="og:url" content="https://wgsextract.github.io/wgsextract-cli/app/wgsextract.html" />
+    <meta property="og:image" content="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
+    <meta property="og:image:secure_url" content="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="WGSExtract social preview showing the desktop app screenshot." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
+    <meta name="twitter:image:alt" content="WGSExtract social preview showing the desktop app screenshot." />
+    <link rel="canonical" href="https://wgsextract.github.io/wgsextract-cli/app/wgsextract.html" />
+    <link rel="image_src" href="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".82em" font-size="84">%E2%8C%98</text></svg>' />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a href="index.html">Home</a><a href="architecture.html">GUI Architecture</a><a class="active" href="wgsextract.html">WGSExtract</a><a href="docs.html">Docs</a><a href="https://wgsextract.github.io/wgsextract-cli/">WGSExtract CLI</a><a href="whats-different.html">What's Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main>
+      <header class="page-hero">
+        <div class="wrap">
+          <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> First real app</p>
+          <h1>WGS Extract CLI made GUI-for-CLI prove itself.</h1>
+          <p class="lede">The WGSExtract bundle is the first real application built through GUI-for-CLI. It pushed the project beyond demo controls into setup, command execution, data state, localization, and packaged releases.</p>
+          <div class="actions"><a class="btn" href="architecture.html">GUI Architecture</a><a class="btn" href="docs.html">Documentation</a></div>
+        </div>
+      </header>
+<section>
+<div class="wrap">
+<div class="section-head">
+<h2>Why this bundle mattered</h2>
+<p>WGSExtract gave GUI-for-CLI a real target: a genomics workflow with long-running tools, user-selected files, setup state, reference data, and packaging expectations.</p>
+</div>
+<div class="grid three">
+<article class="card">
+<div class="kicker">Setup</div>
+<h3>More than a launch button</h3>
+<p>The bundle needs setup steps, environment checks, external scripts, tool paths, and recoverable state before actions are safe to run.</p>
+</article>
+<article class="card">
+<div class="kicker">Commands</div>
+<h3>Long-running process UX</h3>
+<p>Genome commands need terminal output, cancellation, exit code handling, path arguments, generated command previews, and clear disabled states.</p>
+</article>
+<article class="card">
+<div class="kicker">Data</div>
+<h3>Dynamic rows and config</h3>
+<p>WGSExtract exercises data sources, state-dependent actions, persisted settings, localization, icons, and workspace files.</p>
+</article>
+</div>
+</div>
+</section>
+<section>
+<div class="wrap">
+<h2>What the app exposes</h2>
+<p>The desktop app bundles <strong>WGSExtract CLI v0.8.10</strong>. A <strong>Basic / Advanced</strong> switch in the sidebar keeps everyday controls up front; Advanced mode covers the CLI's remaining user options, and Basic runs commands with the hidden settings at their defaults. Nanopore reads work through the actions already in the app with no settings to change, and opt-in controls cover the rest. They start blank or unchecked, so automatic detection and <code>config.toml</code> defaults keep applying.</p>
+<h3>Oxford Nanopore in existing actions</h3>
+<p>Nanopore (ONT) reads are detected from <code>PL:ONT</code> read groups or UUID read names.</p>
+<ul>
+<li><strong>Align and Realign:</strong> use minimap2's <code>map-ont</code> preset and keep MM/ML methylation tags through alignment and sorting. Realign refuses its keep-FASTQ option for ONT input rather than lose those tags. FASTQs renamed without platform metadata, such as SRA downloads, are treated as Illumina unless you set <strong>Sequencing platform</strong> in Advanced mode.</li>
+<li><strong>DeepVariant:</strong> selects the ONT_R104 model. It supports R10.4.1 chemistry only and needs x86-64, so ONT calling is refused on Apple Silicon and ARM64. DeepVariant itself is still a separate install.</li>
+<li><strong>SV Call:</strong> runs Sniffles2 instead of Delly. App setup does not install Sniffles; install it separately before running this action on ONT data.</li>
+</ul>
+<h3>Improvements from CLI v0.6.6</h3>
+<ul>
+<li><strong>DeepVariant:</strong> CRAM 3.1 input is converted to a temporary CRAM 3.0 copy, and whole-genome postprocessing memory is estimated and capped.</li>
+<li><strong>Realign:</strong> paired reads stream through collation at whole-genome scale, and single-end input is refused before extraction instead of being dropped.</li>
+<li><strong>BAM Info:</strong> sex is inferred when chrX or chrY is missing, and depth binning is faster.</li>
+<li><strong>Microarray:</strong> coordinate projections and catalogues are cached for faster runs.</li>
+</ul>
+<h3>Opt-in controls from CLI v0.6.6</h3>
+<ul>
+<li><strong>DeepVariant:</strong> a model dropdown that defaults to automatic. Its ONT_R104 choice supports R10.4.1 chemistry only and needs x86-64. DeepVariant does not run on native Windows.</li>
+<li><strong>SV Call:</strong> a long-read mode (Nanopore or any long-read data) and an optional tandem-repeat BED. The caller stays automatic, and pbsv is not offered for Nanopore. Sniffles does not run on native Windows.</li>
+<li><strong>Clair3:</strong> an optional Nanopore caller with an optional model override, Clair3 2.0.5 on Linux (x86-64, ARM64) and Apple Silicon Macs. It is hidden on Windows, is not available on Intel Macs, and you install it separately.</li>
+<li><strong>Methylation Pileup:</strong> a bedMethyl table and summary from MM/ML-tagged reads, with optional context, 5hmC and strand overrides. It is hidden on Windows, and you install modkit separately.</li>
+<li><strong>Ancestry:</strong> Y-STR repeat counts with FamilyTreeDNA, PowerPlex Y23 and Yfiler Plus panels.</li>
+<li><strong>Annotate:</strong> a variant table as TSV plus an SQLite database to query.</li>
+<li><strong>Settings:</strong> preview a redacted <code>report-issue</code> bug report about the last action you ran in the app, or, after a confirmation, open it in your browser as a pre-filled GitHub issue. The redacted report reaches GitHub in the link, but no issue is created until you review and submit it there yourself.</li>
+</ul>
+<h3>CLI only for now</h3>
+<p>Native Linux ARM64 DeepVariant is CLI only, because Linux ARM64 desktop installers are not published.</p>
+<h3>Controls from earlier releases</h3>
+<p>These came with <a href="https://github.com/theontho/gui-for-cli/pull/171">GUI #171</a>. They start unchecked or blank, inheriting CLI/config defaults rather than forcing them off.</p>
+<ul>
+<li><strong>FASTQ:</strong> aggregate existing FastQC reports into offline MultiQC HTML, with file and directory pickers and explicit report replacement. MultiQC must already be available; this action neither installs it nor runs FastQC.</li>
+<li><strong>Extract and Library:</strong> optional Poz Y-BAM regions (GRCh37/38), unmapped FASTQs, and allele-annotated yBrowse Y-SNP calling on matching indexed GRCh38. Install the pinned yBrowse resource explicitly from Library first.</li>
+<li><strong>Microarray:</strong> marker-only MyHeritage GSA and Ancestry layouts; AADR 1240K, HO, union, and opt-in v66.p1 2M PLINK/EIGENSTRAT research exports; quality/depth filtering, strand masking, historical rsIDs, no-call/reason reports, and a sequence-defined I/D manifest bound to one selected consumer format.</li>
+<li><strong>BAM Info:</strong> streaming per-chromosome depth bins and optional retention of FASTQs extracted during realignment.</li>
+<li><strong>VCF:</strong> opt-in Ultima flow-mode GATK scattering. It can change genotypes and annotations and needs 6 GiB RAM per worker; unscattered calling stays the default.</li>
+<li><strong>Ancestry and Settings:</strong> optional lineage-tree links, persistent logs, an existing temporary-workload volume, atomic main-output publication, and best-effort keep-awake.</li>
+</ul>
+<p>AADR 2M is excluded from <code>all</code>: explicitly install its pinned metadata from Library first. It supports GRCh37/38 only; GRCh38 also needs an already-installed forward chain. It does not support CHM13/T2T, and extraction never downloads missing metadata or chains. Use non-identifying AADR sample labels.</p>
+<p>CLI setup is native on Windows, without WSL or MSYS2, and GUI settings save real TOML booleans and numbers, including <code>false</code>. Earlier CLI releases also fixed fresh Windows installation, added warnings for invalid configuration values, and improved alignment reproducibility, memory preflight, and native Windows full-genome validation. Tool and platform requirements still vary by workflow.</p>
+<p><a href="index.html">Download v0.8.10</a>, read the <a href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.8.10">v0.8.10 release notes</a> and <a href="../docs/ont.html">ONT limitations</a>, or see the <a href="devdocs/wgsextract-post-v063.html">workflow details and prerequisites</a>.</p>
+</div>
+</section>
+<section>
+<div class="wrap">
+<h2>What it forced into the platform</h2>
+<ul>
+<li>bundle loading from folders and archives;</li>
+<li><code>manifest.json</code> and page schema validation;</li>
+<li>setup dry-runs and setup execution;</li>
+<li>dynamic page controls and action state;</li>
+<li>terminal output panes and process lifecycle handling;</li>
+<li>app settings in platform-standard Application Support paths, and your own data in a visible <code>wgs-extract</code> folder in your home folder that you can move to another disk;</li>
+<li>localized strings and semantic icon maps;</li>
+<li>bundle-specific packaging and app identity.</li>
+</ul>
+<p>Those requirements are generic. The WGSExtract app is concrete, but the runtime behavior belongs to GUI-for-CLI so another CLI tool can reuse the same shell.</p>
+</div>
+</section>
+<section>
+<div class="wrap">
+<h2>Why it shaped the frontend decision</h2>
+<p>A toy bundle can make any renderer look good. WGSExtract made the comparison harder: the frontend had to carry real commands, real setup, and real release packaging on Windows, macOS, and Linux. One TypeScript app packaged with Tauri was the surface that carried all of it with a single codebase, so it became the only frontend.</p>
+</div>
+</section>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGSExtract</strong><p>A real workflow drove the generic app shell.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli">Source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

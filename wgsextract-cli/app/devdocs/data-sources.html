@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Data sources | WGS Extract GUI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/app/devdocs/data-sources.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../architecture.html">GUI Architecture</a><a href="../wgsextract.html">WGSExtract</a><a class="active" href="../docs.html">Docs</a><a href="../../index.html">WGSExtract CLI</a><a href="../whats-different.html">What&#x27;s Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract GUI</a> / <a href="index.html">Developer Docs</a> / <span>Data sources</span></nav>
+<h1 id="data-sources">Data sources</h1>
+<p>A control, config setting or section can fill itself from a <code>dataSource</code>: a bundle script the app runs when it shows the page. The script prints a JSON payload: <code>options</code> for a dropdown, <code>items</code> or <code>rows</code> for a library list, <code>values</code> for a section, and <code>rowActions</code>/<code>actions</code> to replace the declared ones.</p>
+<pre><code class="language-jsonc">&quot;dataSource&quot;: {
+  &quot;path&quot;: &quot;scripts/list-genomes.sh&quot;,          // a bundle script, resolved per platform as for actions
+  &quot;arguments&quot;: [&quot;--list&quot;],
+  &quot;optionalArguments&quot;: [[&quot;--ref&quot;, &quot;{{ref_path}}&quot;]], // optional; a group is left out when a placeholder in it is empty
+  &quot;environment&quot;: { &quot;LIBRARY&quot;: &quot;{{ref_path}}&quot; }, // optional
+  &quot;workingDirectory&quot;: &quot;data&quot;,                   // optional, in the bundle; the bundle root by default
+  &quot;timeoutSeconds&quot;: 120                         // optional; 15 by default
+}</code></pre>
+<p>It must exit 0 within 15 seconds, or the <code>timeoutSeconds</code> it declares. It runs with <code>WGSEXTRACT_GUI_DATA_SOURCE=1</code>, and each field and config value as <code>WGSEXTRACT_GUI_FIELD_&lt;ID&gt;</code> and <code>WGSEXTRACT_GUI_CONFIG_&lt;ID&gt;</code>.</p>
+<h2 id="transforms">Transforms<a class="heading-anchor" href="#transforms" aria-label="Link to section">#</a></h2>
+<p>When the command prints JSON of its own, such as a CLI's <code>--json</code> output, <code>transform</code> maps it to the payload instead of a wrapper script:</p>
+<pre><code class="language-jsonc">&quot;dataSource&quot;: {
+  &quot;path&quot;: &quot;scripts/run-tool.sh&quot;,
+  &quot;arguments&quot;: [&quot;--json&quot;, &quot;list&quot;],
+  &quot;transform&quot;: { &quot;module&quot;: &quot;transforms/genomes.mjs&quot;, &quot;export&quot;: &quot;options&quot; }
+}</code></pre>
+<pre><code class="language-js">// transforms/genomes.mjs
+export function options(output) {
+  return { options: output.details.genomes.map((genome) =&gt; ({ id: genome.path, title: genome.label })) };
+}</code></pre>
+<ul>
+<li><strong><code>module</code></strong> is an ES module in the bundle; <strong><code>export</code></strong> names one of its functions. The app calls it in its own Node process with the parsed output and shows the object it returns (it may return a promise). It runs with the same trust as the bundle's scripts.</li>
+<li>The command must print valid JSON. A missing export, a throw or anything but an object fails the data source with that message, as a failing script does.</li>
+<li>An edited module is loaded again on the next run.</li>
+<li>Bundle test plans' <code>dataSource</code> steps run the transform too, and their output checks (<code>requiredOutput</code>, <code>forbiddenOutput</code>) see the payload it returned as indented JSON rather than the command's output.</li>
+</ul>
+<p>WGSExtract's reference genome dropdowns and Reference Genomes table run <code>wgsextract --json ref library --list</code> through <code>transforms/reference-genomes.mjs</code>.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract GUI</strong><p>Rendered from <code>gui/devdocs/data-sources.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/gui/devdocs/data-sources.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Install WGS Extract CLI with the standalone macOS/Linux installer, native Windows installer, or developer Pixi workflow." />
+    <title>Install | WGS Extract CLI</title>
+    <meta property="og:site_name" content="WGS Extract CLI" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Install | WGS Extract CLI" />
+    <meta property="og:description" content="Install WGS Extract CLI with the standalone macOS/Linux installer, native Windows installer, or developer Pixi workflow." />
+    <meta property="og:url" content="https://wgsextract.github.io/wgsextract-cli/install.html" />
+    <meta property="og:image" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta property="og:image:secure_url" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="WGSExtract CLI social preview showing the desktop app screenshot." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Install | WGS Extract CLI" />
+    <meta name="twitter:description" content="Install WGS Extract CLI with the standalone macOS/Linux installer, native Windows installer, or developer Pixi workflow." />
+    <meta name="twitter:image" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta name="twitter:image:alt" content="WGSExtract CLI social preview showing the desktop app screenshot." />
+    <link rel="canonical" href="https://wgsextract.github.io/wgsextract-cli/install.html" />
+    <link rel="image_src" href="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".82em" font-size="84">🧬</text></svg>' />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="index.html">Home</a><a class="active" href="install.html">Install CLI</a><a href="gui.html">GUI</a><a href="cli.html">CLI</a><a href="workflows.html">Workflows</a><a href="wgs-guide.html">WGS guide</a><a href="reference.html">Reference</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-hero">
+        <div class="wrap">
+          <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Setup guide</p>
+          <h1>Install once, then run repeatable genome workflows.</h1>
+          <p class="lede"><abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract <abbr data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">CLI</abbr> v0.8.10 uses <a class="term-link" href="https://pixi.sh/">Pixi</a> to manage <a class="term-link" href="https://www.python.org/">Python</a>, the app itself, and many external bioinformatics tools. macOS and Linux use the standalone terminal installer; Windows uses <code>install_windows.bat</code> from <a class="term-link" href="https://learn.microsoft.com/powershell/">PowerShell</a>, which installs native Windows builds of the tools through <a class="term-link" href="https://pixi.sh/">Pixi</a>. Linux x86_64 and native Linux <abbr data-tooltip="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers." aria-label="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers.">ARM64</abbr> both use the terminal installer.</p>
+          <div class="toc"><a href="#quickstart">macOS/Linux</a><a href="#running">Running the CLI</a><a href="#windows">Windows</a><a href="#developer">Developer Pixi setup</a><a href="#platforms">Platforms</a><a href="#references">References</a><a href="#checksums">Download checks</a><a href="#config">Configuration</a><a href="#verify">Verify</a></div>
+        </div>
+      </header>
+
+<section id="quickstart">
+<div class="wrap split">
+<div class="steps">
+<article class="step">
+<h3>Open Terminal first</h3>
+<p>Open the Terminal app on your machine. On macOS, use <strong>Applications &gt; Utilities &gt; Terminal</strong>. On Linux, open your normal terminal window.</p>
+</article>
+<article class="step">
+<h3>Paste the installer command</h3>
+<p>Copy the one-line installer below, paste it into Terminal, and press Enter. The installer prints each step before it runs it.</p>
+</article>
+<article class="step">
+<h3>Use the standalone folder</h3>
+<p>The installer resolves the latest published <a class="term-link" href="https://github.com/WGSExtract/wgsextract-cli">GitHub</a> release (not the <code>main</code> branch) and installs it into <code>wgsextract-cli/</code>. The app lives in <code>app/</code>, <a class="term-link" href="https://pixi.sh/">Pixi</a> files live in <code>.pixi/</code>, installer temp files live in <code>app/tmp/</code>, and the <abbr data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">CLI</abbr> launcher sits beside <code>app/</code> at <code>wgsextract</code>. On macOS, the installer checks for the Xcode Command Line Tools first and opens this folder in Finder when it finishes.</p>
+</article>
+<article class="step">
+<h3>Bootstrap references</h3>
+<p>Download the metadata and reference-library structure <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract uses to find <abbr data-tooltip="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences." aria-label="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences.">FASTA</abbr>, <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr>, ploidy, liftover, and annotation assets.</p>
+</article>
+<article class="step">
+<h3>Run a small test</h3>
+<p>Use <code>info</code> and region-limited commands first. Whole-genome jobs can take hours and hundreds of gigabytes of working space.</p>
+</article>
+</div>
+<div class="code-panel">
+<header class="code-panel-top"><div class="window-controls" aria-hidden="true"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><span class="code-panel-title">macos-linux.sh</span><button class="copy-button" type="button">Copy</button></header>
+<pre><code><span class="comment"># 1. Open Terminal.</span>
+<span class="comment"># 2. Paste this line and press Enter.</span>
+<span class="comment"># 3. The installer creates ./wgsextract-cli.</span>
+<span class="cmd">curl -fsSL https://raw.githubusercontent.com/WGSExtract/wgsextract-cli/main/install.sh | sh</span>
+
+<span class="comment"># Put the launcher on PATH for this shell (see &quot;Running the CLI&quot;)</span>
+<span class="cmd">export PATH=&quot;$PWD/wgsextract-cli:$PATH&quot;</span>
+
+<span class="comment"># Initialize reference library data</span>
+<span class="cmd">wgsextract ref bootstrap</span>
+<span class="cmd">wgsextract ref library --list</span>
+<span class="cmd">wgsextract ref library --install hs38</span>
+
+<span class="comment"># Verify the environment (exits 1 if a mandatory tool is missing)</span>
+<span class="cmd">wgsextract deps check</span>
+
+<span class="comment"># Uninstall the app if needed. Interactive runs ask whether to remove Pixi too.</span>
+<span class="cmd">./wgsextract-cli/uninstall.sh</span></code></pre>
+</div>
+</div>
+</section>
+<section id="running">
+<div class="wrap">
+<div class="section-head">
+<h2>Running the <abbr data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">CLI</abbr></h2>
+<p>Commands on this site are written as plain <code>wgsextract</code>. Use the form that matches how you installed it.</p>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Install type</th><th>How to run</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Standalone installer (macOS/Linux)</td><td><code>./wgsextract-cli/wgsextract</code>, or <code>wgsextract</code> after adding <code>wgsextract-cli/</code> to <code>PATH</code></td><td>Relative paths resolve against your current directory.</td></tr>
+<tr><td>Windows installer or source checkout</td><td><code>pixi run wgsextract</code>, from the project folder</td><td></td></tr>
+<tr><td>Specialized <a class="term-link" href="https://pixi.sh/">Pixi</a> environments</td><td><code>pixi run -e pacbio wgsextract ...</code> (also <code>vep</code>), from the app or project folder</td><td>See <a class="inline-link" href="cli.html#environments">Pixi environments</a>.</td></tr>
+</tbody>
+</table>
+</div>
+<p>To keep the standalone launcher on <code>PATH</code>, add <code>export PATH=&quot;/path/to/wgsextract-cli:$PATH&quot;</code> to your shell profile.</p>
+</div>
+</section>
+<section id="windows">
+<div class="wrap split">
+<div>
+<div class="section-head">
+<h2>Windows native installer</h2>
+<p>Use the Windows installer from a normal Windows <a class="term-link" href="https://learn.microsoft.com/powershell/">PowerShell</a> window. The tools run natively on Windows, on your Windows files, without <abbr data-tooltip="WSL: Windows Subsystem for Linux: a Windows feature for running Linux environments." aria-label="WSL: Windows Subsystem for Linux: a Windows feature for running Linux environments.">WSL</abbr> or <a class="term-link" href="https://www.msys2.org/" data-tooltip="MSYS2: Minimal SYStem 2: a Windows environment that provides Unix-like tools and package management." aria-label="MSYS2: Minimal SYStem 2: a Windows environment that provides Unix-like tools and package management.">MSYS2</a>.</p>
+</div>
+<div class="grid two" style="margin-top: 22px">
+<article class="card">
+<h3>Run the BAT installer</h3>
+<p>Open <a class="term-link" href="https://learn.microsoft.com/powershell/">PowerShell</a> on Windows, then move into the <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract <abbr data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">CLI</abbr> folder you cloned or downloaded and run <code>install_windows.bat</code>. If <a class="term-link" href="https://pixi.sh/">Pixi</a> is missing, the installer installs it first.</p>
+</article>
+<article class="card">
+<h3>What it does</h3>
+<p><code>install_windows.bat</code> installs <a class="term-link" href="https://pixi.sh/">Pixi</a> if needed, then the default and <a class="term-link" href="https://gatk.broadinstitute.org/" data-tooltip="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows." aria-label="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows.">GATK</a> environments: <a class="term-link" href="https://www.python.org/">Python</a>, the <abbr data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">CLI</abbr>, and native Windows tools, including <a class="term-link" href="https://www.htslib.org/">samtools</a>, <a class="term-link" href="https://samtools.github.io/bcftools/">bcftools</a>, BWA, bwa-mem2, <a class="term-link" href="https://github.com/lh3/minimap2">minimap2</a>, <a class="term-link" href="https://github.com/OpenGene/fastp">fastp</a>, samblaster and <abbr data-tooltip="GKL: Genomics Kernel Library: native numerical kernels used to accelerate GATK." aria-label="GKL: Genomics Kernel Library: native numerical kernels used to accelerate GATK.">GKL</abbr> acceleration for <a class="term-link" href="https://gatk.broadinstitute.org/" data-tooltip="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows." aria-label="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows.">GATK</a>. It finishes with <code>wgsextract deps check</code>.</p>
+</article>
+</div>
+</div>
+<div class="code-panel">
+<header class="code-panel-top"><div class="window-controls" aria-hidden="true"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><span class="code-panel-title">install_windows.bat</span><button class="copy-button" type="button">Copy</button></header>
+<pre><code><span class="comment"># Open PowerShell in the downloaded wgsextract-cli folder.</span>
+<span class="comment"># If you have not downloaded the project yet:</span>
+<span class="cmd">git clone https://github.com/WGSExtract/wgsextract-cli.git</span>
+<span class="cmd">cd wgsextract-cli</span>
+
+<span class="comment"># Recommended Windows install path: run the BAT installer.</span>
+<span class="cmd">.\install_windows.bat</span>
+
+<span class="comment"># If Pixi was just installed, reopen PowerShell first.</span>
+<span class="comment"># Verify the tools.</span>
+<span class="cmd">pixi run wgsextract deps check</span>
+
+<span class="comment"># Uninstall the app-local environment and config defaults.</span>
+<span class="cmd">.\uninstall_windows.bat</span>
+
+<span class="comment"># Also remove the Pixi the installer set up.</span>
+<span class="cmd">.\uninstall_windows.bat --remove-prerequisites</span></code></pre>
+</div>
+</div>
+<div class="wrap">
+<div class="callout">
+<strong>Windows prerequisites:</strong> Download the repository or clone it with Git, then run the BAT installer; it downloads <a class="term-link" href="https://pixi.sh/">Pixi</a> when missing. Reopen your shell after a first <a class="term-link" href="https://pixi.sh/">Pixi</a> installation. Older installs used <a class="term-link" href="https://www.msys2.org/" data-tooltip="MSYS2: Minimal SYStem 2: a Windows environment that provides Unix-like tools and package management." aria-label="MSYS2: Minimal SYStem 2: a Windows environment that provides Unix-like tools and package management.">MSYS2</a>, which is no longer needed. See the <a class="inline-link" href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/windows.md">Windows guide</a> for details.
+</div>
+</div>
+</section>
+<section id="developer">
+<div class="wrap split">
+<div>
+<div class="section-head">
+<h2>Developer <a class="term-link" href="https://pixi.sh/">Pixi</a> setup</h2>
+<p>From a source checkout, run the developer setup script once. It requires Git (plus Xcode Command Line Tools on macOS), installs <a class="term-link" href="https://pixi.sh/">Pixi</a> and <code>just</code> for your user when missing, installs locked default/dev environments and pre-commit hooks, and runs version, dependency and smoke checks.</p>
+</div>
+<div class="grid two" style="margin-top: 22px">
+<article class="card">
+<h3>Best for contributors</h3>
+<p>Use this path when you plan to edit code, run tests, inspect package metadata, or switch branches frequently.</p>
+</article>
+<article class="card">
+<h3>Same toolchain</h3>
+<p>The standalone installer still uses <a class="term-link" href="https://pixi.sh/">Pixi</a> underneath. Developer setup adds contributor tools; optional environments remain explicit installs, not feature-time downloads.</p>
+</article>
+</div>
+</div>
+<div class="code-panel">
+<header class="code-panel-top"><div class="window-controls" aria-hidden="true"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><span class="code-panel-title">developer-pixi.sh</span><button class="copy-button" type="button">Copy</button></header>
+<pre><code><span class="comment"># macOS/Linux</span>
+<span class="cmd">git clone https://github.com/WGSExtract/wgsextract-cli.git</span>
+<span class="cmd">cd wgsextract-cli</span>
+<span class="cmd">./scripts/dev_setup.sh</span>
+
+<span class="comment"># Windows PowerShell, from the checkout:</span>
+<span class="cmd">powershell -ExecutionPolicy Bypass -File scripts\dev_setup.ps1</span>
+
+<span class="comment"># Reopen the terminal if Pixi or just was newly installed.</span>
+<span class="cmd">pixi run wgsextract help</span>
+<span class="cmd">just check</span></code></pre>
+</div>
+<div class="callout">
+<strong>Contributor tooling</strong> (pytest, ruff, mypy) lives in the <code>dev</code> <a class="term-link" href="https://pixi.sh/">Pixi</a> environment. Tasks such as <code>pixi run test</code>, <code>pixi run lint</code>, and <code>pixi run typecheck</code> select it automatically. Rerun setup safely, or use <code>just setup</code> once <code>just</code> is available. See <a class="inline-link" href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/developer_setup.md">Developer setup</a> for skip-test options and the contribution workflow.
+</div>
+</div>
+</section>
+<section id="platforms">
+<div class="wrap">
+<div class="section-head">
+<h2>Platform notes</h2>
+<p>Use the standalone installer on macOS/Linux and <code>install_windows.bat</code> on native Windows. On Windows the tools are native Windows programs, so no <abbr data-tooltip="WSL: Windows Subsystem for Linux: a Windows feature for running Linux environments." aria-label="WSL: Windows Subsystem for Linux: a Windows feature for running Linux environments.">WSL</abbr> or <a class="term-link" href="https://www.msys2.org/" data-tooltip="MSYS2: Minimal SYStem 2: a Windows environment that provides Unix-like tools and package management." aria-label="MSYS2: Minimal SYStem 2: a Windows environment that provides Unix-like tools and package management.">MSYS2</a> setup is needed and they work directly on files on your Windows drives.</p>
+</div>
+<div class="grid three">
+<article class="card">
+<h3>macOS</h3>
+<p>Use the standalone installer. It opens the install folder in Finder and creates the <code>wgsextract</code> <abbr data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">CLI</abbr> launcher.</p>
+<span class="tag">osx-arm64</span>
+<span class="tag">osx-64</span>
+<a class="inline-link" href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/apple-silicon-16gb.md">A 30x genome on a 16 GB Apple M1</a>
+</article>
+<article class="card">
+<h3>Linux</h3>
+<p>Use the standalone installer on x86_64 and on native <abbr data-tooltip="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers." aria-label="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers.">ARM64</abbr> (v0.6.6 and later). <abbr data-tooltip="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers." aria-label="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers.">ARM64</abbr> phase 1 covers <abbr data-tooltip="CPU: Central Processing Unit: the main processor that runs computation-heavy genomics commands." aria-label="CPU: Central Processing Unit: the main processor that runs computation-heavy genomics commands.">CPU</abbr> alignment, <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>/<abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr>, <a class="term-link" href="https://samtools.github.io/bcftools/">bcftools</a>, microarray exports, coverage, <a class="term-link" href="https://github.com/genid/Yleaf">Yleaf</a>/<a class="term-link" href="https://haplogrep.i-med.ac.at/">Haplogrep</a> and optional <a class="term-link" href="https://www.ensembl.org/info/docs/tools/vep/index.html" data-tooltip="VEP: Variant Effect Predictor: an annotation tool that predicts variant effects on genes and transcripts." aria-label="VEP: Variant Effect Predictor: an annotation tool that predicts variant effects on genes and transcripts.">VEP</a>. Native <abbr data-tooltip="CPU: Central Processing Unit: the main processor that runs computation-heavy genomics commands." aria-label="CPU: Central Processing Unit: the main processor that runs computation-heavy genomics commands.">CPU</abbr> <a class="term-link" href="https://github.com/google/deepvariant">DeepVariant</a> on <abbr data-tooltip="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers." aria-label="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers.">ARM64</abbr> supports <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> only: build <code>localhost/wgsextract-deepvariant:1.10.0-arm64</code> locally with <code>packaging/deepvariant-arm64/build.sh</code> before calling. Other models and <code>--checkpoint</code> are refused. <a class="term-link" href="https://gatk.broadinstitute.org/" data-tooltip="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows." aria-label="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows.">GATK</a>, Ultima alignment and Parabricks remain gated on Linux <abbr data-tooltip="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers." aria-label="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers.">ARM64</abbr>.</p>
+<span class="tag">linux-64</span>
+<span class="tag">linux-aarch64</span>
+<a class="inline-link" href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/linux-arm64.md" data-tooltip="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers." aria-label="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers.">Linux ARM64 scope and validation</a>
+</article>
+<article class="card">
+<h3>Windows</h3>
+<p>Use <code>install_windows.bat</code> from <a class="term-link" href="https://learn.microsoft.com/powershell/">PowerShell</a>. <a class="term-link" href="https://pixi.sh/">Pixi</a> installs <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract's own native Windows builds of the bioinformatics tools.</p>
+<p>Windows x64 is the published installation path. Windows <abbr data-tooltip="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers." aria-label="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers.">ARM64</abbr> remains an opt-in qualification preview, not part of the default lock or published app artifacts.</p>
+<span class="tag">win-64</span>
+<a class="inline-link" href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/windows.md">Windows guide</a>
+</article>
+</div>
+</div>
+</section>
+<section id="references">
+<div class="wrap">
+<div class="section-head">
+<h2>Reference library setup</h2>
+<p>Most genome operations need a reference genome and companion files. The reference library lets <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract resolve those assets instead of asking you for every path on every command.</p>
+</div>
+<div class="grid two">
+<article class="card">
+<h3>Bootstrap data</h3>
+<p><code>ref bootstrap</code> initializes the library scaffolding and common metadata. Its archive is checked against a SHA-256 pinned in the program. A finished install leaves a <code>.bootstrap-&lt;version&gt;</code> marker in the library. If a run is interrupted, the archive stays in the library and the next run re-extracts it. Then use the library commands to list and install supported builds such as hs38.</p>
+<pre><code><span class="cmd">wgsextract ref bootstrap</span>
+<span class="cmd">wgsextract ref library --list</span>
+<span class="cmd">wgsextract ref library --install hs38</span></code></pre>
+<p>Annotation data comes from <code>ref clinvar</code>, <code>ref gnomad</code>, <code>ref revel</code>, <code>ref phylop</code>, <code>ref gerp</code>, <code>ref spliceai</code>, <code>ref alphamissense</code>, <code>ref pharmgkb</code>, and <code>ref gene-map</code>. <code>ref phylop</code> and <code>ref gerp</code> download one build's per-base scores (about 10 GB each; <code>--build hg19</code> for hg19). <code>ref spliceai</code> downloads Ensembl's open hg38 scores (28.9 GB); hg19 scores need an Illumina BaseSpace login, so it explains where to put a manually downloaded file.</p>
+</article>
+<article class="card">
+<h3>Index and verify</h3>
+<p><abbr data-tooltip="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences." aria-label="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences.">FASTA</abbr> references need indexes and dictionaries before alignment and variant callers can use them efficiently.</p>
+<pre><code><span class="cmd">wgsextract ref index --ref /path/to/hs38.fa</span>
+<span class="cmd">wgsextract ref verify --ref /path/to/hs38.fa</span>
+<span class="cmd">wgsextract ref status</span></code></pre>
+<p><code>ref verify</code> checks gzip integrity, the <abbr data-tooltip="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences." aria-label="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences.">FASTA</abbr> index, and, for catalog genomes, the sequence-dictionary signature; it fails on a mismatch.</p>
+<p>Since v0.6.6, the catalog also recognizes and resolves hs38d1c (GRCh38 with additional viral decoys) and hs38d1t (hs38d1s plus MT169739.1). Install the exact model matching the alignment header, not just another hg38 <abbr data-tooltip="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences." aria-label="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences.">FASTA</abbr>.</p>
+</article>
+</div>
+<div class="callout">
+<strong>Reference builds matter.</strong> hg19/GRCh37, hg38/GRCh38, and <abbr data-tooltip="T2T: Telomere-to-Telomere: a newer reference approach that aims to represent chromosomes end to end." aria-label="T2T: Telomere-to-Telomere: a newer reference approach that aims to represent chromosomes end to end.">T2T</abbr> coordinates differ. Do not mix BAMs, <abbr data-tooltip="VCFs: Variant Call Format files: files containing variants and annotations in the VCF standard." aria-label="VCFs: Variant Call Format files: files containing variants and annotations in the VCF standard.">VCFs</abbr>, annotation files, and gene coordinates from different builds unless you intentionally lift over or re-run the analysis.
+</div>
+</div>
+</section>
+<section id="checksums">
+<div class="wrap">
+<div class="section-head">
+<h2>Download verification</h2>
+<p>Reference bundles are <a class="term-link" href="https://github.com/WGSExtract/wgsextract-cli">GitHub</a> release assets, versioned separately from app releases so routine releases do not re-upload multi-gigabyte files.</p>
+</div>
+<p>When <code>ref library --install</code> or <code>ref download</code> fetches a <a class="term-link" href="https://github.com/WGSExtract/wgsextract-cli">GitHub</a> release asset, <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract asks the <a class="term-link" href="https://github.com/WGSExtract/wgsextract-cli">GitHub</a> Releases API for that asset's <code>sha256:&lt;digest&gt;</code> metadata and verifies the file before extracting or processing it. No neighboring <code>.sha256</code> files are needed. The native Windows tool packages are pinned by SHA-256 in <code>pixi.toml</code>, which <a class="term-link" href="https://pixi.sh/">Pixi</a> checks.</p>
+<ul>
+<li>If the digest lookup is unavailable (for example, the API is unreachable or rate-limited), <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract logs a warning and continues. Set <code>GITHUB_TOKEN</code> to authenticate the lookup in automation.</li>
+<li>If <a class="term-link" href="https://github.com/WGSExtract/wgsextract-cli">GitHub</a> metadata is fetched but has no valid SHA-256 digest, or the downloaded file does not match it, the download fails.</li>
+<li>Reference genomes are checked again after installation: gzip integrity, <code>samtools faidx</code>, and the sequence-dictionary signature.</li>
+</ul>
+</div>
+</section>
+<section id="config">
+<div class="wrap split">
+<div>
+<h2>Configuration</h2>
+<p class="lede">Use <code>wgsextract config</code> to view the active config path and every setting. Set input, output, reference <abbr data-tooltip="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences." aria-label="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences.">FASTA</abbr>, reference library, genome library, threads, memory, and external tool paths once instead of repeating them. Command-line options override config values for a single run.</p>
+<div class="grid two" style="margin-top: 22px">
+<article class="card">
+<h3>Config locations</h3>
+<p>macOS: <code>~/.config/wgsextract/config.toml</code> if <code>~/.config/</code> exists, otherwise <code>~/Library/Application Support/wgsextract/</code>. Linux: <code>~/.config/wgsextract/config.toml</code>. Windows: <code>%LocalAppData%\theontho\wgsextract\config.toml</code>.</p>
+</article>
+<article class="card">
+<h3>Genome library</h3>
+<p>Set <code>dataset_library</code> (formerly <code>genome_library</code>) to a folder with one subfolder per person or sample. Then <code>--genome sample-id</code> can resolve inputs and outputs from that folder.</p>
+</article>
+</div>
+</div>
+<div class="code-panel">
+<header class="code-panel-top"><div class="window-controls" aria-hidden="true"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><span class="code-panel-title">config.toml</span><button class="copy-button" type="button">Copy</button></header>
+<pre><code><span class="config-key">input</span> =<span class="config-value"> &quot;/data/genomes/joe/joe.cram&quot;</span>
+<span class="config-key">outdir</span> =<span class="config-value"> &quot;/data/genomes/joe/out&quot;</span>
+<span class="comment"># Reference genome FASTA (same as --ref)</span>
+<span class="config-key">ref</span> =<span class="config-value"> &quot;/data/reference/genomes/hs38.fa.gz&quot;</span>
+<span class="comment"># Reference library directory</span>
+<span class="config-key">reflib</span> =<span class="config-value"> &quot;/data/reference&quot;</span>
+<span class="config-key">dataset_library</span> =<span class="config-value"> &quot;/data/datasets&quot;</span>
+<span class="comment"># A number, or &quot;auto&quot;</span>
+<span class="config-key">threads</span> =<span class="config-value"> &quot;auto&quot;</span>
+<span class="config-key">memory</span> =<span class="config-value"> &quot;auto&quot;</span>
+<span class="config-key">haplogrep_path</span> =<span class="config-value"> &quot;/usr/local/bin/haplogrep3&quot;</span>
+<span class="config-key">haplogrep_tree</span> =<span class="config-value"> &quot;phylotree-fu-rcrs&quot;</span></code></pre>
+</div>
+</div>
+</section>
+<section id="verify">
+<div class="wrap">
+<div class="section-head">
+<h2>Verify before running full genomes</h2>
+<p>Start with environment checks and tiny regions. It is much cheaper to catch missing references, unsorted BAMs, or command syntax errors on chrM than halfway through a full-genome job.</p>
+</div>
+<div class="code-panel">
+<header class="code-panel-top"><div class="window-controls" aria-hidden="true"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><span class="code-panel-title">verification-recipes.sh</span><button class="copy-button" type="button">Copy</button></header>
+<pre><code><span class="cmd">wgsextract deps check</span>
+<span class="cmd">wgsextract --input /data/sample.cram info --detailed</span>
+<span class="cmd">wgsextract --input /data/sample.cram extract mito-vcf</span>
+<span class="cmd">wgsextract --input /data/sample.cram vcf snp --region chrM</span>
+<span class="cmd">wgsextract --input /data/sample.cram microarray --formats 23andme_v5 --region chrM</span></code></pre>
+</div>
+</div>
+</section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Install guide and environment reference.</p></div>
+        <p><a href="cli.html">Next: CLI guide</a></p>
+      </div>
+    </footer>
+    <script>
+      (() => {
+        const copyText = async (text) => {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            return;
+          }
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "fixed";
+          textarea.style.left = "-9999px";
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          textarea.remove();
+        };
+
+        document.addEventListener("click", async (event) => {
+          const button = event.target.closest(".copy-button");
+          if (!button) return;
+          const panel = button.closest(".code-panel");
+          const code = panel?.querySelector("pre code");
+          if (!code) return;
+          const previous = button.textContent;
+          try {
+            await copyText(code.innerText);
+            button.textContent = "Copied";
+          } catch {
+            button.textContent = "Failed";
+          }
+          window.setTimeout(() => {
+            button.textContent = previous;
+          }, 1400);
+        });
+
+        let tooltip;
+        let activeTooltipTarget;
+        let tooltipTimer;
+
+        const ensureTooltip = () => {
+          if (!tooltip) {
+            tooltip = document.createElement("div");
+            tooltip.className = "site-tooltip";
+            tooltip.hidden = true;
+            tooltip.setAttribute("role", "tooltip");
+            document.body.appendChild(tooltip);
+          }
+          return tooltip;
+        };
+
+        const positionTooltip = () => {
+          if (!tooltip || !activeTooltipTarget) return;
+          const rect = activeTooltipTarget.getBoundingClientRect();
+          const tipRect = tooltip.getBoundingClientRect();
+          const margin = 12;
+          let left = rect.left + rect.width / 2 - tipRect.width / 2;
+          left = Math.max(margin, Math.min(left, window.innerWidth - tipRect.width - margin));
+          let top = rect.top - tipRect.height - 10;
+          if (top < margin) top = rect.bottom + 10;
+          tooltip.style.left = `${Math.round(left + window.scrollX)}px`;
+          tooltip.style.top = `${Math.round(top + window.scrollY)}px`;
+        };
+
+        const showTooltip = (target) => {
+          const text = target.dataset.tooltip;
+          if (!text) return;
+          activeTooltipTarget = target;
+          const tip = ensureTooltip();
+          tip.textContent = text;
+          tip.hidden = false;
+          tip.classList.remove("visible");
+          window.requestAnimationFrame(() => {
+            positionTooltip();
+            tip.classList.add("visible");
+          });
+        };
+
+        const scheduleTooltip = (target) => {
+          window.clearTimeout(tooltipTimer);
+          tooltipTimer = window.setTimeout(() => showTooltip(target), 120);
+        };
+
+        const hideTooltip = () => {
+          window.clearTimeout(tooltipTimer);
+          activeTooltipTarget = undefined;
+          if (!tooltip) return;
+          tooltip.classList.remove("visible");
+          tooltip.hidden = true;
+        };
+
+        document.addEventListener("mouseover", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (!target || target === activeTooltipTarget) return;
+          scheduleTooltip(target);
+        });
+
+        document.addEventListener("mouseout", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (!target || target.contains(event.relatedTarget)) return;
+          hideTooltip();
+        });
+
+        document.addEventListener("focusin", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (target) scheduleTooltip(target);
+        });
+        document.addEventListener("focusout", hideTooltip);
+        window.addEventListener("scroll", positionTooltip, { passive: true });
+        window.addEventListener("resize", positionTooltip);
+      })();
+    </script>
+  </body>
+</html>

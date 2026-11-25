@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="WGS Extract CLI documentation, install guide, workflows, and whole genome sequencing reference." />
+    <title>WGS Extract CLI | Local-first whole genome toolkit</title>
+    <meta property="og:site_name" content="WGS Extract CLI" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="WGS Extract CLI | Local-first whole genome toolkit" />
+    <meta property="og:description" content="WGS Extract CLI documentation, install guide, workflows, and whole genome sequencing reference." />
+    <meta property="og:url" content="https://wgsextract.github.io/wgsextract-cli/" />
+    <meta property="og:image" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta property="og:image:secure_url" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="WGSExtract CLI social preview showing the desktop app screenshot." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="WGS Extract CLI | Local-first whole genome toolkit" />
+    <meta name="twitter:description" content="WGS Extract CLI documentation, install guide, workflows, and whole genome sequencing reference." />
+    <meta name="twitter:image" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta name="twitter:image:alt" content="WGSExtract CLI social preview showing the desktop app screenshot." />
+    <link rel="canonical" href="https://wgsextract.github.io/wgsextract-cli/" />
+    <link rel="image_src" href="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".82em" font-size="84">🧬</text></svg>' />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a class="active" href="index.html">Home</a><a href="install.html">Install CLI</a><a href="gui.html">GUI</a><a href="cli.html">CLI</a><a href="workflows.html">Workflows</a><a href="wgs-guide.html">WGS guide</a><a href="reference.html">Reference</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+
+    <main>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Local-first genomics toolkit</p>
+      <h1>Turn whole genome data into useful files, reports, and extracts.</h1>
+      <p class="lede">
+        <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract <abbr data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">CLI</abbr> is a modern, scriptable command-line recreation of <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract. It wraps common bioinformatics tools so you can inspect <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>/<abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr> files, build consumer microarray files, call variants, extract Y/<abbr data-tooltip="MT: Mitochondrial chromosome: the chromosome name often used for mitochondrial DNA in some reference builds." aria-label="MT: Mitochondrial chromosome: the chromosome name often used for mitochondrial DNA in some reference builds.">MT</abbr> reads, manage references, and automate repeatable genome work.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="install.html">Install the CLI</a>
+        <a class="btn" href="gui.html">Download the GUI</a>
+        <a class="btn" href="workflows.html">Browse workflows</a>
+        <a class="btn" href="wgs-guide.html">Learn WGS basics</a>
+      </div>
+    </div>
+
+    <aside class="hero-card" aria-label="Quick start terminal">
+      <div class="terminal">
+        <div class="terminal-top" aria-hidden="true"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <pre><code><span class="comment"># Open Terminal, paste this line, then press Enter</span>
+<span class="prompt">$</span> <span class="cmd">curl -fsSL https://raw.githubusercontent.com/WGSExtract/wgsextract-cli/main/install.sh | sh</span>
+
+<span class="comment"># Put the launcher on PATH, then check your setup</span>
+<span class="prompt">$</span> <span class="cmd">export PATH="$PWD/wgsextract-cli:$PATH"</span>
+<span class="prompt">$</span> <span class="cmd">wgsextract deps check</span>
+
+<span class="comment"># See available commands</span>
+<span class="prompt">$</span> <span class="cmd">wgsextract help</span></code></pre>
+      </div>
+      <div class="stats">
+        <div class="stat"><strong><abbr data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">CLI</abbr></strong><span>Automation first</span></div>
+        <div class="stat"><strong>Local</strong><span>Runs on your machine</span></div>
+        <div class="stat"><strong><a class="term-link" href="https://pixi.sh/">Pixi</a></strong><span>Reproducible tools</span></div>
+      </div>
+    </aside>
+  </div>
+</header>
+
+<section class="homepage-screenshot-section">
+  <div class="wrap">
+    <figure class="homepage-screenshot">
+      <img src="assets/cli-screenshot.webp" alt="WGSExtract CLI desktop app showing command-line workflow output." width="2514" height="1874" fetchpriority="high" />
+    </figure>
+  </div>
+</section>
+<section>
+<div class="wrap">
+<div class="section-head">
+<h2>A practical reference site, not just a splash page.</h2>
+<p>Use the pages below as a map for installing the tool, understanding <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> file types, and running common genome workflows safely.</p>
+<p>The <a class="inline-link" href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/README.md">topic guide index</a> lists every detailed guide by task, including microarray calling rules, lineage/yBrowse, variant accuracy, configuration and resource planning.</p>
+<p>The current release is <a class="inline-link" href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.8.10">v0.8.10</a>; its release notes say what it adds. Recent releases brought native Linux <abbr data-tooltip="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers." aria-label="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers.">ARM64</abbr>, Oxford Nanopore detection with Sniffles and optional Clair3 calling, CpG methylation pileups, Y-STR panels, queryable variant tables, result manifests (<code>--json</code>) and easier help, on top of native Windows tools and <a class="term-link" href="https://gatk.broadinstitute.org/" data-tooltip="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows." aria-label="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows.">GATK</a> acceleration, more microarray and <abbr data-tooltip="AADR: Allen Ancient DNA Resource: curated research datasets and marker panels used in population genetics." aria-label="AADR: Allen Ancient DNA Resource: curated research datasets and marker panels used in population genetics.">AADR</abbr> exports, resource preflight, and one-command developer setup. See <a class="inline-link" href="https://github.com/WGSExtract/wgsextract-cli/releases">GitHub Releases</a> for every release's notes.</p>
+</div>
+<div class="grid three">
+<article class="card">
+<div class="kicker">Install</div>
+<h3>Install the standalone app or use <a class="term-link" href="https://pixi.sh/">Pixi</a> directly</h3>
+<p>Use the standalone macOS/Linux installer, the native Windows installer, or one-command developer setup for a source checkout. Linux <abbr data-tooltip="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers." aria-label="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers.">ARM64</abbr> is supported natively.</p>
+<a class="inline-link" href="install.html">Read the install guide</a>
+</article>
+<article class="card">
+<div class="kicker"><abbr data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">CLI</abbr> reference</div>
+<h3>Command groups and recipes</h3>
+<p>Learn the major command families for info, <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>/<abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr>, extraction, <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr> calling, annotation, lineage, alignment, <abbr data-tooltip="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores." aria-label="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores.">FASTQ</abbr> <abbr data-tooltip="QC: Quality Control: checks that help assess whether data and outputs are usable." aria-label="QC: Quality Control: checks that help assess whether data and outputs are usable.">QC</abbr>, references, and fake data.</p>
+<a class="inline-link" href="cli.html" data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">Open the CLI guide</a>
+</article>
+<article class="card">
+<div class="kicker">Workflows</div>
+<h3>Go from a goal to commands</h3>
+<p>Follow recipes for microarray simulation, <abbr data-tooltip="Y-DNA: Y-chromosome DNA: DNA on the Y chromosome, often used for paternal-line genealogy." aria-label="Y-DNA: Y-chromosome DNA: DNA on the Y chromosome, often used for paternal-line genealogy.">Y-DNA</abbr> and <abbr data-tooltip="mtDNA: Mitochondrial DNA: DNA inherited mostly through the maternal line and stored in mitochondria." aria-label="mtDNA: Mitochondrial DNA: DNA inherited mostly through the maternal line and stored in mitochondria.">mtDNA</abbr> extraction, variant calling, <abbr data-tooltip="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores." aria-label="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores.">FASTQ</abbr> to <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>, storage conversion, and testing.</p>
+<a class="inline-link" href="workflows.html">Pick a workflow</a>
+</article>
+<article class="card">
+<div class="kicker"><abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> guide</div>
+<h3>Learn whole genome concepts</h3>
+<p>Get a friendly explanation of whole genome sequencing, coverage, references, variants, file types, read technologies, and interpretation limits.</p>
+<a class="inline-link" href="wgs-guide.html" data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">Read the WGS guide</a>
+</article>
+<article class="card">
+<div class="kicker">Reference</div>
+<h3>Glossary and safety notes</h3>
+<p>Look up common terms, file extensions, external tools, privacy considerations, and troubleshooting tips for long-running genome jobs.</p>
+<a class="inline-link" href="reference.html">Open the reference</a>
+</article>
+</div>
+</div>
+</section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Local-first tools for practical whole genome sequencing workflows.</p></div>
+        <p>GPL-3.0-or-later. Source on <a href="https://github.com/WGSExtract/wgsextract-cli">GitHub</a>.</p>
+      </div>
+    </footer>
+    <script>
+      (() => {
+        const copyText = async (text) => {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            return;
+          }
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "fixed";
+          textarea.style.left = "-9999px";
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          textarea.remove();
+        };
+
+        document.addEventListener("click", async (event) => {
+          const button = event.target.closest(".copy-button");
+          if (!button) return;
+          const panel = button.closest(".code-panel");
+          const code = panel?.querySelector("pre code");
+          if (!code) return;
+          const previous = button.textContent;
+          try {
+            await copyText(code.innerText);
+            button.textContent = "Copied";
+          } catch {
+            button.textContent = "Failed";
+          }
+          window.setTimeout(() => {
+            button.textContent = previous;
+          }, 1400);
+        });
+
+        let tooltip;
+        let activeTooltipTarget;
+        let tooltipTimer;
+
+        const ensureTooltip = () => {
+          if (!tooltip) {
+            tooltip = document.createElement("div");
+            tooltip.className = "site-tooltip";
+            tooltip.hidden = true;
+            tooltip.setAttribute("role", "tooltip");
+            document.body.appendChild(tooltip);
+          }
+          return tooltip;
+        };
+
+        const positionTooltip = () => {
+          if (!tooltip || !activeTooltipTarget) return;
+          const rect = activeTooltipTarget.getBoundingClientRect();
+          const tipRect = tooltip.getBoundingClientRect();
+          const margin = 12;
+          let left = rect.left + rect.width / 2 - tipRect.width / 2;
+          left = Math.max(margin, Math.min(left, window.innerWidth - tipRect.width - margin));
+          let top = rect.top - tipRect.height - 10;
+          if (top < margin) top = rect.bottom + 10;
+          tooltip.style.left = `${Math.round(left + window.scrollX)}px`;
+          tooltip.style.top = `${Math.round(top + window.scrollY)}px`;
+        };
+
+        const showTooltip = (target) => {
+          const text = target.dataset.tooltip;
+          if (!text) return;
+          activeTooltipTarget = target;
+          const tip = ensureTooltip();
+          tip.textContent = text;
+          tip.hidden = false;
+          tip.classList.remove("visible");
+          window.requestAnimationFrame(() => {
+            positionTooltip();
+            tip.classList.add("visible");
+          });
+        };
+
+        const scheduleTooltip = (target) => {
+          window.clearTimeout(tooltipTimer);
+          tooltipTimer = window.setTimeout(() => showTooltip(target), 120);
+        };
+
+        const hideTooltip = () => {
+          window.clearTimeout(tooltipTimer);
+          activeTooltipTarget = undefined;
+          if (!tooltip) return;
+          tooltip.classList.remove("visible");
+          tooltip.hidden = true;
+        };
+
+        document.addEventListener("mouseover", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (!target || target === activeTooltipTarget) return;
+          scheduleTooltip(target);
+        });
+
+        document.addEventListener("mouseout", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (!target || target.contains(event.relatedTarget)) return;
+          hideTooltip();
+        });
+
+        document.addEventListener("focusin", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (target) scheduleTooltip(target);
+        });
+        document.addEventListener("focusout", hideTooltip);
+        window.addEventListener("scroll", positionTooltip, { passive: true });
+        window.addEventListener("resize", positionTooltip);
+      })();
+    </script>
+  </body>
+</html>

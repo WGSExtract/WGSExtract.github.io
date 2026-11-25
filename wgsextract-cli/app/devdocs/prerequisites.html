@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Prerequisites | WGS Extract GUI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/app/devdocs/prerequisites.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../architecture.html">GUI Architecture</a><a href="../wgsextract.html">WGSExtract</a><a class="active" href="../docs.html">Docs</a><a href="../../index.html">WGSExtract CLI</a><a href="../whats-different.html">What&#x27;s Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract GUI</a> / <a href="index.html">Developer Docs</a> / <span>Prerequisites</span></nav>
+<h1 id="prerequisites">Prerequisites</h1>
+<p>Some actions need data or tools that the user installs separately, such as a reference genome or an optional tool. A bundle can declare a check that the app runs before such an action. If the check reports that something is missing, the action doesn't start. Instead a dialog names what is missing and offers three choices:</p>
+<ul>
+<li><strong>Install and Continue</strong>: the app checks again, installs each item that is still missing, showing each install in its own terminal tab, then runs the action. An item installed while the dialog was open is skipped. If an install fails, the action doesn't run.</li>
+<li><strong>Continue</strong>: the user has installed it themselves. The app checks again, and runs the action only if nothing is missing any more; otherwise the dialog stays and says so.</li>
+<li><strong>Cancel</strong>: nothing runs.</li>
+</ul>
+<p><strong>Install and Continue</strong> is shown only when every missing item can be installed by the app.</p>
+<pre><code class="language-jsonc">// manifest.json
+&quot;prerequisites&quot;: {
+  &quot;command&quot;: {
+    &quot;executable&quot;: &quot;{{bundleRoot}}/scripts/run-tool.sh&quot;,
+    &quot;arguments&quot;: [&quot;needs&quot;, &quot;--json&quot;, &quot;--&quot;]
+  },
+  &quot;executables&quot;: {
+    &quot;{{bundleRoot}}/scripts/run-tool.sh&quot;: [],
+    &quot;{{bundleRoot}}/scripts/run-tool-calls.sh&quot;: [&quot;calls&quot;]
+  },
+  &quot;kindLabels&quot;: { &quot;genome&quot;: &quot;prerequisites.kinds.genome&quot; }
+}</code></pre>
+<p><strong><code>executables</code></strong> chooses the actions that are checked: those whose command runs one of these executables. The check is given the action's rendered command line, after the arguments listed for its executable. A wrapper script that adds a subcommand, for example, can be described this way.</p>
+<p><strong><code>prerequisiteArguments</code></strong> on an action gives the check a command line of its own, interpolated like the command's arguments. Use it for an action whose executable takes arguments the check can't read, such as positional ones.</p>
+<p><strong><code>kindLabels</code></strong> maps each item <code>kind</code> to a string-table key. The dialog lists an item with that text, in which <code>%{name}</code> is the item's name, for example "%{name} reference genome". An item of another kind is listed by its name.</p>
+<h2 id="the-check">The check<a class="heading-anchor" href="#the-check" aria-label="Link to section">#</a></h2>
+<p>The app runs <code>command</code> with the command line appended, in the bundle workspace. Its last line on stdout must be a JSON object:</p>
+<pre><code class="language-json">{&quot;missing&quot;: [{&quot;id&quot;: &quot;hs37d5&quot;, &quot;kind&quot;: &quot;genome&quot;, &quot;name&quot;: &quot;hs37d5&quot;, &quot;installArguments&quot;: [&quot;ref&quot;, &quot;library&quot;, &quot;--install&quot;, &quot;hs37d5&quot;]}]}</code></pre>
+<ul>
+<li><code>id</code> names the item when the app asks for it to be installed.</li>
+<li><code>installArguments</code> are run with <code>command.executable</code> to install the item. They are <code>null</code> when the app can't install it.</li>
+</ul>
+<p>WGSExtract also reports a missing optional tool (<code>&quot;kind&quot;: &quot;tool&quot;</code>, installed with <code>wgsextract deps install &lt;tool&gt;</code>, or <code>null</code> for a tool the user installs).</p>
+<p>An empty list means the action can run. So does a check that exits non-zero, prints no such report, or takes longer than a minute. The app logs why on its console and runs the action, which then reports the problem itself.</p>
+<p>To install an item, the app runs the check again on the server and takes the arguments from that report. The page only names the item, so it can't run arbitrary commands. If that report no longer lists the item, it was installed meanwhile, and the install finishes at once with exit code 0. If that check fails, the install fails.</p>
+<p>If another bundle is loaded while a check or install is under way, the held-back action is dropped: it belongs to the old bundle.</p>
+<p>The WGSExtract bundle checks its <code>wgsextract</code> actions with <a href="https://wgsextract.github.io/wgsextract-cli/commands.html" target="_blank" rel="noopener noreferrer"><code>wgsextract ref needs</code></a>. It reports the reference genome that a BAM or CRAM input was aligned to when the command decodes a CRAM's reads or calls variants, and the annotation data that the <code>vcf</code> annotation commands need.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract GUI</strong><p>Rendered from <code>gui/devdocs/prerequisites.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/gui/devdocs/prerequisites.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

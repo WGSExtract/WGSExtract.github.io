@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CHM13 microarray projection | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/microarray-chm13.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>CHM13 microarray projection</span></nav>
+<h1 id="chm13-microarray-projection">CHM13 microarray projection</h1>
+<p>The default alignment caller remains SNP-only. Supplied <code>--indel-manifest</code> bindings enable a separate, conservative alignment-based I/D caller for the bound vendor's exact GRCh37 template rows. Native VCF input remains exclusion-only. Known I/D/non-SNV IDs remain no-calls when their sequence context or coordinates cannot be verified. Valid GRCh37 positions and known non-SNV source alleles also prevent reference filling. Vendor aliases are masked independently of the CombinedKit's first ID. The packaged source-allele summary and per-run <code>asset_summary</code> report these exclusions; marker-only vendor assets do not certify probe types.</p>
+<p>The CHM13 path is separate from the existing GRCh37/38 implementation. It calls native CHM13 positions and projects nucleotide genotypes to the existing GRCh37/rCRS vendor templates and AADR panels. It does not infer a probe's strand or convert a nucleotide call into a vendor insertion/deletion code.</p>
+<h2 id="reference-requirements">Reference requirements<a class="heading-anchor" href="#reference-requirements" aria-label="Link to section">#</a></h2>
+<p>Only the CHM13v2.0 analysis set with <strong>original chrM and masked chrY PARs</strong> is supported. The unmasked-Y and masked-Y/rCRS analysis sets are different reference variants and are rejected. The packaged manifest records all 25 primary sequence lengths and MD5s, the reference/index hashes, and the published PAR intervals.</p>
+<p>The FASTA must already be indexed. Equivalent FASTA encodings are checked through their actual indexed sequences, not a filename or a stale sequence dictionary. BAM/CRAM input must carry matching primary <code>@SQ</code> names, lengths and <code>M5</code> signatures; missing signatures cannot establish which reference variant was used. VCF input is normalized to the reference's chromosome names, checked against any declared contig signatures, and every observed REF is checked against the actual FASTA before projection.</p>
+<p>The complete installed marker-template union and the installed <code>hg18ToHg19.over.chain.gz</code> and <code>hg38ToHg19.over.chain.gz</code> are required: they place the NCBI36 (FTDNA_V1_Affy) and GRCh38 (FTDNA's Y files) templates' markers on GRCh37. Among same-named chains in the searched folders, the copy with UCSC's pinned SHA-256 is used; any other copy is used only when no pinned one is found, with a warning, and then the site-map union check can fail with "Installed templates differ". No tools, templates or chains are installed by this path. Custom <code>--ref-vcf-tab</code> and <code>--ploidy-file</code> overrides are not supported for CHM13.</p>
+<h2 id="calls-and-diagnostics">Calls and diagnostics<a class="heading-anchor" href="#calls-and-diagnostics" aria-label="Link to section">#</a></h2>
+<p>Existing <code>--region</code>, <code>--parallel</code>, quality and marker-identity options apply. Region coordinates are <strong>native CHM13 coordinates</strong>. Male PAR/non-PAR ploidy uses the CHM13 intervals, not GRCh38 defaults; chrM is haploid.</p>
+<ul>
+<li>Inverted mappings complement a genotype exactly once.</li>
+<li>Assembly REF differences are reported, not used to rewrite a genotype.</li>
+<li>Nonreciprocal, ambiguous and colliding mappings are no-calls.</li>
+<li>Unsupported indel records, overlapping deletions, conflicting duplicates and rejected quality/identity calls remain no-calls; later records or AADR export cannot restore them.</li>
+<li>Marker-only vendor IDs do not certify every probe as a SNP. Public dbSNP-only probe/type enrichment is a separate follow-up, not a claim of this path. The alignment route reuses the existing SNP-only caller (<code>mpileup -I</code>, <code>call -V indels</code>); it cannot discover every indel allele. Observed indel masking applies to supplied VCF records, not an indel-probe certification.</li>
+<li>Absent variant-only VCF sites are no-calls by default, with the same DP ≥10, GQ ≥20 and FILTER gates as GRCh37/38. Unsafe reference filling requires <code>--assume-hom-ref --min-dp 0 --min-gq 0</code>; depth/GQ gates never manufacture evidence at absent sites.</li>
+</ul>
+<p>Each invocation retains its native VCF, target and canonical CombinedKit in a private <code>CHM13_*</code> output subdirectory. <code>&lt;sample&gt;_CHM13_report.json</code> records reason counts, reference diagnostics and the CombinedKit path. <code>--call-reasons</code> also writes per-site reasons beside the CombinedKit. Vendor and AADR files retain their normal names.</p>
+<h2 id="opt-in-alignment-id-probes">Opt-in alignment I/D probes<a class="heading-anchor" href="#opt-in-alignment-id-probes" aria-label="Link to section">#</a></h2>
+<p>Use the existing <code>--indel-manifest FORMAT=PATH</code> option with an applicable manufacturer manifest, as described in <a href="microarray-indels.html">microarray-indels.md</a>. No manifest or executable is installed automatically. Binding a generic array manifest does not certify every customized vendor probe or revision.</p>
+<p>Only exact marker-ID <strong>and</strong> GRCh37-coordinate matches in the bound template are considered. NCBI36 templates remain exclusion-only. A reciprocal, unambiguous catalogue mapping locates a search window; the full manifest DNA sequence on <strong>both</strong> sides must match exactly one native reference haplotype, in either orientation. No sequence, probe type or I/D code is inferred from an rsID. <code>bcftools norm</code> verifies and left-aligns the alleles. Distinct overlapping normalized definitions are quarantined together, even across bound formats.</p>
+<p>A separate indel-enabled, known-allele <code>mpileup</code>/<code>call</code> stream uses the validated CHM13 ploidy and the same sex determination as SNP calling. A native record and matching DNA alleles are mandatory, including for a reference homozygote: an absent variant never becomes a reference call. Depth must be at least 4 and genotype quality at least 20; existing user thresholds may tighten these floors. For forced reference records without GQ, the complete biallelic PL vector supplies the difference between the called and next-best genotype likelihoods. Missing/incomplete likelihoods cannot supply quality. Existing FILTER and rsID-identity exclusions apply and cannot be restored.</p>
+<p>The genotype additionally requires at least <strong>two distinct read fragments per called allele</strong>, spanning every repeat-equivalent placement of the normalized event and <strong>15 exact reference bases beyond each end of that span</strong>. The native reference determines the rightmost equivalent placement, including motif rotations for tandem-repeat insertions and deletions. Both outer anchors must occur once in the fetched local reference window and complete alternate haplotype. An unresolved shift of 4,096 bases, non-unique anchors, missing bases or ambiguous reference sequence stays a no-call. Reads ending inside a repeat provide neither REF nor ALT support, even when their alignment is gapless. Mapping and every supporting base quality must be at least 20. Secondary, supplementary, duplicate and QC-failed reads are excluded; overlapping mates are counted once. Partial reads and flanking mismatches provide no support. A conflicting fragment, other fully-flanked haplotype, or a deletion/skip overlapping the event and removing a flank quarantines the probe. Homozygous calls with opposing fully-flanked evidence are no-calls. Extreme depth (1,000 fragment names per probe) is conservatively quarantined. These deliberately strict rules can reduce call rate, especially in repeats, near other variants or at low coverage.</p>
+<p>Ploidy must be consistent across the full flanked interval. Female chrY, masked male chrY PARs, intervals crossing PAR boundaries or the mitochondrial origin, and missing reference flanks are no-calls. Male non-PAR chrX/chrY and chrM are haploid; male chrX PARs and female chrX are diploid. As in existing SNP calling, unclassified sex defaults to female ploidy.</p>
+<p>Only verified vendor I/D encodings are overlaid, retaining each original template ID, coordinate and row order. SNP CombinedKit and AADR projections stay separate and keep known indel exclusions. Without manifest bindings, all existing CHM13 and GRCh37/38 calls and default exports are unchanged. <code>CHM13_*/indels/</code> retains normalized definitions, native calling VCF, <code>probe-calls.tsv</code> (including fragment counts) and a hashed-manifest <code>summary.json</code>; the top-level CHM13 report links the summary. These per-sample diagnostics contain genotypes and must remain private.</p>
+<h2 id="pinned-mitochondrial-bridge">Pinned mitochondrial bridge<a class="heading-anchor" href="#pinned-mitochondrial-bridge" aria-label="Link to section">#</a></h2>
+<p>Original CHM13 chrM has a different circular origin from rCRS. The bridge first normalizes that origin with the unique first-40-base rCRS anchor, then computes a global unit-cost alignment. Only reciprocal base pairs shared by <strong>all optimal alignments of the origin-normalized sequences</strong> are used. Coordinates are then converted back to the actual native CHM13 sequence. <code>N</code> costs one substitution and never provides a called mapping. The manifest pins the rotation, scoring, sequence checksums and alignment artifact.</p>
+<p>The legacy GRCh38 mitochondrial target/export behavior is deliberately unchanged.</p>
+<p><code>lineage mt-haplogroup</code> reads the same alignment to classify chrM called on CHM13 (#832): it calls every chrM site, rebuilds the sample's sequence along the alignment, and hands Haplogrep its rCRS variants, indels left-aligned against the rCRS. Only the sample's bases count where the two differ (the C after rCRS 310, 10208, 3107N), which is why a variants-only VCF on CHM13 is refused. On HG00096's chrM it gives H16a1, as the GRCh38 alignment does.</p>
+<p>A CHM13 VCF must have one sample and reference-only records (ALT <code>.</code>, <code>&lt;*&gt;</code> or <code>&lt;NON_REF&gt;</code>); a 0/0 on a real ALT, such as a DeepVariant RefCall, doesn't prove the other sites were called. A mixed call at 10208 is refused unless its level (FORMAT/AF, as Mutect2 writes) puts one allele above Haplogrep's 0.9 heteroplasmy level, and <code>--contamination</code> refuses a mixture there of CHM13's C and a third base. An alignment whose header and <code>--ref</code> disagree on which chrM it is (rCRS or CHM13) is refused before calling.</p>
+<h2 id="regeneration">Regeneration<a class="heading-anchor" href="#regeneration" aria-label="Link to section">#</a></h2>
+<p><code>scripts/build_microarray_chm13_map.py --help</code> documents the developer generator. It requires the complete marker-only templates, direct and reciprocal chains, the pinned <code>hg18ToHg19</code> and <code>hg38ToHg19</code> lifts (in the <code>--chains</code> folder), the independent GRCh38 cross-check chains, indexed source/native references with sequence dictionaries, and the published CHM13 PAR BED.</p>
+<p>The runtime asset is bounded delta-encoded arrays plus a JSON manifest and its SHA256 sidecar. The independent GRCh38 eligibility table is validation-only and is not shipped. Direct GRCh37↔CHM13 mappings remain authoritative when the GRCh38 route disagrees.</p>
+<p>The v2 map covers every CombinedKit v5 template (<code>CHM13_V2_FORMATS</code> in <code>core/microarray/targets.py</code>), including the merged 23andMe v4 (v4a–c) and FTDNA v2 (v2a–d) layouts, letter-named variants, FTDNA's GRCh38 Y files (lifted with <code>hg38ToHg19</code>), tellmeGen, Genera, MTHFR Genetics, meuDNA and SelfDecode. Its union contains 2,992,588 sites (2,531,391 template sites plus the pinned AADR union); the sites v1 had keep identical projections. Its compact payload is 7,018,085 compressed / 17,302,476 decoded bytes.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Map</th><th>Sites</th><th>Compressed</th><th>Decoded</th></tr></thead>
+<tbody>
+<tr><td>v1 (pre-v5 templates)</td><td>2,862,500</td><td>6,802,944</td><td>16,621,310</td></tr>
+<tr><td>v2 (CombinedKit v5)</td><td>2,992,588</td><td>7,018,085</td><td>17,302,476</td></tr>
+</tbody>
+</table></div>
+<p>Runtime limits are 7 MiB (7,340,032) compressed, 17 MiB (17,825,792) decoded and 3,000,000 rows, so v2 has about 7,400 rows of headroom: the next template that adds many new markers will need these budgets raised. Changing these measured budgets requires an explicit asset update, not a writable cache or an automatic download. A template added to <code>_FORMATS</code> after <code>CHM13_V2_FORMATS</code> stays outside the map, and its markers are no-calls on CHM13 input, until the map is rebuilt with it.</p>
+<h3 id="derived-caches">Derived caches<a class="heading-anchor" href="#derived-caches" aria-label="Link to section">#</a></h3>
+<p>Runs reuse decoded site-map columns, the validated marker-ID union, and indexed native targets under <code>microarray/chm13/</code> in the configured reference library. The packaged assets are never modified: their SHA256 checks still run before using cached columns. Derived files have checksums and are published under builder locks; missing, truncated, or corrupt files are rebuilt.</p>
+<p>Keys include the catalogue manifest/reference profile, builder version, and template/chain/AADR file paths, sizes, and modification times. Target keys also include chromosome aliases and the selected native regions. Changing these inputs invalidates the corresponding cache. These files are disposable; delete <code>microarray/chm13/</code> to reclaim them or force a rebuild. Without a configured reference library, setup remains uncached. An explicit <code>--ref</code> FASTA never chooses the cache location. Unwritable caches also fall back to uncached setup and targets in the output directory; existing valid read-only caches remain usable.</p>
+<p>Cache names use 20-hex-digit (80-bit) key prefixes, so no cached file lies more than 84 characters below the library. Windows tools such as htslib cannot open paths of 260 characters (UTF-16 code units) or more, whatever the <code>LongPathsEnabled</code> setting says, so on Windows a reference library deeper than 175 characters runs uncached with a <code>cache_path_too_long</code> warning. Caches named by full 64-digit SHA-256 keys, from earlier releases, are never read; delete them to reclaim their space when no older release is running.</p>
+<h3 id="implementation-layout">Implementation layout<a class="heading-anchor" href="#implementation-layout" aria-label="Link to section">#</a></h3>
+<p>The internal <code>core/microarray/</code> package holds assembly-chain coordinate projection (<code>coordinates.py</code>), verified CHM13 asset decoding (<code>site_map.py</code>), and the disposable decoded-column cache (<code>site_map_cache.py</code>). The <code>chm13*.py</code> modules alongside them handle CHM13 reference validation, calls, indel probes, marker exclusions, and native-target caches. Command orchestration remains in <code>commands/_microarray_chm13.py</code>; public <code>wgsextract_cli.api.microarray</code> operations are unchanged.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/microarray-chm13.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/microarray-chm13.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

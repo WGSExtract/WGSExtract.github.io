@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Static site source | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/site_generation.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Static site source</span></nav>
+<h1 id="static-site-source">Static site source</h1>
+<p>Edit the Markdown pages in <code>site_src/</code>, then run:</p>
+<pre><code class="language-bash">pixi run site-build</code></pre>
+<p>The generator (<code>scripts/build_site.py</code>) writes one HTML file per page into <code>site/</code>. Generated <code>site/*.html</code> is gitignored: build it locally for previews rather than committing stale copies. The Markdown renderer is intentionally small; it supports the components already used by the current pages, plus normal headings, paragraphs, links, inline code, fenced code blocks, lists, and tables.</p>
+<p>Common acronyms are defined once in <code>site_src/abbr.toml</code>. The generator adds matching abbreviation markup and fast site tooltips to generated HTML automatically, so Markdown pages should use plain acronym text rather than embedding abbreviation tags by hand.</p>
+<p>The site Markdown files use YAML-compatible front matter. Run <code>pixi run lint</code> before committing; it validates Python, site front matter, and <code>site_src/abbr.toml</code>, and the same site-source check runs from pre-commit and CI.</p>
+<p>Detailed guides live in <code>docs/</code> (CLI back-end), <code>gui/docs/</code> (desktop app user docs), and <code>gui/devdocs/</code> (desktop app developer docs). <code>scripts/build_docs_html.py</code> renders <code>README.md</code>, <code>docs/**/*.md</code>, <code>gui/README.md</code>, <code>gui/docs/**/*.md</code>, and <code>gui/devdocs/**/*.md</code> into static HTML under <code>site/docs/</code> and <code>site/app/docs/</code> (plus <code>site/app/devdocs/</code>), rewriting relative <code>.md</code> links to <code>.html</code> with GitHub-compatible heading anchors. Both CLI and GUI error messages use <code>https://wgse.bio/wgsextract-cli/...</code> short URLs (<code>src/wgsextract_cli/core/docs_links.py</code> and <code>gui/app/shared/docs-links.ts</code>) pointing to these rendered pages.</p>
+<p>New website landing pages in <code>site_src/</code> still need front matter with an <code>output</code> name and, when appropriate, an entry in <code>NAV_ITEMS</code> in <code>scripts/build_site.py</code>.</p>
+<p>The site build generates the command, Python API and configuration references, plus the CLI landing page's command cards. Edit the command registry and help catalog, API docstrings and parameter definitions, or the config schema and its hand-written guide (<code>docs/data/configuration-guide.md</code>). Do not commit generated reference pages. The configuration guide's links are relative to its own directory; the build links to their published GitHub pages.</p>
+<p>Run <code>pixi run -e dev python scripts/validate_site_sources.py --generated</code> to render and validate the generated pages without writing HTML.</p>
+<h2 id="hand-maintained-files-in-site">Hand-maintained files in <code>site/</code><a class="heading-anchor" href="#hand-maintained-files-in-site" aria-label="Link to section">#</a></h2>
+<p>The generator only writes <code>site/*.html</code>. These files are maintained by hand and must stay committed:</p>
+<ul>
+<li><code>site/assets/site.css</code>: the stylesheet every page links to.</li>
+<li><code>site/assets/cli-screenshot.webp</code>: the home page screenshot.</li>
+<li><code>site/assets/social-preview.webp</code>: the Open Graph/Twitter preview image.</li>
+<li><code>site/.nojekyll</code>: tells GitHub Pages to serve the files as-is without Jekyll processing.</li>
+</ul>
+<h2 id="deployment">Deployment<a class="heading-anchor" href="#deployment" aria-label="Link to section">#</a></h2>
+<p><code>.github/workflows/pages.yml</code> rebuilds and publishes <code>site/</code> when site sources, the generators, or reference inputs (including CLI source) change on <code>main</code>. Run <code>pixi run site-build</code> for a local preview; commit only the source and hand-maintained assets.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/site_generation.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/site_generation.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

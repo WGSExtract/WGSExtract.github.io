@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Changelog | WGS Extract GUI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/app/docs/CHANGELOG.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../architecture.html">GUI Architecture</a><a href="../wgsextract.html">WGSExtract</a><a class="active" href="../docs.html">Docs</a><a href="../../index.html">WGSExtract CLI</a><a href="../whats-different.html">What&#x27;s Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract GUI</a> / <a href="index.html">User Docs</a> / <span>Changelog</span></nav>
+<h1 id="changelog">Changelog</h1>
+<p>All notable changes to this project are tracked here. Format follows <a href="https://keepachangelog.com/en/1.1.0/" target="_blank" rel="noopener noreferrer">Keep a Changelog</a>.</p>
+<p>Unreleased changes are tracked in <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/gui/docs/changelog/unreleased/README.md" target="_blank" rel="noopener noreferrer">fragments</a>.</p>
+<h2 id="0810---2026-11-24">[0.8.10] - 2026-11-24<a class="heading-anchor" href="#0810---2026-11-24" aria-label="Link to section">#</a></h2>
+<h3 id="added">Added<a class="heading-anchor" href="#added" aria-label="Link to section">#</a></h3>
+<ul>
+<li>The Microarray page keeps <strong>CombinedKit v3</strong> alongside <strong>CombinedKit v5</strong> (expanding v3), places <code>23andMe v1/v2</code> before <code>v3</code> and <code>FTDNA v1 (Affy)</code> before <code>v2</code> on their main rows, puts FTDNA's GRCh38 Y formats (<code>v2y</code>, <code>v3y</code>, <code>v4y</code>) on a dedicated <strong>FTDNA (Y only, Build 38)</strong> row, exposes the consumer vendor formats from <a href="https://github.com/WGSExtract/wgsextract-cli/pull/1107" target="_blank" rel="noopener noreferrer">#1107 (Microarray: letter-named vendor variants and CombinedKit v5)</a> (AncestryDNA <code>v2ab</code>, <code>v2cd</code>, <code>v2e</code>; FamilyTreeDNA <code>v4</code>; MyHeritage <code>v3</code>; <code>tellmeGen</code>, <code>Genera</code>, <code>MTHFR Genetics</code>, <code>meuDNA</code> <code>v1</code>/<code>v2</code>, <code>SelfDecode</code>, and <code>Nucleus</code>), and removes the dropped minor date/size variants and standalone <code>ancestry_v2</code>.</li>
+<li>A result's findings (Personal Report) and mtDNA haplogroup variants are listed under it, each with <strong>Show in viewer</strong> at its own position on the sample's BAM, CRAM or VCF. The viewer opens a row's contig in the matched reference's spelling (<code>chr1</code> or <code>1</code>, <code>chrM</code> or <code>MT</code>), opens ClinVar and ACMG findings only on a reference of their evidence's build, and opens Haplogrep's rCRS positions only on a mitochondrion whose sequence is the rCRS (not hg19's Yoruba or T2T's CHM13 chrM). A row without a single position, or whose sample file is missing, unindexed or outside My Genomes, shows a disabled link with the reason; <code>POST /api/viewer/check</code> checks the file without granting any bytes (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/1161" target="_blank" rel="noopener noreferrer">#1161, viewer links from result tables</a>).</li>
+<li>A <strong>Gene page</strong> in the WGSExtract sidebar: enter a gene symbol to see its RefSeq transcripts and exons, your variants in it (consequence, ClinVar, gnomAD, research-only ACMG; filters for rare and damaging, ClinVar P/LP and ACMG P/LP; <strong>Export TSV</strong>) and read depth over each exon against a callable threshold, all from <code>wgsextract info gene</code> on this computer. Missing data names the command that provides it; <strong>Open in genome viewer</strong> shows the gene with the new <strong>RefSeq transcripts</strong> track (<a href="https://github.com/WGSExtract/wgsextract-cli/blob/v0.8.10/gui/docs/gene-page.md" target="_blank" rel="noopener noreferrer">gene-page.md</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/1166" target="_blank" rel="noopener noreferrer">#1166, offline gene page</a>).</li>
+<li>VCF Info, VariantQC, Granite-QC, and multi-VCF picker actions, provenance tooltips on Reference Data/Genomes/Tools tables, and genome viewer rsID and annotation tracks (<a href="https://github.com/WGSExtract/wgsextract-cli/pull/1463" target="_blank" rel="noopener noreferrer">#1463, VCF Info/QC/Viewer tools</a>).</li>
+</ul>
+<h3 id="changed">Changed<a class="heading-anchor" href="#changed" aria-label="Link to section">#</a></h3>
+<ul>
+<li>Bump the bundled WGSExtract CLI installer target to <code>v0.8.10</code> (<a href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.8.10" target="_blank" rel="noopener noreferrer">release notes</a>).</li>
+</ul>
+<h3 id="fixed">Fixed<a class="heading-anchor" href="#fixed" aria-label="Link to section">#</a></h3>
+<ul>
+<li>The genome viewer's file endpoints answer a <code>HEAD</code> without a <code>Range</code> with <code>200</code> and the file's full size for files over 32 MiB too, instead of <code>416</code>; whole-file <code>GET</code>s keep their 32 MiB limit (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/1227" target="_blank" rel="noopener noreferrer">#1227</a>).</li>
+<li>Two settings saves at once, from two windows or from the app and the CLI, no longer lose one of the changes: each save takes a lock the CLI shares and merges into the file as it is (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/1230" target="_blank" rel="noopener noreferrer">#1230, lost concurrent settings saves</a>).</li>
+<li>A run, setup or workspace move whose window disconnected before its progress stream began no longer starts, instead of running (and holding the workspace) with nobody listening; a progress write waiting on a stalled window always settles when the stream is cancelled (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/1234" target="_blank" rel="noopener noreferrer">#1234, backpressured progress on disconnect</a>).</li>
+<li>Moving the users workspace or a library folder keeps the symbolic links in it working, on the same disk or to another one. A link to a file inside the moved folder now points at that file's new place (a relative link stays relative), instead of at the old folder; a link to something outside the folder still points there, and is moved as a link, never copied in. Windows folder links fall back to junctions when symbolic links aren't allowed (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/1239" target="_blank" rel="noopener noreferrer">#1239, links broken by a move</a>).</li>
+<li>Moving the users workspace or a folder named in Settings now asks you to retry if a command or save is still running, instead of risking lost changes or output in the old folder. A refused move does not interrupt the steps of an already-running CLI workflow. (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/1322" target="_blank" rel="noopener noreferrer">#1322, workspace move coordination</a>)</li>
+<li>Settings refuses a move if the user's workspace, the library folder being moved, or the chosen destination is itself a symbolic link or Windows junction. The error names the link and its target; nothing is moved or changed. To relocate a linked folder, move its target manually and update the setting. For a linked destination, select the actual folder instead of its link. Links inside the folder being moved are unaffected (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/1340" target="_blank" rel="noopener noreferrer">#1340, moving a linked folder</a>).</li>
+<li>The next job starts a fresh local job server after all running processes are stopped (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/1459" target="_blank" rel="noopener noreferrer">#1459, job server restart</a>).</li>
+</ul>
+<h2 id="089---2026-11-21">[0.8.9] - 2026-11-21<a class="heading-anchor" href="#089---2026-11-21" aria-label="Link to section">#</a></h2>
+<h3 id="added-1">Added<a class="heading-anchor" href="#added-1" aria-label="Link to section">#</a></h3>
+<ul>
+<li>A built-in genome viewer: <strong>Genome viewer</strong> in the sidebar, or <strong>View reads</strong> beside a BAM/CRAM/VCF input, shows reads and variants with the matching installed reference, offline. BAM, CRAM and indexed VCF/gVCF results get <strong>Show in viewer</strong>; a single-region <strong>Extract custom</strong> result opens at its extracted locus. It adds local BED, bedGraph and bigWig tracks, installed RefSeq gene spans with gene-symbol search and installed cytobands, and <strong>Connect and view remote file</strong> views files on a WGS Extract server after consent to each transfer (<a href="genome-viewer.html">genome-viewer.md</a>).</li>
+<li>A <strong>Tools</strong> page, below Reference Genomes, lists every mandatory and optional tool from the dependency check (<code>wgsextract deps list</code>): whether it is installed, its version and the Pixi environment it comes from. Optional tools packaged in Pixi environments of their own get <strong>Install</strong> (<code>wgsextract deps install</code>) and <strong>Uninstall</strong> (<code>wgsextract deps uninstall</code>, after a confirmation naming every tool that environment provides); a tool this computer can't have shows <strong>Not available</strong>, and one the user installs (plink2, Dorado) <strong>Install it yourself</strong>, each with the reason as its tooltip.</li>
+<li>An action that needs a missing optional tool (FastQC with MultiQC merging, <code>vcf gatk</code>, <code>score pgs --plink2-check</code> and the like) opens the missing-prerequisites dialog as a missing genome does, with <strong>Install and Continue</strong> when the app can install the tool.</li>
+<li>A data source may declare <code>timeoutSeconds</code> (15 by default).</li>
+<li>Analysis actions show their result when the run ends, even while the terminal is collapsed. An action with <code>resultCard: true</code> gets a result card: the self-contained page <code>wgsextract --card</code> writes, with the printed result, warnings, outputs, tool versions and input file. It pops up over the app, naming the <code>.card.html</code> it is shown from, and <strong>View Card</strong> shows it again. An action with <code>openOutput</code> opens a report its tool wrote in the system's default app. The manifest's <code>resultDocument.cardArguments</code> asks commands for the card, and jobs get <code>?card=1</code>. WGSExtract shows cards for its info, coverage, identification, haplogroup, Y-STR, typing, VCF QC, trio, full-analysis and manifest-verification actions. It opens the FastQC (MultiQC when made), FastP, MultiQC, Personal Report and PharmCAT reports.</li>
+</ul>
+<h3 id="changed-1">Changed<a class="heading-anchor" href="#changed-1" aria-label="Link to section">#</a></h3>
+<ul>
+<li>Bug-report actions stay off until setup succeeds; setup checks an already installed Pixi and stops, naming its path and version, when it is too old.</li>
+<li>Bump the bundled WGSExtract CLI installer target to <code>v0.8.9</code> (<a href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.8.9" target="_blank" rel="noopener noreferrer">release notes</a>).</li>
+<li>Actions take an <code>advancedTitle</code>, shown instead of <code>title</code> in Advanced mode. WGSExtract's Variant Calling <strong>Default</strong> button is now <strong>BCFTools</strong> in Basic and <strong>BCFTools, Delly</strong> in Advanced, naming the callers each mode can run (Advanced adds SVs and CNVs, called with Delly).</li>
+</ul>
+<h2 id="088---2026-11-18">[0.8.8] - 2026-11-18<a class="heading-anchor" href="#088---2026-11-18" aria-label="Link to section">#</a></h2>
+<h3 id="added-2">Added<a class="heading-anchor" href="#added-2" aria-label="Link to section">#</a></h3>
+<ul>
+<li>In Advanced mode each titled section starts collapsed to its header row, with a down arrow on the right to open it and an up arrow to close it again. Sections marked <code>&quot;collapsible&quot;: false</code> stay open; WGSExtract uses this for its Inputs sections. <code>&quot;collapsible&quot;: &quot;open&quot;</code> sections start open instead; WGSExtract uses this for Generate Microarray Target Formats.</li>
+<li>Checkbox groups take <code>&quot;layout&quot;: &quot;inline&quot;</code>: the options side by side, and consecutive inline groups share one row.</li>
+<li>WGSExtract can write a gVCF: the Extract page's Variant Calling section has a <strong>gVCF</strong> checkbox for the Default, GATK and DeepVariant callers.</li>
+<li>WGSExtract's Consensus Genome section describes what it writes and what input works best.</li>
+<li>A data source can name a <code>transform</code>, an export of an ES module in the bundle that maps the JSON its command prints to the payload the app shows (<a href="../devdocs/data-sources.html">devdocs/data-sources.md</a>). WGSExtract's reference genome dropdowns and Reference Genomes table now read <code>wgsextract --json ref library --list</code> through one, and its <code>list-reference-genomes</code> scripts, which read the CLI's catalog file from inside its install, are gone. The table and dropdowns show the same genomes, states and sizes as before.</li>
+<li>Data sources take <code>optionalArguments</code>, as action commands do: a group is left out when a placeholder in it is empty.</li>
+</ul>
+<h3 id="changed-2">Changed<a class="heading-anchor" href="#changed-2" aria-label="Link to section">#</a></h3>
+<ul>
+<li>Bump the bundled WGSExtract CLI installer target to <code>v0.8.8</code> (<a href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.8.8" target="_blank" rel="noopener noreferrer">release notes</a>).</li>
+<li>Workspace migration refuses symlink/junction aliases of the same physical folder before removing old state. Legacy My Genomes settings now move their actual library contents, and bundle test runs expand direct users-workspace placeholders against their separate users root.</li>
+<li>Folder-move dialogs now take keyboard focus, contain Tab navigation, cancel with Escape and return focus to the initiating control without restoring a cancelled edit.</li>
+<li>Reference-library setup explicitly selects the configured Reference Data library rather than inheriting the last selected reference FASTA.</li>
+<li>Packaged desktop resources include the production TOML parser. Bound library folder changes show their move confirmation in a dialog available on every page, including Basic mode.</li>
+<li>WGSExtract's Variant Calling section replaces the SNP Call, InDel Call, SV Call and CNV Call buttons with <strong>SNP</strong>, <strong>InDel</strong>, <strong>SV</strong> and <strong>CNV</strong> checkboxes and one <strong>Default</strong> button, which runs <code>wgsextract vcf call</code> for the checked types, each into its own VCF. <strong>gVCF</strong> writes SNPs and InDels as one gVCF instead, and <strong>Merged</strong> combines everything into one <code>variants.vcf.gz</code> (or <code>variants.g.vcf.gz</code>) in place of the separate files; both sit on the checkbox row, in Basic too. The buttons (FreeBayes, GATK and DeepVariant beside Default) follow the checkboxes, and the rest of the section's settings sit below them under <strong>Additional options</strong>, in Advanced.</li>
+<li>WGSExtract's Ancestry Inputs holds only the BAM/CRAM. A new <strong>Haplogroup Analysis</strong> section, shown in Basic too, has the Run Yleaf and Run Mito Haplogrep buttons at its foot, below their options (Advanced only). Y-STR Repeat Counts and its options move to their own Advanced-only section.</li>
+<li>WGSExtract's Run Haplogrep button is now Run Mito Haplogrep.</li>
+<li>WGSExtract's Extract sections are renamed Subset BAM/CRAM, Realign BAM/CRAM, Phase VCF and Create Gene Region BED.</li>
+<li>Settings' Setup section can collapse to its header, in Basic and Advanced; it starts collapsed once setup has run and open before then, while it runs or after a failure.</li>
+<li>WGSExtract's Library Paths sections (My Genomes, Reference Data, Reference Genomes) show in Basic too and stay open, like the Inputs sections.</li>
+<li>WGSExtract calls the dataset library the My Genomes library, and new workspaces keep it in <code>mygenomes</code>.</li>
+<li>WGSExtract's FASTQ page moves the MultiQC checkbox and the FastQC and fastp buttons from Inputs into a new <strong>Analysis</strong> section, and Aggregate FastQC reports becomes a section of its own.</li>
+<li>WGSExtract's Microarray page moves its quality and output options (Minimum genotype quality through QC minimum depth) from Inputs to an Advanced-only <strong>Additional Refinements</strong> block after the Generate button. Its sections are renamed Analyze a Microarray RAW Data File (now above the formats) and Generate Microarray Target Formats.</li>
+<li>WGSExtract's Genotyping from BAM/CRAM section says what it holds and that microarray genotyping has its own page.</li>
+<li>WGSExtract's VCF page shows the VCF input in its Inputs section, since every section's commands use it.</li>
+<li>The workspace splits in two. <code>{{bundleWorkspace}}</code> (the app's copy of the bundle, its saved state and run logs) goes back to the app's data folder, where the user never moves it. The new <code>{{usersWorkspace}}</code> (manifest <code>defaultUsersWorkspace</code>, WGSExtract's <code>~/wgs-extract</code>) holds the settings file and the folders the user manages: the My Genomes library and, with the app-installed CLI, the Reference Data and Reference Genomes libraries and the temporary folder. The Settings page's <strong>Bundle Workspace Location</strong> is now <strong>Users Workspace Location</strong>, and moves the users workspace; changing one of those folders under <strong>Users Workspace Settings</strong> (formerly <strong>Edit Settings File</strong>) asks whether to move what is in it too (setting <code>moveContents</code>). The workspace kept in <code>~/wgs-extract</code> by 0.8.5 to 0.8.7 becomes the users workspace on the first start, keeping its files; the bundle's copy and state move to the app's data folder. Uninstalling removes the bundle workspace and asks before deleting the users workspace. Scripts get <code>WGSEXTRACT_GUI_USERS_WORKSPACE</code>, and <code>bundle-test-cli</code> takes <code>--users-workspace</code>. Saving settings now keeps keys the editor doesn't show, which the CLI may have saved.</li>
+<li>WGSExtract leaves the Output Directory unset by default: commands use the CLI's default <code>wgse</code> folder beside their input files from the lab. Only Advanced mode can set a GUI override. A config setting can be <code>advancedOnly</code>: hidden and omitted from GUI command overrides in Basic, without erasing its saved value or changing CLI defaults. Saving visible settings preserves omitted advanced settings.</li>
+<li>Setting-folder moves refuse sources containing either workspace, the bundle source or any settings editor's config file, including through symlinks. Moving the whole users workspace remains available through Users Workspace Location.</li>
+<li>WGSExtract's Dataset Library is now the My Genomes library: the <code>mygenomes_library</code> setting (the CLI still reads <code>dataset_library</code>) and a <code>mygenomes</code> folder. An existing <code>datasets</code> folder stays where it is, preserving saved input paths.</li>
+<li>The Settings page shows Setup, <strong>Standard UI Options</strong> (formerly Standard Options), then Dependency Checks, Report a Problem, Users Workspace Location and Users Workspace Settings, the last four closed until opened. A page section can say <code>&quot;collapsed&quot;: true</code> to start closed in Basic too; it uses the shared section toggle.</li>
+<li>The rest of the GUI for CLI name goes: the app and its docs call themselves WGS Extract GUI, and internal names (window events, temporary folders, browser storage keys, the npm and Python package names) use <code>wgsextract-gui</code>. The workspace marker reads <code>WGS Extract GUI workspace</code>; workspaces marked by earlier releases are still recognised and get the new marker on the next start. The window layout (sidebar and terminal sizes) is remembered under new keys, so it resets once. Developer tools keep Node in <code>~/.local/share/wgsextract-gui-dev</code> and their caches in <code>wgsextract-gui-dev</code>, so <code>make setup</code> downloads Node again once.</li>
+<li>The command output pane is now the Jobs pane. Its first tab, <strong>Jobs</strong> (formerly Main), lists every job run this session, newest first: its tab, outcome (running, succeeded, finished with warnings, failed or cancelled), start time and main input file. Clicking a job opens its tab at the right end of the row, reopening it if it was closed. As job tabs pile up, the newest stay next to the copy and hide buttons and the oldest drop off the left, so those buttons are never pushed out of view. While the Jobs list itself shows, the row holds only the Jobs tab, since the list's rows repeat the job tabs. Hiding the pane keeps its row of job tabs, and the arrow at its end turns up to show it again; the floating terminal button is gone. Basic mode starts with the pane collapsed; Advanced reopens it as it was last left.</li>
+<li>An action can name its main input with <code>primaryInput</code> (a placeholder), shown in the Jobs list's File column; without it the list shows the first file path control the command uses. WGSExtract sets it where that would be an output or a folder (MultiQC, Generate Batch, reference downloads).</li>
+<li>WGSExtract's Datasets page is now <strong>My Genomes</strong>.</li>
+<li>WGSExtract's Reference Genomes delete button runs <code>wgsextract ref library --delete</code>, and its <code>delete-reference-genome</code> scripts are gone. It asks first and refreshes the table as before; it now also removes the bwa-mem2 index, dense suffix-array files and run manifests, and refuses while another run is building the genome's bwa index.</li>
+<li>WGSExtract's My Genomes test genome buttons run <code>wgsextract ref test-genome --install</code> and <code>--delete</code>, and the <code>test-genome-library</code> scripts are gone. Installing still downloads the SHA-256-pinned zip into the dataset library's <code>.downloads</code> folder (now resuming an interrupted download) and unpacks it with its <code>genome-config.toml</code>; deleting still removes both, and now unlinks a linked dataset folder instead of refusing.</li>
+<li>WGSExtract's last wrapper scripts are gone: Unalign to FASTQ runs <code>wgsextract bam unalign</code> (which now names the FASTQs <code>&lt;input&gt;_R1.fastq.gz</code> and <code>_R2</code> itself), FastQC runs <code>wgsextract qc fastqc --r2 … --multiqc</code>, the BAM page's Detailed Coverage button reads <code>wgsextract --json info calculate-coverage --status</code> through <code>transforms/coverage-status.mjs</code>, and the library, microarray, VCF and My Genomes sections read <code>wgsextract ref status --values</code> directly. FastQC runs now also save a result document.</li>
+</ul>
+<h2 id="087---2026-11-11">[0.8.7] - 2026-11-11<a class="heading-anchor" href="#087---2026-11-11" aria-label="Link to section">#</a></h2>
+<h3 id="added-3">Added<a class="heading-anchor" href="#added-3" aria-label="Link to section">#</a></h3>
+<ul>
+<li>Bundles can declare a <code>prerequisites</code> check that runs before an action. When the action needs data that isn't installed, it doesn't start; a dialog names what is missing and offers <strong>Install and Continue</strong>, <strong>Continue</strong> (after installing it yourself; the app checks again) or <strong>Cancel</strong> (<a href="../devdocs/prerequisites.html">devdocs/prerequisites.md</a>). WGSExtract checks with <code>wgsextract ref needs</code>, so running Info, variant calling, extraction and the rest on a CRAM whose reference genome (for example hs37d5) isn't installed offers to install it first, as the old WGS Extract did. The VCF annotation commands do the same for their annotation data.</li>
+<li>Options can give <code>groupTooltip</code> and <code>categoryTooltip</code>, shown beside their group's heading or row title and their category's heading. WGSExtract's Microarray formats use them for Consumer Tests, Reich Lab and AADR; the AADR file-format note moves from the section description to Reich Lab.</li>
+<li>A settings file (<code>configFile</code>) can list <code>previousPaths</code>. On load the app moves the file from the first that exists to its declared path, removes the old folder if that leaves it empty, and treats a saved choice of an old path as the declared one.</li>
+</ul>
+<h3 id="changed-3">Changed<a class="heading-anchor" href="#changed-3" aria-label="Link to section">#</a></h3>
+<ul>
+<li>Bump the bundled WGSExtract CLI installer target to <code>v0.8.7</code> (<a href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.8.7" target="_blank" rel="noopener noreferrer">release notes</a>).</li>
+<li>The app keeps its own data in <code>WGSExtract-gui</code> in the platform's app data folder (<code>%LOCALAPPDATA%\WGSExtract-gui</code>, <code>~/Library/Application Support/WGSExtract-gui</code>, <code>~/.local/share/WGSExtract-gui</code>), and setup installs the WGS Extract CLI there (<code>runtime/wgsextract-cli</code>) instead of in the workspace, so the workspace holds only the user's files and moving it no longer reinstalls the CLI. Bundles reach the folder as <code>{{appData}}</code> and their scripts as <code>WGSEXTRACT_GUI_APP_DATA</code>. The desktop app's identifier is <code>dev.wgsextract-gui</code> (its webview data and logs). Environment variables are renamed from <code>GUI_FOR_CLI_*</code> to <code>WGSEXTRACT_GUI_*</code> (<code>GUI_FOR_CLI_APP_SUPPORT_NAME</code> is now <code>WGSEXTRACT_GUI_APP_DATA_NAME</code>), and the uninstall CLI's <code>--app-support-name</code> is now <code>--app-data-name</code>, optional. Installs up to 0.8.6 migrate on the first start: the app's settings come over from <code>dev.guiforcli.web.embed.wgsextract</code>, setup is offered again since its CLI is gone, and once it has installed the CLI in the new place it removes the old one from the workspace (on Windows, with its Pixi environment). The Windows installer removes a 0.8.6 app installed in another folder than the new one.</li>
+<li>WGSExtract's <code>config.toml</code> moves from <code>&lt;workspace&gt;/settings/</code> to the workspace folder itself (<code>~/wgs-extract/config.toml</code> by default), and the <code>settings</code> folder goes. Existing installs' files move on the next start. A relative path in it, such as a custom Y tree's <code>tree = &quot;mytree.json&quot;</code>, now means a file in the workspace folder.</li>
+</ul>
+<h3 id="fixed-1">Fixed<a class="heading-anchor" href="#fixed-1" aria-label="Link to section">#</a></h3>
+<ul>
+<li>Linux AppImage: setup, actions and uninstall no longer run with the AppImage's library and tool paths (<code>LD_LIBRARY_PATH</code>, <code>PATH</code>, <code>PYTHONHOME</code> and the like). The system's programs loaded the image's older libraries instead of their own, so setup failed on newer systems such as Ubuntu 26.04 (<code>libcrypto.so.3: version &#x27;OPENSSL_3.3.0&#x27; not found</code>).</li>
+<li>Windows: saving settings no longer fails with <code>EPERM</code> when another program has the file open for a moment, such as the CLI reading its <code>config.toml</code> or a virus scanner. The save retries for up to about two seconds.</li>
+</ul>
+<h2 id="086---2026-11-09">[0.8.6] - 2026-11-09<a class="heading-anchor" href="#086---2026-11-09" aria-label="Link to section">#</a></h2>
+<h3 id="added-4">Added<a class="heading-anchor" href="#added-4" aria-label="Link to section">#</a></h3>
+<ul>
+<li>A Basic / Advanced mode switch in the sidebar, saved with the app's state. Pages, sections, controls, options, actions, columns and library rows can be marked <code>advancedOnly</code>; Basic runs commands with hidden settings at their defaults. Sections can be <code>subsection</code>s, dropdowns take <code>emptyText</code>, and checkbox groups can lay options out in vendor rows (<code>layout: &quot;rows&quot;</code>).</li>
+<li>WGSExtract: Advanced mode covers the CLI's remaining user options, with a new Workflows page. Detailed Coverage shows the depth bins; Extract has MT-only, Y-only, Y and MT, and Autosomes and X buttons; Library Install buttons turn into Delete.</li>
+</ul>
+<h3 id="changed-4">Changed<a class="heading-anchor" href="#changed-4" aria-label="Link to section">#</a></h3>
+<ul>
+<li>WGSExtract's Library page splits into Reference Data and Reference Genomes, and a new Datasets page (just above Reference Data) holds User Datasets: the Dataset Library folder (<code>dataset_library</code>, formerly <code>genome_library</code>; new installs use <code>&lt;workspace&gt;/datasets</code>), the Test Dataset and Example Datasets. A new Reference Genomes Library setting (<code>reference_genome_library</code>, new installs <code>&lt;workspace&gt;/genomes</code>) holds only the reference genomes; existing installs keep their folders. The Manage Reference Genomes table shows sizes for FTP-hosted genomes too. Downloading Example Datasets over 25 GB (every example, about 441 GB, or a large tag) asks first. Manage Reference Data's buttons show in Basic; Annotate moves above Workflows.</li>
+<li>WGSExtract pages reorganised around Inputs sections; Align, Realign and Variant Calling move to Extract and VCF annotation to the VCF page.</li>
+<li>Languages trimmed to English, French, German and Brazilian Portuguese (<code>pt-BR</code>); other Portuguese locales fall back to it.</li>
+<li>Bump the bundled WGSExtract CLI installer target to <code>v0.8.6</code> (<a href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.8.6" target="_blank" rel="noopener noreferrer">release notes</a>).</li>
+</ul>
+<h2 id="085---2026-11-07">[0.8.5] - 2026-11-07<a class="heading-anchor" href="#085---2026-11-07" aria-label="Link to section">#</a></h2>
+<h3 id="added-5">Added<a class="heading-anchor" href="#added-5" aria-label="Link to section">#</a></h3>
+<ul>
+<li>Bundles can declare a local <code>jobServer</code>, and actions can carry a <code>serverOperation</code>. Those actions then run as jobs on the server, with live progress and clean cancellation, and run their command when the server isn't available (<a href="../devdocs/job-server.html">devdocs/job-server.md</a>). The WGSExtract bundle runs its coverage actions on <code>wgsextract serve</code> once its bundled CLI supports <code>serve --ready-json</code>; until then they run their commands.</li>
+<li>Bundles can declare which commands print a JSON result document (<code>resultDocument</code>). The app then lists the files a run wrote with <strong>Open</strong> and <strong>Show in Folder</strong>, shows its warnings and key metrics, shows a refused option next to the action, and offers <strong>Open Setup</strong> when a tool is missing (<a href="../devdocs/result-documents.html">devdocs/result-documents.md</a>). Bundle test plans can check the document with <code>expectedResult</code>. The WGSExtract bundle reads its <code>wgsextract</code> actions' documents through <code>--result-file</code>, and its wrapper scripts exit 2 when they refuse an input (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/529" target="_blank" rel="noopener noreferrer">#529</a>).</li>
+<li>WGSExtract controls for CLI <code>v0.6.6</code>: DeepVariant model selection including <code>ONT_R104</code>, SV long-read modes and tandem-repeat BED, Clair3 and methylation pileup (hidden on Windows), Y-STR panels, variant tables, and a redacted bug-report preview. New options start unset, so automatic Nanopore detection and <code>config.toml</code> defaults keep applying.</li>
+<li>WGSExtract's Settings page has <strong>Open Bug Report on GitHub</strong> next to <strong>Preview Bug Report</strong>. After a confirmation, it runs <code>report-issue --open</code> on the same run, with your description, and your browser opens GitHub's pre-filled new-issue form. The redacted report reaches GitHub in the link, but no issue is created until you submit it there (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/528" target="_blank" rel="noopener noreferrer">#528</a>).</li>
+<li>Page sections accept <code>visibleWhen</code>, and conditions can read the built-in <code>hostPlatform</code> placeholder (<code>windows</code>, <code>macos</code>, <code>linux</code>, or <code>posix</code>).</li>
+<li>Commands and conditions can name the last action run in the app, and the last failed one, with <code>{{lastResultDocumentPath}}</code> and <code>{{lastFailedResultDocumentPath}}</code> (<a href="../devdocs/result-documents.html#the-last-run">devdocs/result-documents.md</a>). WGSExtract's <strong>Preview Bug Report</strong> uses them, so it describes the action you ran rather than a background library check.</li>
+</ul>
+<h3 id="changed-5">Changed<a class="heading-anchor" href="#changed-5" aria-label="Link to section">#</a></h3>
+<ul>
+<li>Bump the bundled WGSExtract CLI installer target to <code>v0.8.5</code> (<a href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.8.5" target="_blank" rel="noopener noreferrer">release notes</a>).</li>
+<li>The WGS Extract workspace now defaults to a visible <code>wgs-extract</code> folder in your home folder, not the app's data folder, and holds temporary files and run logs too. The Settings page can move it, with its contents, to another disk; setup then reinstalls the CLI runtime there. Paths inside it are shown as <code>{{bundleWorkspace}}/...</code>. Existing workspaces are not moved over: run setup again. Run logs keep the newest 100 runs. If a folder or file of yours is already called <code>wgs-extract</code>, the workspace goes in <code>wgs-extract-2</code> instead.</li>
+<li>Uninstalling asks before deleting the workspace, wherever it is. That includes one left in the app's data folder, which deleting the app's data now keeps; a silent uninstall keeps them all.</li>
+<li>Bundle WGSExtract CLI <code>v0.6.6</code>: Oxford Nanopore reads are detected automatically, keep their methylation tags through alignment, and get Nanopore-tuned calling (DeepVariant ONT model, Sniffles structural variants, optional Clair3), plus CpG methylation pileups. Also adds native Linux ARM64, Y-STR genealogy panels, queryable variant tables (TSV/SQLite/Parquet), depth-aware confidence labels, <code>report-issue</code> for redacted bug reports, and easier help; DeepVariant now accepts CRAM 3.1 input and bounds its whole-genome memory use, and whole-genome realignment streams without FASTQ intermediates (<a href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.6.6" target="_blank" rel="noopener noreferrer">CLI release notes</a>).</li>
+<li>Bundle WGSExtract CLI <code>v0.6.5</code>: fresh Windows installs work again and invalid configuration values produce clear warnings. Includes the v0.6.4 opt-in MultiQC, expanded microarray/AADR exports and targeted Y analysis, streamed eligible small paired realignment, and safer downloads, outputs and Windows cancellation (<a href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.6.5" target="_blank" rel="noopener noreferrer">v0.6.5 release notes</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.6.4" target="_blank" rel="noopener noreferrer">v0.6.4 features</a>).</li>
+<li>Bundle WGSExtract CLI <code>v0.6.3</code>: alignment output no longer depends on thread count, BWA-MEM2 sorts in less memory, alignment checks memory before starting and falls back to BWA when MEM2 won't fit, long jobs show memory and disk estimates up front, and SNP/indel calling can optionally run per chromosome in parallel. Native Windows is now validated on full genomes (<a href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.6.3" target="_blank" rel="noopener noreferrer">CLI release notes</a>).</li>
+</ul>
+<h3 id="fixed-2">Fixed<a class="heading-anchor" href="#fixed-2" aria-label="Link to section">#</a></h3>
+<ul>
+<li>WGSExtract <strong>Run Yleaf</strong> works again: it no longer sends <code>--yleaf-path</code>, which the CLI dropped when Yleaf became built in, and the dead Yleaf path settings are gone. Run Yleaf gains Y tree, ancient DNA and genotyped-positions-only options. CI now parses every bundle command with this repository's CLI, so a dropped or renamed flag fails CI (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/538" target="_blank" rel="noopener noreferrer">#538</a>).</li>
+<li>The Web UI server rejects an invalid <code>--port</code> (not a decimal integer from 0 to 65535) with a clear error before it starts, instead of failing later inside Node.</li>
+</ul>
+<h2 id="062---2026-10-27">[0.6.2] - 2026-10-27<a class="heading-anchor" href="#062---2026-10-27" aria-label="Link to section">#</a></h2>
+<h3 id="changed-6">Changed<a class="heading-anchor" href="#changed-6" aria-label="Link to section">#</a></h3>
+<ul>
+<li>Bundle WGSExtract CLI <code>v0.6.2</code>: Windows setup now runs natively without WSL or MSYS2, with faster Windows tools. This release also adds microarray templates and Ultima support, and fixes microarray output (<a href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.6.2" target="_blank" rel="noopener noreferrer">CLI release notes</a>).</li>
+<li>GUI for CLI is now one TypeScript app packaged with Tauri for Windows, macOS, and Linux. macOS releases ship the Tauri app (signed, notarized, and self-updating through <code>latest.json</code>) instead of the SwiftUI app and Sparkle; the macOS app is no longer named <code>WebUI</code>.</li>
+<li>Every bundle load validates the manifest and pages against the <code>docs/schema</code> rules (required fields, unique ids, paths that stay inside the bundle, text icons, action commands), as the Swift CLI's <code>bundle validate</code> did. <code>npm --prefix app run bundle:validate -- &lt;bundle&gt;...</code> checks bundles without the app, and <code>make lint</code> runs it over the examples.</li>
+<li>Bundles load from <code>.zip</code>, <code>.tar</code>, <code>.tar.gz</code>/<code>.tgz</code>, and gzipped <code>manifest.json</code> archives on every OS, extracted in pure Node. <strong>Load Bundle...</strong> (Ctrl/Cmd+O) now opens a file dialog for a bundle's <code>manifest.json</code> or a bundle archive.</li>
+<li>macOS releases ship separate Apple Silicon and Intel builds. Their DMGs are notarized and stapled, so Gatekeeper accepts the downloaded DMG as well as the app inside it.</li>
+<li>The macOS app has <strong>File &gt; Uninstall</strong> again, as the SwiftUI app did: it runs the bundle's uninstall steps, removes the app's data and WebKit storage, and moves the app to the Trash. <code>GUI_FOR_CLI_AUTO_RUN_UNINSTALL=1</code> runs it unattended on macOS as on Linux.</li>
+<li><code>make</code> targets (and <code>powershell -ExecutionPolicy Bypass -File .\make.ps1 &lt;target&gt;</code> on Windows) run through a small task runner, <code>tools/tasks.py</code>: <code>run</code>, <code>dev</code>, <code>tauri</code>, <code>build</code>, <code>build-tauri</code>, <code>lint</code>, <code>test</code>, <code>ci</code>, <code>package</code>.</li>
+<li>Bump the bundled WGSExtract CLI installer target to <code>v0.6.0</code>: male genomes get chrY calls and haploid chrX (they were called as female), <code>vcf trio</code> from VCFs finds de novos again, AncestryDNA kits fill in chrX/chrY/MT, DeepVariant runs on CPU from Google's Docker image, alignment uses bwa-mem2 when the reference has its index, and about 60 other fixes from three test passes.</li>
+<li>Bump the bundled WGSExtract CLI installer target to <code>v0.5.0</code>: alignment is ALT-aware on hs38DH and always marks duplicates, <code>info</code> shows whether an alignment was made that way (WGS Extract v4's weren't) and callers warn about it, microarray kits agree with real chips more closely (99.1% to 99.8% on AncestryDNA), <code>vcf trio</code> genotypes a trio jointly from their BAM/CRAMs, and <code>--gpu</code> aligns and calls on an NVIDIA GPU with Parabricks.</li>
+<li>Bump the bundled WGSExtract CLI installer target to <code>v0.4.3</code>: actions that pick a reference themselves use the one shipped beside a BAM over a library genome of another build (with hs38 installed, the mtDNA haplogroup action reported no haplogroup for the hg19 test genome), SpliceAI scores from Ensembl, and 23andMe v1/v2 microarray templates.</li>
+<li>Bump the bundled WGSExtract CLI installer target to <code>v0.4.2</code>: large reference downloads over 8 connections that resume, <code>ref status</code> listing all installed data, a usable PharmGKB annotation, <code>vcf pharmcat</code>, and a faster <code>vep --preset fast</code>.</li>
+<li>Bump the bundled WGSExtract CLI installer target to <code>v0.4.1</code>, whose Windows installer no longer needs Git (setup on a PC without Git failed installing Yleaf), runs GATK and HaploGrep on Windows, and removes MSYS2 on uninstall.</li>
+<li>Bump the bundled WGSExtract CLI installer target to <code>v0.4.0</code>, which adds the <code>--config</code> option the bundle now uses to keep its settings in the workspace, and fixes haplogroups for installs under paths with spaces.</li>
+</ul>
+<h3 id="removed">Removed<a class="heading-anchor" href="#removed" aria-label="Link to section">#</a></h3>
+<ul>
+<li>The SwiftUI macOS app, Swift CLI, iOS and AppKit apps, Electron, NodeGUI, the TypeScript TUI, the macOS WebView shell, the Rust/Go/C/C++/.NET/Dart/Kotlin/Python/Mojo experimental renderers, and the benchmark, screenshot, and macOS updater-e2e tooling. They are preserved on the <code>old-experimental</code> branch.</li>
+</ul>
+<h2 id="038---2026-06-09">[0.3.8] - 2026-06-09<a class="heading-anchor" href="#038---2026-06-09" aria-label="Link to section">#</a></h2>
+<h3 id="changed-7">Changed<a class="heading-anchor" href="#changed-7" aria-label="Link to section">#</a></h3>
+<ul>
+<li>Bump the bundled WGSExtract CLI installer target to <code>v0.3.8</code> so new GUI builds pick up the microarray output fixes.</li>
+</ul>
+<h2 id="0114---2026-06-08">[0.1.14] - 2026-06-08<a class="heading-anchor" href="#0114---2026-06-08" aria-label="Link to section">#</a></h2>
+<h3 id="added-6">Added<a class="heading-anchor" href="#added-6" aria-label="Link to section">#</a></h3>
+<ul>
+<li>Local CI runner (<code>tools/ci/ci_local.py</code>) that mirrors the GitHub Actions pipeline; expose as <code>make ci</code> (full) and <code>make ci-fast</code> (skip iOS).</li>
+<li>Linux Swift Package CI job (Ubuntu, Swift 6.2 container) that runs <code>swift build</code> + <code>swift test</code> against <code>GUIForCLICore</code>.</li>
+<li>App-layer iOS guard: action buttons are disabled with an explanatory tooltip on iOS, where command execution is unsupported.</li>
+<li>Smarter pre-push hook: branches matching <code>release/*</code> run the full CI pipeline (incl. iOS build); other branches still use <code>--fast</code>.</li>
+<li><code>LocaleMatchingTests</code> for <code>BundleSourceLoader.matchLocalizationCode</code> covering exact, region-stripped, Chinese script, and ordering paths.</li>
+<li>Windows admin setup mode for packaged WGSExtract installers.</li>
+<li>macOS and Windows worktree setup targets for installer lifecycle validation.</li>
+<li>SmartScreen install guidance on the WGSExtract download page.</li>
+</ul>
+<h3 id="changed-8">Changed<a class="heading-anchor" href="#changed-8" aria-label="Link to section">#</a></h3>
+<ul>
+<li>Refactor blitz: split the four largest files into focused topic groups via Swift extensions.
+<ul>
+<li><code>BundleSourceLoader</code> → entry + <code>+Manifest</code> + <code>+Localization</code></li>
+<li><code>TerminalLogStore</code> → state/public API + <code>+Setup</code> + <code>+ProcessRunner</code></li>
+<li><code>BundleManifestValidator</code> → entry + <code>+Pages</code> + <code>+Controls</code> + <code>+Helpers</code>; the monolithic <code>validate(_:)</code> body is now per-page/section/control helpers</li>
+<li><code>ControlRenderer</code> → view dispatch + <code>+Subviews</code> + <code>+DataSource</code></li>
+</ul></li>
+<li>Round 2 splits: <code>DataSourceRunner</code> → entry + <code>+Process</code> (macOS); <code>ConfigFileBootstrapper</code> → entry + <code>+Toml</code> + <code>+Script</code>; <code>BundleSessionLoader</code> → entry + <code>+Workspace</code> + <code>+InitialState</code>.</li>
+<li>Moved reusable renderer/session helpers (<code>CommandRenderContext</code>, rendered commands, data sources, config IO, and bundle session loading) from <code>platform/apple/shared/app</code> into <code>GUIForCLICore</code>.</li>
+<li>CI workflow now runs the same Python script CI uses, so local <code>make ci</code> and remote CI cannot drift.</li>
+<li>Bumped <code>actions/checkout</code> to <code>@v6</code> (Node 24 runtime).</li>
+</ul>
+<h3 id="fixed-3">Fixed<a class="heading-anchor" href="#fixed-3" aria-label="Link to section">#</a></h3>
+<ul>
+<li><code>LocaleLinterRunner</code> strict mode regex no longer matches <code>, 0 errors</code>/<code>, 0 warnings</code>.</li>
+<li><code>DataSourceRunner.signature</code> array literal split so Swift 6.2 type-checker doesn't time out on iOS Simulator builds.</li>
+<li>Cloudflare-blocked <code>install.tuist.io</code> script in CI replaced with <code>brew install tuist</code>.</li>
+<li>macOS CI runner now explicitly selects the newest installed Xcode so Swift 6.2 toolchain is active.</li>
+<li>WGSExtract macOS setup preflight behavior before bundled CLI install.</li>
+<li>WGSExtract installer lifecycle coverage for setup timing, app data creation, uninstall hooks, and cleanup.</li>
+</ul>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract GUI</strong><p>Rendered from <code>gui/docs/CHANGELOG.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/gui/docs/CHANGELOG.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

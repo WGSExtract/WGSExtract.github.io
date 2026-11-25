@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Variant table: query your variants with SQL | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/variant-table.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Variant table: query your variants with SQL</span></nav>
+<h1 id="variant-table-query-your-variants-with-sql">Variant table: query your variants with SQL</h1>
+<p><code>wgsextract vcf table</code> turns an annotated VCF into a flat table with one row per variant allele and fixed, typed columns. Spreadsheets, <code>sqlite3</code>, DuckDB, pandas or an AI agent can read it without knowing the VCF format.</p>
+<pre><code class="language-bash">wgsextract vep run --input sample.vcf.gz                   # gene, consequence, HGVS
+wgsextract vcf clinvar --vcf-input sample_vep.vcf.gz       # ClinVar significance
+wgsextract vcf gnomad --vcf-input clinvar_annotated.vcf.gz # gnomAD frequency
+wgsextract vcf table --vcf-input gnomad_annotated.vcf.gz</code></pre>
+<p>This writes <code>&lt;input stem&gt;_variants.tsv</code> and <code>&lt;input stem&gt;_variants.sqlite</code> (<code>--no-sqlite</code> skips the database) and a result manifest naming both. <code>--format parquet</code> writes <code>&lt;input stem&gt;_variants.parquet</code> instead of the TSV (see <a href="parquet.html">Parquet output</a>; it needs the optional <code>pyarrow</code>). The table uses whatever annotations the VCF has. Columns whose annotation is missing stay empty, so annotate first; any subset and order of the commands above works.</p>
+<h2 id="rows">Rows<a class="heading-anchor" href="#rows" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong>One row per ALT allele.</strong> A multi-allelic site gives a row per ALT, each with its own allele frequency, consequence and zygosity. Rows keep the VCF's order, which is sorted by position.</li>
+<li><strong>Only alleles the sample carries.</strong> Calls of <code>0/0</code>, no-calls and the other ALT of a <code>0/1</code> multi-allelic site are left out, so a gVCF or a DeepVariant VCF with <code>RefCall</code> records yields only real variants. <code>--all-alleles</code> keeps every ALT, with <code>zygosity</code> saying which the sample carries. A sites-only VCF (no samples) keeps every ALT.</li>
+<li>gVCF reference blocks (<code>&lt;NON_REF&gt;</code>, <code>&lt;*&gt;</code>) and the spanning-deletion placeholder <code>*</code> never get a row.</li>
+<li>A multi-sample VCF uses its first sample, or the one named with <code>--sample</code>.</li>
+<li><code>--region chr22</code> or <code>--region chr1:1000000-2000000</code> exports one region.</li>
+</ul>
+<h3 id="slice-a-vcf-to-a-panel">Slice a VCF to a panel<a class="heading-anchor" href="#slice-a-vcf-to-a-panel" aria-label="Link to section">#</a></h3>
+<p>Use the same options on <code>vcf filter</code> and <code>vcf table</code>:</p>
+<pre><code class="language-bash">wgsextract vcf filter --vcf-input sample.vcf.gz --genes BRCA1,BRCA2 --bed targets.bed
+wgsextract vcf table --vcf-input sample.vcf.gz --preset acmg-sf --region chr17</code></pre>
+<p>Repeat <code>--gene SYMBOL</code> or <code>--genes SYMBOL1,SYMBOL2</code>, give <code>--gene-file FILE</code>, or select a <code>--preset</code> listed by <code>wgsextract panel bed --list-presets</code>. A gene file accepts names separated by spaces, commas or newlines; <code>#</code> starts a comment. Symbols and unique aliases resolve offline against the bundled RefSeq gene spans. An unknown name or ambiguous alias is an error. The VCF header or the <code>.fai</code> of a matching <code>--ref</code> FASTA must identify GRCh37, GRCh38 or CHM13v2.0. If <code>--ref</code> is a local library and the header doesn't identify a build, its indexed FASTAs must point to a single build. Filenames alone don't identify an assembly. <code>--pad-kb</code> pads each whole gene span on both sides (default: no padding).</p>
+<p>The commands take the <strong>union</strong> of the gene spans and the zero-based, half-open <code>--bed</code> intervals (plain or gzipped), then <strong>intersect</strong> it with <code>--region</code> if given. <code>--region</code> takes a contig, a 1-based position or an inclusive range; separate multiple regions with commas. Contig names such as <code>chr17</code> and <code>17</code> match automatically. Supply BED coordinates for the VCF's assembly; this is not liftover. A VCF record is kept if it overlaps the final intervals, without duplicating records from overlapping targets. A panel with no matches returns a header-only VCF or table. Other filters (such as <code>--expr</code> or <code>--sample</code>) still apply.</p>
+<p>The result manifest's <code>details.panel</code> records the resolved genes and presets, the final intervals in VCF contig naming (BED coordinates), and the SHA-256 of the BED file as supplied.</p>
+<h2 id="columns">Columns<a class="heading-anchor" href="#columns" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Column</th><th>Type</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>chrom</code>, <code>pos</code>, <code>ref</code>, <code>alt</code></td><td>text, integer, text, text</td><td>The allele, as in the VCF (1-based position).</td></tr>
+<tr><td><code>rsid</code></td><td>text</td><td>dbSNP rsIDs from the VCF's ID column, else VEP's <code>Existing_variation</code>, else PharmGKB's; <code>;</code>-separated. Callers such as DRAGEN and DeepVariant leave the ID column empty, so annotate with <code>vep</code> (the default <code>everything</code> preset) to fill it.</td></tr>
+<tr><td><code>gene</code></td><td>text</td><td>VEP <code>SYMBOL</code>, else SnpEff <code>Gene_Name</code>, else the PharmGKB gene.</td></tr>
+<tr><td><code>consequence</code>, <code>impact</code></td><td>text</td><td>Sequence Ontology terms (<code>&amp;</code>-separated) and HIGH/MODERATE/LOW/MODIFIER, from the chosen transcript.</td></tr>
+<tr><td><code>hgvs_c</code>, <code>hgvs_p</code></td><td>text</td><td>HGVS coding and protein change on the chosen transcript.</td></tr>
+<tr><td><code>clinvar_significance</code>, <code>clinvar_condition</code></td><td>text</td><td>ClinVar <code>CLNSIG</code> and <code>CLNDN</code> (from <code>vcf clinvar</code>; else VEP's <code>CLIN_SIG</code>).</td></tr>
+<tr><td><code>gnomad_af</code></td><td>real</td><td>gnomAD allele frequency of this ALT (from <code>vcf gnomad</code>; else VEP's <code>gnomADg_AF</code>, then <code>gnomADe_AF</code>, then <code>gnomAD_AF</code>). Empty when gnomAD lacks the ALT, or when the VCF has no gnomAD annotation: a vep-rs cache from <code>vep download</code> has none, so run <code>vcf gnomad</code> (see <a href="#population-frequencies">Population frequencies</a>).</td></tr>
+<tr><td><code>genotype</code>, <code>zygosity</code></td><td>text</td><td>The sample's GT (<code>0/1</code>, <code>1|1</code>, ...), and its copies of this ALT: <code>het</code>, <code>hom_alt</code>, <code>hemizygous</code>, <code>not_carried</code> or <code>no_call</code>.</td></tr>
+<tr><td><code>depth</code>, <code>gq</code>, <code>qual</code>, <code>filter</code></td><td>integer, integer, real, text</td><td>Read depth (FORMAT/DP, else the sum of AD, else INFO/DP), genotype quality, QUAL and FILTER.</td></tr>
+<tr><td><code>confidence</code></td><td>text</td><td>The depth-aware <code>high</code>/<code>moderate</code>/<code>low</code> label in <code>INFO/WGSE_CONF</code>, when the VCF has one (<a href="variant-confidence.html">variant-confidence.md</a>).</td></tr>
+<tr><td><code>confidence_reasons</code></td><td>text</td><td>The reason codes behind that label, <code>|</code>-separated (<code>INFO/WGSE_CONF_REASONS</code>), for example <code>low_depth|strand_bias</code>.</td></tr>
+<tr><td><code>pharmgkb_level</code>, <code>pharmgkb_drugs</code></td><td>text</td><td>Best PharmGKB level of evidence (1A, 1B, 2A, 2B, 3, 4) and the drugs, from <code>vcf pharmgkb</code>.</td></tr>
+<tr><td><code>pharmcat_diplotype</code>, <code>pharmcat_phenotype</code></td><td>text</td><td>PharmCAT's call for the row's gene, with <code>--pharmcat-json &lt;stem&gt;.phenotype.json</code> from <code>vcf pharmcat</code>.</td></tr>
+<tr><td><code>sv_af</code>, <code>sv_freq</code></td><td>real, text</td><td>A structural variant's population frequency and its class (<code>common</code>, <code>low</code>, <code>rare</code> or <code>novel</code>), from <a href="sv-frequency.html"><code>vcf sv-freq</code></a>.</td></tr>
+<tr><td><code>acmg_class</code>, <code>acmg_criteria</code>, <code>acmg_transcript</code></td><td>text</td><td><strong>Research use only; not a diagnosis.</strong> fastVEP's automated ACMG/AMP class (<code>P</code>, <code>LP</code>, <code>VUS</code>, <code>LB</code>, <code>B</code>), the criteria it found met (<code>&amp;</code>-separated) and the transcript it classified on, from <a href="acmg.html"><code>vcf acmg</code></a>. Empty when the VCF has no classes.</td></tr>
+<tr><td><code>imputed</code>, <code>genotype_probability</code></td><td>integer, real</td><td><code>1</code> when the genotype was imputed from a reference panel (<code>INFO/IMP</code>, from <a href="imputation.html"><code>vcf impute</code></a>), else <code>0</code>; and the largest FORMAT/GP when its values are probabilities in [0, 1]. Unrecognised/phred-scaled scores leave the probability empty. Imputed rows below <code>vcf impute</code>'s thresholds have <code>filter</code> <code>ImpLowConf</code>.</td></tr>
+<tr><td><code>phase_set</code></td><td>text</td><td>The sample's <code>FORMAT/PS</code> for a phased genotype, otherwise empty. Compare phase sets only within the same sample and chromosome. Use <code>genotype</code> together with <code>phase_set</code> to see which alleles are on the same haplotype.</td></tr>
+<tr><td><code>alt_fraction</code></td><td>real</td><td>This ALT's depth divided by the sum of <code>FORMAT/AD</code> across REF and all ALTs in the record. If depths are incomplete or sum to zero, falls back to the allele's <code>FORMAT/VAF</code>, then <code>FORMAT/AF</code>, if present and in [0, 1]. <code>INFO/AF</code> is not a read fraction.</td></tr>
+<tr><td><code>transcript_id</code></td><td>text</td><td>The transcript associated with <code>consequence</code>: VEP <code>Feature</code> or SnpEff <code>Feature_ID</code>. Empty for non-transcript effects.</td></tr>
+<tr><td><code>gnomad_popmax_af</code></td><td>real</td><td>Maximum allele frequency across gnomAD genetic ancestry groups for this ALT (<code>GNOMAD_POPMAX_AF</code> from <code>vcf gnomad</code>, a native gnomAD <code>AF_grpmax_joint</code>/<code>AF_grpmax</code>/<code>AF_popmax</code> field, or a gnomAD-specific group-maximum field in VEP <code>CSQ</code>). VEP <code>MAX_AF</code> combines databases and is not a fallback.</td></tr>
+<tr><td><code>gnomad_nhomalt</code></td><td>integer</td><td>Count of homozygotes for this ALT in gnomAD (<code>GNOMAD_NHOMALT</code> from <code>vcf gnomad</code>, native <code>nhomalt_joint</code>/<code>nhomalt</code>, or a gnomAD homozygote count in VEP <code>CSQ</code>). A known count of zero is distinct from a missing count.</td></tr>
+<tr><td><code>kg_af</code>, <code>max_af</code></td><td>real</td><td>VEP's 1000 Genomes phase 3 frequency of this ALT over all populations (<code>AF</code>), and its <code>MAX_AF</code>: the highest frequency in any population VEP's cache has, gnomAD and 1000 Genomes with Ensembl VEP's cache but 1000 Genomes only with a vep-rs cache from <code>vep download</code>. Where VEP lists several co-located known variants, the highest value.</td></tr>
+<tr><td><code>ad_ref</code>, <code>ad_alt</code></td><td>integer, integer</td><td>The sample's <code>FORMAT/AD</code> read counts for REF and this ALT. Empty when AD is missing or incomplete; an explicit count of zero stays <code>0</code>. A record split from a multi-allelic one keeps REF and its own ALT.</td></tr>
+<tr><td><code>revel</code>, <code>alphamissense_score</code>, <code>alphamissense_class</code></td><td>real, real, text</td><td>REVEL and AlphaMissense missense pathogenicity (0–1) and AlphaMissense's class (<code>likely_benign</code>, <code>ambiguous</code>, <code>likely_pathogenic</code>); see <a href="#in-silico-scores">In-silico scores</a>.</td></tr>
+<tr><td><code>cadd_raw</code>, <code>cadd_phred</code></td><td>real, real</td><td>CADD's raw and PHRED-scaled deleteriousness scores.</td></tr>
+<tr><td><code>spliceai_max</code></td><td>real</td><td>The highest of the ALT's four SpliceAI delta scores (<code>DS_AG</code>, <code>DS_AL</code>, <code>DS_DG</code>, <code>DS_DL</code>, 0–1), for the row's gene when scored.</td></tr>
+<tr><td><code>phylop</code>, <code>gerp</code></td><td>real, real</td><td>PhyloP and GERP++ conservation scores for the position.</td></tr>
+<tr><td><code>sift_score</code>, <code>sift_prediction</code>, <code>polyphen_score</code>, <code>polyphen_prediction</code></td><td>real, text, real, text</td><td>SIFT and PolyPhen-2 for the chosen transcript (for example <code>deleterious</code> 0.01, <code>probably_damaging</code> 0.998).</td></tr>
+</tbody>
+</table></div>
+<p>When a WGSE annotation splits a multi-allelic record, it saves the original AD total so the read fraction stays the same. A known split without a complete original total can only use <code>FORMAT/VAF</code> or <code>FORMAT/AF</code>.</p>
+<p>The TSV has a header row and leaves missing values empty. The SQLite database has the table <code>variants</code> with these columns, <code>columns</code> (each column's type and meaning, for an agent to read first) and <code>metadata</code> (wgsextract version, source VCF and its SHA-256, sample, reference build, region, annotations found, <code>population_af_sources</code>, row count and command line). It is indexed on <code>gene</code>, <code>rsid</code> and <code>(chrom, pos)</code>.</p>
+<p><a href="server.html"><code>/v1/variants</code> and MCP <code>query_variants</code></a> can return these columns from any of the table formats. They omit fields that are missing.</p>
+<p>Newly built <code>ref gnomad --release 4.1</code> tables retain the joint dataset's <code>AF_grpmax_joint</code> and <code>nhomalt_joint</code>. <code>vcf gnomad</code> carries them into its annotated VCF and, with <code>--max-af</code>, its confidence table. Older five-column gnomAD tables still supply <code>gnomad_af</code>, but do not have the two additional statistics. To rebuild an installed table, move it and its index aside before running <code>ref gnomad --release 4.1</code> again (this streams about 900 GB).</p>
+<p>A table of a <a href="acmg.html"><code>vcf acmg</code></a> VCF keeps the research-only disclaimer where its readers look: the <code>acmg_*</code> column descriptions, the metadata key <code>acmg_disclaimer</code> (SQLite <code>metadata</code>, the Parquet footer), the result manifest's warning <code>acmg_research_only</code> and the server's <code>query_variants</code> pages that return <code>acmg_*</code> values (<code>disclaimer</code>). The TSV has only its header row, so read the classes with that disclaimer in mind:</p>
+<pre><code class="language-sql">-- Research use only: automated P/LP calls, with the criteria behind them
+SELECT gene, hgvs_p, zygosity, acmg_class, acmg_criteria, acmg_transcript
+FROM variants WHERE acmg_class IN (&#x27;P&#x27;, &#x27;LP&#x27;) ORDER BY gene;</code></pre>
+<p><strong>Which transcript.</strong> VEP annotates every transcript a variant touches. The table keeps one per allele, as VEP's <code>--pick</code> would: the one VEP flagged <code>PICK</code>, else the MANE Select transcript, then the canonical one, then a protein-coding one, then the most severe consequence. SnpEff lists the most severe effect first, and the table takes that one.</p>
+<h2 id="population-frequencies">Population frequencies<a class="heading-anchor" href="#population-frequencies" aria-label="Link to section">#</a></h2>
+<p><code>gnomad_af</code> holds gnomAD frequencies only. VEP with a vep-rs cache built by <code>vep download</code> fills just the 1000 Genomes frequencies: Ensembl publishes no gnomAD frequencies to build the cache from, so VEP's <code>gnomADe_*</code> and <code>gnomADg_*</code> fields stay empty. Those 1000 Genomes values go to <code>kg_af</code> and <code>max_af</code>, never to <code>gnomad_af</code>. When no row has a gnomAD frequency and the VCF has no <code>vcf gnomad</code> annotation, <code>vcf table</code> warns <code>gnomad_af_missing</code>: an empty <code>gnomad_af</code> may then mean "not annotated" rather than "rare" (VEP leaves its gnomAD fields empty both for a cache without gnomAD and for variants gnomAD lacks, so the warning names both). The metadata key <code>population_af_sources</code> (<code>gnomad</code>, <code>1000genomes</code>, both or neither) and the manifest metrics <code>gnomad_af_rows</code>, <code>kg_af_rows</code> and <code>max_af_rows</code> say which frequencies the table holds. Run <code>vcf gnomad</code> before filtering on rarity.</p>
+<h2 id="in-silico-scores">In-silico scores<a class="heading-anchor" href="#in-silico-scores" aria-label="Link to section">#</a></h2>
+<p><code>vcf table</code> reads scores already in the VCF. It does not compute or download them. You can annotate first with <code>vcf revel</code>, <code>vcf alphamissense</code>, <code>vcf cadd</code>, <code>vcf spliceai</code>, <code>vcf phylop</code> and <code>vcf gerp</code>, or run them together:</p>
+<pre><code class="language-bash">wgsextract vcf chain-annotate --vcf-input sample.vcf.gz \
+  --annotations revel,alphamissense,cadd,spliceai,phylop,gerp</code></pre>
+<ul>
+<li><strong>Source priority.</strong> The table first looks for <code>REVEL</code>, <code>am_pathogenicity</code> / <code>am_class</code>, <code>CADD_RAW</code> / <code>CADD_PHRED</code>, <code>SpliceAI</code>, <code>PHYLOP</code> and <code>GERP</code> in INFO. It then tries fastVEP's <code>FV_REVEL</code>, <code>FV_ALPHAMISSENSE</code>, <code>FV_PHYLOP</code> and <code>FV_GERP</code>, then VEP's CSQ plugin fields and dbNSFP fields. SIFT and PolyPhen come from VEP CSQ first, then fastVEP's <code>FV_DBNSFP</code>. When fastVEP has several AlphaMissense entries for one ALT, the highest-scoring entry supplies both the score and, if present, its class.</li>
+<li><strong>Transcript choice.</strong> REVEL, AlphaMissense, SIFT and PolyPhen from CSQ use the chosen transcript. CADD, PhyloP and GERP can fall back to another CSQ entry for the same allele. When a numeric CSQ field lists several values separated by <code>&amp;</code>, the table uses the highest.</li>
+<li><strong>SpliceAI.</strong> Each row reads only its own ALT's entries and skips missing (<code>.</code>) deltas. It uses the highest delta for the row's gene if that gene was scored, or the highest delta across all genes otherwise. For split records with <code>OLD_MULTIALLELIC</code>, SpliceAI and fastVEP entries match the original ALT first. A normalized spelling is used only if it cannot name another original ALT, or if <code>vcf spliceai</code> marked the score as refreshed for this row.</li>
+<li><strong>Missing and site-level scores.</strong> Missing scores stay empty, not zero. At a site with several variant ALTs, a single allele-specific score (<code>Number=1</code>) cannot be assigned to an ALT and stays empty. PhyloP and GERP describe the position and apply to every ALT.</li>
+</ul>
+<h2 id="example-queries">Example queries<a class="heading-anchor" href="#example-queries" aria-label="Link to section">#</a></h2>
+<p>With <code>sqlite3 sample_variants.sqlite</code> (or any SQLite client):</p>
+<pre><code class="language-sql">-- What the database holds, and where it came from
+SELECT name, type, description FROM columns;
+SELECT key, value FROM metadata;
+
+-- Variants in a pharmacogene
+SELECT chrom, pos, ref, alt, rsid, consequence, hgvs_p, genotype
+FROM variants WHERE gene = &#x27;CYP2C19&#x27;;
+
+-- One rsID
+SELECT * FROM variants WHERE rsid = &#x27;rs4244285&#x27;;
+
+-- A region (uses the (chrom, pos) index)
+SELECT * FROM variants
+WHERE chrom = &#x27;chr17&#x27; AND pos BETWEEN 43044295 AND 43125483;
+
+-- ClinVar pathogenic or likely pathogenic, well covered
+SELECT chrom, pos, ref, alt, gene, clinvar_significance, clinvar_condition,
+       zygosity, depth
+FROM variants
+WHERE (clinvar_significance LIKE &#x27;Pathogenic%&#x27;
+       OR clinvar_significance LIKE &#x27;Likely_pathogenic%&#x27;)
+  AND depth &gt;= 20
+ORDER BY gene;
+
+-- Clinical findings whose call is not high confidence, and why
+SELECT gene, rsid, clinvar_significance, confidence, confidence_reasons
+FROM variants
+WHERE clinvar_significance IS NOT NULL AND confidence IN (&#x27;low&#x27;, &#x27;moderate&#x27;);
+
+-- Protein-changing variants with a measured gnomAD frequency below 0.1%
+-- and no known VEP population frequency at or above 0.1%
+SELECT gene, hgvs_p, consequence, gnomad_af, max_af, zygosity
+FROM variants
+WHERE impact IN (&#x27;HIGH&#x27;, &#x27;MODERATE&#x27;)
+  AND gnomad_af &lt; 0.001
+  AND (max_af IS NULL OR max_af &lt; 0.001)
+  AND filter = &#x27;PASS&#x27;;
+
+-- Rare missense variants with a high predicted pathogenicity score
+SELECT gene, hgvs_p, revel, alphamissense_score, cadd_phred
+FROM variants
+WHERE consequence LIKE &#x27;%missense_variant%&#x27;
+  AND (gnomad_af IS NULL OR gnomad_af &lt; 0.001)
+  AND (revel &gt;= 0.5 OR alphamissense_class = &#x27;likely_pathogenic&#x27;);
+
+-- Variants SpliceAI predicts to change splicing
+SELECT gene, hgvs_c, spliceai_max, consequence
+FROM variants WHERE spliceai_max &gt;= 0.5 ORDER BY spliceai_max DESC;
+
+-- Variants rare overall but common in some ancestry group, or seen
+-- homozygous in gnomAD&#x27;s (largely healthy) individuals
+SELECT gene, hgvs_p, gnomad_af, gnomad_popmax_af, gnomad_nhomalt
+FROM variants
+WHERE gnomad_af &lt; 0.001 AND (gnomad_popmax_af &gt;= 0.01 OR gnomad_nhomalt &gt; 0);
+
+-- Two phased heterozygous hits in one gene on the same haplotype (cis) or
+-- on opposite ones (trans), within one phase block. Only 0|1 and 1|0: a
+-- multi-allelic site&#x27;s rows (1|2) all keep the site&#x27;s genotype.
+SELECT a.gene, a.hgvs_p, a.genotype, b.hgvs_p, b.genotype,
+       CASE WHEN a.genotype = b.genotype THEN &#x27;cis&#x27; ELSE &#x27;trans&#x27; END AS phase
+FROM variants a JOIN variants b
+  ON a.gene = b.gene AND a.chrom = b.chrom AND a.phase_set = b.phase_set
+     AND a.pos &lt; b.pos
+WHERE a.genotype IN (&#x27;0|1&#x27;, &#x27;1|0&#x27;) AND b.genotype IN (&#x27;0|1&#x27;, &#x27;1|0&#x27;)
+  AND a.impact IN (&#x27;HIGH&#x27;, &#x27;MODERATE&#x27;) AND b.impact IN (&#x27;HIGH&#x27;, &#x27;MODERATE&#x27;);
+
+-- Heterozygous calls with skewed allele balance (possible mosaicism,
+-- clonal haematopoiesis or an artifact)
+SELECT chrom, pos, gene, genotype, ad_ref, ad_alt, alt_fraction
+FROM variants
+WHERE zygosity = &#x27;het&#x27; AND alt_fraction &lt; 0.25 AND ad_alt &gt;= 3;
+
+-- Homozygous loss-of-function candidates
+SELECT gene, hgvs_c, hgvs_p, consequence
+FROM variants WHERE impact = &#x27;HIGH&#x27; AND zygosity = &#x27;hom_alt&#x27;;
+
+-- Variants per gene, most first
+SELECT gene, count(*) AS n FROM variants
+WHERE gene IS NOT NULL GROUP BY gene ORDER BY n DESC LIMIT 20;
+
+-- Drug-response variants with strong PharmGKB evidence
+SELECT gene, rsid, genotype, pharmgkb_level, pharmgkb_drugs
+FROM variants WHERE pharmgkb_level IN (&#x27;1A&#x27;, &#x27;1B&#x27;);</code></pre>
+<p>DuckDB reads the TSV without loading it into a database first:</p>
+<pre><code class="language-bash">duckdb -c &quot;SELECT gene, count(*) FROM read_csv(&#x27;sample_variants.tsv&#x27;, delim=&#x27;\t&#x27;)
+           WHERE impact = &#x27;HIGH&#x27; GROUP BY gene ORDER BY 2 DESC&quot;</code></pre>
+<p>With <code>--format parquet</code>, DuckDB reads the typed columns and the provenance straight from the file:</p>
+<pre><code class="language-bash">duckdb -c &quot;SELECT chrom, pos, gene, hgvs_p FROM &#x27;sample_variants.parquet&#x27;
+           WHERE clinvar_significance ILIKE &#x27;%pathogenic%&#x27; AND zygosity = &#x27;hom_alt&#x27;&quot;
+duckdb -c &quot;SELECT decode(key), decode(value)
+           FROM parquet_kv_metadata(&#x27;sample_variants.parquet&#x27;)&quot;</code></pre>
+<p>and pandas: <code>pd.read_csv(&quot;sample_variants.tsv&quot;, sep=&quot;\t&quot;)</code>, <code>pd.read_parquet(&quot;sample_variants.parquet&quot;)</code>, or <code>pd.read_sql(&quot;SELECT * FROM variants WHERE gene = &#x27;BRCA2&#x27;&quot;, sqlite3.connect(...))</code>.</p>
+<h2 id="asking-an-agent">Asking an agent<a class="heading-anchor" href="#asking-an-agent" aria-label="Link to section">#</a></h2>
+<p>Point an AI agent at the SQLite file and ask in plain language. Tell it to read the <code>columns</code> and <code>metadata</code> tables first. Questions it can answer with the queries above:</p>
+<ul>
+<li>"Do I carry any ClinVar pathogenic or likely pathogenic variants? Which genes, and is the read depth good enough to trust them?"</li>
+<li>"Which variants do I have in CYP2C19, CYP2C9 and VKORC1, and what do they mean for clopidogrel and warfarin?"</li>
+<li>"List my rare (gnomAD below 0.1%) protein-changing variants, grouped by gene."</li>
+<li>"Am I homozygous for any loss-of-function variant?"</li>
+<li>"What is my genotype at rs429358 and rs7412 (APOE)?"</li>
+<li>"How many variants of each consequence type do I have?"</li>
+</ul>
+<p>An agent's reading of a variant is not a diagnosis. ClinVar classifications change, a low-depth or low-confidence call can be wrong, and the table holds only what was called and annotated. Confirm anything that matters with an accredited laboratory and a genetic counsellor.</p>
+<h2 id="size-and-speed">Size and speed<a class="heading-anchor" href="#size-and-speed" aria-label="Link to section">#</a></h2>
+<p>A 30x whole-genome DRAGEN VCF of 4.98 million records (5.07 million ALT alleles) annotated with <code>vcf clinvar</code> took 2 minutes 14 seconds on one CPU core with a peak of 260 MB of memory. Records are streamed, so memory does not grow with the VCF. It wrote a 306 MB TSV and a 518 MB SQLite database, in which an indexed lookup by gene, rsID or region takes about a millisecond and a query that scans the whole table one to three seconds.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/variant-table.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/variant-table.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

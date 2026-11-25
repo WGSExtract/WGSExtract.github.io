@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FASTQ archives | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/fastq-archive.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>FASTQ archives</span></nav>
+<h1 id="fastq-archives">FASTQ archives</h1>
+<p>Use <code>fastq archive</code> to compress a single FASTQ or a synchronized pair. Use <code>fastq restore</code> before running tools that expect FASTQ, including <code>align</code>. Neither command contacts the network, needs a reference genome, or modifies its input. They use Zstandard from the Python standard library (3.14+) or the <code>backports.zstd</code> dependency on earlier versions; no external tool is needed.</p>
+<pre><code class="language-sh">wgsextract fastq archive --r1 reads_R1.fastq.gz --r2 reads_R2.fastq.gz --output reads.wgfq
+wgsextract fastq restore --input reads.wgfq --output restored_R1.fastq --output-r2 restored_R2.fastq</code></pre>
+<p>Omit <code>--r2</code> and <code>--output-r2</code> for single-end reads. All output paths must be new and on a filesystem that supports hard links (for example APFS, ext4 or NTFS). Successful commands also write a result manifest: <code>fastq_archive</code> for the archive and <code>fastq_r1</code> / <code>fastq_r2</code> for the restored mates.</p>
+<h2 id="what-is-preserved">What is preserved<a class="heading-anchor" href="#what-is-preserved" aria-label="Link to section">#</a></h2>
+<p>Restore writes the same <strong>uncompressed FASTQ bytes</strong> in the same order, per file. It preserves duplicates, names and comments, all bases and quality characters, <code>+</code> lines, mixed LF/CRLF, and a missing final newline. A gzip/BGZF input is decompressed first: the original compression wrapper, timestamps, and block boundaries are not stored. There is no lossy mode.</p>
+<p>The input must use four lines per record with a header starting with <code>@</code>, a separator starting with <code>+</code>, and equal sequence and quality lengths. Wrapped records and truncated records are refused. Lines are limited to 8 MiB, including any terminator, and a single record or pair to 24 MiB in total. Read 2 must have a matching identifier at every ordinal and the same number of records as read 1. The identifier is the first whitespace-delimited token after <code>@</code>, ignoring a terminal <code>/1</code> or <code>/2</code>. Any <code>/1</code>, <code>/2</code> or CASAVA-style <code>1:</code>/<code>2:</code> mate marker must agree with the given mate. Duplicate identifiers are valid, but identifiers alone cannot distinguish pairs with the same name.</p>
+<p>Restore checks the archive before publishing the output files. A checksum failure, malformed block or wrong number of output paths leaves neither restored mate published. Keep the source files until you have verified a round trip and backed up the archive. Checksums detect corruption; they are not signatures or encryption.</p>
+<h2 id="wgfq-version-1-bitstream"><code>.wgfq</code> version 1 bitstream<a class="heading-anchor" href="#wgfq-version-1-bitstream" aria-label="Link to section">#</a></h2>
+<p>All integers are unsigned and little-endian; offsets and sizes are in bytes. No filenames or filesystem paths occur in the container.</p>
+<ol>
+<li>The bytes <code>57 47 53 46 53 01</code> (<code>WGSFS</code>, version 1), then the one-byte number of FASTQ files (1 or 2).</li>
+<li>Zero or more blocks: a <code>u32</code> payload size, a <code>u32</code> CRC-32 (IEEE, as in zlib), and the payload. Blocks carry at most 250,000 records per mate and 24 MiB of restored FASTQ bytes in total. The encoded payload limit is 128 MiB. Block and record order is the original order.</li>
+<li>End marker: <code>u32</code> zero and <code>u32</code> zero. Next are 32 raw SHA-256 bytes per input in mate order, over the entire restored byte stream of that input. No unused data may follow.</li>
+</ol>
+<p>Each block contains, for each mate in order, four streams: headers, sequences, <code>+</code> lines, and qualities. Every stream is a <code>u32</code> transformed length (at most 24 MiB + 5 bytes), a <code>u32</code> compressed length, then that many bytes of a single independent <a href="https://www.rfc-editor.org/rfc/rfc8878" target="_blank" rel="noopener noreferrer">Zstandard frame</a> without a dictionary and with a window at most 64 MiB. Use mode <code>0</code> if packing would exceed the transformed length limit.</p>
+<p>Header and <code>+</code> streams are the concatenated original lines, with terminators. Sequences and qualities can be packed: the decompressed stream begins with one mode byte and a <code>u32</code> original stream length, followed by:</p>
+<ul>
+<li>Mode <code>0</code>: the original stream, including all terminators.</li>
+<li>Mode <code>1</code>: <code>ceil(original length / 4)</code> packed bytes, then an array of <code>u32</code> position deltas and an array of literal bytes. The <code>i</code>th two-bit value occupies bits <code>2(i mod 4)</code> through <code>2(i mod 4)+1</code> of its byte. The alphabets in code order are <code>ACGT</code> for sequences and <code>F:,#</code> for qualities. A literal replaces the unpacked byte at the position given by the cumulative sum of the deltas (the first delta is the zero-based position itself). The number of deltas and literals is the size of the suffix after the packed bytes divided by five.</li>
+</ul>
+<p>Decode each stream, split on LF (keeping any CR), and reassemble one record at a time by interleaving corresponding lines from each of the four streams. The first three streams have an LF after every line. The quality stream may lack its last LF in the final block only; in that case omit the last LF when reconstructing the block. Nothing depends on matching unique identifiers or normalizing a base or a quality character.</p>
+<h2 id="benchmarking">Benchmarking<a class="heading-anchor" href="#benchmarking" aria-label="Link to section">#</a></h2>
+<p><code>scripts/fastq_archive_bench.py</code> compares both prototypes with <code>bgzip -6</code>. It times each encode and decode separately with one codec worker, and checks each mate with an independent SHA-256 after restoration. Throughput uses uncompressed FASTQ bytes; bits/base and the BGZF ratio include archive framing and repairs. The alternative, unaligned CRAM 3.1 plus a sparse literal repair stream, is benchmark-only and is not a <code>.wgfq</code> file. Benchmarks also require <code>samtools</code> 1.24 and <code>bgzip</code>. Use <code>--edge</code> for the small byte-exactness fixture and <code>--records 3000000</code> for a reproducible prefix of a local pair. The harness uses an <code>out/</code> subdirectory for working files; the sources are read-only.</p>
+<p>On the first 3 million HG002 NovaSeq PCR-free 30× pairs (Apple M1 Pro), both formats round-tripped exactly. CRAM with repairs produced the smallest archive (2.413 bits/base), but decoded at 128.2 MB/s in the comparison and did not reach the 150 MB/s gate in the tuning runs. The shipped format measured 2.765 bits/base (26.7% smaller than <code>bgzip -6</code>), 113.4 MB/s encode and 246.5 MB/s decode, at 366.7 and 338.1 MiB peak RSS, respectively. These are slice measurements, not throughput guarantees for other reads, hosts, or storage.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/fastq-archive.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/fastq-archive.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

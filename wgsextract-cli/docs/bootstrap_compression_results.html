@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reference Bundle Compression Benchmark | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/bootstrap_compression_results.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Reference Bundle Compression Benchmark</span></nav>
+<h1 id="reference-bundle-compression-benchmark">Reference Bundle Compression Benchmark</h1>
+<p>Historical measurements used to choose the format of the reference bootstrap bundle. The benchmark script that produced them has since been removed from the repository.</p>
+<p>For current pipeline benchmarks, use <a href="resource_estimates.html#pipeline-benchmarks"><code>wgsextract benchmark</code></a> (<code>wgsextract benchmark --help</code> lists datasets and profiles). These historical compression measurements are not extraction, alignment, or variant-calling benchmarks.</p>
+<p><strong>Source data:</strong> <code>reference/microarray/raw_file_templates</code> <strong>Raw size:</strong> 335.76 MB</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Method</th><th>Level</th><th>Size</th><th>Ratio</th><th>Comp time (s)</th><th>Ext time (s)</th></tr></thead>
+<tbody>
+<tr><td>7z</td><td>9</td><td>56.48 MB</td><td>5.94x</td><td>195.08</td><td>3.79</td></tr>
+<tr><td>7z</td><td>5</td><td>74.33 MB</td><td>4.52x</td><td>48.06</td><td>5.42</td></tr>
+<tr><td>xz</td><td>9</td><td>72.58 MB</td><td>4.63x</td><td>180.85</td><td>2.95</td></tr>
+<tr><td>xz</td><td>6</td><td>83.27 MB</td><td>4.03x</td><td>44.10</td><td>1.18</td></tr>
+<tr><td>zstd</td><td>19</td><td>86.28 MB</td><td>3.89x</td><td>149.94</td><td>0.44</td></tr>
+<tr><td>bgzip</td><td>9</td><td>91.33 MB</td><td>3.68x</td><td>33.50</td><td>0.54</td></tr>
+<tr><td>bzip2</td><td>1</td><td>99.27 MB</td><td>3.38x</td><td>16.18</td><td>6.02</td></tr>
+<tr><td>bzip2</td><td>9</td><td>104.16 MB</td><td>3.22x</td><td>17.01</td><td>6.82</td></tr>
+<tr><td>bgzip</td><td>6</td><td>105.25 MB</td><td>3.19x</td><td>6.25</td><td>0.54</td></tr>
+<tr><td>7z</td><td>1</td><td>105.63 MB</td><td>3.18x</td><td>2.52</td><td>4.99</td></tr>
+<tr><td>xz</td><td>3</td><td>107.20 MB</td><td>3.13x</td><td>25.45</td><td>0.75</td></tr>
+<tr><td>xz</td><td>0</td><td>107.72 MB</td><td>3.12x</td><td>1.74</td><td>0.80</td></tr>
+<tr><td>gzip</td><td>9</td><td>110.53 MB</td><td>3.04x</td><td>72.62</td><td>1.45</td></tr>
+<tr><td>zip</td><td>9</td><td>110.53 MB</td><td>3.04x</td><td>75.55</td><td>2.13</td></tr>
+<tr><td>zstd</td><td>15</td><td>110.52 MB</td><td>3.04x</td><td>56.73</td><td>0.45</td></tr>
+<tr><td>pigz</td><td>9</td><td>110.54 MB</td><td>3.04x</td><td>10.29</td><td>0.58</td></tr>
+<tr><td>gzip</td><td>6</td><td>111.53 MB</td><td>3.01x</td><td>14.66</td><td>1.44</td></tr>
+<tr><td>zip</td><td>6</td><td>111.54 MB</td><td>3.01x</td><td>15.77</td><td>2.19</td></tr>
+<tr><td>pigz</td><td>6</td><td>111.55 MB</td><td>3.01x</td><td>2.19</td><td>0.60</td></tr>
+<tr><td>zstd</td><td>9</td><td>112.65 MB</td><td>2.98x</td><td>4.50</td><td>0.45</td></tr>
+<tr><td>zstd</td><td>1</td><td>114.18 MB</td><td>2.94x</td><td>0.48</td><td>0.38</td></tr>
+<tr><td>bgzip</td><td>1</td><td>119.71 MB</td><td>2.80x</td><td>1.47</td><td>0.53</td></tr>
+<tr><td>zstd</td><td>3</td><td>123.34 MB</td><td>2.72x</td><td>0.88</td><td>0.49</td></tr>
+<tr><td>pigz</td><td>1</td><td>127.87 MB</td><td>2.63x</td><td>0.43</td><td>0.54</td></tr>
+<tr><td>gzip</td><td>1</td><td>127.88 MB</td><td>2.63x</td><td>2.82</td><td>1.59</td></tr>
+<tr><td>zip</td><td>1</td><td>127.88 MB</td><td>2.63x</td><td>3.46</td><td>2.35</td></tr>
+<tr><td>lz4</td><td>9</td><td>148.91 MB</td><td>2.25x</td><td>2.25</td><td>0.30</td></tr>
+<tr><td>lz4</td><td>1</td><td>195.64 MB</td><td>1.72x</td><td>0.42</td><td>0.30</td></tr>
+</tbody>
+</table></div>
+<h2 id="decision-targz-of-bgzipped-files">Decision: <code>.tar.gz</code> of bgzipped files<a class="heading-anchor" href="#decision-targz-of-bgzipped-files" aria-label="Link to section">#</a></h2>
+<p>7z at level 9 gave the best ratio, and a 7z archive of the uncompressed bundle was smaller still:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Archive</th><th>Contents</th><th>Size</th></tr></thead>
+<tbody>
+<tr><td><code>wgsextract-reference-bootstrap.tar.gz</code></td><td>bgzipped files</td><td>167 MB</td></tr>
+<tr><td><code>wgsextract-reference-raw.7z</code></td><td>uncompressed files</td><td>92 MB</td></tr>
+</tbody>
+</table></div>
+<p>These sizes are for the v0.1.0 bundle. Since v0.2.0 it has no YBrowse SNP VCFs (#509, drop YBrowse SNP VCFs), and since v0.3.0/v0.4.0 it expands CombinedKit v3 with the CombinedKit v5 microarray templates (#1107, CombinedKit v5 microarray templates), is built by <code>scripts/build_reference_bootstrap.py</code>, and is about 193 MB. The bootstrap bundle nevertheless ships as a <code>.tar.gz</code> (see <code>BOOTSTRAP_URL</code> and <code>BOOTSTRAP_SHA256</code> in <code>src/wgsextract_cli/core/constants.py</code>):</p>
+<ul>
+<li>Liftover chains and other genomic files are already in the bgzipped <code>.gz</code> form the tools expect, so nothing needs recompressing after extraction.</li>
+<li><code>tar</code> and <code>gzip</code> are available everywhere the CLI runs; 7z would be an extra dependency.</li>
+<li>The bundle changes rarely, so the larger download is a one-time cost.</li>
+</ul>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/bootstrap_compression_results.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/bootstrap_compression_results.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

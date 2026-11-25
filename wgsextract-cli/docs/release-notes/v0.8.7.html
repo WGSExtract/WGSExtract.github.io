@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WGS Extract 0.8.7 | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/release-notes/v0.8.7.html" />
+    <link rel="stylesheet" href="../../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../../index.html">Home</a><a href="../../install.html">Install CLI</a><a href="../../gui.html">GUI</a><a href="../../cli.html">CLI</a><a href="../../workflows.html">Workflows</a><a href="../../wgs-guide.html">WGS guide</a><a href="../../reference.html">Reference</a><a class="active" href="../index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../../index.html">WGS Extract CLI</a> / <a href="../index.html">CLI Docs</a> / <span>WGS Extract 0.8.7</span></nav>
+<h1 id="wgs-extract-087">WGS Extract 0.8.7</h1>
+<p>This release adds sample QC (relatedness and contamination), SMA carrier screening and SV population frequencies, makes vep-rs the default VEP engine, and has the desktop app offer to install a missing reference genome before a run instead of failing.</p>
+<h2 id="new">New<a class="heading-anchor" href="#new" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong><code>qc relate</code></strong> checks sex, relatedness and continental ancestry across BAMs, CRAMs and VCFs with somalier: same person, parent-child, siblings, 2nd and 3rd degree, with warnings for a sex or PED mismatch (swapped files). <code>ref somalier --install</code> gets its sites and the 1000 Genomes sketches. Linux and macOS (<code>pixi install -e somalier</code>); <a href="../relate.html">docs</a> (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/614" target="_blank" rel="noopener noreferrer">#614</a>).</li>
+<li><strong><code>qc contamination</code></strong> estimates DNA from another person (FREEMIX) in a GRCh37 or GRCh38 BAM or CRAM with VerifyBamID2. Above <code>qc_max_contamination</code> (default 0.03), variant calling, microarray and lineage warn, confidence labels are capped at moderate and the personal report says so. Linux and macOS; <a href="../contamination.html">docs</a> (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/616" target="_blank" rel="noopener noreferrer">#616</a>).</li>
+<li><strong><code>typing smn</code></strong> calls SMN1/SMN2 copy number with SMNCopyNumberCaller for SMA carrier status, flagging a possible silent carrier (g.27134T&gt;G). It needs short-read WGS at 30x or more, runs from the <code>smn</code> environment (Linux and macOS), and is not a diagnosis. The report gains a carrier screening section (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/619" target="_blank" rel="noopener noreferrer">#619</a>).</li>
+<li><strong><code>vcf sv-freq</code></strong> annotates structural variants with population frequencies from gnomAD-SV (GRCh38 and GRCh37) and gnomAD-LR (GRCh38), installed with <code>ref gnomad-sv --install</code>. <code>vcf table</code> gains <code>sv_af</code> and <code>sv_freq</code> columns, and the report lists rare SVs; <a href="../sv-frequency.html">docs</a> (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/618" target="_blank" rel="noopener noreferrer">#618</a>).</li>
+<li><strong>vep-rs is the default VEP engine</strong>, on every platform including Windows. On a whole HG002 genome it took 175 s instead of Ensembl VEP's 3.5 hours, with ≥99.9999% matching consequences. <code>vep download --engine vep-rs</code> builds its cache; <code>--engine ensembl</code> (or config <code>vep_engine</code>) keeps Ensembl VEP, and a setup with only an Ensembl VEP cache keeps using it, with a warning; <a href="../vep-engines.html">docs</a> (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/602" target="_blank" rel="noopener noreferrer">#602</a>).</li>
+<li><strong><code>typing str</code> on Nanopore and PacBio reads</strong> uses LongTR (<code>longtr</code> environment), or STRkit with <code>--caller strkit</code>; short reads keep ExpansionHunter (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/615" target="_blank" rel="noopener noreferrer">#615</a>).</li>
+<li><strong><code>vcf clair3</code></strong> uses Clair3 2.0.5 and now runs on Linux ARM64 and Apple Silicon as well as Linux x86-64 (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/613" target="_blank" rel="noopener noreferrer">#613</a>).</li>
+<li><strong><code>vcf pharmcat</code> on native Windows</strong> (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/622" target="_blank" rel="noopener noreferrer">#622</a>).</li>
+<li><strong><code>ref needs -- COMMAND</code></strong> lists the reference genome or annotation data a command line needs that the library lacks, with the command that installs each. The desktop app uses it to ask before a run.</li>
+<li><code>--aligner auto</code> on Apple Silicon can now pick bwa-mem2 when <code>wgse-bwa-mem2</code> 0.5.0 or later is installed, without upstream bwa-mem2 or the reference's <code>.0123</code> file, using its smaller memory estimate. bwa-mem2's records differ from bwa's, so a run that used to align with bwa (or <code>wgse-bwa</code>) may now give a different BAM; pass <code>--aligner bwa</code> to keep bwa.</li>
+<li><code>vcf snp</code> and <code>vcf indel</code> start the longest contigs first, so chrX no longer runs alone at the end: about 5% faster, with the same records (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/646" target="_blank" rel="noopener noreferrer">#646</a>).</li>
+<li><code>methylation pileup</code> on a CRAM without <code>--region</code> only walks the contigs that have reads: 8 s instead of 190 s on a 1 Mb slice (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/611" target="_blank" rel="noopener noreferrer">#611</a>).</li>
+</ul>
+<h2 id="fixes">Fixes<a class="heading-anchor" href="#fixes" aria-label="Link to section">#</a></h2>
+<ul>
+<li><code>info</code> on a CRAM whose reference isn't installed reported 0 bp reads, single-end and an unknown sequencer. It now reports those as "Could not compute" and warns which reference to install.</li>
+<li>CRAM reads are never decoded with a reference fetched from the internet: every tool gets a local-only <code>REF_PATH</code>, so a CRAM whose <code>UR</code> file is gone uses the library's genome or fails, instead of silently downloading it from EBI (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/636" target="_blank" rel="noopener noreferrer">#636</a>).</li>
+<li>Chunked <code>realign</code> of a CRAM keeps every unplaced read; with htslib before 1.25 some were dropped (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/655" target="_blank" rel="noopener noreferrer">#655</a>).</li>
+<li>BAMs whose read groups name several platforms (for example ONT and Illumina merged) no longer silently get short-read defaults: <code>align</code>, <code>realign</code>, <code>vcf deepvariant</code> and <code>vcf sv</code> refuse them unless an option chooses the platform (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/652" target="_blank" rel="noopener noreferrer">#652</a>).</li>
+<li><code>vcf deepvariant</code> on Apple Silicon refuses Google's amd64 image up front (it can't run under emulation) and names the alternatives (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/665" target="_blank" rel="noopener noreferrer">#665</a>).</li>
+<li><code>vcf clair3</code> reads CRAM 3.1, shows Clair3's own errors, and works when a path has a space; so does <code>vcf phase</code> with LongPhase (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/604" target="_blank" rel="noopener noreferrer">#604</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/623" target="_blank" rel="noopener noreferrer">#623</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/632" target="_blank" rel="noopener noreferrer">#632</a>).</li>
+<li><code>methylation pileup</code> explains modkit's CRAM crash instead of failing with a bare segfault (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/608" target="_blank" rel="noopener noreferrer">#608</a>).</li>
+<li>The UCSC liftOver chains are checksum-pinned and fall back to a GitHub mirror when UCSC is unreachable (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/667" target="_blank" rel="noopener noreferrer">#667</a>).</li>
+<li>The <code>--metal</code> aligners fall back to the CPU when a GPU command hangs (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/548" target="_blank" rel="noopener noreferrer">#548</a>).</li>
+<li>Windows: the CLI and the app work from any install folder and Pixi home (<code>PIXI_HOME</code>), and a missing tools environment gives a clear error instead of every page failing with exit 127.</li>
+<li>Installing hs37d5 from the NIH mirror works again. NIH serves it as RAZF, an older indexed gzip that was taken for BGZF, so indexing failed and the install fell back to the much slower EBI mirror. It is now recompressed to BGZF.</li>
+<li><code>ref bootstrap</code> no longer downloads the AADR v66.p1 2M SNP panel: the Harvard Dataverse server is slow enough to stall setup. Install it when you need it with <code>wgsextract ref aadr --install</code>, or from the app's Reference Data page. The Microarray page's <strong>2M</strong> format stays disabled, with a tooltip, until it is installed.</li>
+</ul>
+<h2 id="desktop-app">Desktop app<a class="heading-anchor" href="#desktop-app" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong>Missing reference data:</strong> running Info, variant calling, extraction and the rest on a CRAM whose reference genome isn't installed (for example hs37d5) no longer runs and reports nothing. A dialog names what is missing and offers <strong>Install and Continue</strong>, <strong>Continue</strong> or <strong>Cancel</strong>; the VCF annotation actions do the same for their annotation data.</li>
+<li><strong>The app's own data moves</strong> to a <code>WGSExtract-gui</code> folder in the platform's app data folder, and setup installs the CLI there, so the workspace holds only your files and moving it no longer reinstalls the CLI. On the first start, a 0.8.6 install's settings come over and setup is offered again.</li>
+<li>WGSExtract's <code>config.toml</code> moves from <code>&lt;workspace&gt;/settings/</code> to the workspace folder itself (<code>~/wgs-extract/config.toml</code> by default). Existing files move on the next start.</li>
+<li>The app's executable is named <code>wgsextract-gui</code> on every platform.</li>
+<li>Linux AppImage: setup and actions no longer run with the AppImage's library paths, which broke setup on newer systems such as Ubuntu 26.04.</li>
+<li>Windows: saving settings no longer fails with <code>EPERM</code> when another program (the CLI, a virus scanner) has the file open for a moment.</li>
+<li>Layout, icon and error-state fixes across the pages, in light and dark mode and narrow windows.</li>
+<li>The AADR 2M SNP panel is an optional Reference Data download again, and the Microarray formats have tooltips for Consumer Tests, Reich Lab and AADR.</li>
+<li>The app site is now "WGS Extract GUI", with a <a href="https://wgsextract.github.io/wgsextract-cli/app/whats-different.html" target="_blank" rel="noopener noreferrer">What's Different</a> page.</li>
+</ul>
+<p>See the app's <a href="https://github.com/WGSExtract/wgsextract-cli/blob/v0.8.7/gui/docs/CHANGELOG.md" target="_blank" rel="noopener noreferrer">CHANGELOG</a> for details.</p>
+<p><strong>Full changelog:</strong> <a href="https://github.com/WGSExtract/wgsextract-cli/compare/v0.8.6...v0.8.7" target="_blank" rel="noopener noreferrer">https://github.com/WGSExtract/wgsextract-cli/compare/v0.8.6...v0.8.7</a></p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/release-notes/v0.8.7.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/release-notes/v0.8.7.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Research panels | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/panel.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Research panels</span></nav>
+<h1 id="research-panels">Research panels</h1>
+<p>A <strong>research panel</strong> is a file that says which genes, sites and allele combinations you want to examine, and which filters a variant must pass to count. <code>wgsextract panel check</code> validates one and resolves its genes. A later <code>panel audit --research-panel</code> will apply it to a genome (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/1287" target="_blank" rel="noopener noreferrer">#1287, declarative research panel audit</a>).</p>
+<blockquote>
+<p><strong>Research use only; not a diagnosis.</strong> A panel records its author's hypotheses. A variant that "qualifies" only passes the panel's filters; nothing in a panel check or audit says that it causes or predicts any condition. Every output carries <code>research_only: true</code> and the <code>panel_research_only</code> warning. Don't act on panel results without a clinical genetics professional.</p>
+</blockquote>
+<p>Panels stay on your computer: checking one reads only the file and the gene annotations bundled with the CLI, and contacts no server. WGS Extract ships no clinical panels. If you build one from PanelApp, PharmVar or ClinPGx data, their terms (including CC BY-SA share-alike) apply to your file.</p>
+<h2 id="check-a-panel">Check a panel<a class="heading-anchor" href="#check-a-panel" aria-label="Link to section">#</a></h2>
+<pre><code class="language-console">$ wgsextract panel check --panel my_panel.toml
+Example research panel (example-panel 0.1.0): a valid wgsextract.panel/1 research panel.
+SHA-256: 9ac1…
+Genes resolved in hg38 (NCBI RefSeq GCF_000001405.40-RS_2025_08):
+  group_a: 6 of 6 genes, 10,776 coding bp
+  group_b: 3 of 4 genes, 4,083 coding bp; not resolved: NOT_A_GENE</code></pre>
+<ul>
+<li>Genes resolve in the panel's <code>build</code>, else hg38; <code>--build hg19</code> or <code>--build t2t</code> resolves them in another build.</li>
+<li>An invalid panel exits 1 with error code <code>panel_invalid</code> and lists every problem with its location (below). <code>--json</code> (or <code>api.panel.check</code>) gives the same list in <code>details.problems</code>.</li>
+<li>A valid panel exits 0. <code>details</code> holds the panel's id, version and SHA-256; each gene's resolution, HGNC ID, spans and coding length; each group's effective filters; and the calibration settings.</li>
+<li>The check writes no files.</li>
+</ul>
+<h3 id="warnings">Warnings<a class="heading-anchor" href="#warnings" aria-label="Link to section">#</a></h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>panel_research_only</code></td><td>Always: the research-only disclaimer.</td></tr>
+<tr><td><code>panel_gene_unresolved</code></td><td>A name is no gene in the bundled annotation (with close symbols when there are some). The audit leaves it out.</td></tr>
+<tr><td><code>panel_gene_ambiguous</code></td><td>A synonym of several genes. Give the symbol.</td></tr>
+<tr><td><code>panel_gene_alias</code></td><td>A synonym of one gene, which is used instead.</td></tr>
+<tr><td><code>panel_gene_noncoding</code></td><td>The gene has no coding sequence, so coding filters can't qualify its variants.</td></tr>
+<tr><td><code>panel_haplotype_pharmcat_gene</code></td><td>A haplotype watches a gene whose star alleles PharmCAT calls. The watch is allowed, but <code>wgsextract vcf pharmcat</code> handles that gene's exceptions and copy-number alleles; this watch only matches the panel's combinations.</td></tr>
+<tr><td><code>panel_build_differs</code></td><td><code>--build</code> differs from the panel's build, so its sites and haplotypes can't be audited on that build.</td></tr>
+</tbody>
+</table></div>
+<h2 id="the-format-wgsextractpanel1">The format: <code>wgsextract.panel/1</code><a class="heading-anchor" href="#the-format-wgsextractpanel1" aria-label="Link to section">#</a></h2>
+<p>A panel is TOML (<code>.toml</code>) or the same structure in JSON (<code>.json</code>). Both are checked against one schema, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/src/wgsextract_cli/assets/schemas/wgsextract.panel.1.schema.json" target="_blank" rel="noopener noreferrer"><code>wgsextract.panel.1.schema.json</code></a>, which editors can use for completion. Every key is checked; an unknown key is an error, never ignored. No key holds an expression.</p>
+<pre><code class="language-toml">schema = &quot;wgsextract.panel/1&quot;
+id = &quot;example-panel&quot;                 # lower-case letters, digits and &#x27;-&#x27;
+name = &quot;Example research panel&quot;
+version = &quot;0.1.0&quot;                    # your version; outputs also record the file&#x27;s SHA-256
+build = &quot;GRCh38&quot;                     # coordinates of sites and haplotypes: GRCh38, GRCh37 or CHM13v2.0
+
+[source]                             # free text, copied into outputs, never read
+citation = &quot;Synthetic example&quot;
+
+[defaults]                           # filters for every group; a group may override any
+max_af = 0.003                       # gnomAD allele frequency, as a fraction (not a percentage)
+max_popmax_af = 0.01
+pass_only = true                     # default true
+min_confidence = &quot;moderate&quot;          # high, moderate or low
+missing_scores = &quot;unscored&quot;          # unscored (default) or drop
+
+[[defaults.qualify]]                 # OR between clauses ...
+impacts = [&quot;HIGH&quot;]
+[[defaults.qualify]]                 # ... AND inside one
+consequences = [&quot;missense_variant&quot;]
+min_revel = 0.5
+[[defaults.qualify]]
+min_spliceai = 0.2
+
+[[groups]]
+id = &quot;group_a&quot;
+name = &quot;Group A&quot;
+genes = [&quot;GENE1&quot;, &quot;GENE2&quot;, &quot;HGNC:613&quot;]   # symbols, unique synonyms or HGNC IDs
+recessive = [&quot;GENE2&quot;]                    # a subset of genes: report cis/trans and biallelic state
+[groups.overrides]
+max_af = 0.001
+
+[[sites]]                            # one site to watch
+id = &quot;site_1&quot;
+locus = &quot;GRCh38:chr1:1000000:G&gt;A&quot;    # BUILD:CHROM:POS:REF&gt;ALT, 1-based
+rsid = &quot;rs123&quot;                       # optional
+
+[[haplotypes]]                       # named allele combinations over sites on one chromosome
+id = &quot;hap_1&quot;
+gene = &quot;GENE3&quot;
+sites = [&quot;GRCh38:chr19:2000000:T&quot;, &quot;GRCh38:chr19:2000138:C&quot;]   # BUILD:CHROM:POS:REF
+alleles = { a = [&quot;C&quot;, &quot;T&quot;], b = [&quot;T&quot;, &quot;T&quot;], c = [&quot;T&quot;, &quot;C&quot;] }
+
+[calibration]                        # all optional
+null_sets = 1000                     # 100 to 100000; default 1000
+match_on = [&quot;callable_cds_bp&quot;]       # the only covariate in this version
+bins = 20                            # 2 to 100; default 20
+seed = 1287                          # unset: the audit derives one from the panel&#x27;s SHA-256 and its input</code></pre>
+<p>A panel needs at least one group, site or haplotype.</p>
+<h3 id="filters">Filters<a class="heading-anchor" href="#filters" aria-label="Link to section">#</a></h3>
+<p><code>[defaults]</code> sets the filters of every group, and a group's <code>[groups.overrides]</code> replaces any of them for that group. <code>qualify</code> is replaced whole, not merged. Every group needs <code>qualify</code> clauses, from the defaults or its overrides.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Key</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td><code>max_af</code></td><td>Keep variants whose gnomAD allele frequency is at most this fraction (0–1). A variant without a frequency is kept and flagged.</td></tr>
+<tr><td><code>max_popmax_af</code></td><td>The same for the highest population frequency, where the table has one.</td></tr>
+<tr><td><code>pass_only</code></td><td>Only variants whose FILTER is PASS. Default <code>true</code>.</td></tr>
+<tr><td><code>min_confidence</code></td><td>The lowest <a href="variant-confidence.html">confidence label</a> kept: <code>high</code>, <code>moderate</code> or <code>low</code>.</td></tr>
+<tr><td><code>missing_scores</code></td><td>What to do when a clause needs a score the variant lacks: <code>unscored</code> (list it, never count it; the default) or <code>drop</code>.</td></tr>
+<tr><td><code>qualify</code></td><td>Clauses; a variant qualifies when it passes any clause.</td></tr>
+</tbody>
+</table></div>
+<p>A clause passes when the variant passes every key in it:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Key</th><th>Passes when</th></tr></thead>
+<tbody>
+<tr><td><code>impacts</code></td><td>The impact is one of <code>HIGH</code>, <code>MODERATE</code>, <code>LOW</code>, <code>MODIFIER</code>.</td></tr>
+<tr><td><code>consequences</code></td><td>The consequence is one of these Sequence Ontology terms (<code>missense_variant</code>).</td></tr>
+<tr><td><code>min_revel</code>, <code>min_alphamissense</code>, <code>min_spliceai</code></td><td>The score is at least this (0–1).</td></tr>
+<tr><td><code>min_cadd_phred</code></td><td>The CADD PHRED score is at least this (0–100).</td></tr>
+</tbody>
+</table></div>
+<p>Scores use three-valued logic. A clause that needs a score the variant lacks neither passes nor fails it: the variant is <code>unscored</code>, listed but never counted, and never counted in calibration. Otherwise a missing SpliceAI score would pass an OR of clauses silently.</p>
+<h3 id="genes">Genes<a class="heading-anchor" href="#genes" aria-label="Link to section">#</a></h3>
+<p>A gene is a symbol (any case), an unambiguous synonym, or an HGNC ID (<code>HGNC:613</code>), resolved in the bundled NCBI RefSeq annotations (<code>assets/panel/genes_&lt;build&gt;.tsv.gz</code>, public domain). A gene listed twice in one group (also through a synonym) is an error.</p>
+<p>Each gene's coding length (<code>cds_bp</code>, stop codon included) is that of one transcript: its MANE Select transcript on GRCh38, else its RefSeq Select one (the GRCh37 and T2T annotations tag no MANE), else its longest coding transcript. <code>details</code> names the transcript and how it was chosen (<code>cds_basis</code>). Null-panel calibration will match genes on this length, counting only bases a genome actually covers.</p>
+<h3 id="sites-and-haplotypes">Sites and haplotypes<a class="heading-anchor" href="#sites-and-haplotypes" aria-label="Link to section">#</a></h3>
+<p>Coordinates are build-qualified and must match the panel's <code>build</code>; nothing is lifted over. A haplotype's sites share one chromosome, each allele lists one base per site in the sites' order, and two allele names can't share the same bases. Allele names are the panel author's labels and get no interpretation.</p>
+<h2 id="problems-and-their-locations">Problems and their locations<a class="heading-anchor" href="#problems-and-their-locations" aria-label="Link to section">#</a></h2>
+<p>A location is a key path with 0-based indices (<code>groups[1].genes[3]</code>), or a line and column for a syntax error.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>syntax</code></td><td>Not valid TOML or JSON, or (JSON) a key given twice.</td></tr>
+<tr><td><code>unsupported_schema</code></td><td><code>schema</code> names another format or version.</td></tr>
+<tr><td><code>unknown_key</code></td><td>A key the format doesn't have; the message lists the ones it has.</td></tr>
+<tr><td><code>missing_key</code></td><td>A required key is absent.</td></tr>
+<tr><td><code>wrong_type</code></td><td>A value of the wrong type (a string where a number belongs).</td></tr>
+<tr><td><code>bad_value</code></td><td>A value out of range, not allowed, empty or in the wrong form.</td></tr>
+<tr><td><code>duplicate</code></td><td>A repeated id, gene, site, list item or allele combination.</td></tr>
+<tr><td><code>empty_panel</code></td><td>No groups, sites or haplotypes.</td></tr>
+<tr><td><code>no_qualify_rule</code></td><td>A group without <code>qualify</code> clauses.</td></tr>
+<tr><td><code>recessive_not_in_group</code></td><td>A <code>recessive</code> gene that isn't one of the group's genes.</td></tr>
+<tr><td><code>build_mismatch</code></td><td>Sites or haplotypes without a panel <code>build</code>, or on another build.</td></tr>
+<tr><td><code>locus_out_of_range</code></td><td>A position beyond the end of its chromosome.</td></tr>
+<tr><td><code>allele_length</code></td><td>An allele with more or fewer bases than the haplotype has sites.</td></tr>
+<tr><td><code>haplotype_split</code></td><td>A haplotype's sites on more than one chromosome.</td></tr>
+</tbody>
+</table></div>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/panel.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/panel.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

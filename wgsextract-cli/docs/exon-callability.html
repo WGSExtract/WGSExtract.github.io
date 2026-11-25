@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Exon callability (vcf callability) | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/exon-callability.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Exon callability (vcf callability)</span></nav>
+<h1 id="exon-callability-vcf-callability">Exon callability (<code>vcf callability</code>)</h1>
+<p>A clinical findings list is silent about most genes, and silence can mean three different things:</p>
+<ul>
+<li><strong>not reported</strong>: the assay read every coding base of the gene and found nothing to report;</li>
+<li><strong>not readable</strong>: the assay could not read some of it, so a variant there would have been missed;</li>
+<li><strong>not run</strong>: no analysis looked at it.</li>
+</ul>
+<p>Gene-body coverage can't tell these apart. A gene with reads over 90% of its body can still hide a whole coding exon nobody read, and 90% of a body that is mostly intron says little about its exons. <code>vcf callability</code> therefore classifies every coding exon of a gene list, base by base, from the sample's <a href="reference-evidence.html">reference evidence</a> (a gVCF), and calls a gene callable only when every one of its coding exons is. The <a href="personal-report.html">personal report</a> combines the result with the ClinVar section.</p>
+<blockquote>
+<p><strong>Callability is technical, not clinical.</strong> It says whether this sequencing run read the bases. A callable exon with nothing reported does not rule out disease, and no gene is "negative" while an exon, a paralog region or a variant class (below) remains unassessed.</p>
+</blockquote>
+<pre><code class="language-sh">wgsextract vcf snp --input sample.cram --reference-evidence gvcf
+wgsextract vcf callability --vcf-input snps.vcf.gz
+wgsextract vcf clinvar --vcf-input bcftools.g.vcf.gz --ref reference.fa
+wgsextract report --input sample.cram</code></pre>
+<h2 id="inputs">Inputs<a class="heading-anchor" href="#inputs" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong>A single-sample gVCF.</strong> <code>--vcf-input</code> is a gVCF, or a VCF whose caller also wrote one (<code>--reference-evidence gvcf</code> with <code>vcf snp</code>, <code>vcf indel</code>, <code>vcf gatk</code>, <code>vcf deepvariant</code> or <code>vcf clair3</code>), found through its result manifest. A VCF without one stops with the command that makes it: a variant-only VCF can't tell a confident reference base from one nobody read. Both files must name exactly one sample and agree on its name. The caller's <code>--region</code> limits what was assessed; exons outside it are <code>not_run</code>.</li>
+<li><strong>A gene list.</strong> <code>--gene-list</code> takes the report's lists (default <code>acmg-sf-3.3</code>, or config <code>report_gene_list</code>) or a TSV/BED of symbols. Only the symbols are used, so nothing is downloaded.</li>
+<li><strong>An exon model.</strong> Bundled for hg38 and hg19 (below); <code>--exons</code> gives another (format below). Genes the model lacks are <code>not_run</code> (<code>no_exon_model</code>).</li>
+</ul>
+<h2 id="bundled-exon-models">Bundled exon models<a class="heading-anchor" href="#bundled-exon-models" aria-label="Link to section">#</a></h2>
+<p><code>assets/report/exons_hg38.tsv.gz</code> and <code>exons_hg19.tsv.gz</code> list, for each gene of the built-in lists (ACMG SF v3.3 and v3.2, 84 genes, 1,852 exons), every exon of one transcript, numbered in transcript order, with its coding part:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Build</th><th>Transcript</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>hg38</td><td>MANE Select</td><td>NCBI RefSeq annotation GCF_000001405.40-RS_2025_08 (GRCh38.p14)</td></tr>
+<tr><td>hg19</td><td>RefSeq Select</td><td>NCBI RefSeq annotation release 105.20220307 (GRCh37.p13)</td></tr>
+</tbody>
+</table></div>
+<p>These are the transcripts the report's gene spans use. Each row also lists the known short-read limitations within 50 bp of the exon, from the GIAB genome stratifications v3.6:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Limitation</th><th>GIAB file</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>low_mappability</code></td><td><code>lowmappabilityall</code></td><td>100 bp reads (up to 2 mismatches and 1 indel) or 250 bp reads also match elsewhere</td></tr>
+<tr><td><code>segmental_duplication</code></td><td><code>segdups</code></td><td>inside a copy of over 1 kb at 90% identity or more elsewhere</td></tr>
+</tbody>
+</table></div>
+<p><code>scripts/build_report_exons.py</code> builds both files from the pinned sources (each checked against its SHA-256; the file headers record the URLs and checksums). NCBI RefSeq annotation is public domain; the GIAB stratifications are NIST data freely available for reuse. The files hold coordinates computed from those sources and nothing else: no interpretation, classification or gene-list table from another tool is copied. The gene symbols are the ACMG SF lists' (facts, cited in the report).</p>
+<h2 id="states">States<a class="heading-anchor" href="#states" aria-label="Link to section">#</a></h2>
+<p>Each coding exon is assessed over its CDS plus <code>--flank</code> intronic bases on each side (default 2, the splice-site dinucleotides; up to 50). Each base gets the gVCF's <a href="reference-evidence.html#evidence-states">evidence state</a> with the <code>confidence_*</code> thresholds (<code>--confidence-depth</code>, <code>--confidence-gq</code>). A base is <strong>read</strong> when it is <code>callable_reference</code> or inside a small-variant call that passes the depth threshold and, when the evidence model supports it, the genotype-quality threshold, with all carried alleles resolved to sequence. A carried call that fails these checks is <code>low_quality_variant</code>, not readable. Bases in known short-read limitations are not counted as read.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Exon status</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>callable</code></td><td>every base read</td></tr>
+<tr><td><code>partial</code></td><td>some bases read, others not</td></tr>
+<tr><td><code>not_readable</code></td><td>no base read: no reads (<code>uncovered</code>), too few or too poor (<code>low_quality_reference</code>), or failed calls (<code>filtered</code>, <code>no_call</code>)</td></tr>
+<tr><td><code>specialist_required</code></td><td>overlaps a short-read limitation: short reads can't place reads there uniquely, whatever the gVCF says, so a paralog-aware method (long reads, a gene-specific assay) is needed</td></tr>
+<tr><td><code>not_run</code></td><td>the caller did not assess these bases (<code>not_assessed</code>)</td></tr>
+<tr><td><code>not_applicable</code></td><td>ploidy 0 for this sample (<code>excluded_by_policy</code>, such as chrY in a woman); left out of every count</td></tr>
+</tbody>
+</table></div>
+<p>An exon's <code>reasons</code> list the states and limitations of its unread bases.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Gene state</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>callable</code></td><td>every coding exon callable</td></tr>
+<tr><td><code>partial</code></td><td>some coding exons not callable</td></tr>
+<tr><td><code>not_readable</code></td><td>no coding exon callable or partial</td></tr>
+<tr><td><code>not_run</code></td><td>no exon model, or no coding exon assessed</td></tr>
+</tbody>
+</table></div>
+<p>In the report, each gene's <strong>result</strong> combines its state with the ClinVar section:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Result</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>reported</code></td><td>the ClinVar section lists a consensus P/LP call in the gene (with its confidence)</td></tr>
+<tr><td><code>not_reported</code></td><td>no call, and every coding exon was read</td></tr>
+<tr><td><code>not_readable</code></td><td>no call, but not every coding exon was read</td></tr>
+<tr><td><code>not_run</code></td><td><code>vcf clinvar</code> has not run, the gene is not in its gene list, or the gene was not assessed; also every gene without a call when the two runs can't be combined (warning <code>clinvar_not_combined</code>). Membership is by the report's own gene list symbols</td></tr>
+</tbody>
+</table></div>
+<p>Run <code>vcf clinvar</code> on the assessed gVCF itself. Annotating a variant-only companion such as <code>snps.vcf.gz</code> can omit indels. The report compares the gVCF fingerprints recorded by both runs and suppresses <code>not_reported</code> if they don't match, the builds differ, or ClinVar findings could not all be placed in genes.</p>
+<h2 id="what-a-callable-exon-does-not-cover">What a callable exon does not cover<a class="heading-anchor" href="#what-a-callable-exon-does-not-cover" aria-label="Link to section">#</a></h2>
+<p>A callable gene still leaves these unassessed (the JSON's <code>unassessed_variant_classes</code>):</p>
+<ul>
+<li>exon or gene deletions and duplications and other structural variants (<code>vcf sv</code>, <code>vcf cnv</code>);</li>
+<li>repeat expansions longer than a read (<code>typing str</code>);</li>
+<li>promoters, untranslated regions and deep intronic variants;</li>
+<li>exons only in other transcripts;</li>
+<li>mosaic and low-fraction variants;</li>
+<li>paralog regions (<code>specialist_required</code> exons).</li>
+</ul>
+<h2 id="builds">Builds<a class="heading-anchor" href="#builds" aria-label="Link to section">#</a></h2>
+<p>The gVCF's <code>##contig</code> lengths must match the exon model's (<code>#contig</code> lines): a bundled model is chosen by them, and a mismatch (another build, such as T2T, or a model for another build) stops the run, naming the contigs that differ. Contig names may differ by <code>chr</code> (and M/MT).</p>
+<h2 id="outputs">Outputs<a class="heading-anchor" href="#outputs" aria-label="Link to section">#</a></h2>
+<ul>
+<li><code>exon_callability.json</code> (role <code>exon_callability</code>, schema <code>wgsextract.exon_callability/1</code>): the gene list, the exon model (file, SHA-256, transcripts and source lines), the reference identity (build, the contigs checked, the FASTA's name), the evidence (the gVCF, relative to the document; engine and version, quality model, minimum mapping quality, assessed region), the thresholds, counts, and per gene its <code>state</code>, <code>reasons</code>, exons per status, the exon numbers not callable (most severe status first), and its assessed, read and limited bases.</li>
+<li><code>exon_callability.tsv</code> (role <code>exon_callability_table</code>): one row per coding exon with its status, reasons, assessed region, bases per evidence state, read and limited bases, and limitation intervals.</li>
+</ul>
+<p>The result manifest records the gVCF as an input (<code>vcf_input</code> when given directly, <code>reference_evidence</code> when found as a companion), the metrics <code>genes_&lt;state&gt;</code> and <code>exons_&lt;status&gt;</code>, and the warnings <code>exons_not_callable</code> and <code>genes_without_exon_model</code>.</p>
+<h2 id="exon-model-format">Exon model format<a class="heading-anchor" href="#exon-model-format" aria-label="Link to section">#</a></h2>
+<p>A TSV (optionally gzipped) with <code>#contig&lt;TAB&gt;name&lt;TAB&gt;length</code> lines for every contig it uses, other <code>#</code> lines as its source notes, and the columns <code>gene</code>, <code>transcript</code>, <code>tag</code>, <code>strand</code>, <code>exon</code>, <code>exons</code>, <code>chrom</code>, <code>start</code>, <code>end</code>, <code>cds_start</code>, <code>cds_end</code> (1-based, inclusive, in order and within the exon; both CDS columns empty for an untranslated exon) and <code>limitations</code> (<code>kind:start-end</code> items separated by <code>;</code>, may be empty). Each gene's rows must be one transcript's exons, numbered 1 to its <code>exons</code> count, each once; a model missing an exon is refused.</p>
+<h2 id="measured-on-hg002">Measured on HG002<a class="heading-anchor" href="#measured-on-hg002" aria-label="Link to section">#</a></h2>
+<p>HG002 (35x Illumina NovaSeq PCR-free, GRCh38 no-alt), <code>vcf snp --reference-evidence gvcf</code> over the ACMG SF v3.3 coding exons (±50 bp, 532 kb, 20 s on 3 threads), then <code>vcf callability</code> (under a second), defaults:</p>
+<div class="table-wrap"><table>
+<thead><tr><th></th><th>Genes</th><th>Coding exons</th></tr></thead>
+<tbody>
+<tr><td>callable</td><td>70</td><td>1,735</td></tr>
+<tr><td>partial</td><td>14</td><td></td></tr>
+<tr><td>specialist required</td><td></td><td>88</td></tr>
+<tr><td>not readable, not run</td><td>0</td><td>0</td></tr>
+</tbody>
+</table></div>
+<p>Every one of the 84 genes passes a gene-body rule: at least 90% of each body has reads (and at least 90% has 10 or more reads at MAPQ 20). Exon by exon, 14 genes have coding exons short reads can't place uniquely, among them the known paralog regions: PMS2 exons 1-5, 9 and 11-15 (PMS2CL and the PMS2P pseudogenes), ABCD1 exons 7-10, PTEN exons 5, 8 and 9 (PTENP1), MYH7 (MYH6) and the TTN exons 172-198. The gVCF alone called 14,097 of those exons' 14,429 bases confident reference; all 328 bases it called low-quality were in them. With ClinVar (release of 2026-11-15) the report lists MSH2 as reported (one low-confidence call), 69 genes as not reported and the 14 as not readable.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/exon-callability.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/exon-callability.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

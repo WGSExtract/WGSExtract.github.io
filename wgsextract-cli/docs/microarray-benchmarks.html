@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Microarray benchmarks | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/microarray-benchmarks.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Microarray benchmarks</span></nav>
+<h1 id="microarray-benchmarks">Microarray benchmarks</h1>
+<p>The weekly remote-resource test generates all <strong>21 consumer layouts</strong> and a CombinedKit from public HG00096 GRCh38 and native CHM13 WGS, then compares them with that sample's independently measured Illumina Omni 2.5 chip. It also scores against HG00097 as a different-sample negative control. This is not a comparison of two generated kits, nor a validation of every marker or chromosome. Both regional CLI runs explicitly use two threads.</p>
+<ul>
+<li>WGS: <a href="https://ftp.sra.ebi.ac.uk/vol1/run/ERR324/ERR3240114/HG00096.final.cram" target="_blank" rel="noopener noreferrer">1000 Genomes NYGC HG00096 30x GRCh38 CRAM</a>, <code>chr20:10000000-12000000</code>.</li>
+<li>Reference: <a href="https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa" target="_blank" rel="noopener noreferrer">GRCh38 full analysis set</a>.</li>
+<li>Chip: <a href="https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/hd_genotype_chip/ALL.chip.omni_broad_sanger_combined.20140818.snps.genotypes.vcf.gz" target="_blank" rel="noopener noreferrer">1000 Genomes Omni release 20140818</a>, GRCh37 <code>20:9900000-12100000</code>.</li>
+<li>Native T2T WGS: <a href="https://anvilproject.s3.amazonaws.com/file/71d42a36eb86dbf3b0bcca7fe02eb864.md5" target="_blank" rel="noopener noreferrer">public HG00096 CHM13 CRAM</a>, native <code>chr20:10000000-12000000</code>, not a rebased alignment.</li>
+<li>T2T reference: <a href="https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/assemblies/analysis_set/chm13v2.0_maskedY.fa.gz" target="_blank" rel="noopener noreferrer">CHM13v2.0 masked-Y/original-MT FASTA</a>, SHA256 <code>36b83c984efe3db0ad05065e875e72fdcc56ade32b5c61cbffc14698453125a3</code>. The test downloads the complete reference (~980 MB), verifies this checksum, builds indexes locally, and preserves every primary SQ signature when slicing the remotely indexed CRAM. It does not claim to checksum the complete CRAM. The existing reference downloader also provisions the standard hg18-to-hg19 chain needed to include NCBI36 vendor probes in the pinned marker union.</li>
+</ul>
+<p>For regional WGS, chip loci must independently lift uniquely and forward into the actual extracted GRCh38 interval before scoring. The wider GRCh37 query margin is not part of the call-rate denominator; eligibility is never selected from which genotypes the generated kit happened to call. For native T2T, eligibility instead requires a mapped GRCh37 source position in the pinned reciprocal site map, inside the actual native chr20 interval. Neither alleles nor generated calls select eligible truth. This validates chip genotypes, not independently the coordinate map itself.</p>
+<p>The allele-exact scorer matches marker identity and chromosome, <strong>not position across different builds</strong>. It sorts alleles but never guesses strand, complements alleles, remaps rsIDs, or interprets I/D probes. Conflicting duplicate identities are permanently quarantined. Single-letter and doubled homozygotes are equivalent only on X/Y/MT. TSV, quoted/unquoted CSV and Ancestry's two allele columns are supported, including gzip input. Real unplaced/position-zero probes are retained as no-calls.</p>
+<p>Reports include per-chromosome overlap, truth no-calls, chromosome mismatches, eligible truth calls, called/concordant/discordant/no-call counts, call rate and called-only concordance. Call rate is conditional on the truth/kit marker-ID overlap with matching chromosomes; no-call rows stay in that denominator. Markers absent from the kit cannot be assigned to its panel without an expected panel manifest. This is not a complete panel-coverage metric; truth and kit marker totals and chromosome mismatches are reported separately. The regional gate requires at least 20 called overlapping markers per layout (200 CombinedKit, 100 23andMe V5), call rate &gt;=90%, concordance &gt;=98%, and different-sample concordance &lt;90%, with no chromosome mismatches. This is a SNP benchmark, not evidence for I/D accuracy.</p>
+<p>CI uploads <strong>only aggregate <code>chip-concordance.json</code></strong>, never genomic records.</p>
+<h2 id="score-an-approved-real-chipexport">Score an approved real chip/export<a class="heading-anchor" href="#score-an-approved-real-chipexport" aria-label="Link to section">#</a></h2>
+<p>Run from the repository root in the existing development environment:</p>
+<pre><code class="language-sh">pixi run python scripts/benchmark_microarray_chip.py \
+  --truth out/approved-chip.txt --truth-format Ancestry_V2cd \
+  --kit 23andMe_V5=out/generated/sample_23andMe_V5.txt \
+  --kit MyHeritage_V3=out/generated/sample_MyHeritage_V3.csv \
+  --output out/chip-concordance.json</code></pre>
+<p>Use the registered canonical format name, or <code>CombinedKit</code> for four-column <code>rsID chromosome position genotype</code> TSV, including an independent chip VCF query: <code>bcftools query -s SAMPLE -f &#x27;%ID\t%CHROM\t%POS[\t%TGT]\n&#x27; chip.vcf.gz</code>. Publish aggregate counts only. Never commit donated exports, genotypes, personal names, kit IDs or identifying source paths. An actual paired chip and WGS is necessary to claim individual concordance.</p>
+<h2 id="serial-versus-parallel">Serial versus parallel<a class="heading-anchor" href="#serial-versus-parallel" aria-label="Link to section">#</a></h2>
+<p>With <code>--threads</code> above 1, chromosomes are called in parallel workers by default; <code>--no-parallel</code> calls them in one stream. Parallel calls are exactly those of one stream: bcftools subsamples a site with more than 255 bases using a random stream seeded once per process, and only such deep sites draw from it. Each worker's output records its last site with INFO/DP above 255; when more than one chromosome has one, those chromosomes are recalled up to that site in one bcftools process, in alignment order, so the stream is consumed exactly as one stream consumes it, and the recalled records replace the workers'. All other sites never depend on the stream. <code>--region</code> and VCF input always use one stream, as does an unindexed alignment. Use a matching BAM/CRAM, FASTA and indexed target table spanning at least two chromosomes, with no region flag.</p>
+<pre><code class="language-sh">agent-coord run --cores 8 --mem 8G --exclusive \
+  --label &quot;microarray serial-parallel benchmark&quot; -- \
+  pixi run python scripts/benchmark_microarray_parallel.py \
+    --input out/public/full.cram --ref out/reference/genome.fa.gz \
+    --config out/benchmark-config.toml \
+    --ref-vcf-tab out/reference/All_SNPs_hg38_ref.tab.gz \
+    --threads 8 --repeats 2 --outdir out/parallel-benchmark</code></pre>
+<p>The Linux harness uses <code>wait4</code> for total user/system CPU (including descendants reaped by the CLI), wall time, and maximum <strong>individual-process</strong> RSS. It also samples aggregate live process-tree RSS every 100 ms; shared pages can be counted repeatedly, so that value is not unique physical memory. No extra timing utility is required. Repeated pairs alternate order to expose cache/order effects. All runs share the same thread limit and emit SHA256 hashes of final exports; intermediate compressed VCF headers and log timings are intentionally excluded. The harness rejects a parallel run that did not actually merge two or more chromosome chunks. Use a fresh output directory and retain logs for every run.</p>
+<p>Run small inputs first and full genomes last under a resource lease. A rebased Install Lab mini-genome is useful for execution/byte-identity testing but <strong>not</strong> for real vendor-chip concordance in native genomic coordinates.</p>
+<p>Do not change a default based on speed alone. Require byte-identical complete exports and representative small/full measurements, documenting CPU, memory, cache/order effects and machine/thread limits. Deep coverage can trigger independent caller depth subsampling, so concordance is not proof of byte identity.</p>
+<h3 id="recorded-validation">Recorded validation<a class="heading-anchor" href="#recorded-validation" aria-label="Link to section">#</a></h3>
+<p>The public rebased Install Lab HG00096 small input spans chromosomes 20/Y/MT; its benchmark target contains only public marker coordinates and alleles. Two alternating pairs at two threads produced identical hashes for all 22 final files in every run:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Mode</th><th>Wall seconds, repeats 1 / 2</th><th>CPU seconds, repeats 1 / 2</th><th>Individual peak MiB, repeats 1 / 2</th><th>Sampled tree peak MiB, repeats 1 / 2</th></tr></thead>
+<tbody>
+<tr><td>Serial</td><td>28.09 / 29.64</td><td>26.78 / 28.15</td><td>54.9 / 55.0</td><td>85.0 / 84.4</td></tr>
+<tr><td>Parallel</td><td>26.36 / 26.32</td><td>25.54 / 26.11</td><td>55.9 / 56.2</td><td>171.1 / 140.9</td></tr>
+</tbody>
+</table></div>
+<p>The complete 15.74 GB public HG00096 GRCh38 CRAM was fetched from the <a href="https://anvilproject.s3.amazonaws.com/file/d3354f61a055adfcfc988470bc507b2d.md5" target="_blank" rel="noopener noreferrer">AnVIL mirror</a> and verified against its official MD5 <code>d3354f61a055adfcfc988470bc507b2d</code>. All 3,366 reference contig lengths/M5s matched the actual indexed FASTA. Two alternating pairs, again at two threads, produced identical hashes for all <strong>23 final files in every run</strong> (21 layouts plus native/projected CombinedKit):</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Mode</th><th>Wall seconds, repeats 1 / 2</th><th>CPU seconds, repeats 1 / 2</th><th>Individual peak MiB, repeats 1 / 2</th><th>Sampled tree peak MiB, repeats 1 / 2</th></tr></thead>
+<tbody>
+<tr><td>Serial</td><td>1532.79 / 1627.38</td><td>1490.67 / 1596.04</td><td>787.9 / 787.4</td><td>788.5 / 788.5</td></tr>
+<tr><td>Parallel</td><td>1059.41 / 1016.86</td><td>1598.37 / 1563.51</td><td>788.6 / 788.2</td><td>836.6 / 829.6</td></tr>
+</tbody>
+</table></div>
+<p>These are shared-host two-core measurements, not isolated eight-core scaling evidence; other leased correctness/realignment work ran concurrently. Full-genome paired wall speedups were 1.45x and 1.60x, with slightly higher average CPU and higher sampled tree RSS in parallel. The small speed gain was modest and its sampled aggregate RSS increased substantially. Those runs had no deep-site reconciliation; its final exports happened to match, but per-contig workers could change likelihoods at deep sites (see below).</p>
+<p>A private 30x GRCh38 (hs38DH) CRAM has 81 sites with INFO/DP above 255 across 10 chromosomes (62 on chrM). Per-contig workers without reconciliation changed QUAL/PL, but no genotype, at two of them; with reconciliation, the parallel VCF body equals the serial one and all 23 final exports matched in every pair. One pair per row, on an otherwise idle eight-core host; recalling the 10 chromosomes took 71–96 s:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Threads</th><th>Code</th><th>Serial wall / CPU s</th><th>Parallel wall / CPU s</th></tr></thead>
+<tbody>
+<tr><td>2</td><td>without reconciliation</td><td>789.7 / 783.7</td><td>561.9 / 836.2</td></tr>
+<tr><td>2</td><td>with reconciliation</td><td>772.7 / 771.6</td><td>721.4 / 1007.1</td></tr>
+<tr><td>6</td><td>without reconciliation</td><td>722.1 / 726.8</td><td>433.2 / 1101.4</td></tr>
+<tr><td>6</td><td>with reconciliation</td><td>687.7 / 693.2</td><td>434.2 / 1064.4</td></tr>
+</tbody>
+</table></div>
+<p>The recall runs after the workers, so it costs most at low thread counts. At six threads parallel was 1.6x faster than serial and matched the unreconciled code; repeated runs on this host varied by up to about 20%. Individual peak RSS stayed near 0.9 GiB; sampled tree RSS reached 2.0 GiB in parallel at six threads.</p>
+<p>Separately, a complete public GRCh38 HG00096 extraction was scored against independently measured chip windows across all 22 autosomes and X. All 21 consumer layouts exceeded 99.76% called concordance and 99.937% conditional call rate; every represented chromosome exceeded 98% concordance. The NCBI36 FTDNA V1 layout had overlapping truth on 22 chromosomes, the others on 23. CombinedKit had 13,631 called overlaps, 13,620 exact (99.919%) and three no-calls. This is sampled-window validation, not exhaustive whole-genome chip coverage.</p>
+<p>A genuine complete native CHM13 HG00096 extraction was independently scored against the same coordinate-selected chip windows. All 21 actual vendor exports passed their full-run checks: minimum called concordance 99.760%, conditional call rate 99.952%, and represented-chromosome concordance 98.684%. Different-sample control concordance ranged from 51.16% to 57.14%. CombinedKit retained 13,624/13,636 called exact (99.912%), 12 discordances and six no-calls. Coordinate-only GRCh37-to-native inverted sites had 708/709 called exact, including 275/275 with differing reference alleles and no inverted no-calls. These map strata are not interchangeable with GRCh38-to-native WGS comparison strata.</p>
+<p>One historical chip annotation, <a href="https://www.ncbi.nlm.nih.gov/snp/rs14115" target="_blank" rel="noopener noreferrer">rs14115</a>, labels chromosome 22 whereas NCBI places it at GRCh37 X:51666786, matching the native extraction. The CombinedKit chromosome-mismatch counter and strict full-run annotation failure remain visible: neither truth nor output was relabeled, excluded or waived. All 21 vendor chromosome checks passed. Every nonconcordant public row was retained locally for investigation; only aggregate results are published. No genotype-based eligibility changes were made.</p>
+<h2 id="accuracy-versus-coverage">Accuracy versus coverage<a class="heading-anchor" href="#accuracy-versus-coverage" aria-label="Link to section">#</a></h2>
+<p>How much depth does a genome need for trustworthy kits? The whole public HG00096 CRAM above (MD5 <code>d3354f61a055adfcfc988470bc507b2d</code>) was downsampled with <code>samtools view -s 42.FRACTION</code>, one seed for every level, so each smaller read set is contained in the larger ones. <code>wgsextract microarray</code> made all 21 consumer layouts at each depth (two threads, default bcftools caller), and every kit was scored against the sample's own Omni 2.5 chip (MD5 <code>620462f7d8ffc9b82e1fff90c3aecd37</code>, 708,762 rsID markers with a genotype) by the allele-exact identity scorer above. Eligibility never depends on what a kit called.</p>
+<p>Depth is the CLI's own measure, the one the low-coverage warning uses: mapped bases, duplicates included, over the autosomes' non-N length. The full CRAM measures 40.1x on it (about 34x without duplicates). Rows are 23andMe V5's 157,843 autosomal markers on the chip; chrX and chrY are scored only where the chip calls this man homozygous, since its chrY "heterozygotes" are probe artefacts. The Omni release has no mtDNA. Warnings are those the CLI gives with the default thresholds (<code>qc_min_diploid_depth = 15</code>): the script re-judges cached runs' depth warnings, and the 15x copy measures 14.998x, so it is just below the threshold.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Depth</th><th>Measured</th><th>Called concordance %</th><th>No-call %</th><th>Het correct %</th><th>Het called hom %</th><th>Hom-alt correct %</th><th>Hom-ref correct %</th><th>chrX / chrY concordance %</th><th>CombinedKit homozygosity %</th><th>Warnings</th></tr></thead>
+<tbody>
+<tr><td>full</td><td>40.1x</td><td>99.93</td><td>0.08</td><td>99.79</td><td>0.14</td><td>99.80</td><td>99.92</td><td>99.98 / 98.91</td><td>77.9</td><td>-</td></tr>
+<tr><td>30x</td><td>30.0x</td><td>99.89</td><td>0.08</td><td>99.66</td><td>0.27</td><td>99.80</td><td>99.92</td><td>99.98 / 98.91</td><td>77.9</td><td>-</td></tr>
+<tr><td>20x</td><td>20.0x</td><td>99.53</td><td>0.08</td><td>98.60</td><td>1.32</td><td>99.79</td><td>99.92</td><td>99.98 / 98.91</td><td>78.2</td><td>-</td></tr>
+<tr><td>15x</td><td>15.0x</td><td>98.57</td><td>0.08</td><td>95.80</td><td>4.13</td><td>99.79</td><td>99.92</td><td>99.96 / 98.90</td><td>78.8</td><td>low_coverage:autosomes</td></tr>
+<tr><td>10x</td><td>10.0x</td><td>95.71</td><td>0.11</td><td>87.37</td><td>12.53</td><td>99.73</td><td>99.90</td><td>99.86 / 98.99</td><td>80.7</td><td>low_coverage:autosomes</td></tr>
+<tr><td>8x</td><td>8.0x</td><td>92.90</td><td>0.20</td><td>79.07</td><td>20.74</td><td>99.59</td><td>99.81</td><td>99.79 / 98.97</td><td>82.5</td><td>low_coverage:autosomes</td></tr>
+<tr><td>6x</td><td>6.0x</td><td>88.08</td><td>0.72</td><td>64.64</td><td>34.66</td><td>99.01</td><td>99.27</td><td>99.73 / 99.03</td><td>85.6</td><td>low_coverage:autosomes</td></tr>
+<tr><td>5x</td><td>5.0x</td><td>84.52</td><td>1.58</td><td>53.86</td><td>44.62</td><td>98.03</td><td>98.39</td><td>99.59 / 99.10</td><td>87.9</td><td>low_coverage:autosomes</td></tr>
+<tr><td>4x</td><td>4.0x</td><td>80.15</td><td>3.48</td><td>40.54</td><td>56.05</td><td>95.91</td><td>96.51</td><td>99.51 / 99.16</td><td>90.7</td><td>high_homozygosity, low_coverage:autosomes</td></tr>
+<tr><td>3x</td><td>3.0x</td><td>75.41</td><td>7.97</td><td>25.99</td><td>66.07</td><td>91.14</td><td>92.05</td><td>99.39 / 99.31</td><td>93.8</td><td>high_homozygosity, low_coverage:autosomes</td></tr>
+<tr><td>2x</td><td>2.0x</td><td>70.69</td><td>18.25</td><td>11.93</td><td>69.86</td><td>80.45</td><td>81.84</td><td>99.43 / 99.29</td><td>96.8</td><td>high_homozygosity, high_no_call_rate, low_coverage:autosomes</td></tr>
+<tr><td>1x</td><td>1.0x</td><td>67.09</td><td>42.56</td><td>2.38</td><td>54.87</td><td>56.18</td><td>57.59</td><td>99.11 / 98.82</td><td>99.1</td><td>high_homozygosity, high_no_call_rate, low_coverage:autosomes</td></tr>
+</tbody>
+</table></div>
+<p>All 21 layouts track each other closely:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Depth</th><th>Kits</th><th>Called concordance %</th><th>No-call % on truth markers</th><th>Kit no-call % (all markers)</th></tr></thead>
+<tbody>
+<tr><td>full</td><td>21</td><td>99.84–99.95</td><td>0.04–0.10</td><td>0.06–0.25</td></tr>
+<tr><td>30x</td><td>21</td><td>99.79–99.91</td><td>0.04–0.10</td><td>0.06–0.25</td></tr>
+<tr><td>20x</td><td>21</td><td>99.47–99.55</td><td>0.04–0.10</td><td>0.07–0.27</td></tr>
+<tr><td>15x</td><td>21</td><td>98.53–98.72</td><td>0.04–0.11</td><td>0.07–0.28</td></tr>
+<tr><td>10x</td><td>21</td><td>95.58–96.19</td><td>0.07–0.14</td><td>0.10–0.33</td></tr>
+<tr><td>8x</td><td>21</td><td>92.73–93.76</td><td>0.17–0.24</td><td>0.21–0.44</td></tr>
+<tr><td>6x</td><td>21</td><td>87.81–89.48</td><td>0.69–0.76</td><td>0.71–0.98</td></tr>
+<tr><td>5x</td><td>21</td><td>84.15–86.36</td><td>1.54–1.60</td><td>1.55–1.84</td></tr>
+<tr><td>4x</td><td>21</td><td>79.71–82.57</td><td>3.28–3.49</td><td>3.45–3.77</td></tr>
+<tr><td>3x</td><td>21</td><td>74.80–78.35</td><td>7.86–8.12</td><td>7.87–8.33</td></tr>
+<tr><td>2x</td><td>21</td><td>69.98–74.26</td><td>18.07–18.76</td><td>18.16–18.88</td></tr>
+<tr><td>1x</td><td>21</td><td>66.25–71.07</td><td>42.40–43.25</td><td>42.47–43.34</td></tr>
+</tbody>
+</table></div>
+<p>What this means:</p>
+<ul>
+<li><strong>Below about 15x, heterozygous sites are what fail.</strong> Homozygous sites stay above 99% correct down to 6x, but heterozygous sites called homozygous rise from 0.3% at 30x to 4% at 15x, 13% at 10x and 21% at 8x. Kits stay almost fully called, so the errors are silent: an 8x genome gives 99.8% call rate and 93% concordance.</li>
+<li><strong>The depth warning therefore now starts below 15x</strong> (<code>qc_min_diploid_depth</code>, previously 8x), where at least 98.5% of called autosomal genotypes agree with the chip. The haploid 3x threshold stands: chrX/chrY calls remain above 98% concordant down to 1x, but at 3x autosomal depth (chrY 3x) 29% of chrY chip markers are no-calls.</li>
+<li><strong>The genotype-rate warnings are backstops, not depth gauges.</strong> CombinedKit homozygosity passes 88% only near 4-5x and the no-call rate passes 10% only between 3x and 2x, so they catch low-pass and imputed inputs, which is their purpose (#306), not the 5-15x range. Both are unchanged; this genome's own homozygosity was 78% at full depth, and populations differ.</li>
+<li>One European male, one caller and one chip: DeepVariant and other callers degrade differently, and an effective depth without duplicates is about 0.84 of the CLI measure here.</li>
+</ul>
+<p>Reproduce, under a lease (about 25 minutes of two-thread <code>microarray</code> per depth; the download is 15.7 GB):</p>
+<pre><code class="language-sh">agent-coord run --cores 2 --mem 6G --disk /home:40G --label &quot;coverage sweep&quot; -- \
+  pixi run python scripts/benchmark_microarray_coverage.py \
+    --input out/public/HG00096.final.cram --ref out/reference/hs38DH.fa.gz \
+    --truth-vcf out/public/omni.vcf.gz --sample HG00096 \
+    --outdir out/coverage --threads 2</code></pre>
+<p>The truth is the GRCh37 Omni release listed at the top of this page, with its <code>.tbi</code>; markers are matched by rsID and chromosome, so its build does not matter. The script resumes from completed depths and deletes each downsampled CRAM after use unless <code>--keep-downsampled</code> is given. It writes <code>summary.json</code> and <code>summary.md</code> with aggregate counts only.</p>
+<h2 id="coverage-boundaries">Coverage boundaries<a class="heading-anchor" href="#coverage-boundaries" aria-label="Link to section">#</a></h2>
+<p>The weekly cases exercise GRCh38 calling/projection and genuine native CHM13 calling/projection into GRCh37 consumer formats, each on chr20. Neither weekly case establishes whole-genome, sex-chromosome, mitochondrial or I/D accuracy. No rebased GRCh38 input, synthetic truth, skipped placeholder or chain-only test constitutes a T2T chip benchmark. AADR PLINK/EIGENSTRAT and proprietary I/D encodings are outside this consumer SNP-chip gate and retain their own focused tests.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/microarray-benchmarks.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/microarray-benchmarks.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

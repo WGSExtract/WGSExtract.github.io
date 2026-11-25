@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WGSExtract: features after CLI v0.6.3 | WGS Extract GUI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/app/devdocs/wgsextract-post-v063.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../architecture.html">GUI Architecture</a><a href="../wgsextract.html">WGSExtract</a><a class="active" href="../docs.html">Docs</a><a href="../../index.html">WGSExtract CLI</a><a href="../whats-different.html">What&#x27;s Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract GUI</a> / <a href="index.html">Developer Docs</a> / <span>WGSExtract: features after CLI v0.6.3</span></nav>
+<h1 id="wgsextract-features-after-cli-v063">WGSExtract: features after CLI v0.6.3</h1>
+<p>These controls require CLI v0.6.4 or newer. This feature branch is rebased onto the separate v0.6.5 bundle-bump PR, which also fixes fresh Windows installation and adds clear warnings for invalid configuration values. Root approves merges and app release tags; neither PR should be merged without that approval.</p>
+<p>Existing actions and selected microarray formats are unchanged. New selections are unchecked or blank: unchecked means inherit CLI/config defaults, not force false. All operations remain explicit user actions.</p>
+<ul>
+<li><strong>FASTQ:</strong> aggregate existing FastQC reports into offline MultiQC HTML. The CLI validates MultiQC availability; this does not install tools or run FastQC automatically. Replacing a report requires explicit selection.</li>
+<li><strong>Extract:</strong> optional Poz Y-BAM regions (GRCh37/38), installed allele-annotated yBrowse Y-SNP calling (matching indexed GRCh38 only), and unmapped FASTQs. Install the pinned GRCh38 yBrowse resource explicitly from Library first.</li>
+<li><strong>Microarray:</strong> marker-only MyHeritage GSA and Ancestry layouts; AADR 1240K/HO/union and opt-in v66.p1 2M PLINK/EIGENSTRAT research exports; optional GQ/DP filtering, strand masking, historical rsIDs, absent/filtered no-calls and reason reports. AADR sample labels must be non-identifying; sex metadata does not change calls. One sequence-defined I/D manifest can be bound to a selected consumer format; repeated bindings remain advanced CLI use. CHM13 uses the supported pinned reference selected in the existing dropdown, not an invented mode flag. The 2M panel is excluded from <code>all</code> and requires explicitly installed metadata from Reference Data's <strong>Install AADR 2M SNP panel</strong> action (not part of the bootstrap: the Harvard server is slow). Until it is installed the Microarray page's <strong>2M</strong> checkbox is disabled, with a tooltip saying so. It supports GRCh37/38 only; GRCh38 needs an already-installed forward chain, and CHM13/T2T is rejected. Metadata is checksum-pinned CC0 with Reich Lab/Harvard Dataverse attribution. Extraction never installs it or downloads a missing chain.</li>
+<li><strong>BAM Info:</strong> a separate streaming per-chromosome depth-bin action and optional retention of FASTQs extracted during realignment.</li>
+<li><strong>VCF:</strong> opt-in Ultima flow-mode GATK scattering; it can change genotypes and annotations and requires 6 GiB RAM per worker. Default stays unscattered.</li>
+<li><strong>Ancestry:</strong> optional printed lineage tree links.</li>
+<li><strong>Settings:</strong> opt-in persistent logs, an existing temporary-workload volume, atomic main-output publication and best-effort keep-awake.</li>
+</ul>
+<p>Settings toggles save as native TOML booleans, including <code>false</code>; values from form inputs are converted according to the setting's kind/default. Numeric defaults declare numeric settings; path/text defaults remain strings even when their text is <code>false</code> or <code>123</code>. Bootstrap merging preserves scalar TOML types. All existing WGSExtract non-toggle settings are strings; the unrelated Annotate toggle is stored in GUI JSON state, not the CLI TOML file. Wrong-type saved scalars report a warning and use the setting's declared default, without preventing bundle/Settings loading or rewriting the file on read. Quoted booleans/numbers are not treated as native TOML scalars. Save-time validation remains strict; form strings are converted to the declared setting type before publication.</p>
+<h2 id="release-and-validation">Release and validation<a class="heading-anchor" href="#release-and-validation" aria-label="Link to section">#</a></h2>
+<p>The hourly CLI release watcher opens a separate <code>cli-&lt;tag&gt;</code> bundle-bump PR and dispatches CI, secrets scanning and Windows installer checks. It does not update this feature branch. After v0.6.4, either apply <code>scripts/bump-wgsextract-cli.py</code> here and retire the duplicate bump PR, or land the separate bump first and rebase. Root approves all merges.</p>
+<p>Run <code>make lint</code> and <code>make test</code>. Renderer tests check unchanged defaults and opt-in argument routing; POSIX wrapper tests check argument boundaries and, when a CLI interpreter is available, actual argparse compatibility. CI conformance rejects post-v0.6.3 controls/actions/formats while the bundled pin is older than v0.6.4. The genuine v0.6.5 pin satisfies this gate; never fake the pin or disable the test to make this PR mergeable.</p>
+<p>After the bundle bump, run the existing hg19 mini baseline plan, then <code>post-v063-mini-opt-in.json</code> against the same workspace. MultiQC must already be available. This adds exact depth bins, unmapped FASTQs, offline aggregation and explicit report replacement. Then run the existing hs38DH/Ladan full-genome microarray plan unchanged for comparison. On matching real references/data, pass the full plan an explicit <code>--input ref_fasta=&lt;matching hs38DH FASTA&gt;</code> selection if the reference dropdown has not yet been selected. On real data, exercise the new layouts, AADR, quality/strand policies, manifest I/D, CHM13, Poz/yBrowse and Ultima scattering. They are not interchangeable with the scaled mini reference. Verify Windows cancel terminates the tool tree. The mini plan scans the bootstrapped <code>output</code> directory for FastQC reports; its per-action output field does not change FastQC's inherited CLI config. MultiQC offers separate file and directory pickers/actions. For the 2M panel, explicitly install metadata in Library first, then run <code>aadr-2m-opt-in.json</code> with command-line <code>--input bam_path=&lt;real BAM/CRAM/VCF&gt;</code> and <code>--input ref_fasta=&lt;matching GRCh37/38 FASTA&gt;</code> overrides. This plan is not valid on the scaled mini reference. Check its six PLINK/EIGENSTRAT files and the CLI's pinned panel/provenance metadata; the original full-genome baseline plan is unchanged.</p>
+<p>ARM64 GUI packaging is a separate follow-up: neither Linux ARM64 nor Windows ARM64 is currently built in distribution/installer CI. Native Node sidecars are already supported, but native runner matrices, installer coverage and architecture-specific updater-feed mappings are needed. CLI setup downloads the pinned source and delegates architecture selection to upstream installers; it does not select a prebuilt per-architecture CLI asset. Wait for CLI ARM64 support and a release, then verify native Pixi/tool selection (including Windows MSYS2/emulation assumptions) from native ARM64 GUI installers.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract GUI</strong><p>Rendered from <code>gui/devdocs/wgsextract-post-v063.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/gui/devdocs/wgsextract-post-v063.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

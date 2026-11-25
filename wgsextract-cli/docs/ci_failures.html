@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CI failure observation and retries | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/ci_failures.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>CI failure observation and retries</span></nav>
+<h1 id="ci-failure-observation-and-retries">CI failure observation and retries</h1>
+<p><code>Rerun Lost Runners</code> uses <code>python3 -m scripts.ci_failures</code> on the <strong>default branch</strong>, never code or artifacts from the completed PR. It needs the runner's installed Python and GitHub CLI, not Pixi or a project environment.</p>
+<h2 id="retry-policy">Retry policy<a class="heading-anchor" href="#retry-policy" aria-label="Link to section">#</a></h2>
+<p>Failures are classified as <strong>lost runner</strong>, <strong>mirror/network</strong>, <strong>test failure</strong>, or <strong>red main</strong>. Only failure-level check annotations identify infrastructure outages; warning annotations and test log quotations cannot trigger retries. Failed-job logs supply test IDs and first error lines. Unknown errors stay test failures and are not automatically retried.</p>
+<ul>
+<li>A cancelled job with zero steps, or an explicit runner-loss annotation, gets <strong>one</strong> retry.</li>
+<li>Explicit package-mirror, DNS or connection failures get <strong>two</strong> retries. A named failing test is not reclassified as infrastructure merely because its traceback mentions a network error.</li>
+<li>The workflow never retries test failures. An operator/landing script can request up to <strong>two</strong> audited test retries with <code>--rerun-tests</code>.</li>
+<li>Deliberate cancellations after steps are left alone.</li>
+<li>Budgets count executions of each job across attempts. A single current-attempt job is retried directly; multiple failed jobs use one failed-jobs request. A carried-forward entry with the same job ID is not a new execution or pass. Multiple cancelled jobs (or an older cancelled job left by a manual job-only retry) require a whole-run retry: GitHub rejects old job IDs and the failed-jobs endpoint does not guarantee retrying cancellations. This rare fallback can repeat successful siblings, and the ledger explicitly records its scope. Lost jobs still receive only one automatic retry.</li>
+<li>All outstanding failures must be eligible. A mixed test/infra failure needs a code fix, and a deliberately cancelled started job prevents restarting its queued zero-step siblings. No automatic request is made at attempt ten.</li>
+<li>A missing-artifact download can be a consequence of a lost producer, not a code failure. When its failure annotation names the exact target of a zero-step lost build job in the same run, and the consumer has no failed tests or additional failed steps, it is classified as lost-runner infrastructure too. The whole run is retried, including producer and consumers, with the producer's one-retry budget. Repeated consumer-only failures do not spend that root budget. Unrelated failures still block automatic retries. This classification also prevents false red-main bugs/quarantine.</li>
+<li>Windows evidence judging omits a missing app evidence set only when the app job already failed/cancelled. Available app evidence, the regular Windows installer evidence and sabotage evidence still go through the unchanged oracle/mutation checks; a missing required set still fails judging.</li>
+<li>Before retrying, the script verifies that this is the latest run and attempt for the workflow, event, branch <strong>and head repository</strong>. Fork branch names cannot accidentally supersede another repository's run. Same-head label-only router runs are separate validation scopes and do not supersede the full validation run. Associated PRs must still be open, non-draft and on the observed head before auditing and immediately before dispatch. A runner-free redraft cancellation cannot retry an old ready payload, even when its queued jobs had zero steps.</li>
+</ul>
+<p>Successful first-attempt PR runs are skipped by the workflow's job condition. Supersession and zero-step cancellation cannot be determined from Actions' job-condition context alone: they require a cheap run-list API lookup before fetching jobs, logs or issues. There are no ten-minute sleeping runners. Successful retries are observed to discover flakes; main successes close bugs.</p>
+<h2 id="pinned-ledger-and-flaky-tests">Pinned ledger and flaky tests<a class="heading-anchor" href="#pinned-ledger-and-flaky-tests" aria-label="Link to section">#</a></h2>
+<p>The script creates and pins <strong>CI flake ledger — YYYY-Www</strong> for the current ISO week, labelled <code>ci-automation</code> and <code>ci-flake-ledger</code>. The period is included in its marker. The weekly rollup pins the current issue and unpins/closes older ledgers, preserving their comments as archives; the first retry of a new period also advances an existing periodized ledger. The rollup migrates the original unperiodized issue as well. Retry lookup reads only open ledger-labelled issues, never the lifetime history of archived ledgers.</p>
+<p>One comment records each run/attempt's retry request <strong>before</strong> dispatch, including every failed job, failing step, first five error lines, classification, SHA, PR numbers, source attempt and run link. The same comment is PATCHed with API acceptance or an aborted-dispatch result. Comments are fetched just once per audit, independent of the number of failed jobs, with a five-page (500-comment) safety budget. A repeated observer event finds the same marker without adding another record.</p>
+<p>Auditing is best-effort: a missing/unavailable/oversized ledger or failed comment write emits <code>ci-audit-skipped</code> in the workflow log and <strong>does not block runner recovery</strong>. Confirmation-write failures likewise do not undo a successful retry. Run/PR freshness checks, retry budgets and actual Actions API failures remain mandatory; an audit outage does not bypass retry eligibility.</p>
+<p>This chooses immediate issue comments over summary-only batching: evidence is searchable and durable even if a run is deleted, and agents can see a retry without waiting a week. Monday's weekly comment adds the seven-day run-level retry rate for each workflow (including manual retries, explicitly labelled). Date searches are partitioned by day and subdivided when GitHub's 1,000-result cap is reached; boundary run IDs are deduplicated before computing rates. Logs are quoted, HTML-escaped and mentions disabled before publication.</p>
+<p>When a failed pytest node ID subsequently has a successful job <strong>and the same test step succeeds</strong>, on the same immutable run SHA, the observer opens or updates <code>Flaky: &lt;test id&gt;</code> with the <code>bug</code> label. A skipped step is not a pass. Stable test-ID markers deduplicate across workflows and commits; concurrent creation is reconciled to the oldest issue, including later lookups. Replaying old recovery evidence never reopens a resolved bug. Only repository-owned heads can create flaky-test exemptions: fork logs cannot change global retry policy. Missing/expired logs do not invent test IDs. The recorded fixtures under <code>tests/fixtures/ci_failures</code> exercise real API responses, including the macOS GPU-resume flake.</p>
+<p>Flaky-test and red-main bugs created by this publisher carry <code>endorsed</code> as well as <code>ci-automation</code> and their existing hidden CI marker. Updates endorse only our <code>github-actions[bot]</code> issues with that label and a body whose first line is exactly <code>(AI): &lt;valid CI marker&gt;</code>; prose or quoted content before that line is not accepted. Stale <code>needs-owner</code> is removed without replacing other labels. Existing issues from other authors, ordinary bot reports, quoted markers, PRs and ledger issues are never auto-endorsed. This is the narrow owner-approved exception in <code>AGENTS.md</code>; CI-log excerpts remain data, never agent instructions.</p>
+<p>The one-time migration for existing open bot reports uses the same ownership checks and is idempotent:</p>
+<pre><code class="language-python">from scripts.ci_github import GitHub
+from scripts.ci_issues import IssueReports
+
+IssueReports(GitHub(&quot;WGSExtract/wgsextract-cli&quot;)).endorse_existing()</code></pre>
+<h2 id="red-main">Red main<a class="heading-anchor" href="#red-main" aria-label="Link to section">#</a></h2>
+<p>A latest failing push run on main opens or updates a workflow-specific <code>main is red: &lt;workflow&gt;</code> bug with failing pytest IDs and commit. Non-pytest failures name the job, step and first errors instead. Tests already confirmed flaky by this observer are excluded. A later successful main run closes that workflow's issue; an old/superseded success cannot close it.</p>
+<p>Before any PR retry, the observer compares its failures with the latest conclusive (success or failure) main push run of the same workflow. Neither a queued fix nor a cancelled run is evidence that main is green. Overlapping non-flaky IDs, or matching job/step/error signatures when neither side has IDs, quarantine the PR with <code>ci-red-main</code> and prevent <strong>all</strong> retries of that run, including landing-script test retries. Observations are tracked per workflow and SHA: a successful observed retry clears only its own workflow's quarantine. On a new PR head, a label-gated <code>pull_request_target</code> job invalidates the old head's label; successful first-attempt PR completions still start no observer runner. Closing a PR also clears the label. This trusted-base job only reads issue comments and updates a label; it never runs the PR's code. Every reconciliation checks the PR's live state and head. A late observer cannot restore an old-head or closed-PR label. Workflow executions serialize issue and label writes with <code>concurrency.queue: max</code>, rather than dropping pending observers, and label reconciliation re-reads committed state to handle local landing callers as well. For the PR-only <strong>PR area checks</strong> router, job prefixes (<code>ubuntu /</code>, <code>macos /</code>, <code>windows /</code>, <code>arm64 /</code>, <code>install /</code>) select the corresponding reusable workflow's main push run, rather than looking for a nonexistent main run of the router. The label and issue notify agents through the normal issue queue; no host credentials or external notification service is needed.</p>
+<p>Run an audited retry from the repository root:</p>
+<pre><code class="language-sh">python3 -m scripts.ci_failures --repository WGSExtract/wgsextract-cli \
+  --run-id RUN_ID --rerun-tests</code></pre>
+<p>Exit status <strong>2</strong> means red main blocked the retry; <strong>0</strong> means processed (possibly no retry needed); other failures must stop the landing loop. The workflow treats quarantine as an observed condition, not another CI failure. Use <code>--rollup</code> instead of <code>--run-id</code> for a weekly rate report.</p>
+<p>The workflow has <code>actions: write</code> for retry requests, <code>checks: read</code> for annotations, <code>issues: write</code> for bugs, labels and pinning, <code>pull-requests: read</code> to verify the live head/state, and <code>contents: read</code> solely for the SHA-pinned checkout. No PR write token or additional secret is needed.</p>
+<p>GitHub supports <a href="https://docs.github.com/actions/how-tos/writing-workflows/choosing-when-your-workflow-runs/control-the-concurrency-of-workflows-and-jobs" target="_blank" rel="noopener noreferrer"><code>queue: max</code></a>, but current actionlint 1.7.12 does not recognize that schema key. The path-scoped actionlint configuration exempts only that exact unknown-key diagnostic; <code>validate_github_actions.py</code> validates the value and disallows conflicting <code>cancel-in-progress</code> settings. All other actionlint checks remain enabled.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/ci_failures.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/ci_failures.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

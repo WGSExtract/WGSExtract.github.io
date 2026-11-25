@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A friendly guide to whole genome sequencing concepts, file types, coverage, references, variants, SNP chips, and practical uses." />
+    <title>Whole Genome Guide | WGS Extract CLI</title>
+    <meta property="og:site_name" content="WGS Extract CLI" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Whole Genome Guide | WGS Extract CLI" />
+    <meta property="og:description" content="A friendly guide to whole genome sequencing concepts, file types, coverage, references, variants, SNP chips, and practical uses." />
+    <meta property="og:url" content="https://wgsextract.github.io/wgsextract-cli/wgs-guide.html" />
+    <meta property="og:image" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta property="og:image:secure_url" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="WGSExtract CLI social preview showing the desktop app screenshot." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Whole Genome Guide | WGS Extract CLI" />
+    <meta name="twitter:description" content="A friendly guide to whole genome sequencing concepts, file types, coverage, references, variants, SNP chips, and practical uses." />
+    <meta name="twitter:image" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta name="twitter:image:alt" content="WGSExtract CLI social preview showing the desktop app screenshot." />
+    <link rel="canonical" href="https://wgsextract.github.io/wgsextract-cli/wgs-guide.html" />
+    <link rel="image_src" href="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".82em" font-size="84">🧬</text></svg>' />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="index.html">Home</a><a href="install.html">Install CLI</a><a href="gui.html">GUI</a><a href="cli.html">CLI</a><a href="workflows.html">Workflows</a><a class="active" href="wgs-guide.html">WGS guide</a><a href="reference.html">Reference</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-hero">
+        <div class="wrap">
+          <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Genomics primer</p>
+          <h1>Whole genome sequencing, explained practically.</h1>
+          <p class="lede"><abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> reads across nearly all of your <abbr data-tooltip="DNA: Deoxyribonucleic Acid: the molecule that carries inherited genetic information." aria-label="DNA: Deoxyribonucleic Acid: the molecule that carries inherited genetic information.">DNA</abbr> instead of checking only a small set of predefined markers. That makes it flexible: the same data can be revisited as reference genomes, callers, annotations, and research improve.</p>
+          <div class="toc"><a href="#types">Test types</a><a href="#files">File flow</a><a href="#coverage">Coverage</a><a href="#variants">Variants</a><a href="#references">References</a><a href="#uses">Uses and limits</a></div>
+        </div>
+      </header>
+
+<section id="types">
+<div class="wrap">
+<div class="section-head">
+<h2><abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> vs microarray / <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip vs exome</h2>
+<p>These tests answer different questions. <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> is broad, microarrays are often called <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chips because they check selected marker sites, and exomes focus on protein-coding sequence.</p>
+</div>
+<p><abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> is best thought of as a reusable data source rather than a single report. Once a genome is sequenced and aligned, you can revisit the same data for ancestry, mitochondrial and Y-lineage work, variant calling, annotation, storage conversion, or new research questions. The tradeoff is that the data is large, the workflows can be slow, and every analysis depends on the reference build and tools used.</p>
+<p>A microarray, also called a <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip, is more like a fixed questionnaire. It checks a curated set of positions chosen by the chip designer. That is why consumer ancestry files are small and upload-friendly, but also why a <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip can miss rare variants, structural changes, or markers not included in that chip version.</p>
+<div class="grid three">
+<article class="card">
+<h3>Whole genome sequencing</h3>
+<p>Attempts to sequence the full genome: autosomes, sex chromosomes, mitochondrial <abbr data-tooltip="DNA: Deoxyribonucleic Acid: the molecule that carries inherited genetic information." aria-label="DNA: Deoxyribonucleic Acid: the molecule that carries inherited genetic information.">DNA</abbr>, coding regions, non-coding regions, and many structural signals.</p>
+<p>Short-read <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> is common and cost-effective, while long-read data can resolve some repetitive or structurally complex regions better. Either way, <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract expects you to keep the raw files, aligned files, reference build notes, and exact commands together so future analyses remain understandable.</p>
+<span class="tag">broadest reuse</span>
+</article>
+<article class="card">
+<h3>Microarray / <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip genotyping</h3>
+<p>Checks selected markers chosen by a chip design. It is common for ancestry, but misses most variants that are not on the chip.</p>
+<p><abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract can simulate several consumer raw-data formats from <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> data by reading positions that overlap a target <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip. The simulated file can be useful for tools that only accept microarray-style input, but it is still derived from sequencing data and should be labeled as such when you share it.</p>
+<p><abbr data-tooltip="AADR: Allen Ancient DNA Resource: curated research datasets and marker panels used in population genetics." aria-label="AADR: Allen Ancient DNA Resource: curated research datasets and marker panels used in population genetics.">AADR</abbr> research panels can also be exported as PLINK/EIGENSTRAT files. Their allele and missing-call conventions matter when combining datasets; they do not recreate ancient-DNA pseudo-haploid processing.</p>
+<span class="tag">cheap</span>
+<span class="tag">fixed markers</span>
+<span class="tag">upload-friendly</span>
+</article>
+<article class="card">
+<h3>Exome sequencing</h3>
+<p>Targets protein-coding regions. Useful for many clinical questions, but it skips most non-coding and structural context.</p>
+<p>An exome can be powerful when the question is mainly about protein-coding variants, but it is not a replacement for <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr>. It often has uneven capture coverage, does not represent every exon equally, and usually provides much less information for ancestry, mitochondrial, <abbr data-tooltip="Y-DNA: Y-chromosome DNA: DNA on the Y chromosome, often used for paternal-line genealogy." aria-label="Y-DNA: Y-chromosome DNA: DNA on the Y chromosome, often used for paternal-line genealogy.">Y-DNA</abbr>, non-coding, and structural workflows.</p>
+<span class="tag">coding focus</span>
+</article>
+</div>
+</div>
+</section>
+<section id="files">
+<div class="wrap">
+<div class="section-head">
+<h2>The usual file flow</h2>
+<p>Most <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> analysis moves through a small set of file types. <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract helps at several points in this chain.</p>
+</div>
+<p>Sequencing usually starts with raw reads. Those reads are aligned to a reference genome, sorted, indexed, and then reused for downstream steps. A variant caller compares aligned reads to the reference and writes records for positions where the sample appears to differ. Reports, extracted reads, microarray / <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip simulations, annotations, and filtered files are derived outputs.</p>
+<p>Keep the primary file and its sidecars together. A <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr> without its <code>.bai</code> index is slower or unusable for random-access operations. A <abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr> without the matching reference <abbr data-tooltip="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences." aria-label="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences.">FASTA</abbr> may be unreadable. A compressed <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr> without an index cannot be queried efficiently by genomic region.</p>
+<div class="timeline">
+<div class="node">
+<strong><abbr data-tooltip="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores." aria-label="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores.">FASTQ</abbr></strong><span>Raw reads and base quality scores directly from sequencing.</span>
+</div>
+<div class="node">
+<strong><abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr> / <abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr></strong><span>Reads aligned to a reference genome, sorted and indexed for access.</span>
+</div>
+<div class="node">
+<strong><abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr> / <abbr data-tooltip="BCF: Binary Call Format: a compact binary version of VCF used for efficient variant storage and processing." aria-label="BCF: Binary Call Format: a compact binary version of VCF used for efficient variant storage and processing.">BCF</abbr></strong><span>Variant calls: positions where the sample differs from the reference.</span>
+</div>
+<div class="node">
+<strong>Reports / kits</strong><span>Microarray / <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip simulations, haplogroups, annotations, extracts, and filtered outputs.</span>
+</div>
+</div>
+</div>
+</section>
+<section id="coverage">
+<div class="wrap split">
+<div>
+<h2>Coverage and quality</h2>
+<p class="lede">Coverage is how many reads support a position. A "30x" genome means an average of about 30 reads cover each position, but real coverage varies across GC-rich regions, repeats, sex chromosomes, mitochondrial <abbr data-tooltip="DNA: Deoxyribonucleic Acid: the molecule that carries inherited genetic information." aria-label="DNA: Deoxyribonucleic Acid: the molecule that carries inherited genetic information.">DNA</abbr>, capture gaps, and low-mappability regions.</p>
+<p>Coverage has both depth and breadth. Depth asks how many reads cover positions that were successfully sequenced. Breadth asks how much of a region has enough usable data at all. Two files can both be described as "30x" while one has much better coverage across difficult regions.</p>
+<p>Quality also depends on mapping, duplicates, base quality, read length, platform, and reference build. Low-quality reads can create false positives; overly strict filtering can hide real variants. That is why region-limited tests and careful inspection matter before launching whole-genome jobs.</p>
+<p>Low-pass consumer genomes (often under 5x) are a special case: most heterozygous sites have too few reads to see both alleles, so providers impute genotypes from population panels. <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract warns before genotyping such files, and when a microarray kit comes out far more homozygous than the 70-80% a directly sequenced genome gives.</p>
+</div>
+<div class="guide-panel">
+<h3>Coverage questions to ask</h3>
+<ul>
+<li>Is this average depth, median depth, or breadth of coverage?</li>
+<li>Are mitochondrial <abbr data-tooltip="DNA: Deoxyribonucleic Acid: the molecule that carries inherited genetic information." aria-label="DNA: Deoxyribonucleic Acid: the molecule that carries inherited genetic information.">DNA</abbr> and Y-chromosome reads present?</li>
+<li>Was the sample aligned to hg19, hg38, <abbr data-tooltip="T2T: Telomere-to-Telomere: a newer reference approach that aims to represent chromosomes end to end." aria-label="T2T: Telomere-to-Telomere: a newer reference approach that aims to represent chromosomes end to end.">T2T</abbr>, or another build?</li>
+<li>Is the alignment coordinate sorted and indexed?</li>
+<li>Are low-quality reads, duplicates, or platform-specific artifacts affecting calls?</li>
+<li>Is the region repetitive, duplicated, or known to be hard to map?</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="variants">
+<div class="wrap">
+<div class="section-head">
+<h2>Variant types</h2>
+<p>Different callers and workflows target different kinds of changes. No single command is best for every variant class and sequencing technology.</p>
+</div>
+<p>A variant is any observed difference from the reference sequence, but different classes behave very differently. Small variants such as <abbr data-tooltip="SNPs: Single Nucleotide Polymorphisms: one-base markers or variants, commonly used by microarray SNP chips." aria-label="SNPs: Single Nucleotide Polymorphisms: one-base markers or variants, commonly used by microarray SNP chips.">SNPs</abbr> and short insertions/deletions are usually easier to represent in a <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr>. Larger rearrangements, repeat expansions, and copy-number changes often need specialized callers, better depth signals, or long-read data.</p>
+<p>Microarray / <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip files mostly represent known single-position markers. They are useful and widely accepted by genealogy tools, but they should not be confused with a complete variant call set from <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr>.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Variant type</th><th>What it means</th><th>Why it matters</th></tr></thead>
+<tbody>
+<tr><td><abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr></td><td>One base differs from the reference.</td><td>Common in ancestry, trait, and many disease-risk annotations. This is the main marker type used by many <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chips.</td></tr>
+<tr><td><abbr data-tooltip="InDel: Insertion or Deletion: a small variant where bases are added or removed relative to the reference." aria-label="InDel: Insertion or Deletion: a small variant where bases are added or removed relative to the reference.">InDel</abbr></td><td>A small insertion or deletion.</td><td>Can disrupt genes and is harder to call than many <abbr data-tooltip="SNPs: Single Nucleotide Polymorphisms: one-base markers or variants, commonly used by microarray SNP chips." aria-label="SNPs: Single Nucleotide Polymorphisms: one-base markers or variants, commonly used by microarray SNP chips.">SNPs</abbr>, especially near repeats.</td></tr>
+<tr><td>Structural variant / <abbr data-tooltip="SV: Structural Variant: a larger genomic change such as a deletion, duplication, inversion, or rearrangement." aria-label="SV: Structural Variant: a larger genomic change such as a deletion, duplication, inversion, or rearrangement.">SV</abbr></td><td>A larger deletion, duplication, inversion, insertion, or rearrangement.</td><td>Often missed by microarrays and short-read SNP-only workflows.</td></tr>
+<tr><td><abbr data-tooltip="CNV: Copy Number Variant: a genomic region where copies are deleted or duplicated compared with expectation." aria-label="CNV: Copy Number Variant: a genomic region where copies are deleted or duplicated compared with expectation.">CNV</abbr></td><td>A region is deleted or duplicated.</td><td>Can affect gene dosage and medically relevant regions.</td></tr>
+<tr><td><abbr data-tooltip="mtDNA: Mitochondrial DNA: DNA inherited mostly through the maternal line and stored in mitochondria." aria-label="mtDNA: Mitochondrial DNA: DNA inherited mostly through the maternal line and stored in mitochondria.">mtDNA</abbr> and <abbr data-tooltip="Y-DNA: Y-chromosome DNA: DNA on the Y chromosome, often used for paternal-line genealogy." aria-label="Y-DNA: Y-chromosome DNA: DNA on the Y chromosome, often used for paternal-line genealogy.">Y-DNA</abbr> markers</td><td>Lineage-informative variants in mitochondrial <abbr data-tooltip="DNA: Deoxyribonucleic Acid: the molecule that carries inherited genetic information." aria-label="DNA: Deoxyribonucleic Acid: the molecule that carries inherited genetic information.">DNA</abbr> or the Y chromosome.</td><td>Used for maternal and paternal haplogroups and genealogy.</td></tr>
+<tr><td>Annotation</td><td>Added context such as gene, consequence, frequency, or known clinical database matches.</td><td>Helps prioritize variants, but does not make the result medical advice.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="references">
+<div class="wrap">
+<div class="section-head">
+<h2>Reference builds and coordinates</h2>
+<p>A genomic coordinate only makes sense relative to a reference build. chr1:100000 in hg19 may not refer to the same biological position in hg38 or <abbr data-tooltip="T2T: Telomere-to-Telomere: a newer reference approach that aims to represent chromosomes end to end." aria-label="T2T: Telomere-to-Telomere: a newer reference approach that aims to represent chromosomes end to end.">T2T</abbr>.</p>
+</div>
+<p>The reference genome is the coordinate system for the analysis. Alignment, variant calling, annotation, liftover, microarray / <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip simulation, and gene filtering all depend on it. Mixing builds can silently produce wrong answers because a position can move, disappear, change chromosome naming, or overlap different annotations.</p>
+<p>If you receive a <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>, <abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr>, or <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr> from a lab, save any metadata that identifies the build. If the build is unknown, treat the file cautiously until you can infer or verify it from headers, contig names, known marker positions, or the provider's documentation.</p>
+<div class="grid three">
+<article class="card">
+<h3>hg19 / GRCh37</h3>
+<p>Older but still common in genealogy tools, legacy annotations, and many older consumer datasets.</p>
+<p>Some third-party tools and older <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip coordinates still expect hg19/GRCh37. That does not mean it is always better; it means you must match the expected coordinate system.</p>
+</article>
+<article class="card">
+<h3>hg38 / GRCh38</h3>
+<p>Modern mainstream reference for many current short-read <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> pipelines and annotation resources.</p>
+<p>Many current callers, annotation datasets, and public resources support hg38 well. If you are starting a new short-read workflow, this is often the practical default unless a downstream service requires another build.</p>
+</article>
+<article class="card">
+<h3><abbr data-tooltip="T2T: Telomere-to-Telomere: a newer reference approach that aims to represent chromosomes end to end." aria-label="T2T: Telomere-to-Telomere: a newer reference approach that aims to represent chromosomes end to end.">T2T</abbr></h3>
+<p><abbr data-tooltip="T2T: Telomere-to-Telomere: a newer reference approach that aims to represent chromosomes end to end." aria-label="T2T: Telomere-to-Telomere: a newer reference approach that aims to represent chromosomes end to end.">T2T</abbr> references cover many regions older references represented poorly, but tool and annotation support varies.</p>
+<p><abbr data-tooltip="T2T: Telomere-to-Telomere: a newer reference approach that aims to represent chromosomes end to end." aria-label="T2T: Telomere-to-Telomere: a newer reference approach that aims to represent chromosomes end to end.">T2T</abbr> can be valuable for difficult regions, but it may not be accepted by consumer tools, older annotation resources, or workflows that assume hg19/hg38 chromosome structures.</p>
+<p><abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract's microarray projection supports one exact CHM13v2 analysis reference, not every <abbr data-tooltip="T2T: Telomere-to-Telomere: a newer reference approach that aims to represent chromosomes end to end." aria-label="T2T: Telomere-to-Telomere: a newer reference approach that aims to represent chromosomes end to end.">T2T</abbr> variant. See <a class="inline-link" href="workflows.html#microarray">microarray requirements</a> before choosing it.</p>
+</article>
+</div>
+<div class="callout">
+<strong>Do not mix builds casually.</strong> If your <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr> was aligned to hg38, call variants and annotate with hg38-compatible resources unless you intentionally lift over coordinates or re-align. Liftover is useful, but it is not perfect and can fail around complex or ambiguous regions.
+</div>
+</div>
+</section>
+<section id="uses">
+<div class="wrap">
+<div class="section-head">
+<h2>What <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> can be used for</h2>
+<p><abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> is powerful, but it is not magic. Results depend on data quality, tool choice, reference build, ancestry representation in databases, and careful interpretation.</p>
+</div>
+<p>The practical value of <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> is that one dataset can serve many goals. You can create microarray / <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip-style files for services that require them, extract smaller mitochondrial or <abbr data-tooltip="Y-DNA: Y-chromosome DNA: DNA on the Y chromosome, often used for paternal-line genealogy." aria-label="Y-DNA: Y-chromosome DNA: DNA on the Y chromosome, often used for paternal-line genealogy.">Y-DNA</abbr> datasets, call variants, annotate candidate genes, or convert storage formats. The same flexibility also creates responsibility: each derived output should keep enough metadata to explain where it came from.</p>
+<div class="grid three">
+<article class="card">
+<h3>Ancestry and genealogy</h3>
+<p>Microarray / <abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr> chip simulations, Y/<abbr data-tooltip="MT: Mitochondrial chromosome: the chromosome name often used for mitochondrial DNA in some reference builds." aria-label="MT: Mitochondrial chromosome: the chromosome name often used for mitochondrial DNA in some reference builds.">MT</abbr> extracts, haplogroups, triangulation, and upload-compatible files for third-party tools.</p>
+<p>Ancestry use cases often care about compatibility. The "right" output is sometimes not the most complete output; it is the one accepted by the target service with the expected build, marker set, and file format.</p>
+</article>
+<article class="card">
+<h3>Variant exploration</h3>
+<p><abbr data-tooltip="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips." aria-label="SNP: Single Nucleotide Polymorphism: a one-base marker or variant, commonly used by microarray SNP chips.">SNP</abbr>, <abbr data-tooltip="InDel: Insertion or Deletion: a small variant where bases are added or removed relative to the reference." aria-label="InDel: Insertion or Deletion: a small variant where bases are added or removed relative to the reference.">InDel</abbr>, <abbr data-tooltip="SV: Structural Variant: a larger genomic change such as a deletion, duplication, inversion, or rearrangement." aria-label="SV: Structural Variant: a larger genomic change such as a deletion, duplication, inversion, or rearrangement.">SV</abbr>, <abbr data-tooltip="CNV: Copy Number Variant: a genomic region where copies are deleted or duplicated compared with expectation." aria-label="CNV: Copy Number Variant: a genomic region where copies are deleted or duplicated compared with expectation.">CNV</abbr>, <a class="term-link" href="https://www.ensembl.org/info/docs/tools/vep/index.html" data-tooltip="VEP: Variant Effect Predictor: an annotation tool that predicts variant effects on genes and transcripts." aria-label="VEP: Variant Effect Predictor: an annotation tool that predicts variant effects on genes and transcripts.">VEP</a>, <a class="term-link" href="https://www.ncbi.nlm.nih.gov/clinvar/">ClinVar</a>, <a class="term-link" href="https://gnomad.broadinstitute.org/">gnomAD</a>, conservation, splicing, and pharmacogenomic annotation workflows.</p>
+<p>Exploration is not diagnosis. Use region tests, check coverage, review caller assumptions, and confirm important findings with qualified professionals and validated labs.</p>
+</article>
+<article class="card">
+<h3>Data stewardship</h3>
+<p>Convert <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr> to <abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr>, index files, verify references, preserve metadata, and keep data private and backed up.</p>
+<p>The raw and aligned files are sensitive and expensive to replace. Store them with checksums, reference-build notes, command logs, and enough organization that future you can understand what each file means.</p>
+</article>
+</div>
+<div class="callout">
+<strong>Privacy and medical caution:</strong> Whole genome files can reveal sensitive information about you and biological relatives. This site is educational and does not provide medical advice. Uploading data to third-party services can create privacy and consent issues that are hard to undo.
+</div>
+</div>
+</section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>Whole Genome Guide</strong><p>Concepts for practical <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> work.</p></div>
+        <p><a href="reference.html">Next: reference</a></p>
+      </div>
+    </footer>
+    <script>
+      (() => {
+        const copyText = async (text) => {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            return;
+          }
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "fixed";
+          textarea.style.left = "-9999px";
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          textarea.remove();
+        };
+
+        document.addEventListener("click", async (event) => {
+          const button = event.target.closest(".copy-button");
+          if (!button) return;
+          const panel = button.closest(".code-panel");
+          const code = panel?.querySelector("pre code");
+          if (!code) return;
+          const previous = button.textContent;
+          try {
+            await copyText(code.innerText);
+            button.textContent = "Copied";
+          } catch {
+            button.textContent = "Failed";
+          }
+          window.setTimeout(() => {
+            button.textContent = previous;
+          }, 1400);
+        });
+
+        let tooltip;
+        let activeTooltipTarget;
+        let tooltipTimer;
+
+        const ensureTooltip = () => {
+          if (!tooltip) {
+            tooltip = document.createElement("div");
+            tooltip.className = "site-tooltip";
+            tooltip.hidden = true;
+            tooltip.setAttribute("role", "tooltip");
+            document.body.appendChild(tooltip);
+          }
+          return tooltip;
+        };
+
+        const positionTooltip = () => {
+          if (!tooltip || !activeTooltipTarget) return;
+          const rect = activeTooltipTarget.getBoundingClientRect();
+          const tipRect = tooltip.getBoundingClientRect();
+          const margin = 12;
+          let left = rect.left + rect.width / 2 - tipRect.width / 2;
+          left = Math.max(margin, Math.min(left, window.innerWidth - tipRect.width - margin));
+          let top = rect.top - tipRect.height - 10;
+          if (top < margin) top = rect.bottom + 10;
+          tooltip.style.left = `${Math.round(left + window.scrollX)}px`;
+          tooltip.style.top = `${Math.round(top + window.scrollY)}px`;
+        };
+
+        const showTooltip = (target) => {
+          const text = target.dataset.tooltip;
+          if (!text) return;
+          activeTooltipTarget = target;
+          const tip = ensureTooltip();
+          tip.textContent = text;
+          tip.hidden = false;
+          tip.classList.remove("visible");
+          window.requestAnimationFrame(() => {
+            positionTooltip();
+            tip.classList.add("visible");
+          });
+        };
+
+        const scheduleTooltip = (target) => {
+          window.clearTimeout(tooltipTimer);
+          tooltipTimer = window.setTimeout(() => showTooltip(target), 120);
+        };
+
+        const hideTooltip = () => {
+          window.clearTimeout(tooltipTimer);
+          activeTooltipTarget = undefined;
+          if (!tooltip) return;
+          tooltip.classList.remove("visible");
+          tooltip.hidden = true;
+        };
+
+        document.addEventListener("mouseover", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (!target || target === activeTooltipTarget) return;
+          scheduleTooltip(target);
+        });
+
+        document.addEventListener("mouseout", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (!target || target.contains(event.relatedTarget)) return;
+          hideTooltip();
+        });
+
+        document.addEventListener("focusin", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (target) scheduleTooltip(target);
+        });
+        document.addEventListener("focusout", hideTooltip);
+        window.addEventListener("scroll", positionTooltip, { passive: true });
+        window.addEventListener("resize", positionTooltip);
+      })();
+    </script>
+  </body>
+</html>

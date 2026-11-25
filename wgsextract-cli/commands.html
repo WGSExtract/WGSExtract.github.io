@@ -1,0 +1,1289 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Every WGS Extract command, with its purpose, outputs, requirements and an example." />
+    <title>WGS Extract command reference</title>
+    <meta property="og:site_name" content="WGS Extract CLI" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="WGS Extract command reference" />
+    <meta property="og:description" content="Every WGS Extract command, with its purpose, outputs, requirements and an example." />
+    <meta property="og:url" content="https://wgsextract.github.io/wgsextract-cli/commands.html" />
+    <meta property="og:image" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta property="og:image:secure_url" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="WGSExtract CLI social preview showing the desktop app screenshot." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="WGS Extract command reference" />
+    <meta name="twitter:description" content="Every WGS Extract command, with its purpose, outputs, requirements and an example." />
+    <meta name="twitter:image" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta name="twitter:image:alt" content="WGSExtract CLI social preview showing the desktop app screenshot." />
+    <link rel="canonical" href="https://wgsextract.github.io/wgsextract-cli/commands.html" />
+    <link rel="image_src" href="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".82em" font-size="84">🧬</text></svg>' />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="index.html">Home</a><a href="install.html">Install CLI</a><a href="gui.html">GUI</a><a href="cli.html">CLI</a><a href="workflows.html">Workflows</a><a href="wgs-guide.html">WGS guide</a><a href="reference.html">Reference</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-hero">
+        <div class="wrap">
+          <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Reference</p>
+          <h1>Command reference</h1>
+          <p class="lede">Browse the full <abbr data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">CLI</abbr> by tier or start with the files you have.</p>
+        </div>
+      </header>
+
+<section><div class="wrap"><p>Commands are grouped by tier. The core tier is the usual path, in order: check a file, make microarray files or find haplogroups, extract reads, (re)align, call and annotate variants, then summarise them in a report. Outputs go to the output directory (<code>--outdir</code>, the configured <code>outdir</code> or the <code>--genome</code> folder) unless noted; a run that registers outputs also writes a <code>.manifest.json</code> beside its main output. Run <code>wgsextract help &lt;command&gt;</code> for its options (<code>--help-all</code> adds the advanced ones). Agents: start with <code>wgsextract help --all --json</code> for a compact index, then <code>wgsextract help &lt;command&gt; --json</code> for options and schemas; <code>wgsextract help --all --json --full</code> dumps everything. <em>Needs</em> lists the external tools a command checks for (<code>wgsextract deps check</code> shows which are installed) and how long it typically takes.</p>
+<h2>Start from what you have</h2>
+<ul>
+<li><strong>Nothing yet (a first run):</strong> <code>deps check</code> (check that the external tools are installed) → <code>ref bootstrap</code> (download the small shared files, e.g. liftover chains) → <code>ref library</code> (download a reference genome) → <code>example-genome download</code> (get a public example genome to practise on)</li>
+<li><strong>A BAM or CRAM from a sequencing service (Nebula, Dante Labs, Sequencing.com, ...):</strong> <code>info</code> (check the reference build, file health and coverage) → <code>microarray</code> (make 23andMe/AncestryDNA-style files to upload) → <code>lineage y-haplogroup</code> (find the paternal haplogroup) → <code>lineage mt-haplogroup</code> (find the maternal haplogroup) → <code>vcf snp</code> (call SNPs into a VCF) → <code>vep run</code> (predict each variant's effect on genes) → <code>report</code> (summarise everything in one HTML report)</li>
+<li><strong>A BAM or CRAM on the wrong build (hg19 when you want hg38, or the reverse):</strong> <code>info</code> (see which build it is) → <code>realign</code> (re-map it to the other build) → <code>info</code> (check the new file, then continue as above)</li>
+<li><strong>FASTQ files (raw reads):</strong> <code>align</code> (map the reads to a reference, making a BAM/CRAM) → <code>info</code> (check the result, then continue as for a BAM/CRAM)</li>
+<li><strong>A VCF (from a provider or another pipeline):</strong> <code>vcf prepare</code> (fix its compression, sorting, contig names and index) → <code>vcf clinvar</code> (add ClinVar clinical significance) → <code>vcf filter</code> (keep a gene, region or quality range) → <code>vep run</code> (predict each variant's effect on genes) → <code>vcf table</code> (one row per variant, for spreadsheets and SQL)</li>
+<li><strong>A consumer raw-data file (23andMe, AncestryDNA, ...):</strong> <code>info chip</code> (identify the vendor, chip and revision)</li>
+</ul>
+<h2>Start here, in this order</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it does</th>
+<th>Writes</th>
+<th>Needs</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>info</code></td>
+<td>Check a BAM/CRAM: reference build, file health, coverage.</td>
+<td>Prints a summary and caches it as &lt;input file name&gt;.wgse_info.json; with --format also &lt;input file name&gt;_chromosomes and _qc (QC stats) as .tsv or .parquet.</td>
+<td>samtools; depending on options and inputs, also: bcftools; seconds on a 30x genome</td>
+<td><code>wgsextract info --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>info calculate-coverage</code></td>
+<td>Generate a full breadth-of-coverage report.</td>
+<td>&lt;input file name&gt;_coverage.tsv, or with --bins &lt;input file name&gt;<em>coverage_bins.tsv (depth bands, or .parquet with --format parquet) instead; with --with-bins both .tsv files. With --by, &lt;input&gt;</em>&lt;bed&gt;<em>target_coverage.tsv (depth per target) and &lt;input&gt;</em>&lt;bed&gt;_target_summary.txt (on- and off-target depth, enrichment and targets below --min-depth). --status writes nothing.</td>
+<td>samtools; depending on options and inputs, also: bcftools; minutes on a 30x genome</td>
+<td><code>wgsextract info calculate-coverage --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>info coverage-sample</code></td>
+<td>Quickly estimate per-chromosome breadth of coverage by sampling ~1,000 evenly spaced, length-weighted 1 kb windows.</td>
+<td>&lt;input file name&gt;_samplecvg.json; a whole-file run also updates the info cache.</td>
+<td>samtools; depending on options and inputs, also: bcftools; minutes on a 30x genome</td>
+<td><code>wgsextract info coverage-sample --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>info gene</code></td>
+<td>Look at one gene from local data: its span and RefSeq transcripts, your VCF's variants in it with consequence, ClinVar, gnomAD and research-only ACMG annotations, and BAM/CRAM read depth over each exon against a callable threshold.</td>
+<td>Prints the gene's span, transcripts, variant counts and exon coverage; --json has the full wgsextract.gene/1 document in details. With --export, &lt;vcf stem&gt;<em>&lt;gene&gt;</em>&lt;filter&gt;_variants.tsv.</td>
+<td>samtools; depending on options and inputs, also: bcftools, tabix; seconds for a gene</td>
+<td><code>wgsextract info gene --gene BRCA1 --input sample.cram --vcf-input sample_annotated.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>info chip</code></td>
+<td>Identify the vendor, chip and revision of a consumer microarray raw-data file (23andMe, AncestryDNA, MyHeritage, FTDNA, ...) from its header and marker set, with a confidence score and the matching --formats template.</td>
+<td>Prints the vendor, chip and matching --formats template; writes no files.</td>
+<td>no external tools; seconds for a raw-data file</td>
+<td><code>wgsextract info chip --input genome_raw_data.txt</code></td>
+</tr>
+<tr>
+<td><code>microarray</code></td>
+<td>Make 23andMe/AncestryDNA-style raw-data files to upload.</td>
+<td>&lt;input stem&gt;_&lt;format&gt;.txt (or the vendor's extension) per format, such as sample_23andMe_V5.txt, and &lt;input stem&gt;_CombinedKit.txt; with --format also &lt;input stem&gt;_genotypes.tsv or .parquet. Each output gets an &lt;output&gt;.inputs.json of the inputs and options that made it; a rerun reuses outputs whose inputs are unchanged.</td>
+<td>bcftools, bgzip, samtools, tabix; depending on options and inputs, also: curl; minutes on a 30x genome</td>
+<td><code>wgsextract microarray --input sample.cram --formats 23andme_v5</code></td>
+</tr>
+<tr>
+<td><code>lineage y-haplogroup</code></td>
+<td>Predict paternal haplogroups with native Yleaf-derived analysis (BAM/CRAM/VCF).</td>
+<td>yleaf/: hg_prediction.hg, the per-sample .out/.fmf/.info reports and run.json; prints the haplogroup and the tree's name and version.</td>
+<td>bcftools, samtools; minutes on a 30x genome</td>
+<td><code>wgsextract lineage y-haplogroup --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>lineage y-str</code></td>
+<td>Count Y-STR repeats (FamilyTreeDNA Y-12 to Y-111, PowerPlex Y23, Yfiler Plus) from a BAM/CRAM for genealogy matching.</td>
+<td>ystr/: &lt;sample&gt;.ystr.tsv, &lt;sample&gt;.ftdna.csv (FTDNA marker order) and run.json.</td>
+<td>samtools; depending on options and inputs, also: bcftools; minutes on a 30x genome</td>
+<td><code>wgsextract lineage y-str --input sample.cram --panel Y-37</code></td>
+</tr>
+<tr>
+<td><code>lineage mt-haplogroup</code></td>
+<td>Predict your maternal haplogroup using Haplogrep 3, optionally checking mtDNA contamination with haplocheck.</td>
+<td>haplogrep_results.txt; prints the mtDNA haplogroup and Haplogrep 3 tree. With --contamination, also haplocheck_contamination.txt (+ .raw.txt, .html).</td>
+<td>bcftools, haplogrep3, java, samtools; depending on options and inputs, also: curl, haplocheck, tabix; minutes on a 30x genome</td>
+<td><code>wgsextract lineage mt-haplogroup --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>extract mito-fasta</code></td>
+<td>Extract the Mitochondrial DNA (chrM) consensus sequence.</td>
+<td>&lt;input stem&gt;_MT.fasta: the mtDNA consensus sequence.</td>
+<td>bcftools, samtools, tabix; depending on options and inputs, also: sambamba; minutes on a 30x genome</td>
+<td><code>wgsextract extract mito-fasta --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>extract mito-vcf</code></td>
+<td>Call variants specifically for the mitochondrial DNA.</td>
+<td>&lt;input stem&gt;_MT.vcf.gz (+ .tbi).</td>
+<td>bcftools, samtools, tabix; depending on options and inputs, also: sambamba; minutes on a 30x genome</td>
+<td><code>wgsextract extract mito-vcf --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>extract mt-bam</code></td>
+<td>Isolate all mitochondrial-related reads into a new, smaller BAM file.</td>
+<td>&lt;input stem&gt;_mtDNA.bam (+ .bai).</td>
+<td>samtools; depending on options and inputs, also: bcftools, sambamba; minutes on a 30x genome</td>
+<td><code>wgsextract extract mt-bam --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>extract ydna-bam</code></td>
+<td>Extract all Y-chromosome reads into a separate BAM file.</td>
+<td>&lt;input stem&gt;_Y.bam (+ .bai).</td>
+<td>samtools; depending on options and inputs, also: bcftools, sambamba; minutes on a 30x genome</td>
+<td><code>wgsextract extract ydna-bam --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>extract ydna-vcf</code></td>
+<td>Call variants specifically for the Y-chromosome.</td>
+<td>&lt;input stem&gt;_Y.vcf.gz (+ .tbi).</td>
+<td>bcftools, bgzip, samtools, tabix; depending on options and inputs, also: sambamba; minutes on a 30x genome</td>
+<td><code>wgsextract extract ydna-vcf --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>extract y-mt-extract</code></td>
+<td>Extract both Y-chromosome and Mitochondrial reads into a single, combined BAM file.</td>
+<td>&lt;input stem&gt;_Y_MT.bam (+ .bai).</td>
+<td>samtools; depending on options and inputs, also: bcftools, sambamba; minutes on a 30x genome</td>
+<td><code>wgsextract extract y-mt-extract --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>extract unmapped</code></td>
+<td>Extract reads that did not align to the reference.</td>
+<td>&lt;input stem&gt;_unmapped.bam (+ .bai); FASTQ files with --fastq.</td>
+<td>samtools; depending on options and inputs, also: bcftools; minutes on a 30x genome</td>
+<td><code>wgsextract extract unmapped --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>extract custom</code></td>
+<td>Extract reads from a specific chromosomal region or gene of interest.</td>
+<td>&lt;input stem&gt;_&lt;region&gt;.bam (+ .bai).</td>
+<td>samtools; depending on options and inputs, also: bcftools, sambamba; minutes on a 30x genome</td>
+<td><code>wgsextract extract custom --input sample.cram --region chr17:43044295-43125483</code></td>
+</tr>
+<tr>
+<td><code>extract region</code></td>
+<td>Extract the mtDNA, the Y chromosome, both, or the autosomes and X chromosome as any of a BAM, a VCF and a consensus FASTA.</td>
+<td>Per chosen format: &lt;input stem&gt;_mtDNA|Y|Y_MT|autosomes_X.bam (+ .bai), &lt;input stem&gt;_MT|Y|Y_MT|autosomes_X.vcf.gz (+ .tbi) and .fasta.</td>
+<td>samtools; depending on options and inputs, also: bcftools, bgzip, tabix; hours on a 30x genome</td>
+<td><code>wgsextract extract region --input sample.cram --target ymt --formats bam,vcf</code></td>
+</tr>
+<tr>
+<td><code>realign</code></td>
+<td>Re-map a BAM/CRAM to another build, e.g. hg19 to hg38.</td>
+<td>&lt;input stem&gt;_aligned.bam or .cram (+ index); with --keep-fastq, also &lt;input stem&gt;_R1/_R2.fastq.gz (single-end ONT/PacBio: &lt;input stem&gt;.fastq.gz). Completed steps are recorded in &lt;output&gt;.steps.json, so a rerun resumes after a crash.</td>
+<td>samtools; depending on options and inputs, also: bcftools, bgzip, bwa, bwa-mem2, bwa-mem3, curl, gatk, minimap2, pbmm2, sambamba, samblaster; hours on a 30x genome</td>
+<td><code>wgsextract realign --input sample_hg19.bam --ref hs38.fa</code></td>
+</tr>
+<tr>
+<td><code>align</code></td>
+<td>Map raw FASTQ reads to a reference, making a BAM/CRAM.</td>
+<td>&lt;reads stem&gt;_aligned.bam or .cram (+ index).</td>
+<td>samtools; depending on options and inputs, also: bcftools, bwa, bwa-mem2, bwa-mem3, curl, gatk, minimap2, pbmm2, sambamba, samblaster; hours on a 30x genome</td>
+<td><code>wgsextract align --r1 sample_R1.fastq.gz --r2 sample_R2.fastq.gz --ref hs38.fa</code></td>
+</tr>
+<tr>
+<td><code>vcf snp</code></td>
+<td>Call Single Nucleotide Polymorphisms (SNPs) using bcftools.</td>
+<td>snps.vcf.gz (+ .tbi); with --reference-evidence gvcf also bcftools.g.vcf.gz (+ .tbi).</td>
+<td>bcftools, samtools, tabix; hours on a 30x genome</td>
+<td><code>wgsextract vcf snp --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>vcf indel</code></td>
+<td>Call Small Insertions and Deletions (InDels) using bcftools.</td>
+<td>indels.vcf.gz (+ .tbi); with --reference-evidence gvcf also bcftools.g.vcf.gz (+ .tbi).</td>
+<td>bcftools, samtools, tabix; hours on a 30x genome</td>
+<td><code>wgsextract vcf indel --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>vcf call</code></td>
+<td>Call several variant types in one run: SNPs and InDels (bcftools), SVs and CNVs, each into its own VCF, and with --merge also into one combined VCF.</td>
+<td>Each type's own VCF (snps.vcf.gz, indels.vcf.gz, the SV caller's VCF, cnv.vcf.gz), with --reference-evidence gvcf one bcftools.g.vcf.gz for SNPs and indels instead; --merge replaces them with variants.vcf.gz (variants.g.vcf.gz with the gVCF) (+ .tbi).</td>
+<td>bcftools, samtools, tabix; depending on options and inputs, also: delly, pbsv, sambamba, sniffles; hours on a 30x genome</td>
+<td><code>wgsextract vcf call --input sample.cram --types snp,indel --merge</code></td>
+</tr>
+<tr>
+<td><code>vcf annotate</code></td>
+<td>Add external metadata (like population frequencies or disease risk) to your VCF file.</td>
+<td>annotated.vcf.gz (+ .tbi).</td>
+<td>bcftools, tabix; depending on options and inputs, also: bgzip, samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf annotate --vcf-input sample.vcf.gz --ann-vcf dbsnp.vcf.gz --cols ID</code></td>
+</tr>
+<tr>
+<td><code>vcf filter</code></td>
+<td>Filter your results.</td>
+<td>filtered.vcf.gz (+ .tbi).</td>
+<td>bcftools, tabix; depending on options and inputs, also: bgzip, samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf filter --vcf-input sample.vcf.gz --genes BRCA1,BRCA2 --bed targets.bed</code></td>
+</tr>
+<tr>
+<td><code>vcf table</code></td>
+<td>Export variants and their annotations (gene, consequence, ClinVar, gnomAD, genotype, depth, ...) as one row per variant, in a TSV (or Parquet) table and an SQLite database to query.</td>
+<td>&lt;input stem&gt;_variants.tsv (or .parquet with --format parquet) and &lt;input stem&gt;_variants.sqlite: one row per variant allele, with its annotations.</td>
+<td>bcftools; depending on options and inputs, also: bgzip, tabix; minutes on a 30x genome</td>
+<td><code>wgsextract vcf table --vcf-input sample.vcf.gz --bed targets.bed</code></td>
+</tr>
+<tr>
+<td><code>vcf prepare</code></td>
+<td>Repair a VCF from a sequencing service so other tools accept it: BGZF compression, sorting, contig names and header lines, and a fresh index; optionally split multiallelics and left-align indels.</td>
+<td>&lt;input stem&gt;_prepared.vcf.gz (+ .tbi, or .csi for contigs over 512 Mb).</td>
+<td>bcftools, tabix; minutes on a 30x genome</td>
+<td><code>wgsextract vcf prepare --vcf-input sample.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>vcf clinvar</code></td>
+<td>Annotate VCF with ClinVar pathogenicity data.</td>
+<td>clinvar_annotated.vcf.gz and clinvar_pathogenic.vcf.gz (+ .tbi).</td>
+<td>bcftools, tabix; depending on options and inputs, also: bgzip, samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf clinvar --vcf-input sample.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>vcf revel</code></td>
+<td>Annotate VCF with REVEL pathogenicity scores.</td>
+<td>revel_annotated.vcf.gz (+ .tbi); with --min-score N, also revel_gt_N.vcf.gz.</td>
+<td>bcftools, tabix; depending on options and inputs, also: bgzip, samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf revel --vcf-input sample.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>vcf gnomad</code></td>
+<td>Annotate VCF with gnomAD population frequencies.</td>
+<td>gnomad_annotated.vcf.gz (+ .tbi); with --max-af AF, also gnomad_af_lt_AF.vcf.gz and its .confidence.tsv table.</td>
+<td>bcftools, tabix; depending on options and inputs, also: bgzip, samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf gnomad --vcf-input sample.vcf.gz --max-af 0.01</code></td>
+</tr>
+<tr>
+<td><code>vcf sv-freq</code></td>
+<td>Annotate SVs with gnomAD-SV/gnomAD-LR frequencies.</td>
+<td>sv_freq_annotated.vcf.gz (+ .tbi) and sv_freq.tsv.</td>
+<td>bcftools, bgzip, tabix; depending on options and inputs, also: samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf sv-freq --vcf-input sniffles.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>vcf pharmgkb</code></td>
+<td>Annotate VCF with PharmGKB drug metabolism data.</td>
+<td>pharmgkb_annotated.vcf.gz (+ .tbi)</td>
+<td>bcftools, tabix; depending on options and inputs, also: bgzip, samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf pharmgkb --vcf-input sample.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>vcf info</code></td>
+<td>Quick summary of a VCF, gVCF or BCF: reference build/model, samples, format, and record counts.</td>
+<td>Prints a VCF summary (reference model/build, samples, format, record counts); writes no files unless --card is set.</td>
+<td>bcftools; depending on options and inputs, also: htsfile, samtools, tabix; seconds on a 30x genome</td>
+<td><code>wgsextract vcf info --vcf-input sample.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>vcf variantqc</code></td>
+<td>Run DISCVRSeq VariantQC to generate an interactive HTML VCF quality report.</td>
+<td>&lt;stem&gt;.variantqc.html interactive VariantQC report from DISCVRSeq.</td>
+<td>no external tools; depending on options and inputs, also: bcftools, discvrseq, java17, samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf variantqc --vcf-input sample.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>vcf granite-qc</code></td>
+<td>Run granite qcVCF (dbmi-bgm/granite) for single-sample or family VCF quality metrics.</td>
+<td>&lt;stem&gt;.granite_qc.json quality metrics report from granite qcVCF.</td>
+<td>bcftools; depending on options and inputs, also: granite, samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf granite-qc --vcf-input sample.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>vep download</code></td>
+<td>Build vep-rs's VEP cache from Ensembl's files (GRCh37/38, T2T-CHM13v2.0), or download Ensembl VEP's with --engine ensembl, for offline annotation.</td>
+<td>Into the VEP cache directory (vep_cache, or --vep-cache).</td>
+<td>samtools, vep-cache-builder; depending on options and inputs, also: curl, tar; depends on download speed</td>
+<td><code>wgsextract vep download --assembly GRCh38</code></td>
+</tr>
+<tr>
+<td><code>vep verify</code></td>
+<td>Check your existing VEP cache for missing files or corruption.</td>
+<td>Prints what is missing or damaged; writes no files.</td>
+<td>no external tools; seconds</td>
+<td><code>wgsextract vep verify --assembly GRCh38</code></td>
+</tr>
+<tr>
+<td><code>vep delete</code></td>
+<td>Delete one release and assembly of your VEP cache.</td>
+<td>Deletes &lt;cache&gt;/&lt;species&gt;/&lt;release&gt;_&lt;assembly&gt;; writes no files.</td>
+<td>no external tools; seconds</td>
+<td><code>wgsextract vep delete --assembly GRCh38</code></td>
+</tr>
+<tr>
+<td><code>vep run</code></td>
+<td>Variant Effect Predictor, with vep-rs (default) or Ensembl VEP (--engine ensembl).</td>
+<td>&lt;input stem&gt;_vep.vcf.gz (or .tsv/.json with --format), with VEP's summary.</td>
+<td>bcftools, tabix, vep-rs; depending on options and inputs, also: samtools, vep; minutes on a 30x genome</td>
+<td><code>wgsextract vep run --input sample.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>report</code></td>
+<td>Summarise a sample's results in one local HTML report.</td>
+<td>&lt;sample&gt;_personal_report.html, .md and .json and &lt;sample&gt;_personal_report_findings.tsv (or .parquet with --format parquet) in the sample folder (or --outdir); evidence links are relative to the sample folder.</td>
+<td>no external tools; depending on options and inputs, also: curl; seconds from existing results</td>
+<td><code>wgsextract report --genome HG002</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2>Setup</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it does</th>
+<th>Writes</th>
+<th>Needs</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ref aadr</code></td>
+<td>Explicitly fetch the hash-pinned CC0 AADR v66.p1 2M SNP panel.</td>
+<td>Into the reference library (reflib): the AADR 2M SNP panel (--delete removes it).</td>
+<td>no external tools; depending on options and inputs, also: curl; depends on download speed</td>
+<td><code>wgsextract ref aadr --install</code></td>
+</tr>
+<tr>
+<td><code>ref ybrowse</code></td>
+<td>Explicitly install a verified, sites-only GRCh38 yBrowse snapshot.</td>
+<td>Into the reference library (reflib): the yBrowse GRCh38 SNP sites (--delete removes them).</td>
+<td>bgzip, tabix; depending on options and inputs, also: bcftools, samtools; depends on download speed</td>
+<td><code>wgsextract ref ybrowse --install</code></td>
+</tr>
+<tr>
+<td><code>ref somalier</code></td>
+<td>Explicitly fetch somalier's hash-pinned sites and 1000 Genomes sketches for qc relate.</td>
+<td>Into the reference library (reflib): somalier's sites files and the 1000 Genomes sketches (--delete removes them).</td>
+<td>no external tools; depending on options and inputs, also: curl; depends on download speed</td>
+<td><code>wgsextract ref somalier --install</code></td>
+</tr>
+<tr>
+<td><code>ref ancestry</code></td>
+<td>Fetch the hash-pinned ancestry reference for qc ancestry.</td>
+<td>Into the reference library (reflib): the HGDP+1KG ancestry reference (--delete removes it).</td>
+<td>no external tools; depending on options and inputs, also: curl; depends on download speed</td>
+<td><code>wgsextract ref ancestry --install</code></td>
+</tr>
+<tr>
+<td><code>ref gnomad-sv</code></td>
+<td>Explicitly fetch hash-pinned gnomAD SV tables for vcf sv-freq.</td>
+<td>Into the reference library (reflib): gnomAD SV tables in gnomad-sv/ (--delete removes them).</td>
+<td>bcftools, bgzip, tabix; depending on options and inputs, also: curl; depends on download speed</td>
+<td><code>wgsextract ref gnomad-sv --install --source lr</code></td>
+</tr>
+<tr>
+<td><code>ref imputation</code></td>
+<td>Explicitly install the hash-pinned GRCh38 imputation panel, per chromosome.</td>
+<td>Into the reference library (reflib): the imputation panel's chromosomes, prepared for GLIMPSE2 (--delete removes them).</td>
+<td>bcftools, GLIMPSE2_chunk, GLIMPSE2_phase, GLIMPSE2_split_reference, tabix; depends on download speed</td>
+<td><code>wgsextract ref imputation --install --chromosomes chr20</code></td>
+</tr>
+<tr>
+<td><code>ref download</code></td>
+<td>Download a reference FASTA from a URL (--url) to a path (--out).</td>
+<td>The FASTA at --out.</td>
+<td>no external tools; depending on options and inputs, also: curl; depends on download speed</td>
+<td><code>wgsextract ref download --url https://example.org/genome.fa.gz --out genome.fa.gz</code></td>
+</tr>
+<tr>
+<td><code>ref index</code></td>
+<td>Prepare a FASTA file for use by indexing it.</td>
+<td>Beside the FASTA: .fai, .dict and the aligner's index files.</td>
+<td>samtools; depending on options and inputs, also: bwa, bwa-mem2, curl; hours, once per reference</td>
+<td><code>wgsextract ref index --ref hs38.fa</code></td>
+</tr>
+<tr>
+<td><code>ref dense-sa</code></td>
+<td>Build wgse-bwa's optional dense suffix-array file for a FASTA (0.8 GB for hs38; align reads it with --dense-suffix-array), list or delete it.</td>
+<td>Beside the FASTA: &lt;FASTA&gt;.wgse-sa16, wgse-bwa's optional dense suffix-array file (0.8 GB for hs38); --list prints the FASTA's files, --delete removes them.</td>
+<td>no external tools; minutes, once per reference</td>
+<td><code>wgsextract ref dense-sa --ref hs38.fa</code></td>
+</tr>
+<tr>
+<td><code>ref count-ns</code></td>
+<td>Calculate the percentage of 'N' (unknown) bases in a genome.</td>
+<td>&lt;reference stem&gt;_ncnt.csv and &lt;reference stem&gt;_nbin.csv.</td>
+<td>no external tools; minutes, once per reference</td>
+<td><code>wgsextract ref count-ns --ref hs38.fa</code></td>
+</tr>
+<tr>
+<td><code>ref verify</code></td>
+<td>Ensure your reference genome file isn't corrupted and has all the necessary companion files (indexes, dicts).</td>
+<td>Prints what is missing or damaged; creates a missing .fai (and .gzi for a compressed FASTA) beside the FASTA.</td>
+<td>samtools; minutes, once per reference</td>
+<td><code>wgsextract ref verify --ref hs38.fa</code></td>
+</tr>
+<tr>
+<td><code>ref library</code></td>
+<td>Opens the interactive reference manager to help you organize and download genomic data.</td>
+<td>Into the reference library (reflib): the chosen reference genome and its indexes.</td>
+<td>bcftools, bgzip, curl, htsfile, samtools, tabix; depends on download speed</td>
+<td><code>wgsextract ref library --list</code></td>
+</tr>
+<tr>
+<td><code>ref status</code></td>
+<td>Report reference library asset status.</td>
+<td>Prints the reference library's status; writes no files.</td>
+<td>no external tools; seconds</td>
+<td><code>wgsextract ref status</code></td>
+</tr>
+<tr>
+<td><code>ref recheck</code></td>
+<td>Compare the resource releases result manifests recorded with the newest: from --answers FILE, or ask NCBI with --online.</td>
+<td>Prints each recorded resource release, the newest and its status; writes no files except the --save-answers file. With --json, the result's details are the wgsextract.recheck/1 document.</td>
+<td>no external tools; seconds</td>
+<td><code>wgsextract ref recheck HG002/HG002_personal_report.manifest.json --answers answers.json</code></td>
+</tr>
+<tr>
+<td><code>ref test-genome</code></td>
+<td>Report, install (--install) or delete (--delete) the small hg19 test genome in the dataset library.</td>
+<td>In the dataset library: wgsextract-benchmark-hg19-mini/ with its genome-config.toml, and the verified zip in .downloads (--delete removes both). Without --install or --delete, prints its status.</td>
+<td>no external tools; depending on options and inputs, also: curl; depends on download speed</td>
+<td><code>wgsextract ref test-genome --install</code></td>
+</tr>
+<tr>
+<td><code>ref needs</code></td>
+<td>Report the reference genome, annotation data or optional tools a command line needs that aren't installed, and how to install them.</td>
+<td>Prints the missing reference genome, annotation data or optional tool and the command that installs each; writes no files. With --json, the result's details.missing lists them.</td>
+<td>no external tools; depending on options and inputs, also: bcftools, tabix; seconds</td>
+<td><code>wgsextract ref needs -- info --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>ref gene-map</code></td>
+<td>Download or delete lightweight gene-to-coordinate mapping files (hg19/hg38), enabling you to filter VCFs by gene name (e.g. BRCA1), with the RefSeq transcript and exon models the genome viewer and info gene show.</td>
+<td>Into the reference library (reflib): the hg19 and hg38 gene maps and their indexed RefSeq transcript and exon models, transcripts_&lt;build&gt;.bed.gz, for the genome viewer and info gene (--delete removes them).</td>
+<td>no external tools; depending on options and inputs, also: bgzip, curl, tabix; depends on download speed</td>
+<td><code>wgsextract ref gene-map</code></td>
+</tr>
+<tr>
+<td><code>ref cytobands</code></td>
+<td>Validate installed hg19/hg38 UCSC cytobands; download missing data only with --download.</td>
+<td>Into the reference library (reflib)/downloads/cytobands_hg19.tsv or cytobands_hg38.tsv; validated zero-based UCSC primary-chromosome bands for offline viewing.</td>
+<td>no external tools; depending on options and inputs, also: curl; depends on download speed</td>
+<td><code>wgsextract ref cytobands --build hg38 --download</code></td>
+</tr>
+<tr>
+<td><code>ref clinvar</code></td>
+<td>Download official ClinVar VCF for hg19 and hg38.</td>
+<td>Into the reference library (reflib): ClinVar VCFs for hg19 and hg38.</td>
+<td>no external tools; depending on options and inputs, also: bgzip, curl, tabix; depends on download speed</td>
+<td><code>wgsextract ref clinvar</code></td>
+</tr>
+<tr>
+<td><code>ref dbsnp</code></td>
+<td>Download NCBI dbSNP b151 common human rsIDs (~37M SNPs, VCF + offline rsID search index) for hg38 and hg19, or delete them.</td>
+<td>Into the reference library (reflib)/downloads/dbsnp_common_&lt;build&gt;.vcf.gz (+ .tbi) and dbsnp_common_&lt;build&gt;.rsid.sqlite (~37M common human rsIDs; --delete removes them).</td>
+<td>no external tools; depending on options and inputs, also: bgzip, curl, tabix; depends on download speed</td>
+<td><code>wgsextract ref dbsnp</code></td>
+</tr>
+<tr>
+<td><code>ref revel</code></td>
+<td>Download REVEL pathogenicity scores for hg19 and hg38.</td>
+<td>Into the reference library (reflib): REVEL score files.</td>
+<td>no external tools; depending on options and inputs, also: bgzip, curl, tabix; depends on download speed</td>
+<td><code>wgsextract ref revel</code></td>
+</tr>
+<tr>
+<td><code>ref phylop</code></td>
+<td>Download UCSC's PhyloP 100-way conservation scores (~10 GB bigWig).</td>
+<td>Into the reference library (reflib): the PhyloP bigWig.</td>
+<td>no external tools; depending on options and inputs, also: curl; depends on download speed</td>
+<td><code>wgsextract ref phylop --build hg38</code></td>
+</tr>
+<tr>
+<td><code>ref gnomad</code></td>
+<td>Download gnomAD population allele frequencies.</td>
+<td>Into the reference library (reflib): gnomAD allele-frequency files.</td>
+<td>no external tools; depending on options and inputs, also: bcftools, bgzip, curl, tabix; depends on download speed</td>
+<td><code>wgsextract ref gnomad --download</code></td>
+</tr>
+<tr>
+<td><code>ref spliceai</code></td>
+<td>Download SpliceAI scores for hg38 (Ensembl, MANE SNVs); index a manual hg19 download.</td>
+<td>Into the reference library (reflib): SpliceAI score files (--delete removes them).</td>
+<td>no external tools; depending on options and inputs, also: bgzip, curl, tabix; depends on download speed</td>
+<td><code>wgsextract ref spliceai</code></td>
+</tr>
+<tr>
+<td><code>ref alphamissense</code></td>
+<td>Download AlphaMissense scores for hg19 and hg38.</td>
+<td>Into the reference library (reflib): AlphaMissense score files (--delete removes them).</td>
+<td>no external tools; depending on options and inputs, also: bgzip, curl, tabix; depends on download speed</td>
+<td><code>wgsextract ref alphamissense</code></td>
+</tr>
+<tr>
+<td><code>ref pharmgkb</code></td>
+<td>Download PharmGKB annotations.</td>
+<td>Into the reference library (reflib): PharmGKB annotation files (--delete removes them).</td>
+<td>no external tools; depending on options and inputs, also: bgzip, curl, tabix; depends on download speed</td>
+<td><code>wgsextract ref pharmgkb</code></td>
+</tr>
+<tr>
+<td><code>ref cadd</code></td>
+<td>Download CADD v1.7 deleteriousness scores (all possible SNVs plus gnomAD indels, ~85 GB per build) with their tabix indexes.</td>
+<td>Into the reference library (reflib): CADD score files and tabix indexes.</td>
+<td>no external tools; depending on options and inputs, also: curl; depends on download speed</td>
+<td><code>wgsextract ref cadd --build hg38</code></td>
+</tr>
+<tr>
+<td><code>ref gerp</code></td>
+<td>Download GERP++ conservation scores as a bigWig (hg38 from Ensembl, ~9.6 GB; hg19 from UCSC, ~7.6 GB).</td>
+<td>Into the reference library (reflib): the GERP++ bigWig.</td>
+<td>no external tools; depending on options and inputs, also: curl; depends on download speed</td>
+<td><code>wgsextract ref gerp --build hg38</code></td>
+</tr>
+<tr>
+<td><code>ref bootstrap</code></td>
+<td>Download and initialize the reference library bootstrap (liftover chains, chip templates, etc.).</td>
+<td>Into the reference library (reflib): the bootstrap liftover chains, chip templates and other small files.</td>
+<td>no external tools; depending on options and inputs, also: curl; depends on download speed</td>
+<td><code>wgsextract ref bootstrap</code></td>
+</tr>
+<tr>
+<td><code>ref acmg-data</code></td>
+<td>Prepare fastVEP's ACMG databases, region tracks and Ensembl GFF3; fetch public sources only with --download.</td>
+<td>Into the reference library (reflib): downloads/acmg/ holds the Ensembl GFF3, the downloads in sources/ and fastVEP's databases with acmg_data.json in sa/ (or --sa-dir); --dry-run shows the plan, and only --download contacts publishers.</td>
+<td>bcftools, bgzip, fastvep, tabix; depends on download speed</td>
+<td><code>wgsextract ref acmg-data --dry-run</code></td>
+</tr>
+<tr>
+<td><code>ref microarray-targets</code></td>
+<td>Build the genome-wide hg19 and hg38 microarray targets from the chip templates, or delete them.</td>
+<td>Into the reference library (reflib): microarray/All_SNPs_hg19_ref.tab.gz and All_SNPs_hg38_ref.tab.gz (+ .tbi); --delete removes them.</td>
+<td>no external tools; minutes on a 30x genome</td>
+<td><code>wgsextract ref microarray-targets</code></td>
+</tr>
+<tr>
+<td><code>deps check</code></td>
+<td>Verify that all required bioinformatics tools (samtools, bcftools, etc.) are installed and accessible in your system path.</td>
+<td>Prints each tool's status; writes no files.</td>
+<td>no external tools; seconds</td>
+<td><code>wgsextract deps check</code></td>
+</tr>
+<tr>
+<td><code>deps list</code></td>
+<td>List every mandatory and optional tool with its status, and whether 'deps install' or 'deps uninstall' can act on it.</td>
+<td>Prints each tool's status and what can be done about it; writes no files.</td>
+<td>no external tools; seconds</td>
+<td><code>wgsextract deps list</code></td>
+</tr>
+<tr>
+<td><code>deps ready</code></td>
+<td>Report whether a command line can run on this computer without the network: its tools, images, GPUs, model weights, input, reference genome and indexes, checked offline without installing or downloading anything.</td>
+<td>Prints each prerequisite of the command line, its status and the explicit step that provides a missing one; writes no files. With --json, the result's details list every item and its evidence.</td>
+<td>no external tools; seconds</td>
+<td><code>wgsextract deps ready -- vcf snp --input sample.bam</code></td>
+</tr>
+<tr>
+<td><code>deps install</code></td>
+<td>Download and install the Pixi environment that provides an optional tool (e.g. gatk).</td>
+<td>Installs the tool's Pixi environment beside the CLI's own.</td>
+<td>no external tools; depending on options and inputs, also: java, java17; depends on download speed</td>
+<td><code>wgsextract deps install gatk</code></td>
+</tr>
+<tr>
+<td><code>deps uninstall</code></td>
+<td>Remove the Pixi environment that provides an optional tool, and the other tools in it.</td>
+<td>Removes the tool's Pixi environment, and the other tools in it.</td>
+<td>no external tools; seconds</td>
+<td><code>wgsextract deps uninstall gatk</code></td>
+</tr>
+<tr>
+<td><code>example-genome list</code></td>
+<td>List curated 1000 Genomes examples.</td>
+<td>Prints the curated examples; writes no files.</td>
+<td>no external tools; instant</td>
+<td><code>wgsextract example-genome list</code></td>
+</tr>
+<tr>
+<td><code>example-genome download</code></td>
+<td>Download curated 1000 Genomes examples into the dataset library.</td>
+<td>Into &lt;mygenomes_library&gt;/test-1000genomes/&lt;example id&gt;/, with a genome config file.</td>
+<td>no external tools; depending on options and inputs, also: curl; depends on download speed</td>
+<td><code>wgsextract example-genome download na12878-lowcov-bam</code></td>
+</tr>
+<tr>
+<td><code>sample show</code></td>
+<td>Show the sample's overrides, the facts commands detected from each of its files (with method, confidence and date) and its recorded results.</td>
+<td>Prints the sample's overrides, recorded facts and results; writes no files.</td>
+<td>no external tools; instant</td>
+<td><code>wgsextract sample show --genome HG002</code></td>
+</tr>
+<tr>
+<td><code>sample set</code></td>
+<td>Set an override (--sex, --platform) that commands use instead of what they detect: a sex for the whole genome folder, else for --input alone.</td>
+<td>wgsextract.sample.toml in the sample folder (the --genome folder, --workspace or the input's folder).</td>
+<td>no external tools; instant</td>
+<td><code>wgsextract sample set --genome HG002 --sex Female</code></td>
+</tr>
+<tr>
+<td><code>sample unset</code></td>
+<td>Remove an override so commands detect that fact again: the folder-wide one and, with --input, that file's own.</td>
+<td>wgsextract.sample.toml in the sample folder.</td>
+<td>no external tools; instant</td>
+<td><code>wgsextract sample unset --genome HG002 --sex</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>Show the settings in use and the config.toml path.</td>
+<td>Prints the settings; in a terminal, offers to create a default config.toml.</td>
+<td>no external tools; instant</td>
+<td><code>wgsextract config</code></td>
+</tr>
+<tr>
+<td><code>report-issue</code></td>
+<td>Report a problem: a redacted, pre-filled GitHub bug report.</td>
+<td>Prints a redacted bug report and its GitHub link and saves the report as issue-report-&lt;time&gt;.md in state/reports (setting state_directory); opens the browser only after you agree or with --open.</td>
+<td>no external tools; seconds</td>
+<td><code>wgsextract report-issue</code></td>
+</tr>
+<tr>
+<td><code>help</code></td>
+<td>List every command, or explain one: 'help vcf snp'.</td>
+<td>Prints to stdout; writes no files.</td>
+<td>no external tools; instant</td>
+<td><code>wgsextract help --all</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2>Advanced</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it does</th>
+<th>Writes</th>
+<th>Needs</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lineage y-private</code></td>
+<td>List candidate private (novel) Y SNPs: calls absent from the installed YBrowse/YFull marker sets, in callable regions, passing strict filters.</td>
+<td>y_private/: &lt;sample&gt;.y_private.tsv (candidates, with the marker sets, callable mask and filters in its header) and &lt;sample&gt;.y_private.vcf.gz (+ .tbi).</td>
+<td>bcftools, bgzip, samtools, tabix; minutes on a 30x genome</td>
+<td><code>wgsextract lineage y-private --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>extract bam-subset</code></td>
+<td>Create a smaller version of your BAM file using a random fraction of reads (e.g. 0.1 for 10%).</td>
+<td>&lt;input stem&gt;_subset.bam (+ .bai).</td>
+<td>samtools; depending on options and inputs, also: bcftools; minutes on a 30x genome</td>
+<td><code>wgsextract extract bam-subset --input sample.cram --fraction 0.1</code></td>
+</tr>
+<tr>
+<td><code>vcf callability</code></td>
+<td>Which coding exons of a gene list (ACMG SF by default) the sample's gVCF could read: callable, partial, not readable, specialist or not run.</td>
+<td>exon_callability.json (per gene: callable, partial, not readable or not run, with the sources and thresholds) and exon_callability.tsv (one row per coding exon).</td>
+<td>bcftools; depending on options and inputs, also: curl; seconds on a 30x genome</td>
+<td><code>wgsextract vcf callability --vcf-input snps.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>vcf to-fasta</code></td>
+<td>Build your personal consensus genome: the reference FASTA with your variants applied (heterozygous SNVs as IUPAC codes by default), and N where a gVCF has no call.</td>
+<td>&lt;input stem&gt;_consensus.fa.gz (+ .fai); with --chain, a .chain file.</td>
+<td>bcftools, bgzip, samtools, tabix; minutes on a 30x genome</td>
+<td><code>wgsextract vcf to-fasta --vcf-input sample.vcf.gz --ref hs38.fa</code></td>
+</tr>
+<tr>
+<td><code>vcf trio</code></td>
+<td>Analyze inheritance patterns.</td>
+<td>trio_&lt;mode&gt;.vcf.gz (+ .tbi); VCF denovo/comphet also write trio_&lt;mode&gt;_inconclusive.vcf.gz for missing/weak parental evidence; from alignments, also trio_joint.vcf.gz (and trio_denovo_isolated.vcf.gz for --mode denovo). The manifest is trio.manifest.json.</td>
+<td>bcftools, samtools, tabix; depending on options and inputs, also: bgzip; minutes on a 30x genome</td>
+<td><code>wgsextract vcf trio --proband child.vcf.gz --mother mother.vcf.gz --father father.vcf.gz --mode denovo</code></td>
+</tr>
+<tr>
+<td><code>vcf cnv</code></td>
+<td>Call Copy Number Variants (CNVs) using Delly.</td>
+<td>cnv.vcf.gz (+ .tbi).</td>
+<td>bcftools, delly, samtools, tabix; hours on a 30x genome</td>
+<td><code>wgsextract vcf cnv --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>vcf sv</code></td>
+<td>Call Structural Variants (SVs) using Delly for short reads, Sniffles for Nanopore (ONT, auto-detected) or other long reads, or pbsv/Sniffles for PacBio.</td>
+<td>sv.vcf.gz (Delly), pbsv.vcf.gz or sniffles.vcf.gz (+ .tbi).</td>
+<td>bcftools, samtools, tabix; depending on options and inputs, also: delly, pbsv, sambamba, sniffles; hours on a 30x genome</td>
+<td><code>wgsextract vcf sv --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>vcf freebayes</code></td>
+<td>A Bayesian genetic variant detector.</td>
+<td>freebayes.vcf.gz (+ .tbi).</td>
+<td>bcftools, freebayes, samtools, tabix; hours on a 30x genome</td>
+<td><code>wgsextract vcf freebayes --input sample.cram --region chr20</code></td>
+</tr>
+<tr>
+<td><code>vcf gatk</code></td>
+<td>Industry-standard GATK HaplotypeCaller.</td>
+<td>gatk.vcf.gz (+ .tbi).</td>
+<td>gatk, samtools, tabix; depending on options and inputs, also: bcftools; hours on a 30x genome</td>
+<td><code>wgsextract vcf gatk --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>vcf deepvariant</code></td>
+<td>Google's Deep Variant variant caller.</td>
+<td>deepvariant.vcf.gz (+ .tbi) and deepvariant.vcf.gz.steps.json; with --reference-evidence gvcf also deepvariant.g.vcf.gz (+ .tbi); until it finishes, the stages' work in .deepvariant.work, where a rerun resumes.</td>
+<td>samtools, tabix; depending on options and inputs, also: bcftools, docker, run_deepvariant, wgse-deepvariant, sambamba; hours on a 30x genome</td>
+<td><code>wgsextract vcf deepvariant --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>vcf clair3</code></td>
+<td>Clair3 small-variant caller for Oxford Nanopore reads (optional; Linux x86-64/ARM64 and Apple Silicon macOS, install with <code>pixi install -e clair3</code>).</td>
+<td>clair3.vcf.gz (+ .tbi).</td>
+<td>bcftools, samtools, tabix; depending on options and inputs, also: docker, run_clair3.sh, sambamba, wgse-clair3; hours on a 30x genome</td>
+<td><code>wgsextract vcf clair3 --input ont.bam</code></td>
+</tr>
+<tr>
+<td><code>vcf phase</code></td>
+<td>Phase a sample's heterozygous calls with its reads (WhatsHap, or LongPhase for Nanopore and PacBio), and optionally tag the reads by haplotype.</td>
+<td>phased.vcf.gz (+ .tbi) and phased.blocks.tsv; with --haplotag, haplotagged.bam or .cram (+ index).</td>
+<td>bcftools, samtools, tabix; depending on options and inputs, also: longphase, whatshap; hours on a 30x genome</td>
+<td><code>wgsextract vcf phase --input ont.bam --vcf-input clair3.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>vcf impute</code></td>
+<td>Impute a GRCh38 sample from the 1000 Genomes 30x panel: low-coverage reads with GLIMPSE2, or a genotype-only VCF with Beagle.</td>
+<td>imputed.vcf.gz (+ .tbi): every imputed record marked INFO/IMP, low-confidence ones FILTERed ImpLowConf.</td>
+<td>bcftools, bgzip, samtools, tabix; depending on options and inputs, also: GLIMPSE2_ligate, GLIMPSE2_phase; hours on a 30x genome</td>
+<td><code>wgsextract vcf impute --input lowpass.bam --chromosomes chr20</code></td>
+</tr>
+<tr>
+<td><code>vcf phylop</code></td>
+<td>Annotate VCF with PhyloP conservation scores.</td>
+<td>phylop_annotated.vcf.gz (+ .tbi); with --min-score N, also phylop_gt_N.vcf.gz.</td>
+<td>bcftools, bgzip, tabix; depending on options and inputs, also: samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf phylop --vcf-input sample.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>vcf cadd</code></td>
+<td>Annotate VCF with CADD deleteriousness scores (CADD_RAW, CADD_PHRED).</td>
+<td>cadd_annotated.vcf.gz (+ .tbi); with --min-score N, also cadd_gt_N.vcf.gz.</td>
+<td>bcftools, tabix; depending on options and inputs, also: bgzip, samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf cadd --vcf-input sample.vcf.gz --min-score 20</code></td>
+</tr>
+<tr>
+<td><code>vcf gerp</code></td>
+<td>Annotate VCF with GERP++ conservation scores (GERP).</td>
+<td>gerp_annotated.vcf.gz (+ .tbi); with --min-score N, also gerp_gt_N.vcf.gz.</td>
+<td>bcftools, bgzip, tabix; depending on options and inputs, also: samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf gerp --vcf-input sample.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>vcf spliceai</code></td>
+<td>Annotate VCF with SpliceAI splicing scores.</td>
+<td>spliceai_annotated.vcf.gz (+ .tbi)</td>
+<td>bcftools, tabix; depending on options and inputs, also: bgzip, samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf spliceai --vcf-input sample.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>vcf alphamissense</code></td>
+<td>Annotate VCF with AlphaMissense pathogenicity scores.</td>
+<td>alphamissense_annotated.vcf.gz (+ .tbi); with --min-score N, also alphamissense_gt_N.vcf.gz.</td>
+<td>bcftools, tabix; depending on options and inputs, also: bgzip, samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf alphamissense --vcf-input sample.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>vcf acmg</code></td>
+<td>Research-only ACMG/AMP classes with fastVEP (opt-in).</td>
+<td>acmg_annotated.vcf.gz (+ .tbi) with INFO ACMG_CLASS, ACMG_CRITERIA and ACMG_TRANSCRIPT, and acmg_summary.json; research only, not a diagnosis.</td>
+<td>bcftools, bgzip, tabix, fastvep; depending on options and inputs, also: samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf acmg --vcf-input sample_vep.vcf.gz --research-acmg --sa-dir acmg_sa --gff3 Homo_sapiens.GRCh38.116.gff3.gz</code></td>
+</tr>
+<tr>
+<td><code>vcf pharmcat</code></td>
+<td>Call star-allele diplotypes and drug-response phenotypes (CYP2C19, CYP2C9, DPYD, ...) with PharmCAT, and write its prescribing report.</td>
+<td>&lt;stem&gt;.report.html and &lt;stem&gt;.phenotype.json from PharmCAT. With supplemental reference evidence, also &lt;stem&gt;.reference-evidence.json.</td>
+<td>bcftools, pharmcat, samtools, tabix; depending on options and inputs, also: bgzip, curl; minutes on a 30x genome</td>
+<td><code>wgsextract vcf pharmcat --vcf-input sample.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>vcf chain-annotate</code></td>
+<td>Sequentially apply multiple annotations to a single VCF.</td>
+<td>chain_annotated.vcf.gz (+ index), chain_annotate.steps.json; with --to-table, chain_annotated_variants.tsv (or .parquet) and .sqlite.</td>
+<td>bcftools, tabix; depending on options and inputs, also: bgzip, samtools, vep, vep-rs; minutes on a 30x genome</td>
+<td><code>wgsextract vcf chain-annotate --vcf-input sample.vcf.gz --annotations clinvar,gnomad --region chr22:19000000-20000000 --threads 4 --to-table</code></td>
+</tr>
+<tr>
+<td><code>bam sort</code></td>
+<td>Sort alignments by genomic coordinates.</td>
+<td>&lt;input stem&gt;_sorted.bam or .cram (+ index).</td>
+<td>samtools; depending on options and inputs, also: bcftools, sambamba; hours on a 30x genome</td>
+<td><code>wgsextract bam sort --input sample.bam</code></td>
+</tr>
+<tr>
+<td><code>bam index</code></td>
+<td>Create a random-access index (.bai/.crai) for your file.</td>
+<td>Beside the input: &lt;input&gt;.bai or .crai.</td>
+<td>samtools; depending on options and inputs, also: sambamba; minutes on a 30x genome</td>
+<td><code>wgsextract bam index --input sample.bam</code></td>
+</tr>
+<tr>
+<td><code>bam unindex</code></td>
+<td>Remove the index file associated with your BAM/CRAM.</td>
+<td>Deletes the input's .bai/.crai index; writes no files.</td>
+<td>samtools; instant</td>
+<td><code>wgsextract bam unindex --input sample.bam</code></td>
+</tr>
+<tr>
+<td><code>bam unsort</code></td>
+<td>Mark the file as 'unsorted' in the header.</td>
+<td>&lt;input stem&gt;_unsorted.bam or .cram.</td>
+<td>samtools; depending on options and inputs, also: bcftools; hours on a 30x genome</td>
+<td><code>wgsextract bam unsort --input sample.bam</code></td>
+</tr>
+<tr>
+<td><code>bam to-cram</code></td>
+<td>Convert BAM to the modern CRAM format.</td>
+<td>&lt;input stem&gt;.cram (+ .crai).</td>
+<td>samtools; depending on options and inputs, also: bcftools, sambamba; minutes on a 30x genome</td>
+<td><code>wgsextract bam to-cram --input sample.bam --ref hs38.fa</code></td>
+</tr>
+<tr>
+<td><code>bam to-bam</code></td>
+<td>Convert a CRAM file back to the traditional BAM format.</td>
+<td>&lt;input stem&gt;.bam (+ .bai).</td>
+<td>samtools; depending on options and inputs, also: bcftools, sambamba; hours on a 30x genome</td>
+<td><code>wgsextract bam to-bam --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>bam unalign</code></td>
+<td>Extract raw reads from a BAM/CRAM back into FASTQ format.</td>
+<td>&lt;input stem&gt;_R1.fastq.gz and _R2.fastq.gz, or the FASTQs --r1/--r2 name (and --se).</td>
+<td>samtools; depending on options and inputs, also: bcftools; hours on a 30x genome</td>
+<td><code>wgsextract bam unalign --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>bam identify</code></td>
+<td>Analyze your BAM header to determine exactly which reference genome was used for the original alignment.</td>
+<td>Prints the reference the file was aligned to; writes no files.</td>
+<td>samtools; depending on options and inputs, also: bcftools; seconds</td>
+<td><code>wgsextract bam identify --input sample.bam</code></td>
+</tr>
+<tr>
+<td><code>bam merge</code></td>
+<td>Merge several coordinate-sorted BAM/CRAM files (e.g. per-lane files) aligned to the same reference into one indexed file.</td>
+<td>merged.bam or merged.cram (+ index), or the --output path; each run keeps its own read group under one sample name (SM).</td>
+<td>samtools; depending on options and inputs, also: bcftools; hours on a 30x genome</td>
+<td><code>wgsextract bam merge lane1.bam lane2.bam --output sample.bam</code></td>
+</tr>
+<tr>
+<td><code>bam to-ubam</code></td>
+<td>Convert an aligned BAM/CRAM or FASTQ reads into a queryname-sorted unaligned BAM (uBAM) for GATK pipelines.</td>
+<td>&lt;input stem&gt;_unaligned.bam: queryname-sorted unaligned reads.</td>
+<td>samtools; depending on options and inputs, also: bcftools; hours on a 30x genome</td>
+<td><code>wgsextract bam to-ubam --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>qc fastp</code></td>
+<td>An ultra-fast all-in-one pre-processor.</td>
+<td>&lt;stem&gt;_fp_1.fastq.gz (and _fp_2), &lt;stem&gt;_fastp.html and &lt;stem&gt;_fastp.json.</td>
+<td>fastp; minutes on a 30x genome</td>
+<td><code>wgsextract qc fastp --r1 sample_R1.fastq.gz --r2 sample_R2.fastq.gz</code></td>
+</tr>
+<tr>
+<td><code>qc fastqc</code></td>
+<td>The industry-standard quality check for raw reads.</td>
+<td>FastQC's &lt;input&gt;_fastqc.html and .zip (and --r2's); with --r2 and --multiqc, multiqc_report.html too.</td>
+<td>fastqc; depending on options and inputs, also: bcftools, multiqc; hours on a 30x genome</td>
+<td><code>wgsextract qc fastqc --input sample_R1.fastq.gz</code></td>
+</tr>
+<tr>
+<td><code>qc multiqc</code></td>
+<td>Combine existing FastQC reports, bcftools stats and WGS Extract result manifests into one local HTML report.</td>
+<td>multiqc_report.html, in --outdir, else in the --input directory (or beside an --input file).</td>
+<td>multiqc; depending on options and inputs, also: bcftools, fastqc; seconds</td>
+<td><code>wgsextract qc multiqc --input fastqc_reports/</code></td>
+</tr>
+<tr>
+<td><code>qc multiqc-metrics</code></td>
+<td>Write MultiQC custom-content files (wgsextract_*_mqc.json) from result manifests; MultiQC isn't needed.</td>
+<td>wgsextract_*_mqc.json MultiQC custom-content files, in --outdir, else in the --input directory (or beside an --input file).</td>
+<td>no external tools; seconds</td>
+<td><code>wgsextract qc multiqc-metrics --input results/</code></td>
+</tr>
+<tr>
+<td><code>qc vcf</code></td>
+<td>Generate statistical reports for your VCF file to check the quality and distribution of your variant calls.</td>
+<td>&lt;input file name&gt;.vcfstats.txt (e.g. sample.vcf.gz.vcfstats.txt), in --outdir, else beside the input.</td>
+<td>bcftools; minutes on a 30x genome</td>
+<td><code>wgsextract qc vcf --vcf-input sample.vcf.gz</code></td>
+</tr>
+<tr>
+<td><code>qc relate</code></td>
+<td>Sex, relatedness and 1000 Genomes superpopulation of BAM/CRAM/VCF files with somalier; flags sample swaps.</td>
+<td>relate.samples.tsv (sex, superpopulation), relate.pairs.tsv (relatedness), relate.html and the sketches in somalier/, in --outdir, else beside the first input.</td>
+<td>bcftools, samtools, somalier; depending on options and inputs, also: bgzip, tabix; minutes on a 30x genome</td>
+<td><code>wgsextract qc relate me.cram</code></td>
+</tr>
+<tr>
+<td><code>qc ancestry</code></td>
+<td>Admixture-style ancestry proportions (HGDP+1KG reference components) from a BAM/CRAM, VCF or microarray file.</td>
+<td>&lt;stem&gt;.ancestry.tsv: K=7 and K=12 proportions with confidence intervals.</td>
+<td>samtools; depending on options and inputs, also: bcftools, curl; minutes on a 30x genome</td>
+<td><code>wgsextract qc ancestry --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>qc contamination</code></td>
+<td>Estimate how much of a GRCh37/38 BAM/CRAM's DNA comes from another person (VerifyBamID2 FREEMIX).</td>
+<td>&lt;stem&gt;.contamination.selfSM (FREEMIX) and &lt;stem&gt;.contamination.Ancestry.</td>
+<td>samtools, verifybamid2; depending on options and inputs, also: bcftools; minutes on a 30x genome</td>
+<td><code>wgsextract qc contamination --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>qc roh</code></td>
+<td>Find runs of homozygosity in a VCF with bcftools roh and your local population allele frequencies; flags long runs over imprinted regions for review (not a diagnosis).</td>
+<td>&lt;stem&gt;.roh.tsv (runs), &lt;stem&gt;.roh.json (wgsextract.roh/1: evidence, scope, F_ROH, isodisomy review flags, provenance) and &lt;stem&gt;.roh.markers.tsv.gz.</td>
+<td>bcftools, bgzip, tabix; minutes on a 30x genome</td>
+<td><code>wgsextract qc roh --input sample.vcf.gz --af-file gnomad.genomes.v4.1.sites.chr15.vcf.bgz --regions chr15</code></td>
+</tr>
+<tr>
+<td><code>qc fake-data</code></td>
+<td>Generate fake BAM, CRAM, VCF, and FASTQ files for testing.</td>
+<td>fake.cram, fake.bam, fake.vcf or fake_R1/_R2.fastq.gz, and the fake reference.</td>
+<td>bcftools, bgzip, samtools, tabix; depending on options and inputs, also: sambamba; seconds for small inputs</td>
+<td><code>wgsextract qc fake-data --outdir out/fake --type bam,vcf --seed 1</code></td>
+</tr>
+<tr>
+<td><code>fastq archive</code></td>
+<td>Compress one or two FASTQ files into a byte-exact archive.</td>
+<td>A new .wgfq archive (--output). Source files are not modified.</td>
+<td>no external tools; minutes on a 30x genome</td>
+<td><code>wgsextract fastq archive --r1 sample_R1.fastq.gz --output sample.wgfq</code></td>
+</tr>
+<tr>
+<td><code>fastq restore</code></td>
+<td>Restore and verify plain FASTQ bytes from an archive.</td>
+<td>Verified uncompressed FASTQ (--output and, for pairs, --output-r2).</td>
+<td>no external tools; minutes on a 30x genome</td>
+<td><code>wgsextract fastq restore --input sample.wgfq --output sample.fastq</code></td>
+</tr>
+<tr>
+<td><code>cohort summarize</code></td>
+<td>Summarize autosomal SNVs from a local cohort manifest and matched gVCFs.</td>
+<td>cohort.variants.tsv (or .parquet) and a result manifest; a private participant join only with --include-identifiers.</td>
+<td>bcftools; minutes on a 30x genome</td>
+<td><code>wgsextract cohort summarize cohort.json --region chr22 --outdir summary</code></td>
+</tr>
+<tr>
+<td><code>repair ftdna-bam</code></td>
+<td>Fix formatting errors specific to Family Tree DNA (FTDNA) BAM files that cause them to fail in standard tools like GATK.</td>
+<td>&lt;input stem&gt;_repaired.bam (+ .bai), or the --output path.</td>
+<td>samtools; depending on options and inputs, also: bcftools; minutes on a 30x genome</td>
+<td><code>wgsextract repair ftdna-bam --input ftdna.bam</code></td>
+</tr>
+<tr>
+<td><code>repair ftdna-vcf</code></td>
+<td>Fix formatting errors in FTDNA VCF files to make them compatible with modern annotation tools like VEP.</td>
+<td>&lt;input stem&gt;_repaired.vcf, or the --output path.</td>
+<td>no external tools; depending on options and inputs, also: bcftools; seconds</td>
+<td><code>wgsextract repair ftdna-vcf --input ftdna.vcf</code></td>
+</tr>
+<tr>
+<td><code>analyze comprehensive</code></td>
+<td>Run a full-chain analysis: QC, lineage, variant calling, annotation, and significant variant filtering.</td>
+<td>The QC, lineage, variant and annotation outputs of each step, and a summary; analyze.steps.json records the completed steps.</td>
+<td>bcftools, samtools, tabix; hours on a 30x genome</td>
+<td><code>wgsextract analyze comprehensive --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>analyze batch-gen</code></td>
+<td>Generate a batch configuration file from a directory of genomes.</td>
+<td>A batch CSV/TSV for 'analyze comprehensive --batch' (--output).</td>
+<td>no external tools; instant</td>
+<td><code>wgsextract analyze batch-gen --directory genomes/ --output batch.tsv</code></td>
+</tr>
+<tr>
+<td><code>typing cyp2d6</code></td>
+<td>Call CYP2D6 star alleles, including copy-number and hybrid alleles, with Cyrius, and write a PharmCAT outside call.</td>
+<td>Cyrius's &lt;stem&gt;.json/.tsv and &lt;stem&gt;.cyp2d6.pharmcat.tsv.</td>
+<td>cyrius, minimap2, samtools; depending on options and inputs, also: bcftools; minutes on a 30x genome</td>
+<td><code>wgsextract typing cyp2d6 --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>typing hla</code></td>
+<td>Call HLA class I and II alleles with T1K from reads in the MHC, and write a PharmCAT outside call for HLA-A/HLA-B.</td>
+<td>&lt;stem&gt;.t1k_genotype.tsv (and T1K's other files) and &lt;stem&gt;.hla.pharmcat.tsv.</td>
+<td>run-t1k, samtools, t1k-build.pl; depending on options and inputs, also: bcftools; minutes on a 30x genome</td>
+<td><code>wgsextract typing hla --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>typing paraphase</code></td>
+<td>Type paralogous loci and copy number with Paraphase from PacBio HiFi or experimental, unvalidated ONT reads.</td>
+<td>&lt;stem&gt;.paraphase.tsv and .json (locus calls), plus raw Paraphase JSON, VCFs and a haplotagged BAM.</td>
+<td>samtools; depending on options and inputs, also: paraphase, minimap2, bcftools; minutes on a 30x genome</td>
+<td><code>wgsextract typing paraphase -i sample.cram --ref hs38.fa.gz --genes SMN1,PMS2,STRC -t 4</code></td>
+</tr>
+<tr>
+<td><code>typing smn</code></td>
+<td>Call SMN1/SMN2 copy number with SMNCopyNumberCaller for SMA carrier screening (one SMN1 copy: carrier; none: affected).</td>
+<td>SMNCopyNumberCaller's &lt;stem&gt;.smn.tsv/.json; copy numbers and carrier status in the result's metrics.</td>
+<td>smn_caller.py, samtools; depending on options and inputs, also: bcftools; minutes on a 30x genome</td>
+<td><code>wgsextract typing smn --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>typing str</code></td>
+<td>Size the disease-causing repeats of ExpansionHunter's catalog (HTT, FMR1, C9ORF72, ...) with ExpansionHunter, or LongTR for Nanopore and PacBio reads, and flag those outside STRchive's normal range.</td>
+<td>&lt;stem&gt;.str.tsv (or .str.parquet), per-locus repeat calls in the result JSON, and the caller's calls: ExpansionHunter's &lt;stem&gt;.str.vcf/.json, LongTR's &lt;stem&gt;.str.vcf.gz or STRkit's &lt;stem&gt;.str.vcf and &lt;stem&gt;.str.strkit.json. Targeted runs append a locus digest to the .str prefix.</td>
+<td>samtools; depending on options and inputs, also: ExpansionHunter, LongTR, strkit, bcftools; minutes on a 30x genome</td>
+<td><code>wgsextract typing str --input sample.cram</code></td>
+</tr>
+<tr>
+<td><code>typing target-cnv</code></td>
+<td>Screen BED targets for GC-normalized copy number from short-read WGS.</td>
+<td>&lt;stem&gt;.target-cnv.tsv: copy-number class, confidence and callability per BED interval.</td>
+<td>samtools; depending on options and inputs, also: bcftools, curl; seconds on a 30x genome</td>
+<td><code>wgsextract typing target-cnv -i sample.bam --bed targets.bed --ref hg38.fa.gz</code></td>
+</tr>
+<tr>
+<td><code>methylation pileup</code></td>
+<td>Tabulate 5mC (and optionally 5hmC) per CpG with modkit into a bedMethyl file and summary.</td>
+<td>&lt;input stem&gt;.&lt;context&gt;.bedmethyl.gz (+ .tbi) and &lt;input stem&gt;.&lt;context&gt;.methylation.tsv; with --format parquet the summary is .methylation.parquet and the calls are also in &lt;input stem&gt;.&lt;context&gt;.bedmethyl.parquet.</td>
+<td>modkit, samtools, tabix; depending on options and inputs, also: bcftools; hours on a 30x genome</td>
+<td><code>wgsextract methylation pileup --input ont.bam</code></td>
+</tr>
+<tr>
+<td><code>methylation regions</code></td>
+<td>Summarize CpG calls over gene promoters or CpG islands.</td>
+<td>&lt;input stem&gt;.&lt;build&gt;.&lt;preset&gt;.methylation.tsv (or .parquet) and its run manifest. With --partition-hp, writes .methylation.hp.tsv (or .parquet) instead.</td>
+<td>samtools; depending on options and inputs, also: modkit, curl; minutes on a 30x genome</td>
+<td><code>wgsextract methylation regions -i ont.cpg.bedmethyl.gz --ref hg38.fa --build hg38 --preset promoters</code></td>
+</tr>
+<tr>
+<td><code>basecall</code></td>
+<td>Nanopore POD5 signal to reads with Dorado (optional).</td>
+<td>&lt;POD5 file or folder stem&gt;.&lt;model&gt;[.&lt;modifications&gt;][.subset].bam: unaligned reads with Dorado's tags (MM/ML with --modified-bases), beside the POD5 input or in --outdir.</td>
+<td>dorado, samtools; hours for a MinION flow cell on a GPU</td>
+<td><code>wgsextract basecall --input pod5/ --modified-bases 5mCG_5hmCG</code></td>
+</tr>
+<tr>
+<td><code>panel bed</code></td>
+<td>Write a BED of gene regions for Nanopore adaptive sampling (MinKNOW) or targeted analysis: genes and presets are padded (default 100 kb each side), clipped and merged, from the bundled NCBI RefSeq annotations of hg38, T2T or hg19.</td>
+<td>panel_&lt;presets&gt;[<em>&lt;genes&gt;]</em>&lt;build&gt;_pad&lt;N&gt;kb.bed, the genes named when up to three, else &lt;N&gt;genes-&lt;digest&gt; (BED4: contig, start, end, genes; contig names from --ref when given).</td>
+<td>no external tools; instant</td>
+<td><code>wgsextract panel bed --preset pharmacogenes</code></td>
+</tr>
+<tr>
+<td><code>panel check</code></td>
+<td>Validate a research panel file (wgsextract.panel/1, TOML or JSON: gene groups with variant filters, watched sites and haplotypes) and resolve its genes in the bundled NCBI RefSeq annotations, with their coding lengths.</td>
+<td>Prints the check; writes no files (--json gives the problems, each gene's resolution and coding length, and each group's filters).</td>
+<td>no external tools; instant</td>
+<td><code>wgsextract panel check --panel my_panel.toml</code></td>
+</tr>
+<tr>
+<td><code>pet-align</code></td>
+<td>Align and call variants for a cat or dog genome.</td>
+<td>&lt;reads stem&gt;<em>&lt;species&gt;.bam or .cram (+ index) and &lt;reads stem&gt;</em>&lt;species&gt;.vcf.gz (+ .tbi).</td>
+<td>bcftools, bwa, samtools; depending on options and inputs, also: bwa-mem2, sambamba, samblaster; hours on a 30x genome</td>
+<td><code>wgsextract pet-align --r1 dog_R1.fastq.gz --r2 dog_R2.fastq.gz --species dog</code></td>
+</tr>
+<tr>
+<td><code>sign create</code></td>
+<td>Hash files or directories into a sha256sum-compatible SHA256SUMS manifest, signed with ssh-keygen when a key is given.</td>
+<td>SHA256SUMS in the inputs' folder (or --output); SHA256SUMS.sig with --key.</td>
+<td>no external tools; depending on options and inputs, also: ssh-keygen; minutes for genome-sized files</td>
+<td><code>wgsextract sign create results/</code></td>
+</tr>
+<tr>
+<td><code>sign verify</code></td>
+<td>Check a SHA256SUMS manifest's OpenSSH signature against a trusted key, then re-hash every listed file.</td>
+<td>Prints the verification result; writes no files.</td>
+<td>no external tools; depending on options and inputs, also: ssh-keygen; minutes for genome-sized files</td>
+<td><code>wgsextract sign verify results/SHA256SUMS --public-key key.pub</code></td>
+</tr>
+<tr>
+<td><code>score pgs</code></td>
+<td>Score an additive PGS Catalog or custom file locally.</td>
+<td>&lt;input stem&gt;_&lt;PGS ID&gt;_pgs.json and .tsv: raw score, variant match rate, licence and citation; for curated GRCh38 scores, an ancestry-adjusted percentile.</td>
+<td>bcftools; depending on options and inputs, also: plink2, curl; minutes on a 30x genome</td>
+<td><code>wgsextract score pgs --input sample.vcf.gz --build GRCh38 --trait height</code></td>
+</tr>
+<tr>
+<td><code>lookup</code></td>
+<td>Genotype and evidence at an rsID, locus or gene.</td>
+<td>Prints the genotype, evidence state and report findings; writes no files (--json: the wgsextract.lookup/1 document in details).</td>
+<td>no external tools; depending on options and inputs, also: bcftools; seconds from existing results</td>
+<td><code>wgsextract lookup --input sample.vcf.gz --rsid rs429358</code></td>
+</tr>
+<tr>
+<td><code>report-delta</code></td>
+<td>What changed between two reports: findings, releases.</td>
+<td>Prints what changed between the runs; writes no files. With --json, the result's details are the wgsextract.delta/1 document.</td>
+<td>no external tools; instant</td>
+<td><code>wgsextract report-delta --before old/HG002/HG002_personal_report.manifest.json --after HG002/HG002_personal_report.manifest.json</code></td>
+</tr>
+<tr>
+<td><code>benchmark</code></td>
+<td>Time the main workflows on test data.</td>
+<td>runs/&lt;timestamp&gt;/ under --outdir (default out/benchmark): benchmark_report.md and benchmark_results.json (timings, tool versions) and per-step logs.</td>
+<td>no external tools; depending on options and inputs, also: bcftools, bgzip, curl, samtools, tabix; hours for the full suite</td>
+<td><code>wgsextract benchmark --profile smoke</code></td>
+</tr>
+<tr>
+<td><code>serve</code></td>
+<td>Local HTTP/JSON and MCP server for apps and AI agents.</td>
+<td>Prints the server's address and token, also saved to state/server/server.json (setting state_directory) for you only; jobs and their logs go in state/server/jobs. Each operation writes its usual outputs and result manifest.</td>
+<td>no external tools; seconds to start; runs until stopped</td>
+<td><code>wgsextract serve --allow ~/wgs</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2>Help topics</h2>
+<p><code>wgsextract help &lt;topic&gt;</code> explains:</p>
+<ul>
+<li><code>references</code>: Reference genomes: what they are, where they come from.</li>
+<li><code>builds</code>: Genome builds (hg19, hg38, T2T) and moving between them.</li>
+<li><code>mygenomes-library</code>: Keep each person's files in a folder; select it with --genome.</li>
+<li><code>coverage</code>: Coverage and depth, and the low-depth warnings.</li>
+<li><code>exit-codes</code>: What wgsextract's exit codes mean.</li>
+<li><code>manifests</code>: The result manifest each run writes, and --json.</li>
+<li><code>privacy</code>: Your genome is identifying: what stays local and sharing.</li>
+<li><code>scripting</code>: Use wgsextract from scripts and AI agents.</li>
+</ul>
+</div></section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>See the <abbr data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">CLI</abbr> overview for common workflows.</p></div>
+        
+      </div>
+    </footer>
+    <script>
+      (() => {
+        const copyText = async (text) => {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            return;
+          }
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "fixed";
+          textarea.style.left = "-9999px";
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          textarea.remove();
+        };
+
+        document.addEventListener("click", async (event) => {
+          const button = event.target.closest(".copy-button");
+          if (!button) return;
+          const panel = button.closest(".code-panel");
+          const code = panel?.querySelector("pre code");
+          if (!code) return;
+          const previous = button.textContent;
+          try {
+            await copyText(code.innerText);
+            button.textContent = "Copied";
+          } catch {
+            button.textContent = "Failed";
+          }
+          window.setTimeout(() => {
+            button.textContent = previous;
+          }, 1400);
+        });
+
+        let tooltip;
+        let activeTooltipTarget;
+        let tooltipTimer;
+
+        const ensureTooltip = () => {
+          if (!tooltip) {
+            tooltip = document.createElement("div");
+            tooltip.className = "site-tooltip";
+            tooltip.hidden = true;
+            tooltip.setAttribute("role", "tooltip");
+            document.body.appendChild(tooltip);
+          }
+          return tooltip;
+        };
+
+        const positionTooltip = () => {
+          if (!tooltip || !activeTooltipTarget) return;
+          const rect = activeTooltipTarget.getBoundingClientRect();
+          const tipRect = tooltip.getBoundingClientRect();
+          const margin = 12;
+          let left = rect.left + rect.width / 2 - tipRect.width / 2;
+          left = Math.max(margin, Math.min(left, window.innerWidth - tipRect.width - margin));
+          let top = rect.top - tipRect.height - 10;
+          if (top < margin) top = rect.bottom + 10;
+          tooltip.style.left = `${Math.round(left + window.scrollX)}px`;
+          tooltip.style.top = `${Math.round(top + window.scrollY)}px`;
+        };
+
+        const showTooltip = (target) => {
+          const text = target.dataset.tooltip;
+          if (!text) return;
+          activeTooltipTarget = target;
+          const tip = ensureTooltip();
+          tip.textContent = text;
+          tip.hidden = false;
+          tip.classList.remove("visible");
+          window.requestAnimationFrame(() => {
+            positionTooltip();
+            tip.classList.add("visible");
+          });
+        };
+
+        const scheduleTooltip = (target) => {
+          window.clearTimeout(tooltipTimer);
+          tooltipTimer = window.setTimeout(() => showTooltip(target), 120);
+        };
+
+        const hideTooltip = () => {
+          window.clearTimeout(tooltipTimer);
+          activeTooltipTarget = undefined;
+          if (!tooltip) return;
+          tooltip.classList.remove("visible");
+          tooltip.hidden = true;
+        };
+
+        document.addEventListener("mouseover", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (!target || target === activeTooltipTarget) return;
+          scheduleTooltip(target);
+        });
+
+        document.addEventListener("mouseout", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (!target || target.contains(event.relatedTarget)) return;
+          hideTooltip();
+        });
+
+        document.addEventListener("focusin", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (target) scheduleTooltip(target);
+        });
+        document.addEventListener("focusout", hideTooltip);
+        window.addEventListener("scroll", positionTooltip, { passive: true });
+        window.addEventListener("resize", positionTooltip);
+      })();
+    </script>
+  </body>
+</html>

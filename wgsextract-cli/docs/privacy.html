@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy and network access | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/privacy.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Privacy and network access</span></nav>
+<h1 id="privacy-and-network-access">Privacy and network access</h1>
+<blockquote>
+<p><strong>Scope:</strong> This document covers <strong>WGS Extract CLI</strong> (the command-line back-end, Python API and local server). For the desktop app's privacy model — including automatic update checks, interactive missing-data install prompts, and how the GUI sits atop the strictly offline CLI — see <a href="../app/docs/privacy.html">Desktop App Privacy and network access</a> and <a href="../app/devdocs/architecture.html#privacy-and-network-boundary">GUI Architecture — Privacy and network boundary</a>.</p>
+</blockquote>
+<p>Ordinary analysis, inspection and reporting stay on this computer. Defaults must not attempt a connection, even when a reference, tree, gene list or model is missing. There is no telemetry, usage reporting or background CLI update check. Missing dependencies are reported, never installed by analysis. Runtime Pixi invocations use both <code>--no-install</code> and <code>--frozen</code>: skipping installation alone would still allow lockfile resolution and registry queries. Incomplete installed runtimes fail with setup guidance, rather than falling back to a potentially different CLI on the host's PATH.</p>
+<p>Explicit download/install commands may use the network. Other commands need <code>--download</code> before fetching missing public data. Without permission they name the missing data and explain how to confirm the download. Installed, verified data is reused offline. <code>--no-download</code> overrides a persistent opt-in:</p>
+<pre><code class="language-toml"># config.toml; default is false
+allow_reference_downloads = false</code></pre>
+<p><code>ref cytobands</code> validates installed tables offline and requires its own explicit <code>--download</code> to fetch missing UCSC <code>cytoBand</code> data, even if the persistent setting is enabled. The request contains only the hg19/hg38 public assembly path on <code>hgdownload.soe.ucsc.edu</code>; no sample-derived data is sent. The genome viewer uses installed tables only and never requests UCSC data.</p>
+<p><code>analyze comprehensive</code> runs these same guarded subcommands. Provision missing data first with the download command named in the error, or explicitly opt in through <code>config.toml</code> before running the comprehensive workflow. The desktop exposes the same default-off setting under Settings → advanced settings → <strong>Allow missing public-data downloads</strong>, with the request disclosure in its tooltip. Lineage and microarray pages also offer an unchecked per-run download option. Fresh-install automation plans select it explicitly; ordinary runs do not.</p>
+<p>The option is shared by the CLI and typed Python/server parameters. The read-only MCP surface refuses download permissions. A server job needs both job authorization and download permission; merely starting the server grants neither to an analysis. Do not enable downloads globally on a machine that must remain offline.</p>
+<h2 id="checking-a-run-before-going-offline">Checking a run before going offline<a class="heading-anchor" href="#checking-a-run-before-going-offline" aria-label="Link to section">#</a></h2>
+<p><code>wgsextract deps ready -- COMMAND ...</code> reports whether a command line can run here without the network, before a long run or before disconnecting. It checks each prerequisite with the check the command's own run makes: the platform, the tools it runs (with their versions, Conda packages and the licences their metadata record), Docker images in the local engine (identity, digests, labels), NVIDIA GPUs and driver, Clair3 models and wgse-deepvariant weights against their pinned SHA-256, and the input, reference genome, indexes and annotation data. Each item is <code>runnable</code>, <code>installed</code>, <code>unverified</code>, <code>unsupported</code>, <code>missing</code>, <code>stale</code> or <code>incompatible</code>; a missing one names the explicit setup or download step that provides it (<code>deps install</code>, <code>ref library --install</code>, <code>docker pull</code>, <code>ref verify</code>, <code>bam index</code>). The check installs, pulls and downloads nothing and makes no network request; a command that downloads, or a remote input, is reported as needing the network. It exits 3 when the run isn't ready. Model and weight terms show as <code>unknown</code> where nothing installed records them: installing, verifying or signing a component doesn't grant a right to redistribute it. The server doesn't offer the check, since its command line names paths on the host.</p>
+<pre><code class="language-sh">wgsextract deps ready -- vcf clair3 --input ont.bam --gpu
+wgsextract --json deps ready -- vcf deepvariant --input sample.cram</code></pre>
+<h2 id="what-goes-where">What goes where<a class="heading-anchor" href="#what-goes-where" aria-label="Link to section">#</a></h2>
+<p>Public-data requests reveal your IP address, requested asset/model identifiers, HTTP headers and timing. GitHub downloads can redirect to GitHub's release asset CDN; checksum discovery may request <code>api.github.com</code>. Audited <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/src/wgsextract_cli/assets/resource_mirrors.json" target="_blank" rel="noopener noreferrer">resource mirrors</a>, when available, use byte-identical public assets and the same consent. A mirror is not permission to download. No reference download sends sample files, genotypes or variant coordinates.</p>
+<p><code>vep run</code> uses a local cache and fails if the required Ensembl cache is missing. Choosing <code>--engine ensembl</code> does not authorize sending variant queries. The separate <code>vep download</code> command fetches public data only.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Opt-in</th><th>Destination</th><th>Request data</th></tr></thead>
+<tbody>
+<tr><td><code>qc ancestry --download</code></td><td>GitHub WGSExtract releases/CDN</td><td>Pinned HGDP+1KG reference filename, not sample ancestry or positions</td></tr>
+<tr><td><code>microarray --download</code></td><td><code>hgdownload.soe.ucsc.edu</code>; GitHub WGSExtract releases/CDN as mirror</td><td>Whole hg18→hg19 / hg19→hg38 chain filenames; sample coordinates are lifted locally and never sent</td></tr>
+<tr><td><code>vcf pharmcat --download</code></td><td><code>zenodo.org</code>, via PharmCAT's reference downloader (record 7288118)</td><td>Public GRCh38 reference archive/index filenames, not pharmacogenetic variants or sample files</td></tr>
+<tr><td><code>ref index --aligner bwa-mem2 --download</code></td><td>Published hs38DH index on Amazon S3</td><td>Reference index filenames, not read/sample information; without permission the index is built locally if RAM permits</td></tr>
+<tr><td><code>typing hla --download</code></td><td>IPD-IMGT/HLA's public distribution, via T1K (GitHub ANHIG/IMGTHLA)</td><td>Allele-database identifiers, not reads or HLA calls</td></tr>
+<tr><td><code>typing target-cnv --download</code></td><td>NCBI (<code>ftp-trace.ncbi.nlm.nih.gov</code>), GIAB v3.5 stratifications</td><td>Assembly name in two fixed BED URLs; no target intervals, reads, sample identifiers or calls</td></tr>
+<tr><td><code>lineage mt-haplogroup --download</code></td><td>GitHub <code>genepi/phylotree-fu-rcrs</code>, <code>genepi/phylotree-rcrs-17</code>, <code>genebygene/mitotree</code> releases/CDN</td><td>Selected tree ID/version, not haplogroup or variants</td></tr>
+<tr><td><code>lineage y-haplogroup --download</code></td><td>GitHub WGSExtract releases/CDN; configured custom-tree host</td><td>Tree ID/version and selected reference build/table; custom-tree URL, not sample markers/calls</td></tr>
+<tr><td><code>report --download</code></td><td>GitHub WGSExtract releases/CDN</td><td>Selected public gene-list filename/version, not findings</td></tr>
+<tr><td><code>report --pgx-context FILE --download</code></td><td><code>files.cpicpgx.org</code></td><td>The pinned CPIC database release filename (<code>cpic_db_dump-v1.61.0.sql.gz</code>), not the medication list, findings or genotypes; the medication file is read locally only</td></tr>
+<tr><td><code>ref recheck --online</code></td><td><code>ftp.ncbi.nlm.nih.gov</code> (ClinVar's weekly release listing for the recorded build)</td><td>A plain GET of the public listing URL; no sample name, paths, positions, genotypes or findings. Without <code>--online</code> (or with <code>--answers FILE</code>) nothing is contacted; see <a href="recheck-and-delta.html">recheck-and-delta.md</a></td></tr>
+<tr><td><code>score pgs --download</code></td><td><code>www.pgscatalog.org</code>, <code>ftp.ebi.ac.uk</code>, GitHub WGSExtract releases/CDN</td><td>PGS ID, coordinate build, public scoring weights and calibration/ancestry asset names, not sample scores or genotypes</td></tr>
+<tr><td><code>basecall --download</code></td><td>Oxford Nanopore's Dorado model distribution</td><td>Model/modification names and POD5 chemistry metadata used to select a model. No signal/read files are uploaded. For offline use pass a local <code>--model</code> directory without <code>--modified-bases</code>.</td></tr>
+<tr><td><code>methylation regions --download</code></td><td><code>hgdownload.soe.ucsc.edu</code></td><td>Pinned public hg38 <code>cpgIslandExt</code> filename; no sample positions or calls. The flag is local-only, and the server can read an allowed, preinstalled table.</td></tr>
+<tr><td><code>ref library --remote-sizes</code> / desktop <strong>Look up sizes</strong></td><td>Each catalog entry's host, including UCSC, NCBI and EBI</td><td>HTTP(S) HEAD or FTP SIZE requests for public reference filenames with missing or at least 30-day-old cached sizes; no sample data</td></tr>
+<tr><td><code>realign --input https://…</code></td><td>The URL's host and redirects</td><td>Explicitly selected remote alignment/index; HEAD, index download and sample-derived genomic byte ranges. Use a local file to avoid disclosing access patterns. Server clients cannot supply URLs.</td></tr>
+<tr><td><code>benchmark --dataset real</code> / <code>--dataset-url</code></td><td>Selected public benchmark host</td><td>Dataset/index URLs; this explicitly selected dataset mode downloads public test data</td></tr>
+<tr><td>Desktop <strong>Check for Updates…</strong>, then <strong>Download</strong></td><td>Configured GitHub release/update endpoints/CDN</td><td>Application version, platform/architecture and asset requests, not sample information</td></tr>
+<tr><td>Desktop <strong>Setup</strong>, reference/dataset download actions</td><td>GitHub, Pixi/Conda/PyPI registries and each selected resource publisher</td><td>Selected package versions, platform and public dataset identifiers, not sample information</td></tr>
+<tr><td>Desktop genome viewer <strong>Connect and view remote file</strong>, after transfer consent</td><td>The operator-selected server URL displayed in the viewer</td><td>Selected server-side sample/index/reference paths, adjacent FASTA index paths and genomic byte offsets; the backend authenticates with the server token and receives selected genomic/reference bytes</td></tr>
+</tbody>
+</table></div>
+<p>Opening an external report/documentation link is an explicit browser action; the browser's own privacy settings apply. Generated reports do not load remote scripts, fonts or images automatically. The desktop's UI and job server talk over authenticated loopback connections on this computer. The optional <a href="../app/docs/genome-viewer.html#view-files-on-a-remote-server">remote genome viewer</a> uses that local backend to proxy explicitly selected server file ranges. Importing or restoring its private TOML configuration makes no remote request. The backend keeps the server token outside browser-delivered data; the viewer receives revocable per-file grants. HTTPS retains certificate validation; redirects and cookie forwarding are disabled. Plain HTTP exposes credentials and genomic traffic, so use an operator-managed TLS proxy or encrypted tunnel. Opening the desktop's Reference Genomes page reads only local/catalog metadata and cached sizes, including old sizes. <strong>Look up sizes</strong> requires confirmation of the destinations and requests before any remote size lookup.</p>
+<h2 id="audit-for-issue-1052-offline-defaults">Audit for issue #1052 (offline defaults)<a class="heading-anchor" href="#audit-for-issue-1052-offline-defaults" aria-label="Link to section">#</a></h2>
+<p>Baseline: main <code>28f56cb9</code>, 2026-11-17. This table groups commands that share the same execution path; options not listed inherit their command's local behavior. Classification describes the baseline, before this change.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Command/option</th><th>Network on baseline?</th><th>Classification / disposition</th></tr></thead>
+<tbody>
+<tr><td><code>help</code>, version, <code>config</code>, <code>sample</code>, <code>report-issue</code>, <code>info</code>, coverage, chip inspection</td><td>No</td><td>Local; no install/update/size probe; support builds a redacted report but does not upload it</td></tr>
+<tr><td><code>extract</code> and <code>bam</code> families, <code>repair</code>, <code>align</code>, local-input <code>realign</code>, <code>panel</code>, <code>sign</code>, <code>analyze batch-gen</code>, VCF conversion/calling/filtering/comparison/phasing/imputation, QC fake-data/fastp/FastQC/MultiQC/VCF/somalier/contamination, non-HLA typing, Y-STR, PET, methylation</td><td>No</td><td>Local; absent references, annotation data, panels and tools give guidance</td></tr>
+<tr><td>CRAM decoding by htslib/Java tools</td><td>No remote fallback intended</td><td>Local-only <code>REF_PATH</code> retained; no Java reference-download property; missing references fail</td></tr>
+<tr><td>Liftover/chip coordinates</td><td>Coordinate conversion is local; missing microarray chains were fetched</td><td><strong>Default-violation</strong> found in review: missing whole-chain downloads now require <code>microarray --download</code>; pyliftover receives only local chain files</td></tr>
+<tr><td>VEP run/verify, chain-annotate, ClinVar/REVEL/gnomAD/SpliceAI/etc. annotation</td><td>Ensembl VEP could fall back to online annotation if its cache directory was missing</td><td>Local caches/indexes only; a missing cache now stops <code>vep run</code> and names <code>vep download</code></td></tr>
+<tr><td>DeepVariant/Clair3/Parabricks containers and native callers</td><td>No registry pull</td><td>Installed images/models required; <code>--pull=never</code>; no runtime dependency installation</td></tr>
+<tr><td><code>ref download</code>, genome-library install, bootstrap, annotation resources, gene maps, microarray targets, ancestry/AADR/somalier/imputation/yBrowse/gnomAD-SV install, ACMG data preparation</td><td>Yes</td><td>Explicit network operations; retain downloads and mirrors</td></tr>
+<tr><td>Reference/dataset listing/status/verify/count/delete</td><td>No</td><td>Local metadata; remote sizes only with the opt-in above</td></tr>
+<tr><td><code>ref index --aligner bwa-mem2</code> on hs38DH</td><td>Yes if published index absent</td><td><strong>Default-violation</strong> found in independent review: fetching prebuilt indexes now requires <code>--download</code>; local index building stays available</td></tr>
+<tr><td><code>vep download</code>, <code>example-genome download</code></td><td>Yes</td><td>Explicit network operations; retain downloads</td></tr>
+<tr><td><code>qc ancestry</code>, calibrated <code>score pgs</code></td><td>Yes when reference absent</td><td><strong>Default-violation</strong>: require <code>--download</code></td></tr>
+<tr><td><code>score pgs --trait/--pgs-id</code></td><td>Yes, including repeated runs</td><td><strong>Default-violation</strong>: require <code>--download</code> for absent Catalog files; reuse local copies</td></tr>
+<tr><td><code>typing hla</code> without local index</td><td>Yes</td><td><strong>Default-violation</strong>: require <code>--download</code> for IPD-IMGT/HLA</td></tr>
+<tr><td><code>vcf pharmcat</code> without its reference FASTA</td><td>Yes, in PharmCAT's downloader subprocess</td><td><strong>Default-violation</strong> found in review: require <code>--download</code> before starting the subprocess</td></tr>
+<tr><td><code>lineage mt-haplogroup</code>, <code>lineage y-haplogroup</code>, custom remote Y trees</td><td>Yes when data absent</td><td><strong>Default-violation</strong>: require <code>--download</code>; cache reuse remains local</td></tr>
+<tr><td><code>analyze comprehensive</code></td><td>Inherits first-use tree downloads from lineage steps</td><td><strong>Default-violation</strong>: child commands now refuse missing data without consent; pre-provision it or explicitly opt in through config</td></tr>
+<tr><td><code>report</code> with clinical findings and absent selected gene list</td><td>Yes</td><td><strong>Default-violation</strong>: require <code>--download</code>, not silent partial placement</td></tr>
+<tr><td><code>report --pgx-context</code> with the pinned CPIC release absent</td><td>Yes</td><td>Requires <code>--download</code>; the medication list never leaves the computer</td></tr>
+<tr><td>Dorado <code>basecall</code> model names/modifications</td><td>Yes</td><td><strong>Default-violation</strong>: require <code>--download</code> or a local model directory</td></tr>
+<tr><td>Remote realignment input, remote sizes, benchmark real-data selection</td><td>Yes</td><td>Explicit <strong>opt-in</strong>; request data disclosed above</td></tr>
+<tr><td><code>serve</code> HTTP/MCP, desktop local backend/path picker</td><td>Loopback only</td><td>Explicit local transport, no automatic remote call; stdio MCP opens no listener</td></tr>
+<tr><td>Desktop launch</td><td>GitHub update check</td><td><strong>Default-violation</strong>: only the explicit update action checks (automated update testing remains explicitly enabled by its harness)</td></tr>
+<tr><td>Desktop Reference Genomes page rendering</td><td>Automatically ran <code>ref library --list --remote-sizes</code>, querying catalog hosts when sizes were missing/stale</td><td><strong>Default-violation</strong> found in independent review: the automatic data source now uses cached sizes only; a separate, confirmed <strong>Look up sizes</strong> action opts in</td></tr>
+<tr><td><code>deps check</code> / shared optional-tool discovery and version probes</td><td>Pixi could resolve a changed manifest</td><td><strong>Default-violation</strong>: frozen lockfile queries/probes, without environment installation</td></tr>
+<tr><td>Installed CLI/desktop analysis launchers</td><td>Pixi could complete/update environments or resolve a changed manifest</td><td><strong>Default-violation</strong>: always <code>--no-install --frozen</code>; Setup remains explicit</td></tr>
+<tr><td>CLI/app telemetry</td><td>None found</td><td>No default telemetry endpoint</td></tr>
+</tbody>
+</table></div>
+<p>PR #1019 (ACMG site-restricted annotation data) is coordinated separately: its proposed remote tabix reads reveal sample-derived variant byte ranges to Google Cloud Storage and Ensembl. That must never be an automatic fallback, including on a missing local database. Its explicit sample-position permission is distinct from permission to download a complete public reference. On the audited main revision, <code>vcf acmg</code> requires local prepared databases; the SpliceAI auto-fetch belongs to the explicit <code>ref acmg-data</code> preparation command.</p>
+<p>Regression coverage blocks Python DNS/socket connections while representative local commands process tiny synthetic data, checks first-use refusal and explicit consent, and retains real samtools/bcftools. Subprocess network isolation is used where the host permits an unprivileged network namespace; socket monkeypatches alone do not sandbox C extensions or child processes.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/privacy.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/privacy.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Local cohort summaries | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/cohort.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Local cohort summaries</span></nav>
+<h1 id="local-cohort-summaries">Local cohort summaries</h1>
+<p><code>wgsextract cohort summarize</code> counts alleles across multiple local genomes for research. It does not call variants, run QC, adjust for ancestry, test for association, or contact a service. The Python equivalent is <code>api.cohort.summarize(api.CohortSummarizeParams(...))</code>. Neither HTTP nor MCP offers it: the cohort manifest itself names files outside the request schema.</p>
+<h2 id="bind-each-genome-to-its-evidence">Bind each genome to its evidence<a class="heading-anchor" href="#bind-each-genome-to-its-evidence" aria-label="Link to section">#</a></h2>
+<p>Create a JSON file with schema <code>wgsextract.cohort/1</code>. A cohort needs at least two distinct participants. Give each an ID used only for the local join, the sample name in the two VCF headers, an original variant VCF or BCF, and its matching gVCF or all-sites VCF. Keep unsplit genotype records: a carried-only variant table cannot recover the denominator. Choose artifacts from the same calling run and participant. The command detects repeated artifact/sample bindings and IDs; it cannot establish biological identity or consent.</p>
+<pre><code class="language-json">{
+  &quot;schema&quot;: &quot;wgsextract.cohort/1&quot;,
+  &quot;assembly&quot;: &quot;GRCh38&quot;,
+  &quot;caller&quot;: &quot;deepvariant&quot;,
+  &quot;reference&quot;: {&quot;path&quot;: &quot;reference.fa&quot;, &quot;sha256&quot;: &quot;&lt;64 hex digits&gt;&quot;},
+  &quot;reference_index&quot;: {&quot;path&quot;: &quot;reference.fa.fai&quot;, &quot;sha256&quot;: &quot;&lt;64 hex digits&gt;&quot;},
+  &quot;participants&quot;: [
+    {
+      &quot;id&quot;: &quot;P01&quot;,
+      &quot;sample&quot;: &quot;sample-a&quot;,
+      &quot;variants&quot;: {&quot;path&quot;: &quot;a.vcf.gz&quot;, &quot;sha256&quot;: &quot;&lt;64 hex digits&gt;&quot;},
+      &quot;evidence&quot;: {&quot;path&quot;: &quot;a.g.vcf.gz&quot;, &quot;sha256&quot;: &quot;&lt;64 hex digits&gt;&quot;}
+    },
+    {
+      &quot;id&quot;: &quot;P02&quot;,
+      &quot;sample&quot;: &quot;sample-b&quot;,
+      &quot;variants&quot;: {&quot;path&quot;: &quot;b.vcf.gz&quot;, &quot;sha256&quot;: &quot;&lt;64 hex digits&gt;&quot;},
+      &quot;evidence&quot;: {&quot;path&quot;: &quot;b.g.vcf.gz&quot;, &quot;sha256&quot;: &quot;&lt;64 hex digits&gt;&quot;},
+      &quot;ancestry&quot;: {&quot;path&quot;: &quot;b.ancestry.manifest.json&quot;, &quot;sha256&quot;: &quot;&lt;64 hex digits&gt;&quot;}
+    }
+  ]
+}</code></pre>
+<p>Paths are absolute or relative to the manifest's directory. Replace each placeholder with the file's SHA-256 (for example, from <code>wgsextract sign create</code>). Use a plain FASTA with its existing <code>samtools faidx</code> index. The assembly must be recognized (GRCh37, GRCh38, CHM13v2, or a supported alias) and agree with the VCF headers and contig dictionaries. All participants must use one caller: <code>bcftools</code>, <code>deepvariant</code>, <code>gatk</code>, or <code>clair3</code>. Header evidence must agree when it names the caller. The command verifies each file's SHA-256 and checks REF against the FASTA during normalization. It does not change inputs, infer a liftover, or download missing data.</p>
+<p>An optional <code>ancestry</code> binding points to the result manifest from <a href="ancestry.html"><code>qc ancestry</code></a> for that variant input. Its input fingerprint, assembly, panel version and fingerprint, and PC1–10 and site overlap must be verifiable. Mixed panels fail. Missing ancestry remains not assessed; it is not a QC pass. No ancestry or QC threshold excludes participants. For contamination, give both <code>alignment</code> (the original BAM/CRAM) and <code>contamination</code> (the <code>qc contamination</code> result manifest) in the participant's entry. For relatedness and sex, give a top-level <code>relatedness</code> object with <code>result</code>, <code>samples</code>, and <code>pairs</code> artifact bindings from the same <code>qc relate</code> run; use its TSV outputs. Match input paths and sample names to the participants. An identified same-person pair fails; other flags and uncertainty are preserved privately, not used as exclusion criteria.</p>
+<h2 id="run-and-interpret">Run and interpret<a class="heading-anchor" href="#run-and-interpret" aria-label="Link to section">#</a></h2>
+<pre><code class="language-bash">wgsextract cohort summarize cohort.json --region chr22 --outdir summary
+wgsextract cohort summarize cohort.json --bed targets.bed --format parquet --outdir summary</code></pre>
+<p>Without a scope all autosomes are included. <code>--region</code> takes 1-based inclusive intervals; <code>--bed</code> takes 0-based half-open intervals. Both accept <code>chr1</code> and <code>1</code> for the same autosome. Output coordinates follow FASTA names and order. The supported alleles are autosomal SNVs, not indels, MNVs, or sex/PAR variants. A multi-allelic record retains its GT and ALT mapping. An uncarried indel ALT cannot hide a padded SNV; a genotype carrying an unsupported allele remains uncallable for overlapping SNVs. Separately represented conflicting calls cannot be reconciled. The summary does not copy file-specific annotation or provenance strings into the allele table. It stages normalized BCFs and one chromosome of text records per input in the temporary workload directory. It reads those records in small buffers without running a process per participant during the merge.</p>
+<p>The table (<code>cohort.variants.tsv</code> or <code>.parquet</code>) has one row per normalized <code>chrom,pos,ref,alt</code> with an observed ALT genotype, even if that genotype did not pass the call checks.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Column</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>ac</code>, <code>an</code>, <code>af</code></td><td>Copies of this ALT, total eligible called chromosomes at the site, and <code>ac/an</code> (blank/null when <code>an=0</code>).</td></tr>
+<tr><td><code>n_het</code>, <code>n_hom_alt</code>, <code>n_hemi</code></td><td>Diploid one-copy, diploid two-copy, and explicitly haploid ALT calls.</td></tr>
+<tr><td><code>callable_samples</code></td><td>Participants contributing alleles to <code>an</code>.</td></tr>
+<tr><td><code>reference_called_samples</code></td><td>Callable participants whose entire genotype is reference.</td></tr>
+<tr><td><code>not_assessed_samples</code></td><td>Participants without a record or a gVCF scope declaration covering the site.</td></tr>
+<tr><td><code>uncallable_samples</code></td><td>Other participants that did not contribute alleles, such as covered no-calls, low-quality records, or gaps inside the assessed interval.</td></tr>
+</tbody>
+</table></div>
+<p>A <code>1/2</code> genotype contributes one copy to each ALT with two called chromosomes. Calls carrying only another ALT count toward <code>an</code>, not <code>ac</code> or <code>reference_called_samples</code>. Do not sum <code>an</code> across ALT rows. An explicit call needs complete GT, passing or unset FILTER and FORMAT/FT, FORMAT/DP of at least <code>--min-depth</code> (default 10, halved for explicit haploid GT), and FORMAT/GQ of at least <code>--min-gq</code> (default 20) when the evidence model uses GQ. An absent VCF call counts as two reference alleles only with passing, diploid hom-ref evidence over the SNV. Blocks use MIN_DP rather than average depth. The caller's <a href="reference-evidence.html">reference evidence classifier</a> accounts for assessed intervals, exclusions and overlapping records. A rejected explicit call never falls back to a reference fill.</p>
+<h2 id="keep-the-results-private">Keep the results private<a class="heading-anchor" href="#keep-the-results-private" aria-label="Link to section">#</a></h2>
+<p>The <a href="result-manifest.html">result manifest</a>, table and Parquet metadata omit participant IDs, sample names, source paths and fingerprints. For a private per-person join, add <code>--include-identifiers</code> to write <code>cohort.participants.private.json</code>; this exposes source file paths, names and, when available, PCs. A later run without that option does not remove an earlier private file. Choose an output directory without sensitive names and keep inputs, temporary work and outputs on a local, access-controlled disk, outside cloud sync and network mounts. Even without identifiers, rare alleles and exact counts can reveal membership: these data are not anonymous or approved for sharing.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/cohort.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/cohort.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ancestry proportions (qc ancestry) | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/ancestry.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Ancestry proportions (qc ancestry)</span></nav>
+<h1 id="ancestry-proportions-qc-ancestry">Ancestry proportions (<code>qc ancestry</code>)</h1>
+<p><code>wgsextract qc ancestry</code> estimates what share of a genome is best matched by each of a set of reference components, the way ADMIXTURE does. There are two views:</p>
+<ul>
+<li><strong>Continental (K=7):</strong> Sub-Saharan African, European, Middle Eastern, Central and South Asian, East Asian, Oceanian and Indigenous American.</li>
+<li><strong>Sub-continental (K=12):</strong> the continental components split into, for example, West African (Senegambia) and West-Central and East African, or Northern European and Middle Eastern and Mediterranean.</li>
+</ul>
+<pre><code class="language-sh">wgsextract qc ancestry --input me.cram
+wgsextract qc ancestry --input me.vcf.gz
+wgsextract qc ancestry --input 23andme_raw.txt</code></pre>
+<p><strong>These are proportions of reference populations, not an ethnicity.</strong> A component is a set of allele frequencies learned from the reference samples. It is named after the reference groups that carry it most, but many present-day populations carry it. For example, the reference Europeans carry on average about a quarter "Middle Eastern" component, which reflects shared ancient ancestry, not recent migration. Groups missing from the reference (see below) are described as mixtures of the components that are there.</p>
+<h2 id="reference">Reference<a class="heading-anchor" href="#reference" aria-label="Link to section">#</a></h2>
+<p>The components were learned with <a href="https://github.com/AI-sandbox/adamixture" target="_blank" rel="noopener noreferrer">ADAMIXTURE</a> 1.9.3 (BSD-3) from 3,129 unrelated samples of the HGDP and 1000 Genomes in gnomAD v3.1 (<a href="https://doi.org/10.1101/gr.278378.123" target="_blank" rel="noopener noreferrer">Koenig et al. 2024</a>). The samples come from 80 populations in Africa, Europe, the Middle East, Central and South Asia, East Asia, Oceania and the Americas, including admixed American populations. gnomAD's LD-pruned set of 187,417 common SNPs is used. gnomAD releases these data under CC0 1.0.</p>
+<p>The reference is one file (about 16 MB). It holds the sites, the component allele frequencies for K=7 and K=12, and a PCA of the reference samples, which <a href="pgs.html">polygenic scores</a> use for their ancestry-adjusted percentiles. It is downloaded from this project's GitHub release <code>ancestry-ref-1</code> into <code>&lt;library&gt;/ancestry/</code> only with <code>--download</code>, or with <code>wgsextract ref ancestry --install</code>. Its SHA-256 is pinned and checked before every use. <code>ref ancestry --delete</code> removes it. It covers GRCh38, GRCh37/hg19 (186,306 of the sites lift over) and T2T-CHM13 (140,020). <code>scripts/ancestry_reference/</code> rebuilds it from gnomAD.</p>
+<p>Without a verified local reference, the default command errors without a connection attempt and asks for <code>--download</code>. See <a href="privacy.html">privacy</a> for hosts, request data and the <code>allow_reference_downloads</code> config setting.</p>
+<h2 id="inputs">Inputs<a class="heading-anchor" href="#inputs" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Input</th><th>Genotypes</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>BAM/CRAM</td><td>read counts at the sites (<code>bcftools mpileup</code>, MAPQ and base quality 20), as genotype likelihoods</td><td>Low coverage gives wider intervals, not biased proportions. Needs its index, and the reference FASTA for a CRAM.</td></tr>
+<tr><td>VCF</td><td>the sample's calls (REF and the site's ALT; site- or sample-filtered (<code>FORMAT/FT</code>) and other-allele calls are unknown)</td><td><code>--sample</code> picks one sample of a multi-sample VCF. A gVCF is read through its reference evidence (below).</td></tr>
+<tr><td>Microarray raw data</td><td>the genotypes at the chip's markers that are reference sites</td><td>23andMe, AncestryDNA, FTDNA, MyHeritage and similar layouts (<code>.txt</code>, <code>.csv</code>, <code>.zip</code>, <code>.gz</code>). The build is found from the positions.</td></tr>
+</tbody>
+</table></div>
+<p>A variants-only VCF omits hom-ref sites. For a whole-genome call set, a missing site is hom-ref, and it is filled in as <code>qc relate</code> does (see <a href="relate.html">relate.md</a>). A variants-only VCF of part of the genome (one chromosome, an exome, a panel) is refused: from its variants alone the proportions would be biased. An all-sites VCF's missing sites stay unknown.</p>
+<p>With reference evidence (a gVCF given as the input, or one the VCF's caller published beside it, found through its result manifest; see <a href="reference-evidence.html">reference-evidence.md</a>) a site the VCF doesn't list is hom-ref only where the gVCF calls it <code>callable_reference</code>; elsewhere (uncovered, low quality, filtered, no-call, not assessed) it stays missing, whether or not the VCF is a whole genome. The manifest counts the missing sites in each state as <code>ancestry_missing_sites_&lt;state&gt;</code>. An indexed <code>--ref</code> supplies contig lengths omitted from the gVCF header. Reference fills must also match the panel's REF: an indexed <code>--ref</code> verifies bases inside blocks; without it, only bases explicitly spelled in a gVCF record's REF can be filled. Incompatible or unverifiable bases stay unknown. With gVCF evidence, observed variants and reference fills use the same minimum depth and, for GQ-based evidence, genotype-quality thresholds. These rules also apply to the ancestry PCs used by <code>score pgs</code>.</p>
+<p><code>--build</code> gives the input's build when its header doesn't tell it.</p>
+<h2 id="outputs">Outputs<a class="heading-anchor" href="#outputs" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>File</th><th>Contents</th></tr></thead>
+<tbody>
+<tr><td><code>&lt;stem&gt;.ancestry.tsv</code></td><td>For K=7 and K=12, one row per component: name, region, proportion, 95% interval and the reference populations that carry it most</td></tr>
+<tr><td><code>&lt;stem&gt;.ancestry.manifest.json</code></td><td>The <a href="result-manifest.html">result manifest</a>. Metrics: <code>ancestry_k7_&lt;component&gt;</code> and <code>ancestry_k12_&lt;component&gt;</code>, each with <code>_lower</code>/<code>_upper</code>; <code>ancestry_sites</code>, <code>ancestry_sites_available</code>, <code>ancestry_depth</code>, <code>ancestry_build</code>, <code>ancestry_confidence</code>; for a VCF or microarray file, also the sample's projection onto the reference PCA, <code>ancestry_pc1</code>…<code>ancestry_pc10</code>, and the share of the sites it used, <code>ancestry_pca_sites_fraction</code> (a site without data counts at the reference mean, pulling the PCs toward the centre)</td></tr>
+</tbody>
+</table></div>
+<p>The 95% intervals come from a block bootstrap over the sites (<code>--bootstrap N</code> replicates, default 100; 0 skips them). Blocks of 500 neighbouring sites are resampled, so linkage between nearby sites widens the intervals as it should.</p>
+<p>The K=7 proportions of at least 0.5% are recorded in the <a href="sample-workspace.html">sample workspace</a> as the <code>ancestry</code> fact, and the <a href="personal-report.html">personal report</a> shows both views.</p>
+<h2 id="accuracy">Accuracy<a class="heading-anchor" href="#accuracy" aria-label="Link to section">#</a></h2>
+<p>Measured on 249 held-out 1000 Genomes samples (a tenth of each population, never used in training) in #620:</p>
+<ul>
+<li><strong>Against the labels:</strong> the largest K=7 component is the sample's own continent for every African, European, East Asian and South Asian sample (216 of 216). Admixed American samples (MXL, PUR, CLM, PEL) are mixtures by design.</li>
+<li><strong>Against ADAMIXTURE's own fit</strong> with these samples included: the projected K=7 shares differ by 0.008 RMSE (0.056 at most); K=12 by 0.024 RMSE.</li>
+<li><strong>Low coverage</strong> (reads simulated from the genotypes): at 0.5x, 1x, 2x and 4x, the K=7 shares are within 0.009, 0.005, 0.005 and 0.003 RMSE of the 30x shares. The 95% intervals cover the 30x value 97-100% of the time. Hard genotype calls from the same reads are biased (0.04 RMSE at 4x), which is why reads are used as genotype likelihoods. HG00096's real 30x reads, subsampled at the sites to 0.5x, give 80% European (77-84%) against 78% at 30x.</li>
+<li><strong>Microarrays:</strong> real 1000 Genomes Omni 2.5M array genotypes (about 76,000 sites) give K=7 shares within 0.005 RMSE of the 30x ones. The positions of current consumer chips cover 23,000 (23andMe v5), 24,000 (MyHeritage GSA) and 33,000 (AncestryDNA v2) sites, with about 0.01 RMSE.</li>
+<li><strong>Fewer sites:</strong> 2,000 random sites give 0.024 RMSE (0.11 at most) and 10,000 sites 0.013.</li>
+<li><strong>Runtime:</strong> a 30x CRAM takes about 20 minutes with 2 threads (reading the sites), and under 350 MB of RAM. A VCF takes about 2 minutes, and a microarray file seconds.</li>
+</ul>
+<h2 id="warnings-and-errors">Warnings and errors<a class="heading-anchor" href="#warnings-and-errors" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>ancestry_few_sites</code></td><td>Fewer than 10,000 sites have data: the proportions are rough (see their intervals)</td></tr>
+</tbody>
+</table></div>
+<p>Fewer than 2,000 sites with data is an error: a region subset, or a file from another species or build.</p>
+<h2 id="compared-with-qc-relate">Compared with <code>qc relate</code><a class="heading-anchor" href="#compared-with-qc-relate" aria-label="Link to section">#</a></h2>
+<p><code>qc relate</code> (<a href="relate.html">relate.md</a>) places a sample in one of the five 1000 Genomes superpopulations with somalier. That is a classification, and it can't describe admixture. <code>qc ancestry</code> gives proportions, uses about ten times as many sites and has more reference populations (HGDP adds the Middle East, Oceania, Central Asia and Indigenous Americans).</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/ancestry.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/ancestry.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

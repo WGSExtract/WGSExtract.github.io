@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy and network access (Desktop App) | WGS Extract GUI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/app/docs/privacy.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../architecture.html">GUI Architecture</a><a href="../wgsextract.html">WGSExtract</a><a class="active" href="../docs.html">Docs</a><a href="../../index.html">WGSExtract CLI</a><a href="../whats-different.html">What&#x27;s Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract GUI</a> / <a href="index.html">User Docs</a> / <span>Privacy and network access (Desktop App)</span></nav>
+<h1 id="privacy-and-network-access-desktop-app">Privacy and network access (Desktop App)</h1>
+<p>Whole-genome data is deeply personal and uniquely identifying — for you and for your biological relatives. <strong>All genomic analysis in WGS Extract runs locally on your computer.</strong> Your FASTQ, BAM, CRAM, VCF, microarray files, genotypes, and variant coordinates are never uploaded by default, and there is no analytics tracking or usage telemetry.</p>
+<p>This guide explains how network access works in the <strong>WGS Extract desktop app</strong>, how it differs from the stricter <strong>CLI back-end</strong>, what external servers can see when you check for updates or download public data, and how to run completely offline.</p>
+<p>For the full command-by-command audit of the CLI engine, see the <a href="../../docs/privacy.html">CLI Privacy and network access guide</a>. For the architectural contract between the app and the CLI, see <a href="../devdocs/architecture.html#privacy-and-network-boundary">Architecture — Privacy and network boundary</a>.</p>
+<h2 id="how-the-desktop-app-and-cli-work-together">How the Desktop App and CLI work together<a class="heading-anchor" href="#how-the-desktop-app-and-cli-work-together" aria-label="Link to section">#</a></h2>
+<p>WGS Extract intentionally separates two different user needs across two layers:</p>
+<ol>
+<li><strong>The CLI back-end (<code>wgsextract</code>) is strictly offline by default.</strong> Ordinary analysis, inspection, and reporting commands never contact the internet, never check for updates, and never install missing files or tools silently. Every CLI network call requires either an explicit install/download subcommand (<code>ref</code>, <code>deps install</code>, <code>vep download</code>) or an explicit opt-in flag (<code>--download</code>, <code>--online</code>, or <code>allow_reference_downloads = true</code>).</li>
+<li><strong>The Desktop App acts as an interactive assistant on your behalf.</strong> Casual (<strong>Basic</strong> mode) desktop users usually want the app to notify them when a newer version is available and to help fetch a missing reference genome or gene map with one click instead of failing with a cryptic error. The desktop app never silently turns on CLI auto-downloads behind your back; instead, it separates network behavior into four transparent tiers.</li>
+</ol>
+<h2 id="the-four-network-tiers-in-the-desktop-app">The four network tiers in the Desktop App<a class="heading-anchor" href="#the-four-network-tiers-in-the-desktop-app" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Tier</th><th>Examples</th><th>Default</th><th>Can it send sample data?</th><th>How to control it</th></tr></thead>
+<tbody>
+<tr><td><strong>1. Automatic update checks</strong></td><td>Checking for newer WGS Extract app releases at startup, and planned update checks for Reference Data, Reference Genomes, and Tools catalogs</td><td><strong>On by default</strong> in desktop builds (opt-out)</td><td><strong>Never</strong> — sends only version/catalog metadata, OS/arch, IP, and standard HTTP headers</td><td>Disable automatic update checks in <strong>Settings</strong></td></tr>
+<tr><td><strong>2. Interactive prerequisite prompts</strong></td><td>Clicking <strong>Install and Continue</strong> when a command or <a href="gene-page.html">Gene Page</a> reports a missing reference genome or Gene Map</td><td><strong>Asks before downloading</strong> — never downloads silently</td><td><strong>Never</strong> — fetches public reference files only</td><td>Click <strong>Cancel</strong> or <strong>Continue</strong> instead, or pre-install files beforehand</td></tr>
+<tr><td><strong>3. Explicit management &amp; help actions</strong></td><td>Running <strong>Setup</strong>, clicking <strong>Install / Download</strong> on <a href="reference-data.html">Reference Data</a>, <a href="reference-genomes.html">Reference Genomes</a>, or <a href="tools.html">Tools</a>, clicking <strong>Look up sizes</strong>, opening a documentation link, or clicking <strong>Open GitHub issue</strong></td><td><strong>Off until you click</strong></td><td><strong>Never</strong> (except a redacted bug report that you preview and submit yourself)</td><td>Only runs when you explicitly click the button or link</td></tr>
+<tr><td><strong>4. Sample-derived remote features</strong></td><td><a href="genome-viewer.html#view-files-on-a-remote-server">Remote Genome Viewer</a> (<strong>Connect and view remote file</strong>), or realigning a remote <code>https://</code> alignment URL</td><td><strong>Always explicit opt-in</strong> (off in Basic &amp; Advanced)</td><td><strong>Yes</strong> — sends requested file paths and genomic byte ranges to the server you chose</td><td>Never enabled by default; requires explicit per-action confirmation</td></tr>
+</tbody>
+</table></div>
+<h2 id="what-external-servers-can-see-ip-address-metadata">What external servers can see (IP address &amp; metadata)<a class="heading-anchor" href="#what-external-servers-can-see-ip-address-metadata" aria-label="Link to section">#</a></h2>
+<p>Even when <strong>no DNA or sample information</strong> leaves your computer, any internet request naturally reveals basic network metadata to the host you connect to:</p>
+<ul>
+<li>Your <strong>public IP address</strong> (which can reveal approximate location or ISP)</li>
+<li><strong>Timing</strong> of the request</li>
+<li>Standard <strong>HTTP headers</strong> (such as user-agent / platform)</li>
+<li><strong>Which public file, tool, or release</strong> was requested (for example, checking whether a newer WGS Extract release exists, or downloading the public <code>hs38</code> reference genome or <code>ClinVar</code> release)</li>
+</ul>
+<p>This applies to automatic update checks as well as manual downloads:</p>
+<ul>
+<li><strong>App update checks</strong> contact the configured GitHub release / updater feed (<code>github.com</code> / GitHub CDN) to compare your installed app version and platform/architecture against the latest release. They never transmit sample filenames, file paths, or genomic data.</li>
+<li><strong>Planned Reference Data, Reference Genomes, and Tools update checks</strong> follow the same rule: lightweight read-only metadata checks that report when a newer public database (such as ClinVar or yBrowse) or tool release is available, without downloading multi-gigabyte files until you explicitly click to update, and governed by the same automatic-update-check setting in <strong>Settings</strong>.</li>
+<li><strong>Public downloads</strong> contact the upstream publisher (such as GitHub releases, Pixi/Conda/PyPI registries, NCBI, UCSC, EBI/Ensembl, Broad/gnomAD, Zenodo, or yBrowse) or an audited WGS Extract mirror. See the complete destination table in <a href="../../docs/privacy.html#what-goes-where">CLI Privacy — What goes where</a>.</li>
+<li><strong>Documentation hot-links</strong> (<code>https://wgse.bio/wgsextract-cli/...</code>) open in your web browser only when you click them. Your browser's own privacy settings apply.</li>
+</ul>
+<h2 id="local-only-guarantees">Local-only guarantees<a class="heading-anchor" href="#local-only-guarantees" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong>Loopback-only app communication:</strong> The desktop window and its local Node backend communicate strictly over authenticated <code>127.0.0.1</code> loopback sockets on your computer.</li>
+<li><strong>Self-contained reports and cards:</strong> HTML result cards and personal reports do not load remote scripts, fonts, or images automatically.</li>
+<li><strong>No silent <code>allow_reference_downloads</code>:</strong> On <a href="settings.html">Settings</a> (Advanced mode → <strong>Users Workspace Settings</strong>), <strong>Allow missing public-data downloads</strong> is <strong>off by default</strong> and stays off unless you explicitly enable it.</li>
+<li><strong>No automatic remote size probes:</strong> Opening <a href="reference-genomes.html">Reference Genomes</a> uses local catalog metadata and cached sizes only; remote size lookup runs only if you explicitly invoke and confirm <strong>Look up sizes</strong>.</li>
+<li><strong>Local Genome Viewer &amp; Gene Page:</strong> Both run offline against files on your machine. The optional remote Genome Viewer never connects without your explicit connection and transfer confirmation, keeps your server token out of browser-delivered data, and enforces HTTPS certificate validation.</li>
+</ul>
+<h2 id="how-to-run-completely-offline">How to run completely offline<a class="heading-anchor" href="#how-to-run-completely-offline" aria-label="Link to section">#</a></h2>
+<p>If you work in an air-gapped environment or want <strong>zero</strong> outbound network traffic — including no IP-visible update checks:</p>
+<ol>
+<li><strong>Disable automatic update checks</strong> in <strong>Settings</strong> (future Reference Data, Reference Genomes, and Tools update checks will honor the same setting).</li>
+<li>Keep <strong>Allow missing public-data downloads</strong> turned <strong>off</strong> in <strong>Settings → Users Workspace Settings</strong> (this is already the default).</li>
+<li>Pre-install the tools, reference genomes, and reference data you need while online (using <strong>Setup</strong>, <strong>Tools</strong>, <strong>Reference Genomes</strong>, and <strong>Reference Data</strong>).</li>
+<li>Optionally verify readiness before disconnecting by running <code>wgsextract deps ready -- &lt;command ...&gt;</code> in a terminal — it checks every tool, genome, index, and database completely offline. See <a href="../../docs/privacy.html#checking-a-run-before-going-offline">Checking a run before going offline</a>.</li>
+</ol>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract GUI</strong><p>Rendered from <code>gui/docs/privacy.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/gui/docs/privacy.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VEP engines | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/vep-engines.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>VEP engines</span></nav>
+<h1 id="vep-engines">VEP engines</h1>
+<h2 id="assembly-and-download-mirror">Assembly and download mirror<a class="heading-anchor" href="#assembly-and-download-mirror" aria-label="Link to section">#</a></h2>
+<p><code>vep run --assembly GRCh37</code> and deprecated <code>--vep-assembly GRCh37</code> select the same build. Conflict warnings use canonical <code>--assembly</code> for either spelling. <code>vep download --assembly</code> selects the cache build; <code>--mirror uk</code> (default) or <code>--mirror ebi</code> chooses its download mirror.</p>
+<h2 id="choosing-an-engine">Choosing an engine<a class="heading-anchor" href="#choosing-an-engine" aria-label="Link to section">#</a></h2>
+<p><code>wgsextract vep run</code> annotates with one of two engines:</p>
+<div class="table-wrap"><table>
+<thead><tr><th></th><th><code>vep-rs</code> (default)</th><th><code>ensembl</code></th></tr></thead>
+<tbody>
+<tr><td>What it is</td><td><a href="https://github.com/natera-open-source/vep-rs" target="_blank" rel="noopener noreferrer">vep-rs</a> 0.5, a Rust reimplementation of Ensembl VEP 116</td><td><a href="https://www.ensembl.org/info/docs/tools/vep/" target="_blank" rel="noopener noreferrer">Ensembl VEP</a> 116, Perl</td></tr>
+<tr><td>Platforms</td><td>Linux, macOS, <strong>native Windows</strong></td><td>Linux, macOS</td></tr>
+<tr><td>Pixi environment</td><td><code>vep-rs</code></td><td><code>vep</code></td></tr>
+<tr><td>Cache</td><td>its own, built from Ensembl's files by <code>vep download</code></td><td>Ensembl's indexed cache, <code>vep download --engine ensembl</code></td></tr>
+</tbody>
+</table></div>
+<p>Choose the engine per run with <code>--engine</code>, or for every run with <code>vep_engine</code> in <code>config.toml</code>:</p>
+<pre><code class="language-toml">vep_engine = &quot;ensembl&quot;</code></pre>
+<pre><code class="language-bash">wgsextract vep download --assembly GRCh38   # vep-rs&#x27;s cache
+wgsextract vep verify --assembly GRCh38
+wgsextract vep run --input sample.vcf.gz
+wgsextract vep run --engine ensembl --input sample.vcf.gz</code></pre>
+<p>Both write the same <code>&lt;input stem&gt;_vep.vcf.gz</code> with a VEP <code>CSQ</code> field and the same field names, so <code>vcf table</code>, <code>vcf trio</code> and the report read either.</p>
+<h3 id="bamcram-provisional-calls">BAM/CRAM provisional calls<a class="heading-anchor" href="#bamcram-provisional-calls" aria-label="Link to section">#</a></h3>
+<p>BAM/CRAM input first runs bcftools mpileup and multiallelic calling, discovering both SNPs and small indels before annotation. <code>--region</code> restricts discovery; <code>--ref</code> must match the alignment, and the ploidy options control calling. Indel calls discard stale bcftools bias tags (SNP values are retained), and reference normalization resolves IUPAC ambiguity codes to valid VCF alleles. This convenience stage is not a validated clinical discovery pipeline: it does not discover structural variants or guarantee small-variant sensitivity. For reviewed calls from another caller, supply its VCF/BCF directly; VEP annotates those records without recalling variants.</p>
+<h3 id="upgrading-from-ensembl-vep">Upgrading from Ensembl VEP<a class="heading-anchor" href="#upgrading-from-ensembl-vep" aria-label="Link to section">#</a></h3>
+<p>vep-rs became the default after Ensembl VEP. If you choose no engine, have no vep-rs cache, and Ensembl VEP and its cache are installed, <code>vep run</code> keeps using Ensembl VEP. It warns <code>vep_engine_fallback</code> with the switch: <code>wgsextract vep download</code> builds vep-rs's cache, and <code>--engine ensembl</code> or <code>vep_engine = &quot;ensembl&quot;</code> keeps Ensembl VEP and silences the warning. A run without the selected engine's local cache fails with <code>vep_cache_missing</code>, as does an Ensembl cache missing its metadata or chromosome directories. Download the matching release and assembly with <code>wgsextract vep download</code> (<code>--engine ensembl</code> for Ensembl VEP), then rerun annotation. Neither engine falls back to the online Ensembl database.</p>
+<h2 id="speed-memory-and-disk">Speed, memory and disk<a class="heading-anchor" href="#speed-memory-and-disk" aria-label="Link to section">#</a></h2>
+<p>Measured on HG002 (5.3 million bcftools calls), GRCh38, Ensembl release 116, with <code>--everything</code>, on a Linux x64 desktop. "Default cache" is the vep-rs cache <code>vep download</code> builds, with known variants; "no-variants cache" is the same built with <code>--no-variations</code>.</p>
+<div class="table-wrap"><table>
+<thead><tr><th></th><th>vep-rs, default cache</th><th>vep-rs, no-variants cache</th><th>Ensembl VEP</th></tr></thead>
+<tbody>
+<tr><td>Whole genome, 6 threads (wall / CPU)</td><td><strong>8.8 min</strong> / 34 CPU-min</td><td>2.9 min / 15 CPU-min</td><td>3 h 34 min / 16.3 CPU-h</td></tr>
+<tr><td>Whole genome, peak memory</td><td><strong>7.5 GB</strong></td><td>7.7 GB</td><td>1.4 GB</td></tr>
+<tr><td>chr1 (422,168 calls), 4 threads</td><td>51 s, 1.0 GB</td><td></td><td>20 min, 0.7 GB</td></tr>
+<tr><td>Cache on disk</td><td><strong>17 GB</strong> (5.7 GB transcripts + 11 GB known variants)</td><td>5.7 GB</td><td>26 GB</td></tr>
+<tr><td>Download</td><td>≈17 GB</td><td>1.6 GB</td><td>27.6 GB</td></tr>
+<tr><td>Build: peak memory</td><td>11 GB</td><td>8.5 GB</td><td>none (unpack only)</td></tr>
+<tr><td>Build: peak disk</td><td>≈37 GB (downloads, genome and cache, until the cache is complete)</td><td>≈10 GB</td><td>≈54 GB (tarball and unpacked cache)</td></tr>
+<tr><td>Build time, after downloading</td><td>80 min on 2 cores</td><td>2 min</td><td></td></tr>
+</tbody>
+</table></div>
+<p>vep-rs keeps each chromosome's transcripts in memory once it has read them, so memory grows to the 7.5 GB above over a whole genome, whatever <code>--fork</code>; one chromosome's VCF needs about 1 GB. A 16 GB computer runs a whole genome; 8 GB is not enough. <code>vep download</code> refuses a cache folder without room for the build, and <code>vep download</code> and <code>vep run</code> report a memory preflight.</p>
+<h2 id="the-vep-rs-cache">The vep-rs cache<a class="heading-anchor" href="#the-vep-rs-cache" aria-label="Link to section">#</a></h2>
+<p><code>vep download</code> (engine vep-rs) downloads Ensembl's GFF3 gene set, protein and genome FASTA and table dumps for the release and, unless <code>--no-variations</code>, its variation VCFs, several files at a time. It checks each against Ensembl's <code>CHECKSUMS</code> and builds the cache with vep-rs's <code>vep-cache-builder</code> in <code>&lt;vep cache&gt;/vep-rs/homo_sapiens/&lt;release&gt;_&lt;assembly&gt;</code>, beside any Ensembl VEP cache. An interrupted download resumes; the old cache is replaced only once the new one is complete. <code>vep verify</code> checks every file against the checksums the builder wrote, and <code>vep delete</code> removes the cache and any unfinished download.</p>
+<h2 id="t2t-chm13v20">T2T-CHM13v2.0<a class="heading-anchor" href="#t2t-chm13v20" aria-label="Link to section">#</a></h2>
+<p>vep-rs also annotates T2T-CHM13v2.0 (<code>chm13v2.0</code>) VCFs; Ensembl VEP has no CHM13 cache here, so <code>--engine ensembl</code> refuses the assembly.</p>
+<pre><code class="language-bash">wgsextract vep download --assembly T2T-CHM13v2.0
+wgsextract vep run --input sample.chm13.vcf.gz   # the assembly is read from the VCF</code></pre>
+<p><code>vep download</code> builds the cache from Ensembl's T2T-CHM13v2.0 gene set (GCA_009914755.4, rapid release <code>2022_07</code>, GENCODE 38 projected onto CHM13 for the HPRC; Ensembl data, free to use without restriction): its GFF3, GTF, protein and genome FASTA, about 1 GB of downloads, each checked against the folder's <code>md5sum.txt</code>. The build takes seconds, peaks at 2.8 GB of memory and writes a 1.2 GB cache in <code>&lt;vep cache&gt;/vep-rs/homo_sapiens/116_T2T-CHM13v2.0</code>. <code>vep run</code> takes the assembly from the reference library's build, else from the VCF's contig lengths; <code>--assembly T2T-CHM13v2.0</code> names it outright.</p>
+<p>What a CHM13 cache lacks, beyond the GRCh38 gaps below:</p>
+<ul>
+<li><strong>Known variants</strong> (<code>Existing_variation</code>, frequencies, ClinVar columns): Ensembl publishes none in a form the builder reads. <code>vep download</code> warns <code>vep_variations_unavailable</code> and <code>vep run</code> warns <code>vep_cache_gaps</code>.</li>
+<li><strong>MANE, CCDS, protein domains, <code>GENE_PHENO</code></strong>: these come from Ensembl's table dumps, which the rapid release doesn't have. The canonical transcript is flagged.</li>
+<li><strong>chrM</strong>: Ensembl doesn't annotate CHM13's mitochondrion.</li>
+<li><strong>Gene set age</strong>: GENCODE 38 (2021). GRCh38's release 116 is GENCODE 50, with many more lncRNA transcripts. A third of its genes, nearly all non-coding (0.7% of protein-coding ones), have no symbol: <code>SYMBOL</code> is empty and <code>Gene</code> holds the CHM13 stable ID (<code>ENSG0522…</code>).</li>
+</ul>
+<h3 id="how-chm13-annotation-compares-with-grch38s">How CHM13 annotation compares with GRCh38's<a class="heading-anchor" href="#how-chm13-annotation-compares-with-grch38s" aria-label="Link to section">#</a></h3>
+<p>HG002's GIAB v5.0q small-variant calls on CHM13 (5,829,374 records) were annotated on CHM13, then lifted to GRCh38 with the reference library's <code>chm13v2-grch38.chain</code> (CrossMap) and annotated there with vep-rs caches of Ensembl 116 and of Ensembl 104 (GENCODE 38, the set CHM13's is projected from). Agreement of the <code>vcf table</code> row of the same call (gene, consequence and impact of the transcript the table picks) over the 2,491,092 table rows on both, and of all CSQ entries over the 2,577,520 lifted records:</p>
+<div class="table-wrap"><table>
+<thead><tr><th></th><th>vs Ensembl 104 (same gene set)</th><th>vs Ensembl 116</th></tr></thead>
+<tbody>
+<tr><td>Gene</td><td>96.8%</td><td>91.5%</td></tr>
+<tr><td>Consequence</td><td>96.0%</td><td>83.5%</td></tr>
+<tr><td>Impact</td><td>99.9%</td><td>99.9%</td></tr>
+<tr><td>Most severe consequence, all entries</td><td>98.0%</td><td>82.8%</td></tr>
+<tr><td>Same set of genes, all entries</td><td>97.8%</td><td>89.7%</td></tr>
+</tbody>
+</table></div>
+<p>Against release 116 most differences are lncRNA transcripts GENCODE has added since 38 (<code>intergenic_variant</code> on CHM13, <code>intron_variant</code> of a new non-coding transcript on GRCh38). Against 104 they are paralogs (RGPD5/RGPD6, LIMS3/LIMS4), a different canonical transcript, and indels at splice sites placed differently. Annotating on CHM13 also keeps calls a lift to GRCh38 loses: 1.26 million of the 5.83 million (mostly centromeric satellites, 61,000 in genes) don't lift, and 2.0 million match GRCh38's reference there. A whole genome took 82 s on 4 threads and 3.5 GB of memory.</p>
+<h2 id="where-vep-rs-differs-from-ensembl-vep">Where vep-rs differs from Ensembl VEP<a class="heading-anchor" href="#where-vep-rs-differs-from-ensembl-vep" aria-label="Link to section">#</a></h2>
+<p>Agreement per (variant, transcript) pair, where Ensembl VEP has a value:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Field</th><th>HG002 whole genome, no-variants cache (61,451,654 pairs)</th><th>HG002 chr1, default cache (4,947,499 pairs)</th></tr></thead>
+<tbody>
+<tr><td>Consequence, IMPACT</td><td>99.99997%</td><td>99.99996%, 99.99998%</td></tr>
+<tr><td>SYMBOL, Gene, BIOTYPE, EXON, INTRON, CANONICAL, MANE_SELECT, MANE</td><td>100%</td><td>100%</td></tr>
+<tr><td>HGVSc</td><td>99.9999% (48,639,197 of 48,639,241)</td><td>99.9999% (3,832,967 of 3,832,972)</td></tr>
+<tr><td>HGVSp</td><td>99.9968% (278,871 of 278,880)</td><td>99.9962% (26,416 of 26,417)</td></tr>
+<tr><td>Protein_position</td><td>99.9921% (279,068 of 279,090)</td><td>99.9886% (26,421 of 26,424)</td></tr>
+<tr><td>Existing_variation</td><td>empty</td><td>99.9998% (4,898,139 of 4,898,148)</td></tr>
+<tr><td>1000 Genomes AF (AF, AFR_AF, …)</td><td>empty</td><td>99.78–99.998%</td></tr>
+<tr><td>CLIN_SIG, SOMATIC, PHENO, GENE_PHENO</td><td>empty (GENE_PHENO 100%)</td><td>99.97–100%</td></tr>
+<tr><td>PICK</td><td>99.96% of pairs</td><td>100%</td></tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>PICK.</strong> On the whole genome, 0.04% of pairs (23,910 of 61.45 million) pick differently. These come from records where Ensembl VEP picks a regulatory-feature row, which a cache built by <code>vep download</code> doesn't hold; vep-rs picks the intergenic or transcript row there. The chr1 comparison ran Ensembl VEP without regulatory features, so it agreed on every pick. In <code>vcf table</code> this changes the consequence of those records, from <code>regulatory_region_variant</code> or <code>TF_binding_site_variant</code> to, usually, <code>intergenic_variant</code>. On HG002 chr22 that was 440 of 85,046 rows (0.5%), and no other column changed.</li>
+<li><strong>SIFT and PolyPhen are empty.</strong> The builder can't fetch the prediction matrices without Ensembl's MySQL server. Use <code>vcf alphamissense</code> or <code>vcf revel</code> instead.</li>
+<li><strong>gnomAD frequencies (<code>gnomADe_*</code>, <code>gnomADg_*</code>) are empty</strong>, and so <code>MAX_AF</code> differs: Ensembl publishes no gnomAD VCF to build them from. Use <code>vcf gnomad</code>. <code>PUBMED</code> is empty too.</li>
+<li><strong>Regulatory features</strong> are not annotated.</li>
+<li><strong>Not supported:</strong> <code>--custom</code> sources. <code>vep run</code> refuses these with vep-rs rather than ignoring them; use <code>--engine ensembl</code> for local custom sources.</li>
+<li>Records Ensembl VEP skips (an SV class it has no term for, such as <code>&lt;CPX&gt;</code>, or one larger than <code>--max_sv_size</code>) stay in vep-rs's output without <code>CSQ</code>; Ensembl VEP leaves them out.</li>
+</ul>
+<p><code>vep run</code> warns <code>vep_cache_gaps</code> when the cache it uses lacks known variants, gnomAD frequencies or predictions, and <code>vcf table</code> warns <code>gnomad_af_missing</code> when its <code>gnomad_af</code> column would be empty for want of them; VEP's 1000 Genomes <code>AF</code> and <code>MAX_AF</code> go to the table's <code>kg_af</code> and <code>max_af</code> instead. The full comparison, including fastVEP, vareffect and bcftools csq, is in <a href="https://github.com/WGSExtract/wgsextract-cli/issues/602" target="_blank" rel="noopener noreferrer">#602</a>.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/vep-engines.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/vep-engines.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

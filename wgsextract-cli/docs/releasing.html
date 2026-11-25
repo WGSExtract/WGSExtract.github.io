@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Releasing | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/releasing.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Releasing</span></nav>
+<h1 id="releasing">Releasing</h1>
+<p><code>pixi run package-smoke</code> builds a source distribution and a wheel from it, checks that both contain the compact CLI help index, and runs discovery from the installed wheel. Builds generate the index without changing the checkout.</p>
+<p>One <code>vX.Y.Z</code> release ships both the CLI and the WGS Extract desktop app (<code>gui/</code>), which bundles that same CLI release. Most of it is automated; this is the whole sequence, with what to check at each step.</p>
+<h2 id="1-the-release">1. The release<a class="heading-anchor" href="#1-the-release" aria-label="Link to section">#</a></h2>
+<p>Merging the release PR starts the release. The workflow creates the tag and publishes only after preflight passes.</p>
+<ol>
+<li><strong>Bump the version</strong> on a branch named <code>release-X.Y.Z</code>:</li>
+</ol>
+<pre><code class="language-bash">   python scripts/bump_version.py X.Y.Z</code></pre>
+<p>It sets the version in <code>pyproject.toml</code>, <code>pixi.toml</code> and <code>src/wgsextract_cli/__init__.py</code>, and points the app's bundle at the same release with <code>gui/scripts/bump-wgsextract-cli.py vX.Y.Z</code> (the tag file <code>gui/examples/WGSExtract/scripts/wgsextract-release-tag.txt</code>, the bundle version that names the installers). The release workflow checks all four versions against the tag. It also moves the <a href="https://wgsextract.github.io/wgsextract-cli/" target="_blank" rel="noopener noreferrer">CLI site</a>'s current release (<code>site_src/index.md</code> and <code>install.md</code>) to the new version, and the same script points the <a href="https://wgsextract.github.io/wgsextract-cli/app/" target="_blank" rel="noopener noreferrer">app site</a> (<code>gui/site_src/index.md</code>, <code>docs.md</code> and <code>wgsextract.md</code>) at the new release's installers and rebuilds <code>gui/site/</code>. The site deploys when the release PR merges, so its download links fail until preflight passes and the release is public. Those pages say what the release adds only through the release notes link, so they need no other edit. The v6 row of <a href="https://wgsextract.github.io/" target="_blank" rel="noopener noreferrer">wgsextract.github.io</a>, which sends new users to the app site, moves to the release on its own within the hour once the release carries the app (the <em>App release watch</em> workflow; see below).</p>
+<ol>
+<li><strong>Write the release notes</strong> in <code>docs/release-notes/vX.Y.Z.md</code>, in the same PR: what users get, under <code>## Changed</code>, <code>## New</code> and <code>## Fixes</code>, plus <code>## Deprecated</code> when commands are deprecated, and <code>## Desktop app</code> for app changes, ending with a compare link (<code>.../compare/vPREVIOUS...vX.Y.Z</code>). PRs record CLI changes under <code>docs/release-notes/unreleased/</code> (deprecations must be announced there) and app changes under <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/gui/docs/changelog/unreleased/README.md" target="_blank" rel="noopener noreferrer"><code>gui/docs/changelog/unreleased/</code></a>. Assemble both sets of fragments with</li>
+</ol>
+<pre><code class="language-bash">   python scripts/release_notes.py assemble X.Y.Z</code></pre>
+<p>which writes the notes file from the fragments, grouped by section, with the title and a compare link from the newest older release tag. It also adds a dated release to <code>gui/docs/CHANGELOG.md</code>, records the new CLI installer target there, and deletes the fragments. Then add a short summary under the title. If a fragment lands on main before the release PR merges, the PR's checks fail: move its entries into the notes file (and the dated changelog entry for a GUI fragment) and delete it. A version bump that leaves fragments or has no dated desktop changelog entry fails the same way. Run assembly even for a release with no fragments. The deprecated commands are also listed in <code>DEPRECATIONS</code> in <code>src/wgsextract_cli/commands/registry.py</code>. A command deprecated in one minor release is removed in the next, so a release that reaches a deprecation's <code>remove_in</code> version removes the command. The PRs since the last release are <code>git log --oneline vPREVIOUS..origin/main</code>.</p>
+<ol>
+<li><strong>Open a PR</strong> titled <code>Release X.Y.Z</code> and merge it once CI is green.</li>
+</ol>
+<p>On the merge, <code>release.yml</code> runs lint, type checks, tests and the package smoke test on the merge commit. It then creates the protected <code>vX.Y.Z</code> tag to pin the exact candidate while main keeps moving.</p>
+<p>Release dispatches the following workflows against that tag and checks the returned run IDs and commit SHA. All must finish successfully:</p>
+<ul>
+<li><code>linux_aligners.yml</code>, <code>macos_aligners.yml</code>, <code>linux_deepvariant.yml</code>, <code>macos_deepvariant.yml</code>, and <code>macos_clair3.yml</code> (build/test only; no native tool releases).</li>
+<li><code>gui-tauri-installer.yml</code> (Windows install/uninstall lifecycle) and <code>gui-distribution.yml</code> (signed installers and <code>latest.json</code> as artifacts).</li>
+<li><code>pharmcat_e2e.yml</code>, <code>gkl_windows.yml</code>, <code>gatk_windows.yml</code>, and <code>cli_smoke.yml</code> (package and real-data benchmark smoke).</li>
+<li><code>install_lab.yml</code>, after GUI distribution succeeds. It receives the distribution run ID and exercises those installers against the candidate CLI from the tree, with Windows negative controls. The publicly pinned CLI install is tested after publication (section 3).</li>
+</ul>
+<p>These workflows also accept manual dispatches for targeted diagnosis. They do not run on PRs, in the merge queue, or on a nightly/weekly timer. The separate <a href="ci_routing.html#setup-checks-on-prs-and-the-daily-backstop">nightly OS suites</a> continue to report regressions on main.</p>
+<p>Once preflight passes, Release creates the draft, uploads the validated distribution's exact artifact, and publishes the installers and updater feed together. <code>install.sh</code> installs the latest published release; installed apps use its <code>latest.json</code>. The native Windows tools aren't part of it: <code>pixi.toml</code> pins their own packages (see <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/packaging/windows/README.md" target="_blank" rel="noopener noreferrer">packaging/windows/README.md</a>).</p>
+<p>Check the <em>Release</em> run on the merge commit and its linked preflight runs. If a check fails or times out, the candidate stays unpublished. For a transient failure, rerun the failed jobs on <strong>Release</strong> to start a new preflight, or dispatch <code>release.yml</code> from <code>main</code> to retry the current version's existing tag. If the tagged code is wrong, leave that tag unpublished; fix the code and cut a fresh version. Do not move a release tag. A release only becomes latest if no newer version is already published; if GitHub can't confirm that, the run stops without publishing.</p>
+<p>The "Protect release tags" ruleset lets only admins, maintainers and deploy keys create <code>v*</code> tags, so the workflow pushes the tag with a deploy key: <code>RELEASE_TAG_DEPLOY_KEY</code>, a secret of the <code>release-tag</code> environment, which only <code>main</code> can use. To replace the key, add a new write deploy key and set the secret to its private key (<code>gh secret set RELEASE_TAG_DEPLOY_KEY --env release-tag &lt; key</code>), then delete the old deploy key.</p>
+<p>Without a notes file, even a green Release run leaves the draft with generated notes. <strong>Wait for the entire Release run to pass</strong> before editing and publishing it on GitHub. Don't mark an older version as latest. Do not push release tags by hand: old commits still have the workflow that published on tag pushes before preflight was introduced. Start or retry Release from <code>main</code>.</p>
+<ol>
+<li><strong>Pin the output-contract baseline</strong> once the tag exists, in a follow-up PR: <code>git fetch origin tag vX.Y.Z</code>, then <code>python scripts/output_contracts.py pin --release vX.Y.Z</code> writes <code>contracts/baselines/vX.Y.Z.json</code> (the tag, its commit and a digest) from the tag's own files, and the PR removes any <code>approved_breaks</code> entries the new baseline absorbed. Later changes are compared with it; see <a href="output-contracts.html">output contracts</a>.</li>
+</ol>
+<h2 id="2-what-the-apps-release-needs">2. What the app's release needs<a class="heading-anchor" href="#2-what-the-apps-release-needs" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong>Secrets and variables.</strong> The app's build reads the Apple signing and notarization secrets (<code>APPLE_CERTIFICATE_P12</code>, <code>APPLE_CERTIFICATE_PASSWORD</code>, <code>APPLE_SIGNING_IDENTITY</code>, and <code>APPLE_API_KEY_P8</code>, <code>APPLE_API_KEY_ID</code>, <code>APPLE_API_ISSUER_ID</code> or <code>APPLE_ID</code>, <code>APPLE_APP_SPECIFIC_PASSWORD</code>, <code>APPLE_TEAM_ID</code>), the updater signing key (<code>TAURI_SIGNING_PRIVATE_KEY</code>, optional <code>TAURI_SIGNING_PRIVATE_KEY_PASSWORD</code>) and the <code>TAURI_UPDATER_PUBKEY</code> variable. A release's macOS build fails without the Apple secrets. App publishing fails before uploading assets if any expected platform lacks a uniquely matched updater artifact with a nonempty signature. See <a href="../app/devdocs/distribution.html">gui/devdocs/distribution.md</a>.</li>
+<li><strong>Trying a change first.</strong> <em>Run workflow</em> on <em>GUI distribution</em> (or <code>gh workflow run gui-distribution.yml --ref BRANCH</code>) builds unsigned installers as run artifacts without releasing anything; the Install Lab can test them (section 3).</li>
+<li><strong>The main site's deploy key.</strong> The <em>App release watch</em> workflow updates the v6 row of <code>README.md</code> in <a href="https://github.com/WGSExtract/wgsextract.github.io" target="_blank" rel="noopener noreferrer">WGSExtract/wgsextract.github.io</a> with <code>MAIN_SITE_DEPLOY_KEY</code>, a secret of the <code>main-site</code> environment (limit that environment to <code>main</code>). Without it the workflow warns and the row stays put. To set it up (the first two commands, once) or replace it:</li>
+</ul>
+<pre><code class="language-bash">  gh api -X PUT repos/WGSExtract/wgsextract-cli/environments/main-site -F &#x27;deployment_branch_policy[protected_branches]=false&#x27; -F &#x27;deployment_branch_policy[custom_branch_policies]=true&#x27;
+  gh api -X POST repos/WGSExtract/wgsextract-cli/environments/main-site/deployment-branch-policies -f name=main -f type=branch
+  ssh-keygen -t ed25519 -N &quot;&quot; -C &quot;wgsextract-cli main-site&quot; -f main-site-key
+  gh repo deploy-key add main-site-key.pub -R WGSExtract/wgsextract.github.io --allow-write -t &quot;wgsextract-cli release watch&quot;
+  gh secret set MAIN_SITE_DEPLOY_KEY --env main-site &lt; main-site-key
+  rm main-site-key main-site-key.pub</code></pre>
+<h3 id="tags-and-earlier-app-releases">Tags and earlier app releases<a class="heading-anchor" href="#tags-and-earlier-app-releases" aria-label="Link to section">#</a></h3>
+<p>The app's releases up to v0.6.6 were made in the former <a href="https://github.com/WGSExtract/gui-for-cli/releases" target="_blank" rel="noopener noreferrer">gui-for-cli</a> repository (also tagged <code>vX.Y.Z</code>, with the same numbers as the CLI release each bundled), and stay there. From the first release after v0.6.6, the app has no tags or releases of its own: it ships in this repository's <code>vX.Y.Z</code> release.</p>
+<p>Apps up to v0.6.6 looked for updates in gui-for-cli's latest release. Only developers had those builds, and releases no longer copy their <code>latest.json</code> there, so those installs don't update themselves: install the current app instead. Apps from v0.8.5 on update from this repository's latest release.</p>
+<h2 id="3-proof-it-reached-users">3. Proof it reached users<a class="heading-anchor" href="#3-proof-it-reached-users" aria-label="Link to section">#</a></h2>
+<p>Within the hour of the app joining the release, <em>App release watch</em> (<code>app_release_watch.yml</code>) starts a full Install Lab run named <code>Install Lab: app vX.Y.Z</code>: Linux, macOS and Windows, with the CLI from this tree and with the CLI release the app pins, plus the negative controls. To start it at once: <code>gh workflow run app_release_watch.yml</code>.</p>
+<p>The <strong>pinned</strong> jobs are the ones that matter: they set up the app exactly as a user's machine does, with the CLI release it bundles. The Windows app jobs only collect evidence; <strong>windows-judge</strong> checks it (and the negative controls), so the evidence the release works is the pinned jobs and windows-judge passing. See <a href="install_testing.html">install_testing.md</a> for what the lab checks, and for trying an app fix before releasing it (<code>gh workflow run install_lab.yml -f app_run=&lt;GUI distribution run id&gt;</code>).</p>
+<h2 id="optional-tool-releases">Optional tool releases<a class="heading-anchor" href="#optional-tool-releases" aria-label="Link to section">#</a></h2>
+<p>Native tool builds are released separately from the CLI, as prereleases that never become the latest release:</p>
+<ul>
+<li><strong>Windows tools</strong> (<code>windows-tools-N</code>): Actions &gt; Windows Tools &gt; Run workflow. See <a href="windows.html">windows.md</a>.</li>
+<li><strong>macOS aligners</strong> (<code>macos-aligners-N</code>): Actions &gt; macOS Aligners &gt; Run workflow. It publishes the Apple Silicon <code>wgse-bwa</code>, <code>wgse-bwa-mem2</code>, <code>wgse-bwa-mem3</code> and <code>wgse-minimap2</code> tarballs built from <code>native/</code> (see <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/native/README.md" target="_blank" rel="noopener noreferrer">native/README.md</a>). Each package carries its own version, printed by <code>--version</code>: bump its <code>WGSE_*_VERSION</code> in the corresponding <code>native/&lt;aligner&gt;/CMakeLists.txt</code> and, where present, its conda recipe when it changes.</li>
+<li><strong>Linux aligners</strong> (<code>linux-aligners-N</code>): Actions &gt; Linux Aligners &gt; Run workflow. It publishes the <code>wgse-bwa</code> (x86-64 and ARM64), <code>wgse-bwa-mem3</code> and <code>wgse-minimap2</code> (x86-64) conda packages built from <code>native/</code> by <code>packaging/wgse-bwa</code>, <code>packaging/wgse-bwa-mem3</code> and <code>packaging/wgse-minimap2</code>, with their CUDA backends on x86-64. Bump <code>WGSE_BWA_VERSION</code> in <code>native/bwa/CMakeLists.txt</code>, <code>WGSE_BWA_MEM3_VERSION</code> in <code>native/bwa-mem3/CMakeLists.txt</code> or <code>WGSE_MINIMAP2_VERSION</code> in <code>native/minimap2/CMakeLists.txt</code> together with the recipe's <code>version</code>.</li>
+<li><strong>macOS DeepVariant</strong> (<code>macos-deepvariant-N</code>): Actions &gt; macOS DeepVariant &gt; Run workflow. It publishes the Apple Silicon <code>wgse-deepvariant</code> tarball built from <code>native/deepvariant/</code> and its WGS weights converted from Google's image, with a <code>SHA256SUMS</code> (see <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/native/deepvariant/README.md" target="_blank" rel="noopener noreferrer">native/deepvariant/README.md</a>). Bump <code>WGSE_DEEPVARIANT_VERSION</code> in <code>native/deepvariant/CMakeLists.txt</code> when the package changes.</li>
+<li><strong>Linux DeepVariant</strong> (<code>linux-deepvariant-N</code>): Actions &gt; Linux DeepVariant &gt; Run workflow. It publishes the Linux x86-64 <code>wgse-deepvariant</code> conda packages (CUDA and CPU-only call_variants) built from <code>native/deepvariant/</code> by <code>packaging/wgse-deepvariant</code>, and the WGS weights, with a <code>SHA256SUMS</code>. Bump <code>WGSE_DEEPVARIANT_VERSION</code> and the recipe's <code>version</code> together, then point pixi.toml's <code>deepvariant</code> feature at the new CUDA package's URL and sha256 and run <code>pixi lock</code>.</li>
+</ul>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/releasing.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/releasing.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

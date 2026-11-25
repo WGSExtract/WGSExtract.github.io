@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CLI installation and removal | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/installation.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>CLI installation and removal</span></nav>
+<h1 id="cli-installation-and-removal">CLI installation and removal</h1>
+<p>For the platform walkthrough, see the <a href="https://wgsextract.github.io/wgsextract-cli/install.html" target="_blank" rel="noopener noreferrer">site install guide</a>. For source development, use <a href="developer_setup.html">developer setup</a> instead.</p>
+<h2 id="install">Install<a class="heading-anchor" href="#install" aria-label="Link to section">#</a></h2>
+<p>macOS and Linux x86_64 or native ARM64 (<code>linux-aarch64</code>):</p>
+<pre><code class="language-bash">curl -fsSL https://raw.githubusercontent.com/WGSExtract/wgsextract-cli/main/install.sh | sh</code></pre>
+<p>The bootstrap script comes from <code>main</code>, but installs the latest published GitHub release, not <code>main</code>. It creates <code>wgsextract-cli/</code> in the current directory (or beside a downloaded <code>install.sh</code>) with the app in <code>app/</code>, Pixi files in <code>.pixi/</code>, and the <code>wgsextract</code> launcher and <code>uninstall.sh</code>. On macOS it checks for Xcode Command Line Tools first. When upgrading, the installer restores the previous app if Pixi setup or verification fails. A successful upgrade rebuilds the default environment. If the Pixi environment location stays the same, optional environments are kept. The installer refuses to move existing local optional environments to a detached location because their installed files can contain absolute paths.</p>
+<p>Linux ARM64 phase 1 supports default alignment/CRAM/calling/export, VEP, native Yleaf-derived Y-DNA analysis and Haplogrep 3. GATK fails before execution because its native kernels are not yet qualified. DeepVariant has an explicit <a href="deepvariant-arm64.html">native CPU source-build path</a>; there is no silent Java or x86-emulation fallback. See <a href="linux-arm64.html">Linux ARM64</a>. Releases v0.6.5 and earlier lack ARM64 support. To test unreleased support instead of a release, select <code>main</code> explicitly:</p>
+<pre><code class="language-bash">curl -fsSL https://raw.githubusercontent.com/WGSExtract/wgsextract-cli/main/install.sh | WGSEXTRACT_REF=main sh</code></pre>
+<p>On Windows, clone or download the repository and run <code>install_windows.bat</code> from PowerShell. It installs Pixi if missing, then the CLI and WGS Extract's native builds of samtools, bcftools, BWA, bwa-mem2, minimap2, fastp and samblaster into Pixi. The standalone installer checks the downloaded source archive in a private staging directory before copying it into the install directory. No WSL or MSYS2 is needed. See <a href="windows.html">Windows</a>.</p>
+<h2 id="installer-options">Installer options<a class="heading-anchor" href="#installer-options" aria-label="Link to section">#</a></h2>
+<p>These are installer inputs, not runtime CLI configuration. Set them before running <code>install.sh</code>:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Variable</th><th>Default</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><code>WGSEXTRACT_INSTALL_DIR</code></td><td><code>wgsextract-cli</code> next to <code>install.sh</code>, or <code>./wgsextract-cli</code> for <code>curl | sh</code></td><td>Install location</td></tr>
+<tr><td><code>WGSEXTRACT_RELEASE_TAG</code></td><td>latest GitHub release</td><td>Release tag, or <code>latest</code></td></tr>
+<tr><td><code>WGSEXTRACT_REF</code></td><td><code>WGSEXTRACT_RELEASE_TAG</code></td><td>Git ref, or <code>latest</code></td></tr>
+<tr><td><code>WGSEXTRACT_ARCHIVE_URL</code></td><td>GitHub source archive for <code>WGSEXTRACT_REF</code></td><td>Exact source archive URL</td></tr>
+<tr><td><code>WGSEXTRACT_BIN_DIR</code></td><td><code>$WGSEXTRACT_INSTALL_DIR</code></td><td>CLI launcher directory</td></tr>
+<tr><td><code>WGSEXTRACT_PIXI_HOME</code></td><td><code>$WGSEXTRACT_INSTALL_DIR/.pixi</code> when Pixi is missing</td><td>Install SHA-256-verified pinned Pixi here; an existing Pixi on <code>PATH</code> or in <code>~/.pixi</code> is reused</td></tr>
+<tr><td><code>WGSEXTRACT_PIXI_CACHE_DIR</code></td><td><code>$WGSEXTRACT_INSTALL_DIR/.pixi/cache</code></td><td>Pixi package cache</td></tr>
+<tr><td><code>WGSEXTRACT_PIXI_ENV_DIR</code></td><td><code>$WGSEXTRACT_INSTALL_DIR/app/.pixi/envs</code></td><td>Pixi environment location</td></tr>
+<tr><td><code>WGSEXTRACT_NO_OPEN</code></td><td>unset</td><td><code>1</code> skips opening Finder on macOS</td></tr>
+</tbody>
+</table></div>
+<p>Leave <code>WGSEXTRACT_BIN_DIR</code>, <code>WGSEXTRACT_PIXI_HOME</code>, <code>WGSEXTRACT_PIXI_CACHE_DIR</code> and <code>WGSEXTRACT_PIXI_ENV_DIR</code> unset to keep the installation together. Pin <code>WGSEXTRACT_RELEASE_TAG=vX.Y.Z</code> for reproducible installs; use <code>WGSEXTRACT_REF=main</code> or <code>WGSEXTRACT_ARCHIVE_URL=&lt;url&gt;</code> for testing.</p>
+<p>When Pixi is missing, installers verify the pinned release's SHA-256 before running it; they do not execute unsigned upstream installer scripts. Updating the Pixi pin also requires updating its trusted release digests. Reference installation has separate <a href="reference-genomes.html#verification-and-gene-maps">sequence-dictionary checks</a>.</p>
+<h2 id="running">Running<a class="heading-anchor" href="#running" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Install type</th><th>Command</th></tr></thead>
+<tbody>
+<tr><td><code>install.sh</code></td><td><code>./wgsextract-cli/wgsextract</code>, or add <code>wgsextract-cli/</code> to <code>PATH</code></td></tr>
+<tr><td>Source checkout or Windows install</td><td><code>pixi run wgsextract</code>, from the repository directory</td></tr>
+</tbody>
+</table></div>
+<p>Guides write plain <code>wgsextract</code>; substitute your launcher. <a href="developer_setup.html#pixi-environments">Optional environments</a> require explicit setup; the CLI never installs tools during a feature run.</p>
+<h3 id="macos-openmp-error-15-with-unknown-library">macOS: OpenMP <code>Error #15</code> with “unknown library”<a class="heading-anchor" href="#macos-openmp-error-15-with-unknown-library" aria-label="Link to section">#</a></h3>
+<p>An interrupted process can leave an unwritten LLVM OpenMP registration in <code>/private/tmp</code>. If macOS reuses that PID, OpenMP may report a duplicate runtime even when the new process loaded only one. The locked WGS Extract and PharmCAT environments use Accelerate for bcftools on macOS to avoid this startup path. Other environments can still load OpenMP, including STRkit, phasing, SMN, Somalier, FreeBayes, LongTR, bwa-mem3, Clair3, Cyrius and VEP. This can also affect GATK when it loads Homebrew's <code>libomp</code>.</p>
+<p>If the error persists, quit affected tools and inspect the entries with <code>ls -l /private/tmp/__KMP_REGISTERED_LIB_*</code>. For an individual entry, confirm it belongs to your account, is a regular file (not a symlink), and is empty or entirely zero-filled (<code>hexdump -C</code> shows its contents). Use <code>ps -p PID</code> with the numeric suffix and leave the file alone if that PID is active or if you are unsure. If the PID is absent, recheck immediately before deleting only that exact file with <code>rm /private/tmp/__KMP_REGISTERED_LIB_PID</code> (replace <code>PID</code> with the actual suffix). Never use <code>sudo</code> or a wildcard for removal. The CLI does not sweep the system temporary directory during normal use.</p>
+<h2 id="uninstall">Uninstall<a class="heading-anchor" href="#uninstall" aria-label="Link to section">#</a></h2>
+<pre><code class="language-bash">./wgsextract-cli/uninstall.sh --yes</code></pre>
+<p>This removes the installation, launcher, Pixi environments and cache under it, <strong>including reference data in the default <code>app/reference/</code> location</strong>. Updating by rerunning the installer instead keeps <code>app/reference/</code>, <code>app/genomes/</code> and Pixi environments.</p>
+<p>Configuration is kept unless <code>--remove-config</code> is given. Interactive runs ask whether to remove Pixi from <code>~/.pixi</code>; <code>--yes</code> keeps it unless you add <code>--remove-pixi</code>. That also removes Pixi's <code>PATH</code> line from shell profiles, and deletes a profile such as <code>~/.zshrc</code> only if installation created it and nothing else was added.</p>
+<p>Custom <code>WGSEXTRACT_BIN_DIR</code>, <code>WGSEXTRACT_PIXI_CACHE_DIR</code> and <code>WGSEXTRACT_PIXI_ENV_DIR</code> locations are recorded at install time. <code>--bin-dir</code>, <code>--pixi-cache-dir</code> and <code>--pixi-env-dir</code> override those records. Other Pixi projects may share those directories, so outside the installation the uninstaller deletes only this installation's environment folder from the environment directory (and the directory itself if the installer created it and it is now empty), and deletes the cache directory only if the installer created it and it holds no Pixi environments. Before asking to continue, it lists exactly what it will delete, including config files and Pixi when <code>--remove-config</code> and <code>--remove-pixi</code> are given. Use <code>--keep-pixi-cache</code> and <code>--keep-pixi-envs</code> to keep this installation's external cache and environments; these flags do not preserve files inside the installation being removed. Windows has its <a href="windows.html">own uninstaller</a>.</p>
+<p>On every platform, <code>--remove-config</code> includes the owned default users workspace's <code>~/wgs-extract/config.toml</code> (<code>%USERPROFILE%\wgs-extract\config.toml</code> on Windows) and legacy per-user config locations. An otherwise empty default users workspace loses its ownership marker and directory too. Libraries, other files and their workspace marker are preserved; unmarked user folders are left alone. Without <code>--remove-config</code>, workspace configuration is unchanged.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/installation.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/installation.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

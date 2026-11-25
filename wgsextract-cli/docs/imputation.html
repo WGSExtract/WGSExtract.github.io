@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Genotype imputation (vcf impute) | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/imputation.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Genotype imputation (vcf impute)</span></nav>
+<h1 id="genotype-imputation-vcf-impute">Genotype imputation (<code>vcf impute</code>)</h1>
+<p><code>wgsextract vcf impute</code> fills in a GRCh38 sample's genotypes at the sites of the 1000 Genomes 30x reference panel (3,202 people, NYGC, phased):</p>
+<ul>
+<li><strong>Low-coverage reads</strong> (a BAM or CRAM at about 0.5–8x) with <a href="https://github.com/odelaneau/GLIMPSE" target="_blank" rel="noopener noreferrer">GLIMPSE2</a> (Rubinacci et al. 2023, <em>Nature Genetics</em>; MIT). GLIMPSE2 reads the reads at every panel site and combines what little they show with the haplotypes of the panel.</li>
+<li><strong>Genotype-only VCFs</strong>, such as microarray calls, with <a href="https://faculty.washington.edu/browning/beagle/beagle.html" target="_blank" rel="noopener noreferrer">Beagle 5</a> (Browning et al. 2021; GPL-3, run as a separate program).</li>
+</ul>
+<pre><code class="language-sh">pixi install -e imputation                                    # once: GLIMPSE2, Beagle, Java
+wgsextract ref imputation --install --chromosomes chr20      # once per chromosome
+wgsextract vcf impute --input lowpass.cram --chromosomes chr20
+wgsextract vcf impute --vcf-input chip.vcf.gz</code></pre>
+<p>Above about 8x, call the reads directly (<code>vcf snp</code>, <code>vcf deepvariant</code>): imputation adds little there and can only find variants the panel holds. <code>vcf impute</code> warns (<code>high_depth_imputation</code>) when the reads are deeper.</p>
+<h2 id="the-reference-panel">The reference panel<a class="heading-anchor" href="#the-reference-panel" aria-label="Link to section">#</a></h2>
+<p><code>ref imputation --install --chromosomes chr20</code> (or <code>chr1-22</code>, or <code>all</code>) downloads each chromosome's panel VCF from IGSR and GLIMPSE's genetic map, checks both against pinned SHA-256 digests, keeps the panel's biallelic SNPs and writes GLIMPSE2's binary reference chunks. The download is deleted; the SNP panel plus binary references require roughly 70 GB for all autosomes. It checks for free space of 2.5 times the requested downloads first.</p>
+<div class="table-wrap"><table>
+<thead><tr><th></th><th>Download</th><th>Licence</th></tr></thead>
+<tbody>
+<tr><td>Panel: 1000 Genomes 30x phased SNV/indel/SV panel (20220422), chr1–chr22</td><td>about 0.7 GB for chr20, 30 GB for all autosomes</td><td>IGSR: free to use without restriction</td></tr>
+<tr><td>Genetic maps: GLIMPSE's GRCh38 maps (pinned to commit <code>6fe2552</code>)</td><td>under 1 MB each</td><td>MIT</td></tr>
+</tbody>
+</table></div>
+<p>The panel is GRCh38 only, with contigs named <code>chr1</code>, <code>chr2</code>...; chrX needs each sample's ploidy and isn't supported yet. A chip VCF with contigs named <code>1</code>, <code>2</code>... is renamed for you. Contig lengths must be present to verify GRCh38; for a lengthless header, supply the matching GRCh38 FASTA index with <code>bcftools reheader --fai GRCh38.fa.fai</code> first.</p>
+<p>The optional environment supports <strong>Linux and macOS (x86-64 and ARM64) and Windows x64</strong>. <code>pixi install --locked -e imputation</code> installs native GLIMPSE2 2.0.1 on Apple Silicon and Linux ARM64. The <a href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/glimpse2-arm64-1" target="_blank" rel="noopener noreferrer">ARM64 packages</a> use NEON without emulation; the HG002 fixture produces identical variant records to Bioconda's x86-64 build on the same OS. If an Intel binary on your Mac's <code>PATH</code> fails to start, move it off <code>PATH</code> to use the native Pixi build; Intel binaries need a compatible Rosetta runtime. If you already prepared a panel with the Intel build, rerun <code>ref imputation --install</code> for the same chromosomes to rebuild the binary chunks from the local panel.</p>
+<p>On Windows, <code>pixi install -e imputation</code> installs our native GLIMPSE2 2.0.1 package from the <code>glimpse2-1</code> release, pinned by URL and SHA-256 in <code>pixi.toml</code>, alongside conda-forge's native OpenJDK and the pinned noarch Beagle jar. No MSYS2 or WSL runtime is needed; GLIMPSE2 phase requires an AVX2/FMA-capable CPU. Windows CI tests a fresh install and both tools on the real HG002 fixture without skips. Missing tools fail dependency validation; neither feature command installs tools. <strong>Windows ARM64 remains unsupported.</strong> The server must allow the effective reference library and panel paths, not just the FASTA's <code>genomes/</code> subfolder; configured defaults and symlinks are checked too. Failed or version-mismatched binary-chunk builds also recheck disk space on retry (about 1.6 times the download size for pending chunks).</p>
+<h2 id="output-and-labelling">Output and labelling<a class="heading-anchor" href="#output-and-labelling" aria-label="Link to section">#</a></h2>
+<p><code>imputed.vcf.gz</code> (+ <code>.tbi</code>) holds every panel site of the chromosomes imputed:</p>
+<ul>
+<li><code>INFO/IMP</code> marks an imputed genotype. GLIMPSE2's are all imputed; Beagle leaves the chip's observed genotypes unmarked. Missing chip genotypes are removed before Beagle, so their filled-in calls are marked <code>IMP</code> too. Previously imputed source calls are also removed rather than promoted to observed chip genotypes.</li>
+<li><code>FORMAT/GT</code>, <code>DS</code> (dosage) and <code>GP</code> (genotype probabilities), and the site's INFO score: GLIMPSE2's <code>INFO/INFO</code> (with the panel frequency <code>INFO/RAF</code>), Beagle's <code>INFO/DR2</code>. Beagle output also keeps the reference panel's counts as <code>WGSE_PANEL_AC</code>/<code>WGSE_PANEL_AN</code>. These dedicated fields survive sample subsetting; standard <code>AC</code>/<code>AN</code> can be recalculated from one sample. Beagle's own <code>AF</code> is also a target-sample frequency. Neither unqualified <code>AF</code> nor ordinary <code>AC</code>/<code>AN</code> establishes panel rarity.</li>
+<li><code>FILTER</code> <code>ImpLowConf</code> on imputed genotypes whose most likely genotype has <code>GP</code> below <code>--min-gp</code> (GLIMPSE2: 0.9; Beagle: 0.95). There is <strong>no default INFO or DR2 filter</strong>. <code>--min-info</code> remains an explicit opt-in site filter, meaningful only for multi-sample cohorts, not single-target imputation.</li>
+<li>A header line <code>##wgsextract_imputation=&lt;Tool=...,Version=...,Panel=...&gt;</code>.</li>
+</ul>
+<p>Downstream commands use these labels:</p>
+<ul>
+<li><code>qc vcf</code> warns that the file is imputed (<code>imputed_vcf</code>).</li>
+<li><code>vcf table</code> has an <code>imputed</code> column and the genotype's probability (<a href="variant-table.html">variant-table.md</a>).</li>
+<li>Confidence labels (<a href="variant-confidence.html">variant-confidence.md</a>) make every imputed call <code>low</code> (reason <code>imputed</code>), and an imputed allele rarer than 1% in the panel is never listed as a ClinVar or rare-variant finding.</li>
+<li><code>microarray</code> exports <code>ImpLowConf</code> genotypes as no-calls, not as the reference. Targets absent from an imputed VCF are also no-calls: the panel did not assess them, so they cannot be filled as homozygous reference.</li>
+</ul>
+<h2 id="accuracy-time-and-memory">Accuracy, time and memory<a class="heading-anchor" href="#accuracy-time-and-memory" aria-label="Link to section">#</a></h2>
+<h3 id="phase-0-hg002-chr20-go">Phase 0: HG002 chr20 (GO)<a class="heading-anchor" href="#phase-0-hg002-chr20-go" aria-label="Link to section">#</a></h3>
+<p>GRCh38, GIAB v4.2.1 calls inside its confident BED, the 3,202-sample panel and 26 GLIMPSE2 chunks. The original 35x BAM was downsampled to each depth. Beagle 5.5 used HG002 truth genotypes at 14,795 lifted 23andMe v5 chr20 sites; those input sites were excluded from its evaluation.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Input</th><th>Dosage r², MAF 0.1–0.5%</th><th>MAF 1–5%</th><th>MAF 5–20%</th><th>MAF 20–50%</th><th>NRC, MAF &gt;5% (all calls)</th></tr></thead>
+<tbody>
+<tr><td>GLIMPSE2 0.5x</td><td>0.894</td><td>0.960</td><td>0.971</td><td>0.958</td><td>0.950</td></tr>
+<tr><td>GLIMPSE2 1x</td><td>0.918</td><td>0.974</td><td>0.985</td><td>0.979</td><td>0.974</td></tr>
+<tr><td>GLIMPSE2 2x</td><td>0.942</td><td>0.982</td><td>0.991</td><td>0.988</td><td>0.985</td></tr>
+<tr><td>GLIMPSE2 4x</td><td>0.959</td><td>0.989</td><td>0.995</td><td>0.992</td><td>0.991</td></tr>
+<tr><td>GLIMPSE2 8x</td><td>0.972</td><td>0.992</td><td>0.997</td><td>0.997</td><td>0.996</td></tr>
+<tr><td>Beagle, chip sites</td><td>0.827</td><td>0.926</td><td>0.942</td><td>0.934</td><td>0.921</td></tr>
+</tbody>
+</table></div>
+<p>Dosage r² compares DS with truth dosage, grouped by the panel's minor allele frequency. NRC is genotype concordance at sites where truth or the imputed call is non-reference. These are unfiltered accuracy figures. The corrected single-target GP filtering is evaluated separately below.</p>
+<p>The go/no-go accuracy gate (r² ≥0.9 for MAF &gt;5% at 1x) passed: 0.985 and 0.979 in the two common bins. This is one sample and chromosome, not evidence of equal accuracy across ancestries, chips or the entire genome. Rare imputed variants are not suitable as clinical findings.</p>
+<h3 id="per-genotype-confidence-for-single-target-imputation">Per-genotype confidence for single-target imputation<a class="heading-anchor" href="#per-genotype-confidence-for-single-target-imputation" aria-label="Link to section">#</a></h3>
+<p>The command takes exactly one target sample. Beagle's DR2 measures dosage spread across target haplotypes: with one sample it acts largely as a zygosity indicator. Confident hom-ref <strong>and hom-alt</strong> calls can have DR2 zero. Any positive default DR2 cutoff therefore discards genuine homozygous calls and turns them into chip-export no-calls. Do not use it as genotype confidence. GLIMPSE INFO is also a site statistic, not a substitute for the target's GP. Both scores are retained in the output, but neither is filtered by default.</p>
+<p>Use the per-genotype max GP instead: <strong>Beagle defaults to 0.95; GLIMPSE2 to 0.9</strong>. The GP curves score common (panel MAF &gt;5%) sites inside GIAB's confident BED, excluding Beagle's chip-input positions. They are retained in <code>out/621/gp/</code>; the earlier DR2 calibration is superseded.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Tool</th><th>Minimum max GP</th><th>Common PASS sites</th><th>PASS share</th><th>PASS NRC</th></tr></thead>
+<tbody>
+<tr><td>Beagle</td><td>0.90</td><td>127,444 / 136,208</td><td>93.57%</td><td>0.96388</td></tr>
+<tr><td>Beagle</td><td><strong>0.95 (default)</strong></td><td><strong>123,445 / 136,208</strong></td><td><strong>90.63%</strong></td><td><strong>0.97367</strong></td></tr>
+<tr><td>Beagle</td><td>0.99</td><td>115,776 / 136,208</td><td>85.00%</td><td>0.98338</td></tr>
+<tr><td>GLIMPSE2 1x</td><td><strong>0.90 (default)</strong></td><td><strong>139,571 / 143,964</strong></td><td><strong>96.95%</strong></td><td><strong>0.99166</strong></td></tr>
+<tr><td>GLIMPSE2 1x</td><td>0.95</td><td>137,677 / 143,964</td><td>95.63%</td><td>0.99454</td></tr>
+<tr><td>GLIMPSE2 1x</td><td>0.99</td><td>132,884 / 143,964</td><td>92.30%</td><td>0.99725</td></tr>
+</tbody>
+</table></div>
+<p>Beagle GP ≥0.95 meets the aggregate common-site NRC ≥0.97 gate while preserving confident homozygous calls. In these evaluated sites, 16,813 of 18,489 GP-qualified hom-alt calls have DR2 zero; they must not be discarded for that. GLIMPSE2 GP ≥0.9 already clears the NRC gate with broad coverage; increasing it is an optional precision/coverage trade-off, not required by these data.</p>
+<p>Calibration is on one HG002 chip simulation/chromosome, not an independent accuracy guarantee for other ancestries or arrays.</p>
+<h3 id="resources">Resources<a class="heading-anchor" href="#resources" aria-label="Link to section">#</a></h3>
+<p>Measured on lin-big with four threads, before chunks ran side by side:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Step</th><th>chr20 wall time</th><th>Peak RSS</th></tr></thead>
+<tbody>
+<tr><td>GLIMPSE2 phase + ligate, per depth</td><td>431–464 s</td><td>2.2–3.1 GB</td></tr>
+<tr><td>Beagle</td><td>60 s</td><td>3.4 GB</td></tr>
+<tr><td>One-time panel preparation</td><td>about 10 min</td><td>—</td></tr>
+</tbody>
+</table></div>
+<p>GLIMPSE2's <code>--threads</code> only splits work between target samples, and <code>vcf impute</code> imputes one, so those four threads did no more than one (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/1118" target="_blank" rel="noopener noreferrer">#1118, imputation speed</a>). <code>vcf impute</code> therefore runs <strong><code>--threads</code> chunks at once, one thread each</strong>, largest first. Each chunk's peak memory is estimated from its binary reference (about 1.2 GB for a typical chunk, 3 GB for chr20's centromeric one), and chunks start only while the running ones fit in 80% of the memory available when the command starts, or in <code>--memory</code> per chunk; one always runs. Each chunk's output doesn't depend on how many run, so the result is identical to running them one at a time. (GLIMPSE2 2.0.1's own threads, used before, sometimes changed a chunk's genotypes from run to run.) A failed chunk stops the others, and the error names it and quotes GLIMPSE2's message.</p>
+<p>On an M1 Pro (10 cores, 32 GB, a shared host, so absolute times are pessimistic), <code>vcf impute</code> of HG002 1x chr20 (26 chunks, 1,430,673 sites) with Bioconda's x86-64 GLIMPSE2 2.0.1 under Rosetta took:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Run</th><th>Wall time</th><th>GLIMPSE2 memory, all running / largest</th></tr></thead>
+<tbody>
+<tr><td>Before: one chunk at a time, <code>--threads 4</code></td><td>978 s</td><td>3.8 / 3.8 GB</td></tr>
+<tr><td><code>--threads 1</code></td><td>958 s</td><td>2.6 / 2.6 GB</td></tr>
+<tr><td><code>--threads 4</code></td><td>277 s (3.5x)</td><td>5.8 / 2.5 GB</td></tr>
+<tr><td><code>--threads 8</code></td><td>208 s (4.7x)</td><td>7.8 / 2.6 GB</td></tr>
+</tbody>
+</table></div>
+<p>The three new runs wrote identical genotypes, dosages and probabilities. The old <code>--threads 4</code> run differed from them at 798 genotypes. The native ARM64 build phased these chunks in 479 s one at a time and 100 s eight at once in the initial <a href="https://github.com/WGSExtract/wgsextract-cli/issues/1118" target="_blank" rel="noopener noreferrer">#1118 speed study</a>. Preparing the chr20 panel took 577 s.</p>
+<p>Extrapolating chr20 (about 2.2% of autosomal bases) gives <strong>about 5.6 hours for whole-autosome GLIMPSE2 one chunk at a time, and about 1 hour with eight at once</strong>, needing about 10–14 GB at eight. Beagle extrapolates to about 45 minutes. These are projections, not measured whole-genome runs, and exclude panel preparation. <code>vcf impute</code> prints its selected-chromosome time/RAM estimate before running.</p>
+<p>The Phase 0 scripts, per-bin JSON, time.tsv and logs are retained in <code>out/621/phase0/</code> in the validation checkout, with the result summary on <a href="https://github.com/WGSExtract/wgsextract-cli/issues/621" target="_blank" rel="noopener noreferrer">issue #621</a>.</p>
+<h3 id="product-command-validation">Product-command validation<a class="heading-anchor" href="#product-command-validation" aria-label="Link to section">#</a></h3>
+<p>The actual <code>ref imputation --install --chromosomes chr20</code> and <code>vcf impute</code> commands were run on lin-big against the same 1x BAM, under an agent-coord four-core/8 GiB lease (nominal 1x input; product depth estimate 1.15x). The installer reused and SHA-256-verified the original download on that host, then prepared its own panel and binary chunks.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Panel MAF</th><th>Phase 0 dosage r²</th><th>Product dosage r²</th></tr></thead>
+<tbody>
+<tr><td>5–20%</td><td>0.984843836</td><td>0.984841991</td></tr>
+<tr><td>20–50%</td><td>0.979164025</td><td>0.979161000</td></tr>
+</tbody>
+</table></div>
+<p>The common-bin differences are below 0.0000031, passing the r² ≥0.9 gate again. The product wrote 1,430,673 labelled sites (9,785 <code>ImpLowConf</code>), with the provenance header and a result manifest. Panel preparation took 7 min 34 s; imputation and labelling took 7 min 3 s, peaking at 2.7 GB RSS. Evidence (<code>comparison.json</code>, GIAB evaluation, header, timings and command log) is retained in <code>out/621/product/</code>. The large output stays on lin-big, under <code>/mnt/models/wgse-621/out/621/product/output/</code>.</p>
+<p>The corrected <strong>Beagle</strong> product command was also run end to end on chr20, with the same chip VCF and product panel, under a four-core/ 8 GiB lease. Its dosage r² exactly matches Phase 0 in every MAF bin, including 0.941519598 (5–20%) and 0.933948882 (20–50%).</p>
+<p>The actual output <code>FILTER</code> values, not just a reconstructed threshold, give 123,445 / 136,208 common sites PASS (<strong>90.63%</strong>) and aggregate NRC <strong>0.973671875</strong>. All <strong>18,489 / 18,489</strong> GP-qualified hom-alt calls in these evaluated sites are PASS; there are zero disagreements between the output filter and the GP-only rule. The header records <code>MinGP=0.95</code> without a <code>MinINFO</code> condition, and the manifest reports the site filter as disabled.</p>
+<p>The product wrote 1,416,853 imputed sites (27,740 <code>ImpLowConf</code>), took 2 min 34 s including input preparation/labelling, and peaked at 2.2 GB RSS. Evidence is in <code>out/621/product-beagle/</code>; its large VCF remains at <code>/mnt/models/wgse-621/out/621/product-beagle/output/</code>.</p>
+<p>The no-call fixture probe at chr20:10,008,603 is filled as <code>1|1</code>, GP=1, DR2=0, <strong>PASS and IMP</strong>, and its exported table row has <code>imputed=1</code>. It is a direct regression for both the homozygote filtering and missing-probe labelling bugs. Panel-rarity suppression remains in force for imputed calls.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/imputation.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/imputation.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

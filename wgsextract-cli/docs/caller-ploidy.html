@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sex/PAR policy in model-based callers | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/caller-ploidy.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Sex/PAR policy in model-based callers</span></nav>
+<h1 id="sexpar-policy-in-model-based-callers">Sex/PAR policy in model-based callers</h1>
+<p>DeepVariant, Clair3 and GATK use the same sample workspace sex override and coverage-based inference as bcftools calling. The detected fact and any explicit override remain separate in the workspace. An unknown sex produces the structured <code>caller_sex_unknown</code> warning and uses the female policy, matching bcftools. Autosome-only requests do not need a sex scan. This remains true with installed M/F tables when their selected policies agree. Sex/mitochondrial aliases (including RefSeq X/Y and <code>M</code>/<code>chrMT</code>) resolve consistently for table lookups; the original FASTA names remain in caller inputs.</p>
+<p>The reference library's ploidy file wins; otherwise a confirmed GRCh37 or GRCh38 build uses the same bcftools table as <code>vcf snp</code>. A file or folder name or contig count alone does not select a build-specific table. For a custom reference with no confirmed build, put its policy in the library's <code>ploidy.txt</code>. The table's coordinates are 1-based inclusive, translated to half-open BED intervals at each boundary. Male X is haploid outside the table's PAR intervals and diploid inside; autosomes remain diploid. The bcftools contract makes male Y haploid (including its PAR copies), female Y excluded, and mitochondrial calls haploid. This is not a genome-wide haploid switch. Other sex-chromosome builds require a library ploidy file. Custom tables must be unambiguous and specify ploidy 0, 1 or 2. Single-sex tables without a sex-neutral fallback, or sex labels other than M/F, are explicitly refused rather than silently interpreted as diploid.</p>
+<ul>
+<li><strong>Google DeepVariant:</strong> uses <code>--haploid_contigs</code> and <code>--par_regions_bed</code>; the PAR BED is omitted when the selected haploid contigs have no diploid PAR intervals (for example chrM or male non-PAR-only chrX/chrY calls), because DeepVariant cannot read an empty BED. Haploid contig handling still applies. Ploidy-zero intervals are excluded from its region selection. The generated BEDs are atomically published, immutable, content-addressed inputs in <code>.deepvariant.policy</code> beside (not inside) its cleaned work folder. Concurrent planning and work cleanup cannot rewrite or delete an active run's policy. Google's recalibration suppresses heterozygous non-PAR genotypes but retains homozygous <strong>diploid-encoded</strong> GT fields (<code>0/0</code>, <code>1/1</code>), not single-allele GT.</li>
+<li><strong>CPU GATK:</strong> calls haploid and diploid interval sets separately, using <code>--sample-ploidy</code>, then gathers and sorts the VCF. Partitioned calls cannot currently be combined with <code>--scatter</code>. Whole-genome CRAM 3.0 remains direct CRAM input. Whole-genome CRAM 3.1 requiring ploidy partitions must first be converted to BAM, rather than silently staging almost the whole genome as temporary BAMs. Bounded regions retain compatibility staging.</li>
+<li><strong>CPU Clair3:</strong> calls each ploidy interval set separately, with <code>--haploid_precise</code> on the haploid set. That mode retains homozygous-alt haploid calls, rather than converting every heterozygous prediction to ALT. Without an explicit region, it retains its chr1–22/X/Y default scope rather than extending calls to ALT/decoy contigs.</li>
+<li><strong>Parabricks DeepVariant (<code>--gpu</code>):</strong> pbrun has <code>--haploid-contigs</code> but no PAR regions option, so it calls each ploidy set separately, like GATK: one run over the diploid intervals (autosomes, the PARs and a woman's chrX), and one over the haploid intervals (a man's non-PAR chrX and chrY, and chrM) with <code>--haploid-contigs</code> naming their contigs and <code>--interval-file</code> keeping it off the PARs. Ploidy-zero intervals aren't called. Each run checks the GPU's free memory just before it starts. Like Google's, its haploid calls keep diploid GT encoding (<code>1/1</code>).</li>
+<li><strong>wgse-deepvariant 0.4.0+:</strong> receives <code>--haploid_contigs</code> and <code>--par_regions_bed</code> for both make_examples and postprocess_variants. Like Google's pipeline, it removes heterozygous probability mass before assigning GT, GQ, QUAL and FILTER, including multiallelic sites, and computes haploid reference confidence before forming gVCF blocks. Haploid calls keep Google's diploid GT/PL encoding (<code>1/1</code>, not <code>1</code>). PARs remain diploid. Unlike Parabricks, the native engine accepts PAR intervals, so one resumable run covers both ploidies without separate caller partitions. Older builds refuse non-diploid policies rather than silently ignoring them.</li>
+<li><strong>GATK <code>--gpu</code> and Clair3 <code>--gpu</code>:</strong> explicitly refuse requests requiring non-diploid handling until those paths are qualified. Diploid-only regions still work. For Google's pipeline rather than the native engine, set <code>deepvariant_native = &quot;off&quot;</code> in config.toml.</li>
+</ul>
+<p>GATK, Clair3 and Parabricks DeepVariant outputs are clipped by variant POS to the partition, so a call overlapping a boundary cannot be emitted by both partitions. With <code>--reference-evidence gvcf</code> each partition's gVCF blocks are also cut at its edges before the parts are gathered (see <a href="reference-evidence.html#sex-and-par">reference-evidence.md</a>). Interval-restricted assembly and Clair3's haploid filtering may differ from other callers; the shared ploidy contract is <strong>not</strong> a claim of scientific parity. Regression tests use real fixture alignments and real samtools/bcftools, replacing only the expensive caller processes. They cover both sides of GRCh37/GRCh38 PAR starts, whole-reference and bounded requests, and male/female/unknown sex.</p>
+<h2 id="public-bounded-qualification">Public bounded qualification<a class="heading-anchor" href="#public-bounded-qualification" aria-label="Link to section">#</a></h2>
+<p>On 2026-11-14, Google's DeepVariant 1.10.0 CPU image called public male HG00096 30x GRCh38 CRAM against hs38DH over <code>chrX:2770000-2790000</code> (crossing the PAR/non-PAR boundary) and <code>chr20:1000001-1010000</code>, using two CPUs. The persisted make_examples and postprocess_variants invocations both received <code>--haploid_contigs chrX</code> and the generated PAR BED. Of 89 records, the 17 non-PAR X records were homozygous (10 <code>1/1</code>, 7 <code>0/0</code>); the PAR retained 23 <code>0/1</code> calls and the autosome retained 28 <code>0/1</code> calls. This qualifies the bounded Google GRCh38 path, not whole-genome accuracy, GRCh37, native engines, Clair3 or GATK scientific parity.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/caller-ploidy.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/caller-ploidy.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

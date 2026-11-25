@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>A 30x genome on a 16 GB Apple M1 | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/apple-silicon-16gb.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>A 30x genome on a 16 GB Apple M1</span></nav>
+<h1 id="a-30x-genome-on-a-16-gb-apple-m1">A 30x genome on a 16 GB Apple M1</h1>
+<p>This page preserves measurements on the smallest Apple Silicon Mac, with the default settings of each recorded version (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/549" target="_blank" rel="noopener noreferrer">#549</a>). Automatic RAM-aware backend selection has since changed; see <a href="#defaults-for-16-gb">current defaults</a>. Every figure is <strong>measured</strong> unless labelled otherwise.</p>
+<h2 id="the-computer">The computer<a class="heading-anchor" href="#the-computer" aria-label="Link to section">#</a></h2>
+<ul>
+<li>Mac mini, base Apple M1: 4 performance and 4 efficiency cores, 8-core GPU, 16 GB of unified memory, internal SSD.</li>
+<li>macOS 27.2. It is someone's everyday Mac: their desktop apps stayed open, so about 10 GiB of RAM was available when runs started, and macOS already held about 0.6 GiB of swap.</li>
+<li>WGS Extract from a source checkout with Pixi, as <a href="developer_setup.html">developer setup</a> describes, plus the <code>macos-aligners-11</code> builds of <code>wgse-bwa</code>, <code>wgse-bwa-mem2</code> and <code>wgse-minimap2</code> on <code>PATH</code> (<a href="hardware.html#apple-silicon-metal">Apple Silicon</a>).</li>
+<li>The README installer also worked (55 s). Its last step opens Finder, which fails harmlessly over SSH.</li>
+</ul>
+<p>Times are wall-clock. Peak memory is the largest resident set of any process (<code>/usr/bin/time -l</code>) and, for long steps, the summed resident memory of all the user's processes, sampled every 5 s.</p>
+<h2 id="summary">Summary<a class="heading-anchor" href="#summary" aria-label="Link to section">#</a></h2>
+<p>A whole genome went from a BAM file to a personal report in <strong>7.3 hours</strong> in the original trial on the base 16 GB M1, with default settings and its owner's apps still open. The historical GPU-policy repeat at main <code>992ee758</code> took <strong>7 h 25 min</strong>, including cold reference indexing and interrupt recovery. Both completed, but completion does <strong>not</strong> mean alignment fits in RAM: that policy swapped heavily (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/747" target="_blank" rel="noopener noreferrer">#747, low-memory realignment</a>). HG002 was sequenced to <strong>35x</strong>, not 30x; neither trial measures a 30x duration.</p>
+<ul>
+<li><strong>Historical timing.</strong> GPU realignment took about 6 hours; SNP/indel calling took 68 minutes in the original trial. These GPU-paced figures are not predictions for the current automatic CPU fallback, which can be substantially slower: the RAM-adaptive whole alignment measured <strong>13 h 38 min</strong>, versus <strong>5 h 24 min</strong> for the prior Metal alignment stage.</li>
+<li><strong>Memory.</strong> Concurrent RSS peaked around 10 GiB only because macOS compressed and swapped memory. The historical GPU alignment moved about <strong>1.1 TiB of swap-out traffic</strong>, not just a few GiB of occupied swap (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/747" target="_blank" rel="noopener noreferrer">#747</a>). That run's working-set estimate was about <strong>22 GiB</strong>, above physical RAM.</li>
+<li><strong>Disk.</strong> The 35x run's normal refusal check required about <strong>204 GiB free</strong> with the input and reference already present. The observed 166 GiB scratch-plus-results peak is not a space recommendation; see <a href="#advice-for-16-gb-macs">the planning advice</a>.</li>
+<li><strong>Accuracy.</strong> Against GIAB v4.2.1, <code>bcftools</code> SNP calls have 99.1% recall and 97.5% precision, and indel calls 95.2% recall and 95.3% precision. 27 of the 29 Y-STRs it called match NIST's values for HG002.</li>
+</ul>
+<h2 id="every-command-on-small-data">Every command on small data<a class="heading-anchor" href="#every-command-on-small-data" aria-label="Link to section">#</a></h2>
+<p>Two passes ran every command family:</p>
+<ul>
+<li><strong>Fake genomes</strong> from the test fixtures: 53 commands, each within 30 s except <code>deps check</code>, and at most 4.1 GiB (<code>realign</code>). <code>deps check</code> took 74 s on its first, cold run; it now takes about 10 s (<a href="https://github.com/WGSExtract/wgsextract-cli/pull/552" target="_blank" rel="noopener noreferrer">#552</a>). 44 passed. Of the 9 that exited non-zero, 7 stopped for the right reason, with a clear message: The other two were faults:
+<ul>
+<li><code>vcf deepvariant</code> needs Docker;</li>
+<li><code>lineage y-haplogroup</code> and <code>lineage y-str</code> find no usable chrY markers in the fake genome;</li>
+<li><code>typing str</code>, <code>typing hla</code> and <code>typing cyp2d6</code> refuse it because its scaled reference is neither GRCh37 nor GRCh38;</li>
+<li><code>microarray</code> needs the hg38-to-hg19 liftover chain from the reference library (<code>ref bootstrap</code>).</li>
+</ul>
+<ul>
+<li><code>bam unalign</code> was run without its required <code>--r1</code>/<code>--r2</code> (a test-script error); given them it passes in 4 s;</li>
+<li><code>analyze comprehensive</code> stopped at the Y haplogroup step instead of going on to call variants. That is fixed in <a href="https://github.com/WGSExtract/wgsextract-cli/pull/577" target="_blank" rel="noopener noreferrer">#577</a>.</li>
+</ul></li>
+<li><strong>5 million real HG002 read pairs</strong> (about 0.5x) aligned to hs38. Everything passed except Y haplogroup and Y-STR, which need more than the 1.9x of chrY these reads gave.</li>
+</ul>
+<div class="table-wrap"><table>
+<thead><tr><th>Step (5M read pairs)</th><th>Time</th><th>Peak memory</th></tr></thead>
+<tbody>
+<tr><td><code>align</code>, default (<code>wgse-bwa</code> on Metal)</td><td>223 s</td><td>7.79 GiB</td></tr>
+<tr><td><code>align --native-aligners off</code> (bwa on the CPU)</td><td>955 s</td><td>7.55 GiB</td></tr>
+<tr><td><code>realign</code> of the CRAM</td><td>247 s</td><td>7.83 GiB</td></tr>
+<tr><td><code>vcf snp</code>, whole genome, contigs in parallel (4 threads)</td><td>211 s</td><td>0.46 GiB</td></tr>
+<tr><td><code>vcf snp</code>, whole genome, one stream (before)</td><td>849 s</td><td>0.52 GiB</td></tr>
+<tr><td><code>vcf cnv</code></td><td>182 s</td><td>4.46 GiB</td></tr>
+<tr><td><code>vcf sv</code></td><td>47 s</td><td>1.40 GiB</td></tr>
+<tr><td><code>typing hla</code></td><td>161 s</td><td>2.71 GiB</td></tr>
+<tr><td><code>microarray</code></td><td>35 s</td><td>1.05 GiB</td></tr>
+</tbody>
+</table></div>
+<p>The test suite passed on the M1 (5,826 tests in 6 min 21 s).</p>
+<h2 id="defaults-for-16-gb">Defaults for 16 GB<a class="heading-anchor" href="#defaults-for-16-gb" aria-label="Link to section">#</a></h2>
+<p>Automatic <code>wgse-bwa</code> GPU selection now requires the pipeline estimate to fit physical RAM less OS headroom. It first lowers sort memory, down to 256M per thread. If no concurrent GPU plan fits, paired Metal BWA can instead align into a compressed checkpoint, then mark duplicates and sort after BWA exits. This staged plan still must fit the physical-RAM budget; CPU remains the fallback when even staging does not fit. an also-over-budget CPU sort is capped at 256M without increasing smaller requests. Concurrent plans keep their workers; every plan retains fixed K100M for record identity. Low momentary available memory alone does not force a large-RAM host onto CPU; streaming realignment retains its available-memory guard. <code>--prefer-native-gpu</code> (or <code>prefer_native_gpu = true</code> in <code>config.toml</code>) opts into speed only after normal GPU sort step-down fails. At that point explicit <code>--memory</code> is retained; default/config memory is capped at 256M, subject to general sort limits. <code>--no-prefer-native-gpu</code> disables the config preference for one run.</p>
+<p>A whole short-read genome on this Mac normally uses <strong>staged Metal</strong> when the concurrent pipeline is too large. The manifest records <code>alignment_mode=&quot;staged_metal&quot;</code> and <code>native_aligner_backend_reason=&quot;memory_budget_metal_staged&quot;</code>. Staged alignment uses the <a href="hardware.html#apple-silicon-stage-plan">per-stage thread plan</a>; K100M remains fixed. Postprocessing uses compressed level3 BAM chunks, with up to 2 GiB per sort thread (stepping down to 256M when needed to fit all workers), followed by a bounded merge. Generated FASTQs are removed after the validated alignment checkpoint unless <code>--keep-fastq</code>; user-provided FASTQs are never deleted. Failed stages retain checkpoints in the reported workspace for unchanged-input recovery. Resume checks the input files, reference indexes and alignment settings; unrelated files in the working directory do not affect it. If an index changed or the checkpoint predates these checks, move the reported workspace aside before rerunning.</p>
+<p>Whole HG00235x validation for #872 (low-memory Metal) retained all835,260,415 ordered SAM records: <strong>4.50h alignment</strong>, <strong>6.44h alignment plus postprocessing and verification</strong>, <strong>0.073GiB swap-out</strong>, and <strong>42.31GiB minimum free disk</strong>. Including FASTQ preparation took6.83h. The raw checkpoint was81.54GiB, marked compressed parts78.69GiB, and final BAM47.23GiB; conservative preflight now allows roughly 230GiB including extraction, bounded intermediate merging and the safety reserve, more if keeping extracted FASTQs. Parts replace the raw checkpoint before merging, rather than accumulating huge sort-temp copies.</p>
+<p>An explicit speed preference still permits the faster, over-budget concurrent GPU plan; it can swap heavily. Otherwise CPU remains possible if the staged plan cannot fit. Check the manifest's <code>native_aligner_backend</code> and the selected sort memory in the log/BAM program header rather than assuming a GPU-paced overnight run. The conservative CPU estimate may still be <code>LOW</code>; this is not a guarantee of RAM fit. Explicit bwa-mem3/<code>--fast</code> paths have different rules; see <a href="hardware.html#apple-silicon-metal">the hardware guide</a>.</p>
+<h3 id="earlier-default-changes">Earlier default changes<a class="heading-anchor" href="#earlier-default-changes" aria-label="Link to section">#</a></h3>
+<p>Earlier measurements drove the changes below. The CPU-estimate allowance in the first item has since been removed; the other changes remain in use.</p>
+<ul>
+<li><strong>An earlier optimization retained Metal despite low RAM.</strong> It allowed a GPU plan within the CPU aligner's own estimate and lowered sort memory to 512M (<a href="https://github.com/WGSExtract/wgsextract-cli/pull/563" target="_blank" rel="noopener noreferrer">#563, earlier GPU selection</a>). It improved the old benchmark from about 11k to 41k reads/s, but the subsequent whole run exposed excessive swap traffic. The oversized CPU estimate no longer overrides the RAM budget (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/747" target="_blank" rel="noopener noreferrer">#747, low-memory realignment</a>).</li>
+<li><strong><code>vcf snp</code> and <code>vcf indel</code> used one core.</strong> They now call contigs in parallel when <code>--threads</code> is above 1, with identical records: 849 s became 211 s (<a href="https://github.com/WGSExtract/wgsextract-cli/pull/560" target="_blank" rel="noopener noreferrer">#560</a>).</li>
+<li><strong><code>deps check</code> took 32 s warm (74 s cold)</strong>, mostly asking Pixi to size the checkout. It now takes 9.8 s (<a href="https://github.com/WGSExtract/wgsextract-cli/pull/552" target="_blank" rel="noopener noreferrer">#552</a>).</li>
+<li><strong><code>realign</code>'s FASTQ extraction showed 0% for 23 minutes.</strong> It now reports how much of the input it has read, then how many reads it has written (<a href="https://github.com/WGSExtract/wgsextract-cli/pull/564" target="_blank" rel="noopener noreferrer">#564</a>).</li>
+<li><strong><code>realign</code>'s disk pre-flight was a warning</strong> even when the disk had room. It is now information (<a href="https://github.com/WGSExtract/wgsextract-cli/pull/556" target="_blank" rel="noopener noreferrer">#556</a>).</li>
+</ul>
+<p>Earlier experiments, with their historical settings:</p>
+<ul>
+<li><strong>Threads.</strong> <code>realign</code> of 25M reads took 656 s at 4 threads and 637 s at 8: the GPU sets the pace (~44k reads/s), and more threads only add memory.</li>
+<li><strong>Sort memory.</strong> Streaming reads into the aligner (<code>-m 512M</code> or less) instead of extracting FASTQs saved disk, not time (664–666 s).</li>
+<li><strong>Variant caller.</strong> <code>bcftools</code> is the caller to use on a Mac.
+<ul>
+<li>GATK HaplotypeCaller runs on one core on arm64: chr20 was not half done after 44 minutes, which would be days for a genome.</li>
+<li>Google's DeepVariant image is x86-64 only and can't run on Apple Silicon: Docker Desktop's emulation lacks the AVX instructions its TensorFlow needs. <code>vcf deepvariant</code> refuses it. It runs <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/native/deepvariant/README.md" target="_blank" rel="noopener noreferrer">wgse-deepvariant</a> when that is on <code>PATH</code> (no Docker; call_variants on the GPU), else only the native ARM64 image (<a href="deepvariant-arm64.html#apple-silicon-macs">deepvariant-arm64.md</a>).</li>
+</ul></li>
+</ul>
+<h2 id="a-whole-genome-hg002-at-35x">A whole genome (HG002 at 35x)<a class="heading-anchor" href="#a-whole-genome-hg002-at-35x" aria-label="Link to section">#</a></h2>
+<p>The input was the public GIAB HG002 NovaSeq PCR-free 35x BAM (830 million reads, 43 GiB) from Google's DeepVariant case study. <code>realign</code> aligned it again to hs38 (GRCh38 with no ALTs). Each command ran with defaults, one after another, with <code>/usr/bin/time -l</code>. A sampler recorded swap, free memory, the summed memory of all the user's processes, and disk use every 5 s, and the process list every 30 s (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/549" target="_blank" rel="noopener noreferrer">evidence</a>).</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Step</th><th>Time</th><th>Peak memory</th></tr></thead>
+<tbody>
+<tr><td><code>realign</code> (extract 23 min, align and sort 5 h 39 min, index 67 s)</td><td>6 h 2 min</td><td>8.40 GiB</td></tr>
+<tr><td><code>info --detailed</code></td><td>2 s</td><td>0.23 GiB</td></tr>
+<tr><td><code>vcf snp</code></td><td>31 min</td><td>0.53 GiB</td></tr>
+<tr><td><code>vcf indel</code></td><td>37 min</td><td>0.30 GiB</td></tr>
+<tr><td><code>microarray</code></td><td>196 s</td><td>1.51 GiB</td></tr>
+<tr><td><code>lineage mt-haplogroup</code></td><td>3 s</td><td>0.23 GiB</td></tr>
+<tr><td><code>lineage y-haplogroup</code></td><td>11 s</td><td>0.59 GiB</td></tr>
+<tr><td><code>lineage y-str</code> (Y-37)</td><td>1 s</td><td>0.12 GiB</td></tr>
+<tr><td><code>extract mito-fasta</code></td><td>5 s</td><td>0.11 GiB</td></tr>
+<tr><td><code>extract ydna-vcf</code></td><td>69 s</td><td>0.11 GiB</td></tr>
+<tr><td><code>extract unmapped</code></td><td>70 s</td><td>0.12 GiB</td></tr>
+<tr><td><code>typing hla</code></td><td>162 s</td><td>3.60 GiB</td></tr>
+<tr><td><code>typing cyp2d6</code></td><td>25 s</td><td>0.58 GiB</td></tr>
+<tr><td><code>report</code></td><td>under 1 s</td><td>0.13 GiB</td></tr>
+</tbody>
+</table></div>
+<p>Peak memory is the largest single process. During <code>realign</code> all the user's processes together peaked at 10.42 GiB, and swap grew from 1.5 to 4.8 GiB; during calling they stayed under 1.6 GiB, and swap didn't grow in any later step.</p>
+<ul>
+<li><strong><code>realign</code> aligned about 41,000 reads a second.</strong> It chose the Metal GPU and lowered the sort memory to 512M a thread to make room for it. Free memory never fell below 16%. A rerun on the current version skips the index step, because <code>align</code> and <code>realign</code> now index while sorting (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/545" target="_blank" rel="noopener noreferrer">#545</a>).</li>
+<li><strong>Disk.</strong> Disk use rose by at most 166 GiB above the input: the FASTQs (deleted once aligned), the sort's temporary files and the 46 GB BAM. <code>realign</code>'s pre-flight asked for about 185 GB.</li>
+<li><strong>Calling</strong> used 4 workers, the default for the M1's four performance cores.</li>
+<li><strong>Results.</strong>
+<ul>
+<li>mtDNA haplogroup H5a7; Y haplogroup J-S4994.</li>
+<li>Y-37: 29 markers called, and 27 of them match NIST's HG002 values. The 8 not called are in palindromes, longer than the reads, or poorly supported.</li>
+<li>HLA: A\<em>01:01/\</em>26:01, B\<em>35:08/\</em>38:01, C\<em>04:01/\</em>12:03, DRB1\<em>04:02/\</em>10:01, DQB1\<em>03:02/\</em>05:01.</li>
+<li>CYP2D6 \<em>2/\</em>4.</li>
+<li><code>report</code> gathered these into one HTML page. Its sample overview is empty, because <code>info --detailed</code> records its metrics only inside a <a href="sample-workspace.html">sample workspace</a>.</li>
+</ul></li>
+</ul>
+<h2 id="accuracy">Accuracy<a class="heading-anchor" href="#accuracy" aria-label="Link to section">#</a></h2>
+<p><code>rtg vcfeval</code> compared the merged SNP and indel calls with the GIAB HG002 v4.2.1 GRCh38 benchmark (chr1–22), inside its benchmark regions. hap.py has no macOS arm64 build; the counts are split into SNPs and indels the way hap.py reports them.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Type</th><th>Recall</th><th>Precision</th><th>F1</th><th>True positives</th><th>False negatives</th><th>False positives</th></tr></thead>
+<tbody>
+<tr><td>SNPs</td><td>0.9907</td><td>0.9747</td><td>0.9826</td><td>3,335,029</td><td>31,345</td><td>86,482</td></tr>
+<tr><td>Indels</td><td>0.9518</td><td>0.9533</td><td>0.9526</td><td>500,090</td><td>25,307</td><td>24,403</td></tr>
+</tbody>
+</table></div>
+<p>They are close to the chr20-only result on the same Mac (SNPs 0.9932 recall, 0.9746 precision; indels 0.9498 and 0.9496). Google's DeepVariant image can't run on a Mac (see above).</p>
+<h2 id="native-deepvariant">Native DeepVariant<a class="heading-anchor" href="#native-deepvariant" aria-label="Link to section">#</a></h2>
+<p>The native engine needs no Docker. On this 16 GiB M1, the released <strong>wgse-deepvariant 0.1.1</strong> (<code>macos-deepvariant-2</code>, DeepVariant 1.10.0) ran HG002 NovaSeq PCR-free 35x chr20 through <code>vcf deepvariant -t 6 -r chr20</code>, with the automatically selected <strong>Metal FP32 batch 512</strong>:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Stage</th><th>Wall seconds</th><th>Peak RSS, decimal GB</th></tr></thead>
+<tbody>
+<tr><td>make_examples</td><td>233.32</td><td>0.339</td></tr>
+<tr><td>call_variants</td><td>172.30</td><td>2.244</td></tr>
+<tr><td>postprocess_variants</td><td>1.46</td><td>0.735</td></tr>
+<tr><td>CLI end-to-end</td><td><strong>408.93 (6m49s)</strong></td><td>2.244 maximum child RSS</td></tr>
+</tbody>
+</table></div>
+<p><code>/usr/bin/time -l</code> also measured <strong>6.557 GB peak memory footprint</strong> during inference: RSS alone understates Metal's unified-memory use. Swap-outs did not increase; pre-existing used swap stayed at 1374.69 MiB. RTG Tools 3.13 against GIAB v4.2.1 inside its confident BED gave <strong>SNP F1 0.997409 and indel F1 0.995993</strong>, identical to the earlier 0.1.0 chr20 and same-input Linux/Docker control scored the same way. These are RTG results, not hap.py scores.</p>
+<p>The whole-genome run already in progress when 0.1.1 was released was allowed to finish with <strong>0.1.0</strong>. Its measured CLI wall time was <strong>13,748.78 s (3h49m09s)</strong>. Scaling that by the measured chr20 ratio <code>408.93 / 413.83 = 0.9882</code> gives a <strong>0.1.1 whole-genome projection of about 3h46m</strong>, not a measured 0.1.1 whole-genome time or accuracy qualification. Allow extra time for other inputs, desktop activity and thermal variation.</p>
+<p>For capacity planning, the <strong>0.1.0</strong> whole-genome run needed 17.3 GB of allocated workspace before cleanup, plus the 46.0 GB input BAM and reference. Its largest stage RSS was 3.70 GB during postprocessing; inference's peak footprint was 5.26 GB. Native calling produced no additional swap-outs. The separate genome-wide RTG evaluation later increased used swap by about 265 MiB. The conservative preflight allowances are retained, rather than lowered from this one sample; the 0.1.1 chr20 workspace was 0.843 GB. Version-labelled measurements, evaluation commands and evidence are in <a href="https://github.com/WGSExtract/wgsextract-cli/issues/721" target="_blank" rel="noopener noreferrer">#721</a>.</p>
+<h2 id="wgse-bwa-or-wgse-bwa-mem3"><code>wgse-bwa</code> or <code>wgse-bwa-mem3</code><a class="heading-anchor" href="#wgse-bwa-or-wgse-bwa-mem3" aria-label="Link to section">#</a></h2>
+<p>On Macs with room for it, <code>wgse-bwa-mem3</code> aligns 1.8 times as fast as <code>wgse-bwa</code>, for about 11 GiB of memory against 6 (<a href="hardware.html#apple-silicon-metal">Apple Silicon</a>). On the same 16 GB M1, with its owner's desktop session open (12–13 GiB available), it doesn't fit (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/609" target="_blank" rel="noopener noreferrer">#609</a>). Both aligners were from <code>macos-aligners-14</code> (<code>wgse-bwa</code> 0.9.0, <code>wgse-bwa-mem3</code> 0.2.0 <code>--compat=bwa-mem</code>), aligning 5 million HG002 read pairs to hs38. Every completed run with <code>-K 10000000</code> wrote the same records, from either aligner.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Aligner, backend, threads (<code>-K 10000000</code>)</th><th>Time</th><th>Peak memory</th></tr></thead>
+<tbody>
+<tr><td><code>wgse-bwa --metal</code>, 8 threads</td><td>201–202 s</td><td>6.2 GiB</td></tr>
+<tr><td><code>wgse-bwa --metal</code>, 4 threads</td><td>205 s</td><td>6.3 GiB</td></tr>
+<tr><td><code>wgse-bwa</code> on the CPU, 8 threads</td><td>360–363 s</td><td>5.5 GiB</td></tr>
+<tr><td><code>wgse-bwa</code> on the CPU, 4 threads</td><td>490–492 s</td><td>5.5 GiB</td></tr>
+<tr><td><code>wgse-bwa-mem3 --metal</code>, 8 threads</td><td>668 s; over 900 s</td><td>10.8 GiB</td></tr>
+<tr><td><code>wgse-bwa-mem3 --metal</code>, 4 threads</td><td>721 s</td><td>10.6 GiB</td></tr>
+<tr><td><code>wgse-bwa-mem3</code> on the CPU, 8 threads</td><td>797 s; over 900 s</td><td>10.6 GiB</td></tr>
+<tr><td><code>wgse-bwa-mem3</code> on the CPU, 4 threads</td><td>over 900 s</td><td>10.5 GiB</td></tr>
+</tbody>
+</table></div>
+<p>The follow-up <a href="https://github.com/WGSExtract/wgsextract-cli/issues/968" target="_blank" rel="noopener noreferrer">thread study, issue #968</a> used 278,929 chr20 pairs and kept at least 6 GiB available. CPU <code>wgse-bwa</code> took 13.72 s at four threads and 9.14 s at eight; Metal took 3.30–3.31 s. The 1-second periodic responsiveness task had a worst observed scheduling/launch delay of 43 ms during CPU mapping and 17 ms during sort. All decoded records matched across thread counts with fixed <code>-K 10000000</code>. This did <strong>not</strong> reproduce an OS-thrashing problem from sort's extra workers. It does not establish safety under memory pressure: the much larger <code>wgse-bwa-mem3</code> runs below are a separate memory-pressure failure. The accompanying 8P+2E M1 Pro study used four balanced rounds under normal desktop load: CPU mapping benefited from extra workers, Metal and markdup did not materially benefit, and sort at ten workers was slower than at eight without seconds-long scheduling stalls. Its tiny codec/calling gains are sensitive to background work on efficiency cores; see the <a href="hardware.html#apple-silicon-stage-plan">thread-plan measurements and limitations</a>.</p>
+<ul>
+<li><strong><code>wgse-bwa-mem3</code> thrashed.</strong> macOS compressed memory to make room, free memory fell to 36–39%, and the load average was seen at about 50. The Mac stopped answering SSH for about 25 minutes.</li>
+<li><strong>With the default batch size it was worse.</strong> No run finished in 900 s, and <code>--metal</code> at 8 threads got through only a tenth of the reads. <code>wgse-bwa</code> with its default batch size took the same time as with <code>-K 10000000</code>.</li>
+<li><strong><code>wgse-bwa</code> is the aligner to use here.</strong> On the GPU it was 3.3 to 3.5 times as fast as <code>wgse-bwa-mem3</code>, at any thread count.</li>
+<li><strong><code>align</code> picks it.</strong> With the defaults, <code>align</code> estimated 19.2 GiB for <code>wgse-bwa-mem3</code> against 12.0–13.0 GiB available, kept <code>wgse-bwa</code> on the GPU, and took 209–211 s. Forced with <code>--aligner bwa-mem3</code> it took 2,144 s (ten times as long), swap grew from 1.8 to 5.0 GiB, and the records were the same.</li>
+</ul>
+<h3 id="the-whole-genome-again-with-macos-aligners-14">The whole genome again, with <code>macos-aligners-14</code><a class="heading-anchor" href="#the-whole-genome-again-with-macos-aligners-14" aria-label="Link to section">#</a></h3>
+<p><code>macos-aligners-14</code> is the aligner release with <code>wgse-bwa</code> 0.9.0 (<a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/native/README.md#installing" target="_blank" rel="noopener noreferrer">Installing</a>).</p>
+<p>The same 35x HG002 BAM was realigned to hs38 again with the defaults (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/609" target="_blank" rel="noopener noreferrer">#609</a>): WGS Extract 0.8.6 from main, with <code>wgse-bwa</code> 0.9.0 and <code>wgse-bwa-mem3</code> 0.2.0 on <code>PATH</code> and bwa-mem2's index (without <code>.0123</code>) beside hs38. #549's reference library had been deleted, so hs38 was an uncompressed copy instead of its bgzipped one, with the same BWA index files. <code>realign</code>'s pre-flight found about 8.4 GiB of RAM available at the start.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Step</th><th>#549 (<code>wgse-bwa</code> 0.7.1)</th><th>#609 (<code>wgse-bwa</code> 0.9.0)</th></tr></thead>
+<tbody>
+<tr><td><code>realign</code></td><td>6 h 2 min</td><td>5 h 52 min</td></tr>
+<tr><td>extract FASTQs</td><td>23 min</td><td>22.5 min</td></tr>
+<tr><td>align and sort</td><td>5 h 39 min</td><td>5 h 29 min</td></tr>
+<tr><td>peak memory (largest process)</td><td>8.40 GiB</td><td>8.41 GiB</td></tr>
+<tr><td>all processes together</td><td>10.42 GiB</td><td>10.24 GiB</td></tr>
+<tr><td>swap</td><td>1.5 to 4.8 GiB</td><td>1.1 to 4.9 GiB</td></tr>
+<tr><td>lowest free memory</td><td>16%</td><td>18%</td></tr>
+<tr><td>disk above the input</td><td>166 GiB</td><td>164 GiB</td></tr>
+<tr><td><code>vcf snp</code></td><td>31 min</td><td>31.5 min</td></tr>
+<tr><td><code>vcf indel</code></td><td>37 min</td><td>36 min</td></tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong><code>realign</code> chose <code>wgse-bwa</code> on the GPU.</strong> It estimated 29.6 GiB for <code>wgse-bwa-mem3</code> against the 9.7 GiB available when alignment began, after extraction, so it didn't use it. It sorted with 512M a thread and extracted FASTQs, because holding a collate bucket beside the aligner didn't fit.</li>
+<li><strong>The record counts matched #549's</strong>: 835,260,415, of which 832,735,204 mapped.</li>
+<li><strong>The time barely changed.</strong> On the GPU the run took about as long as with 0.7.1; the GPU still sets the pace.</li>
+<li><strong>The pre-flight warned and the run still finished.</strong> It reported memory (22.0 GiB estimated against 8.4 available) and disk (230 GiB against 223 free) as LOW, then completed within 164 GiB of extra disk.</li>
+</ul>
+<h3 id="historical-metal-run-macos-aligners-16-and-mimalloc">Historical Metal run, <code>macos-aligners-16</code> and mimalloc<a class="heading-anchor" href="#historical-metal-run-macos-aligners-16-and-mimalloc" aria-label="Link to section">#</a></h3>
+<p><a href="https://github.com/WGSExtract/wgsextract-cli/issues/722" target="_blank" rel="noopener noreferrer">#722</a> repeated the short-read pipeline on this Mac with main <code>992ee758</code>, published <code>wgse-bwa</code> 0.12.1 (<code>macos-aligners-16</code>), samtools/bcftools 1.24, and the optional <code>wgse-mimalloc</code> installed through the documented tool setup. The existing HG002 <strong>35x</strong>, full-quality BAM (42.87 GiB, 835,260,805 indexed records) was used in place, without a staging copy. The target was the existing 195-contig <code>GRCh38_no_alt.fa</code>, not the 456-contig hs38a used for this issue's small-data trial. Desktop applications remained open.</p>
+<p>The then-current settings were not overridden: four requested threads, Metal BWA, 512M sort memory per thread selected automatically, and the caller's default mimalloc mode. The normal disk refusal check passed; no force or preflight bypass was used. The four-thread setting is a worker request, not a cap on all OS threads: sampling saw up to 207 threads in an extraction samtools process, 39 in alignment's samtools, and 20 in <code>wgse-bwa</code>, including library/helper threads. Those are thread counts, not simultaneously busy CPU cores.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Step</th><th>Measured wall time</th><th>Largest-process RSS</th><th>Sampled pipeline RSS</th></tr></thead>
+<tbody>
+<tr><td>Initial <code>realign</code>: extraction, cold reference index, intentional interruption</td><td>62.65 min</td><td>7.72 GiB</td><td>9.02 GiB</td></tr>
+<tr><td>Resumed <code>realign</code>: cached FASTQs, align, sort and output index</td><td>323.96 min</td><td>8.30 GiB</td><td>10.11 GiB</td></tr>
+<tr><td><code>vcf snp</code>, mimalloc</td><td>27.04 min</td><td>0.514 GiB</td><td>1.29 GiB</td></tr>
+<tr><td><code>vcf indel</code>, mimalloc</td><td>31.16 min</td><td>0.305 GiB</td><td>1.37 GiB</td></tr>
+<tr><td><code>report</code></td><td>0.47 s</td><td>0.063 GiB</td><td>—</td></tr>
+</tbody>
+</table></div>
+<p>The optional <code>--mimalloc off</code> comparison then took 29.99 min / 0.533 GiB largest-process RSS for SNPs and 34.60 min / 0.299 GiB for indels. Both produced exactly the same ordered VCF records as their mimalloc runs. Mimalloc's wall times were about 10% lower in this single sequential comparison, not a repeated or randomized benchmark; its RSS advantage was small for SNPs and absent for indels. Including both comparisons and record hashing, the experiment took 8 h 30 min.</p>
+<p>That historical sequence took <strong>7 h 25 min</strong>, including a cold reference index (39 min), FASTQ extraction (22.5 min), and a deliberate alignment interrupt. It is a measured 35x run, not a measured 30x duration. The small slice's linear time projection was not a whole-genome guarantee.</p>
+<p><strong>Resume recovered the completed extraction.</strong> SIGINT after the first alignment heartbeat returned 130. The unchanged command then skipped extraction, reused the same 66.23 GiB FASTQ pair, and completed with 835,260,415 BAM records (832,735,204 mapped). The small-data test had already verified identical ordered SAM records between interrupted/resumed and uninterrupted runs; a second uninterrupted whole-genome run was not performed. The result manifests recorded <code>wgse-bwa</code> 0.12.1/<code>metal</code>, and both callers recorded <code>bcftools_allocator: mimalloc</code>.</p>
+<p><strong>RSS alone hides the memory cost.</strong> During resumed alignment, <code>vm_stat</code> recorded <strong>1,113.72 GiB swap-in and 1,116.92 GiB swap-out traffic</strong>. These are cumulative system-wide traffic deltas, not simultaneously occupied swap or process-attributed bytes. Sampled occupied swap ranged from 1.21 to 3.70 GiB; memory pressure alternated between normal (1) and warning (2). This heavy swapping is a product bug tracked in <a href="https://github.com/WGSExtract/wgsextract-cli/issues/747" target="_blank" rel="noopener noreferrer">#747</a>, not evidence that the historical GPU defaults fit comfortably in 16 GiB. Default mimalloc calling and report added no swap-out traffic; the optional system-allocator SNP run coincided with 0.034 GiB of system-wide swap-out traffic. The conservative RAM estimate was 22.02 GiB at startup, versus 10.80 GiB available. Do <strong>not</strong> recalibrate that working-set estimate down to 8.30 GiB RSS: macOS compression and swapping kept the resident peak smaller.</p>
+<p><strong>Disk fit, but the margin mattered.</strong> Free space started at 210.36 GiB above the already-present input and reference and fell to 37.42 GiB. The measurement harness's own 25 GiB free-space guard, which is not part of <code>realign</code>, never fired; <code>realign</code> checks its disk requirement only at start-up. Sampled scratch peaked at 134.86 GiB; scratch plus results peaked at 166.15 GiB. The free-space fall also includes newly built reference indexes and other system activity, so it is not the same measurement. The completed BAM was 43.20 GiB; the SNP and indel VCFs contained 4,392,799 and 918,481 variants. Keep extra space for the desktop, swap and reference indexing rather than treating the observed peak as a minimum free-space recommendation.</p>
+<p><code>report</code> successfully wrote its artifacts, but this sequence did not run annotation, lineage or typing. Its clinical sections were <code>not_run</code>; this is a pipeline/resource measurement, not a populated clinical report or a new accuracy benchmark.</p>
+<h3 id="whole-genome-validation-of-the-ram-adaptive-fallback">Whole-genome validation of the RAM-adaptive fallback<a class="heading-anchor" href="#whole-genome-validation-of-the-ram-adaptive-fallback" aria-label="Link to section">#</a></h3>
+<p>The same HG002 <strong>35x</strong> input and 195-contig reference were rerun with the RAM-adaptive policy from #747 (low-memory realignment). Public <code>bam unalign</code> first recreated the full FASTQ pair with the original four-worker/1G collate plan; both sizes and fingerprints matched the original retained files. <code>realign --r1/--r2</code> then exercised the alignment stage with normal disk checks and no backend, worker or sort-memory overrides.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Whole 35x alignment stage</th><th>Prior Metal4 / sort512</th><th>Automatic CPU4 / sort256</th></tr></thead>
+<tbody>
+<tr><td>Alignment, sort and inline index wall time</td><td>323.96 min (5 h 24 min)</td><td>817.65 min (13 h 38 min)</td></tr>
+<tr><td>Largest-process RSS</td><td>8.298 GiB</td><td>7.602 GiB</td></tr>
+<tr><td>Global swap-in traffic</td><td>1,113.716 GiB</td><td>46.935 GiB</td></tr>
+<tr><td>Global swap-out traffic</td><td>1,116.922 GiB</td><td>47.873 GiB</td></tr>
+<tr><td>Minimum free disk during measured stage</td><td>37.42 GiB</td><td>29.83 GiB</td></tr>
+</tbody>
+</table></div>
+<p>The native CPU mapper itself reported 48,102 s (<strong>13 h 22 min</strong>); the CLI alignment step, including final sorting/indexing, took 49,057 s. The separate extraction took <strong>23.67 min</strong>, indexing added no separate pass, and post-command record hashing/runner finalization took about <strong>10.5 min</strong>. These are not a repeated or randomized benchmark.</p>
+<p>The fallback reduced measured swap-out traffic by <strong>95.7% (23.3×)</strong>, but <strong>did not eliminate swapping</strong>. It cost <strong>2.52×</strong> the alignment wall time, about <strong>8 h 14 min extra</strong>. Sampled occupied swap was 0.96–2.15 GiB, not the 47.87 GiB of cumulative traffic. Whole-run BWA footprint peaked at 8.781 GiB, with only 0.005 GiB wired; samblaster and sort peaked at 6.115/1.242 GiB. The conservative CPU RAM preflight still reported LOW, 19.22/10.78 GiB.</p>
+<p>All <strong>835,260,415 records</strong>, including 832,735,204 mapped records, matched the Metal control exactly as ordered SAM text: <code>e91f5279cf594fc4db133e157012a1d0c64f62d2792050ef376b0429f3c0fb6f</code>. The manifest recorded published wgse-bwa 0.12.1, backend <code>cpu</code>. No native code was changed. The 25 GiB harness guard never fired, and verified output BAM/index/FASTQs were retired after evidence collection; the original input, reference and truth files were retained.</p>
+<p><strong>Recommendation and remaining options.</strong> Keep the conservative CPU fallback for this approximately 2×-over-budget whole-genome GPU plan when record identity and lower swap traffic matter more than speed. Do not describe it as swap-free or assume that a near-budget case needs the same trade-off.</p>
+<ul>
+<li>Metal with <strong>K10M</strong> lowered BWA footprint from 9.795 to 7.366 GiB on the 70.7-million-read case, but changed MAPQ and duplicate flags. It is not an identity-preserving automatic fix, and no whole K10M run was performed.</li>
+<li>Metal with <strong>K100M and sort256</strong> preserved records and took 29.09 min versus 29.38 min for sort512 on that small case, while sort footprint fell from 2.342 to 1.222 GiB. The approved whole-genome comparison below retained Metal speed, but still moved <strong>378.39 GiB</strong> of swap-out.</li>
+<li>Restricting CPU fallback to only <em>far</em> over-budget estimates could keep faster Metal for modest overestimates, but no threshold has been calibrated. That threshold policy is not implemented. The owner-approved speed opt-in, <code>--prefer-native-gpu</code> / <code>prefer_native_gpu = true</code>, deliberately exposes the known GPU speed/swap choice. It tries normal GPU sort step-down first; an ineffective preference changes neither the manifest reason nor the completed alignment's journal key.</li>
+</ul>
+<h3 id="three-mode-whole-genome-comparison">Three-mode whole-genome comparison<a class="heading-anchor" href="#three-mode-whole-genome-comparison" aria-label="Link to section">#</a></h3>
+<p>These concurrent/CPU trials preceded compressed staged Metal. Their default recommendation is superseded by <a href="#defaults-for-16-gb">the current 16GB defaults</a>.</p>
+<p>The approved third run used the same HG002 35x reads, whose regenerated full FASTQ sizes and fingerprints match both earlier cases, and published wgse-bwa 0.12.1 with four workers/K100M. <code>--prefer-native-gpu --memory 256M</code> selected Metal despite the estimated <strong>20.71 GiB</strong> GPU plan exceeding the <strong>14 GiB</strong> physical-RAM budget.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Whole alignment, sort and inline index</th><th>Original Metal/sort512</th><th>CPU/sort256</th><th>Metal/sort256</th></tr></thead>
+<tbody>
+<tr><td>Wall time</td><td>5.40 h</td><td>13.63 h</td><td><strong>5.08 h</strong></td></tr>
+<tr><td>Global swap-out</td><td>1,116.922 GiB</td><td>47.873 GiB</td><td><strong>378.389 GiB</strong></td></tr>
+<tr><td>Global swap-in</td><td>1,113.716 GiB</td><td>46.935 GiB</td><td><strong>376.432 GiB</strong></td></tr>
+<tr><td>Largest-child RSS</td><td>8.298 GiB</td><td>7.602 GiB</td><td><strong>8.633 GiB</strong></td></tr>
+<tr><td>BWA footprint / wired</td><td>not sampled</td><td>8.781 / 0.005 GiB</td><td><strong>10.409 / 5.551 GiB</strong></td></tr>
+<tr><td>Ordered SAM gold hash</td><td>identical</td><td>identical</td><td><strong>identical</strong></td></tr>
+</tbody>
+</table></div>
+<p>All 835,260,415 records match the gold hash above. The third run exited 0 with manifest status <code>ok</code>; the free-space guard never fired (29.83 GiB minimum). Its separate full extraction took <strong>23.50 min / 3.031 GiB RSS</strong>. Native BWA took <strong>17,335.869 s (4 h 49 min)</strong>; the complete alignment/sort/index command took <strong>18,294.66 s (5 h 5 min)</strong>. Inline indexing added no separate pass; post-command hash/finalization took about <strong>632 s</strong>, outside that wall time. Samblaster/sort footprint peaks were 6.111/1.256 GiB, not simultaneous sums. VM traffic includes the shared desktop and is not process-attributed.</p>
+<p><strong>Decision: keep CPU as the automatic low-memory fallback.</strong> Metal/sort256 reduced swap-out 66.1% versus original Metal and kept its speed, but still generated <strong>7.90×</strong> the CPU case's swap traffic. It failed the owner's under-200-GiB gate. Do not infer RAM fit from its 8.63 GiB RSS or shrink the working-set estimate to force automatic GPU selection. GPU/sort256 remains an opt-in speed/wear trade-off when no normal GPU plan fits. No additional benchmark was started; verified generated outputs/FASTQs were removed and free space restored to about 203 GiB.</p>
+<h2 id="advice-for-16-gb-macs">Advice for 16 GB Macs<a class="heading-anchor" href="#advice-for-16-gb-macs" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong>Use the RAM-adaptive policy rather than forcing the old GPU choice.</strong> The historical GPU run generated about <strong>1.1 TiB of swap-out traffic per 35x genome</strong>, wearing the SSD; its <strong>LOW memory</strong> warning (about 22 GiB estimated against about 11 GiB available) predicted the risk. Automatic <code>wgse-bwa</code> selection now honors that budget and can choose CPU with 256M sort memory. The whole validation reduced traffic to 47.87 GiB, not zero, at 13 h 38 min rather than 5 h 24 min for alignment. See <a href="https://github.com/WGSExtract/wgsextract-cli/issues/747" target="_blank" rel="noopener noreferrer">#747, low-memory realignment</a>. Staged Metal subsequently retained the same records in 6.44h with 0.073GiB swap-out; it is now tried before CPU when the concurrent plan cannot fit.</li>
+<li><strong>Close what you can before <code>realign</code> and check its chosen backend.</strong> CPU fallback can take substantially longer than the old GPU measurements; more workers add memory and are not an automatic speed improvement.</li>
+<li><strong>Plan disk space before starting.</strong> For a 35x run with the input and reference already present, the normal refusal check requires about <strong>204 GiB free</strong>. The conservative envelope is about <strong>260 GiB</strong> if reference indexes must be built. Download space for the input comes <strong>on top</strong>. Leave additional headroom for swap and the desktop rather than planning around the observed 166 GiB scratch-plus-results peak. The normal refusal check and the advisory conservative resource envelope are different checks; a passing refusal check is not a reservation.</li>
+<li><strong>Install the <code>macos-aligners</code> builds</strong> (<a href="hardware.html#apple-silicon-metal">Apple Silicon</a>). They provide CPU optimizations and GPU acceleration when the pipeline fits; installation is not a promise that a whole 35x run will use Metal.</li>
+<li><strong>Call with <code>vcf snp</code> and <code>vcf indel</code></strong> (<code>bcftools</code>). They use the four performance cores and little memory.</li>
+<li><strong>Run the other commands as you like.</strong> They take minutes and stay well within 16 GB.</li>
+</ul>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/apple-silicon-16gb.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/apple-silicon-16gb.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

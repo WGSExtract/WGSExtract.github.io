@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Low-coverage and imputed inputs | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/genotype-qc.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Low-coverage and imputed inputs</span></nav>
+<h1 id="low-coverage-and-imputed-inputs">Low-coverage and imputed inputs</h1>
+<p>Genotype outputs are only as good as the reads behind them. A consumer "low-pass" genome (often 0.5–5x) cannot see both alleles at most heterozygous sites, and the provider usually fills the gaps by imputing genotypes from a population panel. Such files convert without errors, but their microarray kits and haplogroups can be wrong, and some analysis services reject them. WGS Extract warns about this; it never changes, blocks or deletes outputs.</p>
+<h2 id="before-mean-depth">Before: mean depth<a class="heading-anchor" href="#before-mean-depth" aria-label="Link to section">#</a></h2>
+<p>Regional <code>info calculate-coverage</code> and <code>info coverage-sample</code> runs use the alignment index directly, without gathering whole-file counts or sex. They report only the region's breadth, leave the global info cache unchanged, and with <code>--format</code> export <code>&lt;input&gt;_&lt;region&gt;_breadth.tsv</code> (or <code>.parquet</code>). Exports use numeric <code>breadth_pct</code> values; Parquet's <code>breadth</code> metadata distinguishes exact coverage from a sampled estimate. <code>info --csv</code> retains pure CSV output for regional requests. Run <code>info --detailed</code> separately for global metrics.</p>
+<p><code>lineage y-haplogroup</code> likewise extracts evidence only on chrY. Its sex guard uses an existing sample fact or current info cache; without one, sex remains unknown rather than triggering a whole-CRAM scan. Its <code>Total_reads</code> field says <code>not assessed (regional Y query)</code>, not a fabricated whole-genome read count.</p>
+<p>Before <code>microarray</code>, the <code>vcf</code> callers (<code>snp</code>, <code>indel</code>, <code>freebayes</code>, <code>gatk</code>, <code>deepvariant</code>, <code>sv</code>, <code>cnv</code>) and the haplogroup commands (<code>lineage y-haplogroup</code>, <code>lineage mt-haplogroup</code>), a BAM/CRAM input's mean depth is checked for the targets the command uses: the autosomes for whole-genome runs, or chrX, chrY or mtDNA when <code>--region</code> names them, chrY for <code>y-haplogroup</code> and mtDNA for <code>mt-haplogroup</code>.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Target</th><th>Default warning threshold</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Autosomes, a woman's chrX</td><td>below 15x (<code>qc_min_diploid_depth</code>)</td><td>Both alleles of a heterozygous site need several reads each. In a <a href="microarray-benchmarks.html#accuracy-versus-coverage">downsampled 1000 Genomes genome</a>, <code>microarray</code> called 4% of heterozygous chip sites homozygous at 15x, 13% at 10x and 21% at 8x.</td></tr>
+<tr><td>chrY, mtDNA, a man's chrX</td><td>below 3x (<code>qc_min_haploid_depth</code>)</td><td>One allele per site needs fewer reads, but below about 3x haplogroups often stop at an upstream branch.</td></tr>
+</tbody>
+</table></div>
+<p>mtDNA has hundreds of copies per cell, so even a 1x genome usually has more than enough mtDNA depth for <code>mt-haplogroup</code>; chrY in a low-pass genome usually does not.</p>
+<p>The check reads nothing new when it can avoid it, using in order:</p>
+<ol>
+<li>the metrics cached by <code>wgsextract info --detailed</code> for this very file;</li>
+<li>a CRAM's container headers, which record the bases in each container (about 10 seconds for a 30x CRAM on an SSD; no decoding is needed). Contigs that htslib packs together into multi-reference containers are attributed from the <code>.crai</code> index, or left unknown without one. These totals also include unmapped mates placed beside their mapped partners (0.2% of the reads in a public HG002 NovaSeq genome), so the depth can be slightly high;</li>
+<li>a BAM's index (<code>samtools idxstats</code>), with the read length from a 20,000-read sample.</li>
+</ol>
+<p>Long reads (a mean read length above 410 bp) are measured instead: index and container counts include secondary and supplementary records, and an ONT supplementary record carries the whole read, so record counts times the read length overstated HG002 ONT chrY 185x for 24x (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/427" target="_blank" rel="noopener noreferrer">#427</a>). The depth is then <code>samtools depth</code> over about 1,000 evenly spaced 1 kb windows of an indexed BAM or CRAM, a few seconds, spread over the contigs with reads (for a CRAM's multi-reference containers, those its <code>.crai</code> index lists). Sampled windows show typical depth: they mostly miss short collapsed-repeat pileups, such as HG002's 1 Mb of chrY satellite at up to 8,000x, which holds half of chrY's aligned bases.</p>
+<p>Depth counts every mapped base, including duplicates, over the reference's non-N length, like <code>info</code>. When none of these sources is available (an unindexed BAM, or an unindexed CRAM with multi-reference containers), the check is skipped with an informational message.</p>
+<p>That whole-input depth is spread over every contig that has reads, so a slice (an <code>extract</code> output, a region-limited realign or a panel) looks shallow even when its reads are deep. Before warning, a target found low is measured again with <code>samtools bedcov</code> over about 200 evenly spaced 1 kb windows on the contigs with reads, dividing by the bases those windows have reads on; when none of them has any, every read on those contigs is counted. This measure leaves out duplicates, secondary and QC-failed reads.</p>
+<p>With <code>--region</code>, <code>microarray</code> and the <code>vcf</code> callers measure the region itself this way instead, dividing by every base of the sampled windows, so a 54x slice called over its own region is not warned about, a region half outside the reads reports about half the depth, and one outside them reports 0x. Region contigs match the input's names either way (<code>20</code> or <code>chr20</code>), and <code>chr20:1,500,000-1,600,000</code> is one region. Whether chrX is haploid is still decided from the whole input, since a region's chrY may have no reads. A CRAM is measured only when its reference FASTA is at hand.</p>
+<p>A genuinely low-pass genome still warns, though only bases with reads count, so the depth shown is somewhat high: a 2% subsample (about 1x) of a 52x ONT HG002 chr20 is reported as about 1.5x, and very sparse inputs approach 1x however few reads they have.</p>
+<h3 id="before-contamination">Before: contamination<a class="heading-anchor" href="#before-contamination" aria-label="Link to section">#</a></h3>
+<p>The same commands also warn (<code>sample_contamination</code>) when <a href="contamination.html"><code>qc contamination</code></a> has recorded that more than 3% of the sample's reads (<code>qc_max_contamination</code>) are another person's. Another person's reads turn homozygous sites heterozygous, so genotypes, microarray kits and haplogroups can be wrong. The estimate comes from the sample workspace; nothing is measured unless you run <code>qc contamination</code>.</p>
+<h2 id="after-genotype-rates">After: genotype rates<a class="heading-anchor" href="#after-genotype-rates" aria-label="Link to section">#</a></h2>
+<h3 id="y-haplogroup-vcf-evidence">Y-haplogroup VCF evidence<a class="heading-anchor" href="#y-haplogroup-vcf-evidence" aria-label="Link to section">#</a></h3>
+<p><code>lineage y-haplogroup</code> counts only <code>FILTER=PASS</code> haploid or homozygous genotypes. Missing calls, heterozygotes (in either allele order), failed filters and unassessed positions are unknown, never ancestral or derived evidence. The <code>.fmf</code> report explains rejected markers and the structured <code>y_evidence_rejected</code> warning summarises them.</p>
+<p>VCF evidence must meet <code>--min-reads</code> using AD, DP or a reference block's MIN_DP; GT-only files without depth are not assigned an artificial read. When present, GQ must meet <code>--base-quality</code>. AD must agree with GT, and base majority uses all reported allele depths.</p>
+<p>A FASTA supplies reference bases, not evidence that a site was called. Reference inference is limited to explicit callable gVCF reference blocks (<code>END</code> with reference GT, adequate quality, and a block-wide FORMAT/MIN_DP or single-sample INFO/MIN_DP meeting the read threshold). DP/AD at a block's first position or its average DP does not prove interior callability. An explicit no-call inside a block remains unknown. <code>--no-ref-inference</code> disables block expansion for targeted panels. bcftools gVCF blocks are depth-only reference evidence: passing filters and adequate MIN_DP establish callability without block GQ. Other GQ-based gVCFs must supply adequate GQ. This uses the shared <a href="reference-evidence.html">reference-evidence</a> classifier and Yleaf's read/quality thresholds. Overlapping records and Clair3 deletion shadows use the same shared interval rules. Every observed REF/END span is protected from missing-site assumptions, including deletions and failed/no-call interiors. Assumed marker reports retain zero observed reads. Variant-only VCFs emit <code>y_reference_evidence_missing</code> and suggest gVCF or all-sites VCF input. <code>--assume-reference</code> opts into the unsafe upstream missing-site assumption for parity checks, emits <code>y_reference_assumed</code>, and is mutually exclusive with <code>--no-ref-inference</code>.</p>
+<p><code>vcf snp</code> and other raw bcftools caller outputs may have <code>FILTER=.</code>, meaning no site-filter assessment was performed. They are deliberately not treated as PASS. Assess caller output explicitly before Y analysis, choosing a threshold suitable for your data, for example:</p>
+<pre><code class="language-sh">bcftools filter --exclude &#x27;QUAL&lt;20&#x27; --soft-filter LowQual --mode + \
+  -Oz -o assessed.vcf.gz snps.vcf.gz
+bcftools index assessed.vcf.gz
+wgsextract lineage y-haplogroup --input assessed.vcf.gz --ref reference.fa</code></pre>
+<p>This preserves existing failed filters and marks assessed passing sites PASS. Genotype, depth, GQ and callable reference-block checks still apply; filtering does not turn absent sites or no-calls into evidence.</p>
+<p>After <code>microarray</code> writes its files, the autosomal genotypes are checked:</p>
+<ul>
+<li><strong>Homozygosity of the CombinedKit's called genotypes.</strong> Directly sequenced genomes give about 70–80%; one downsampled genome gave 78% at 30x, 88% at 5x and 94% at 3x. Above 88% (<code>qc_max_autosomal_homozygosity</code>) usually means a low-pass or heavily imputed input; below 60% (<code>qc_min_autosomal_homozygosity</code>) suggests a contaminated or mixed sample. The heterozygous/homozygous ratio is logged with it.</li>
+<li><strong>No-call (<code>--</code>) rate of each vendor file.</strong> Above 10% (<code>qc_max_no_call_rate</code>) means the input lacks reads or calls at many chip positions. This is skipped for <code>--region</code> runs, which leave most chip positions uncalled by design.</li>
+</ul>
+<p>Both need at least 1,000 sites to say anything.</p>
+<h2 id="settings">Settings<a class="heading-anchor" href="#settings" aria-label="Link to section">#</a></h2>
+<p>Thresholds are <code>config.toml</code> settings:</p>
+<pre><code class="language-toml">qc_min_diploid_depth = 15.0        # 0 disables
+qc_min_haploid_depth = 3.0         # 0 disables
+qc_min_autosomal_homozygosity = 0.6
+qc_max_autosomal_homozygosity = 0.88
+qc_max_no_call_rate = 0.1
+qc_max_contamination = 0.03        # FREEMIX; 0 disables</code></pre>
+<p><code>--qc-min-depth DEPTH</code> overrides both depth thresholds for one run of a command above; <code>--qc-min-depth 0</code> turns the depth check off.</p>
+<h2 id="what-to-do-about-a-warning">What to do about a warning<a class="heading-anchor" href="#what-to-do-about-a-warning" aria-label="Link to section">#</a></h2>
+<ul>
+<li>Run <code>wgsextract info --detailed</code> for per-chromosome depth and breadth.</li>
+<li>For a low-pass file, use the provider's imputed VCF knowingly: imputed genotypes are population guesses, so rare variants and close-relative matching are unreliable, and uploads may be rejected.</li>
+<li>Results on chrY or mtDNA at low depth may still be correct to an upstream branch; treat terminal subclades as unconfirmed.</li>
+</ul>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/genotype-qc.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/genotype-qc.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

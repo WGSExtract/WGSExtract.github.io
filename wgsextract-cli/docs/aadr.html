@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AADR research-panel export | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/aadr.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>AADR research-panel export</span></nav>
+<h1 id="aadr-research-panel-export">AADR research-panel export</h1>
+<pre><code class="language-sh">wgsextract microarray --input sample.bam --ref reference \
+  --formats aadr_1240k,aadr_ho,aadr_1240k+ho \
+  --aadr-sample-id sample01 --aadr-sex U --region chr20 --outdir out/aadr</code></pre>
+<p>Each selected panel writes <strong>both</strong> PLINK <code>.bed/.bim/.fam</code> and EIGENSTRAT <code>.geno/.snp/.ind</code> files. PLINK's SNP-major binary format is the standard compact interchange form accepted by PLINK and ADMIXTOOLS <code>convertf</code>; unlike <code>.ped</code>, it does not expand a single sample's million markers into a huge text row. No PLINK/ADMIXTOOLS installation is required to write these files.</p>
+<p>The pinned AADR v66.p1 lists are GRCh37: 1,233,013 1240K markers and 584,131 HO markers. In this release HO is a strict subset, so <code>aadr_1240k+ho</code> (also <code>aadr_1240k_ho</code>) has the same markers as <code>aadr_1240k</code>. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/src/wgsextract_cli/assets/microarray/raw_file_templates/README.md#aadr-v66p1-aadr_1240k-aadr_ho-aadr_1240kho" target="_blank" rel="noopener noreferrer">Provenance, licence and hashes</a> identify the exact public SNP-only sources.</p>
+<h2 id="opt-in-aadr-2m-v66p1">Opt-in AADR 2M (v66.p1)<a class="heading-anchor" href="#opt-in-aadr-2m-v66p1" aria-label="Link to section">#</a></h2>
+<p>Install the marker resource <strong>explicitly</strong>, then select the additional panel:</p>
+<pre><code class="language-sh">wgsextract ref aadr --install --ref reference
+wgsextract microarray --input sample.bam --ref reference \
+  --formats aadr_2m --aadr-sample-id sample01 --outdir out/aadr-2m</code></pre>
+<p><code>ref aadr --install</code> uses the existing resumable, shared-download mechanism and verifies the pinned SHA256 before installing <code>reference/aadr/v66.p1_2M.aadr.patch.PUB.snp</code>. The library can also be selected through the existing <code>reference_library</code> setting in <code>config.toml</code>. Pass the same library to the extraction (a FASTA under its <code>genomes/</code> directory is also supported). The marker data are <strong>not bundled</strong>. <code>microarray</code> checks that the file is present and hash-correct before calling; it never automatically fetches or repairs it. For GRCh38 input, <code>hg19ToHg38.over.chain.gz</code> must also already be in the library: install it explicitly with <code>wgsextract ref download --url https://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/hg19ToHg38.over.chain.gz --out reference/hg19ToHg38.over.chain.gz</code>. T2T remains unsupported.</p>
+<p>The 2M panel contains <strong>2,142,271</strong> GRCh37 SNPs, including every current v66.p1 1240K and HO SNP with the same ID, physical coordinate and reference/variant alleles. It is <strong>not</strong> the separate 1,243,531-site <code>2M_compatibility</code> panel. It is excluded from <code>--formats all</code>; legacy panel choices and defaults are unchanged. Selecting <code>aadr_2m,aadr_1240k,aadr_ho</code> writes each panel separately. Absent sites in variant-only VCFs are no-calls by default. With the unsafe <code>--assume-hom-ref --min-dp 0 --min-gq 0</code> opt-in, reference-fill eligibility is evaluated against the original legacy target set: a 2M-only hit cannot turn a previously missing legacy chromosome into homozygous reference. Sparse VCFs can therefore have different absent-site calls in the two panels under that opt-in policy.</p>
+<p><strong>Genetic maps are not interchangeable:</strong> the official 2M genetic distance differs at <strong>1,200,251</strong> legacy 1240K sites (<strong>583,490</strong> HO sites). Each export uses its own panel's metadata, never a mixture: 2M <code>.snp</code> preserves the official v66.p1 2M Morgans, and <code>.bim</code> converts those values to centimorgans. Legacy 1240K/HO retain their existing map and bytes. Restricting a 2M export to 1240K therefore permits genotype comparisons but not byte-identical <code>.snp</code>/<code>.bim</code> metadata. For example, rs3094315 has 0.000665 Morgans in 2M versus 0.020130 in legacy 1240K/HO.</p>
+<p>Source: <a href="https://reich.hms.harvard.edu/" target="_blank" rel="noopener noreferrer">Reich Lab AADR</a> / <a href="https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/FFIDCW&amp;version=14.0" target="_blank" rel="noopener noreferrer">Harvard Dataverse version 14.0</a>, released 2026-06-08, panel v66.p1. The <a href="https://dataverse.harvard.edu/api/access/datafile/13994517" target="_blank" rel="noopener noreferrer">SNP-only file</a> is 134,963,073 bytes, SHA256 <code>39312150ce88ec757a88e52a7921ca7fd1190d9cce11cfe39c756ea5737b7a9b</code>. It is published under <strong>CC0 1.0</strong>; cite the release and Mallick et al. (2024), <em>Scientific Data</em> 11, 182, <a href="https://doi.org/10.1038/s41597-024-03031-7" target="_blank" rel="noopener noreferrer">doi:10.1038/s41597-024-03031-7</a>. No individual genotypes, annotations or identifiers are installed.</p>
+<h2 id="coordinates-and-allele-coding">Coordinates and allele coding<a class="heading-anchor" href="#coordinates-and-allele-coding" aria-label="Link to section">#</a></h2>
+<ul>
+<li><code>.snp</code> preserves AADR order, chromosome codes (X=23, Y=24), genetic positions in Morgans, GRCh37 positions, and reference/variant alleles. <code>.bim</code> uses the same order with A1=AADR reference and A2=AADR variant, converting Morgans to PLINK's centimorgans (column 3 multiplied by 100).</li>
+<li>EIGENSTRAT <code>.geno</code> encodes <strong>copies of AADR's reference allele</strong>: 2=ref/ref, 1=ref/variant, 0=variant/variant, 9=missing. It is not ALT dosage.</li>
+<li>PLINK <code>.bed</code> uses the documented SNP-major header <code>6c 1b 01</code> and the matching A1/A2 encoding: binary 00=ref/ref, 10=heterozygous, 11=variant/variant, 01=missing, with unused sample bits zero.</li>
+<li>Calls are matched by normalized physical coordinate, not by rsID alone. An allele outside the AADR reference/variant pair is missing; <strong>no strand guessing</strong>, including at A/T and C/G markers, is performed. For VCF input, conflicting duplicate records and explicitly unsupported calls (including insertion genotypes) are masked directly from the per-record VCF calls, before any CombinedKit reference-filling assumption can affect AADR. This masking only removes calls; it never restores a quality-rejected call.</li>
+<li>GRCh38 input uses the forward GRCh37-to-GRCh38 UCSC chain to locate each AADR marker. Only unique primary-contig hits are used; inverted mappings explicitly complement the call back to the AADR strand. Output remains GRCh37. Unmapped and ambiguous markers are missing. Unknown builds are not supported.</li>
+<li>The existing CHM13 pathway can project legacy 1240K/HO through its bundled marker map. That map does not contain the full 2M panel: <code>aadr_2m</code> on CHM13/T2T is rejected before calling, rather than exporting unmapped new sites.</li>
+<li>Haploid calls are represented as homozygous diploid dosage, as in the CombinedKit; this is <strong>not random pseudo-haploid sampling</strong> for ancient DNA.</li>
+<li>A region-limited run still writes the complete selected panel, with missing calls outside the region. All markers without alignment calls are missing. The existing VCF-input semantics apply: by default, an absent variant on a represented contig may be treated as homozygous reference. A variant-only VCF is not evidence of coverage; use an alignment for coverage-aware no-calls.</li>
+<li>The default sample label is <code>sample</code>, sex <code>U</code>, population <code>Unknown</code>, no parents or phenotype. Set a unique non-identifying <code>--aadr-sample-id</code> before merging. <code>--aadr-sex</code> changes metadata only, not the caller's ploidy inference.</li>
+</ul>
+<p>The AADR target and calling intermediates are retained in a unique <code>AADR_*</code> subdirectory of the output directory for each invocation, isolating concurrent samples/builds/panels. The chain is reused read-only from the reference library when installed, otherwise downloaded into that invocation's directory for legacy-only runs. Runs selecting 2M require it in the library before any consumer-target preparation; even a chain left in an output directory is not treated as an installed 2M prerequisite. The intermediate CombinedKit and calling VCF also stay in that directory; the selected PLINK/EIGENSTRAT and vendor exports are written at the output root. Legacy cached consumer-chip targets are not modified. Mixing AADR and vendor formats adds the AADR sites to the run's target; <code>all,aadr_ho</code> explicitly includes the existing combined consumer target too. An explicit <code>--ref-vcf-tab</code> contributes additional sites to an AADR run. Without an AADR format, the existing target and output paths are unchanged.</p>
+<h2 id="compatibility-validation">Compatibility validation<a class="heading-anchor" href="#compatibility-validation" aria-label="Link to section">#</a></h2>
+<p>The authoritative allele/coding specification is <a href="https://github.com/DReichLab/AdmixTools/blob/master/convertf/README" target="_blank" rel="noopener noreferrer">ADMIXTOOLS convertf/README</a> (EIGENSTRAT and PACKEDPED), and <a href="https://www.cog-genomics.org/plink/1.9/formats#bed" target="_blank" rel="noopener noreferrer">PLINK BED format</a>. The export preserves the <strong>AADR reference allele</strong>, even if another tool would reorder alleles by frequency. Use PLINK's <code>--keep-allele-order</code> when preserving this coding is important.</p>
+<p>Validation uses the public GIAB HG002 GRCh38 chr20 alignment, first at chr20:10,000,000–12,000,000, then all of chr20. It checks generated <code>.snp</code> metadata and <code>.bim</code> allele columns against <strong>all rows</strong> of the pinned public AADR <code>.snp</code> lists, and verifies that <code>.bed</code> and <code>.geno</code> encode the same calls. This is the metadata/allele-concordance alternative to a <code>mergeit</code> genotype merge: no AADR individuals' genotypes are needed or downloaded. Actual downstream merging is still subject to the other dataset's build, sample-label, SNP-selection and ploidy settings; no claim is made to reproduce ancient-DNA pseudo-haploid processing.</p>
+<p>The chromosome validation checked every SNP metadata row with <strong>100% exact ID/position/map/allele concordance</strong> against the public sources. Nonmissing calls also agree with the source caller VCF's AADR-reference dosage and the independently decoded PLINK BED representation:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Region (GRCh38)</th><th>1240K called and verified</th><th>HO called and verified</th><th>1240K+HO called and verified</th></tr></thead>
+<tbody>
+<tr><td>chr20:10,000,000–12,000,000</td><td>1,179</td><td>684</td><td>1,179</td></tr>
+<tr><td>chr20</td><td>30,371</td><td>16,257</td><td>30,371</td></tr>
+</tbody>
+</table></div>
+<p>One full-chr20 call has an out-of-panel allele and is correctly missing rather than forced into AADR's biallelic coding. Both runs preserve <strong>23/23 legacy output files byte-for-byte</strong> (21 vendor formats plus both CombinedKit builds) against main <code>99eb6df</code>. The built wheel is about 50.8 MB and contains the marker asset with the documented SHA256.</p>
+<p>Focused tests cover reference dosage, missing/third alleles, haploid calls, conflicting coordinates, panel selection, exact BED bytes, safe metadata, inverted/ambiguous liftover and deterministic genotype-free asset generation. Existing consumer formats are additionally compared byte-for-byte with main on the same public chromosome input.</p>
+<h2 id="targets-not-fabricated">Targets not fabricated<a class="heading-anchor" href="#targets-not-fabricated" aria-label="Link to section">#</a></h2>
+<p>MTHFR Genetics, Genera and meuDNA need a verifiable real export or public complete marker list, schema, build, strand and reuse terms. No such input was verified in the available local inventory. GEDmatch already accepts the combined 23andMe-style kit; no new fixed GEDmatch panel was verified. These are not aliases to unrelated vendors and are not invented templates.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/aadr.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/aadr.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

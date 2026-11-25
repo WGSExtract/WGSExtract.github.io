@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Job servers | WGS Extract GUI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/app/devdocs/job-server.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../architecture.html">GUI Architecture</a><a href="../wgsextract.html">WGSExtract</a><a class="active" href="../docs.html">Docs</a><a href="../../index.html">WGSExtract CLI</a><a href="../whats-different.html">What&#x27;s Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract GUI</a> / <a href="index.html">Developer Docs</a> / <span>Job servers</span></nav>
+<h1 id="job-servers">Job servers</h1>
+<p>Some actions are better run as jobs on a long-running server than as one process per click:</p>
+<ul>
+<li>the server reports structured progress;</li>
+<li>it can queue work;</li>
+<li>it cancels a job cleanly.</li>
+</ul>
+<p>A bundle can declare such a server in <code>manifest.json</code>. Its actions can then run as jobs on it. Each action keeps its <code>command</code>, which runs whenever the server can't be used.</p>
+<pre><code class="language-jsonc">// manifest.json
+&quot;jobServer&quot;: {
+  &quot;command&quot;: {
+    &quot;executable&quot;: &quot;{{bundleRoot}}/scripts/run-tool.sh&quot;,
+    &quot;arguments&quot;: [&quot;--parent-pid&quot;, &quot;{{appPid}}&quot;, &quot;serve&quot;, &quot;--ready-json&quot;]
+  },
+  &quot;startupTimeoutSeconds&quot;: 60
+}
+
+// an action in a page file
+{
+  &quot;id&quot;: &quot;coverage&quot;,
+  &quot;title&quot;: &quot;Coverage&quot;,
+  &quot;command&quot;: { &quot;executable&quot;: &quot;{{bundleRoot}}/scripts/run-tool.sh&quot;, &quot;arguments&quot;: [&quot;coverage&quot;, &quot;--input&quot;, &quot;{{bam_path}}&quot;] },
+  &quot;serverOperation&quot;: {
+    &quot;operation&quot;: &quot;info/calculate-coverage&quot;,
+    &quot;parameters&quot;: { &quot;input&quot;: &quot;{{bam_path}}&quot;, &quot;bins&quot;: true, &quot;outdir&quot;: &quot;{{out_dir}}&quot; }
+  }
+}</code></pre>
+<p><strong><code>parameters</code></strong> are sent as the JSON request body.</p>
+<ul>
+<li>String values are interpolated like command arguments.</li>
+<li>A string that ends up empty is left out.</li>
+<li>Numbers, booleans and other values are sent as written.</li>
+</ul>
+<p><strong><code>{{bundleRoot}}</code>, <code>{{home}}</code> and <code>{{appPid}}</code></strong> are the only placeholders available to <code>jobServer.command</code>. <code>{{appPid}}</code> is the app's process ID. Pass it to a server that can watch it, so the server exits when the app dies, even when the app is killed and can't stop it.</p>
+<h2 id="lifecycle">Lifecycle<a class="heading-anchor" href="#lifecycle" aria-label="Link to section">#</a></h2>
+<p><strong>Startup.</strong> The app starts the server the first time an action with a <code>serverOperation</code> runs. It runs in the bundle workspace, like actions do.</p>
+<p><strong>Ready line.</strong> Once the server is listening, it must print one line of JSON on stdout with its base URL and a bearer token: <code>{&quot;url&quot;: &quot;http://127.0.0.1:PORT/v1&quot;, &quot;token&quot;: &quot;...&quot;}</code>. Other lines before it are ignored. A server that can't start may print <code>{&quot;error&quot;: {&quot;message&quot;: &quot;...&quot;}}</code> instead; the app logs that it refused to start, with the message, and falls back.</p>
+<p>Locally launched job servers must advertise a numeric loopback URL, such as <code>127.0.0.1</code> or <code>::1</code>. The app rejects external destinations and hostnames before sending bearer credentials or sample parameters. Requests refuse redirects, including redirects to another local service. WGS Extract's bundled command pins <code>--listen 127.0.0.1 --port 0</code>, overriding any saved server listen port or public URL. Explicit remote viewer connections use a separate consented path; they do not redirect ordinary jobs.</p>
+<p><strong>Restarts.</strong> If the server exits, the next action starts it again. It stops with the app and when another bundle is loaded, like every other process the app started.</p>
+<p><strong>Fallback.</strong> The app runs the action's <code>command</code> instead when:</p>
+<ul>
+<li>the server can't be started;</li>
+<li>it prints no ready line within <code>startupTimeoutSeconds</code>;</li>
+<li>the connection is refused before the app can send the request, and restarting doesn't help;</li>
+<li>the server explicitly rejects the submission before creating a job.</li>
+</ul>
+<p>If the reply is lost or doesn't identify the job, the app checks the original job ID if the server supports client-generated IDs. It never submits again or runs the command directly in this case. If it cannot recover the job, it warns the user to check the server before trying again, and includes the ID when the server supports it.</p>
+<h2 id="protocol">Protocol<a class="heading-anchor" href="#protocol" aria-label="Link to section">#</a></h2>
+<p>Every request carries <code>Authorization: Bearer &lt;token&gt;</code>. Paths are relative to <code>url</code>. Servers that support client-generated IDs include <code>&quot;client_job_ids&quot;: true</code> in the ready line. The GUI sends the ID header only to those servers.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Request</th><th>Response</th></tr></thead>
+<tbody>
+<tr><td><code>POST /ops/{operation}</code> with the parameters as a JSON body, <code>X-WGSE-Job-ID</code> when supported, and <code>?card=1</code> for an action with <code>resultCard</code></td><td>2xx with a job: <code>{&quot;id&quot;: &quot;...&quot;, &quot;status&quot;: &quot;...&quot;}</code>. A server that uses the header sets <code>id</code> to the client-generated lowercase UUIDv4.</td></tr>
+<tr><td><code>GET /jobs/{id}/events</code></td><td>Server-sent events until the job has finished, then the stream ends. <code>status</code> events carry <code>{&quot;status&quot;: ...}</code>; <code>progress</code> events carry <code>stage</code>, <code>message</code> and/or <code>fraction</code> (0–1).</td></tr>
+<tr><td><code>GET /jobs/{id}</code></td><td>The job; <code>exit_code</code> once it has finished, and <code>error</code> if it failed. The action's exit code is <code>exit_code</code>, else 0 for <code>succeeded</code> and 1 otherwise. When the bundle declares a <a href="result-documents.html">result document</a> for the action, it is read from <code>result</code>.</td></tr>
+<tr><td><code>GET /jobs/{id}/log?tail=0</code></td><td>The job's whole log as text; it is added to the action's output.</td></tr>
+<tr><td><code>DELETE /jobs/{id}</code></td><td>Cancels the job. 409 means it had already finished.</td></tr>
+</tbody>
+</table></div>
+<p>When the user cancels the action, the app sends <code>DELETE</code> and follows the job's events until it has finished, for up to a minute.</p>
+<p>To explicitly reject before creating a job, return <code>{&quot;error&quot;: {&quot;code&quot;: &quot;...&quot;, &quot;message&quot;: &quot;...&quot;}}</code> with one of these status and code combinations:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Status</th><th>Code</th></tr></thead>
+<tbody>
+<tr><td>400</td><td><code>bad_length</code>, <code>bad_json</code>, <code>bad_headers</code>, <code>usage</code>, <code>invalid_job_id</code></td></tr>
+<tr><td>401</td><td><code>unauthorized</code></td></tr>
+<tr><td>403</td><td><code>bad_host</code>, <code>bad_origin</code>, <code>path_not_allowed</code>, <code>destructive</code></td></tr>
+<tr><td>404</td><td><code>unknown_op</code>, <code>not_found</code></td></tr>
+<tr><td>413</td><td><code>too_large</code></td></tr>
+<tr><td>503</td><td><code>stopping</code></td></tr>
+</tbody>
+</table></div>
+<p><a href="../../docs/server.html">WGSExtract CLI's <code>wgsextract serve</code></a> implements this protocol (<code>serve --ready-json</code>). The WGSExtract example bundle uses it for its coverage actions; with a bundled CLI older than that flag, they run their commands.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract GUI</strong><p>Rendered from <code>gui/devdocs/job-server.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/gui/devdocs/job-server.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

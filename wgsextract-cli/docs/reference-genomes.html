@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reference genomes: where they come from | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/reference-genomes.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Reference genomes: where they come from</span></nav>
+<h1 id="reference-genomes-where-they-come-from">Reference genomes: where they come from</h1>
+<p><code>wgsextract ref library --install CODE</code> (and the app's Library page) downloads a genome from the first source in the catalog (<code>src/wgsextract_cli/assets/reference/seed_genomes.csv</code>) that works. For most genomes that is a copy in this repository's GitHub releases. The original source (NCBI, EBI, UCSC, AWS) is listed after it as an <code>-Alt</code> row, and the install falls back to it automatically. The original servers have been slow and unreliable, so the copies come first (#701).</p>
+<p>For annotation resources, gene maps and benchmark downloads, see <a href="resource-mirrors.html">download mirrors and source rights</a>. Their separate audit deliberately excludes restricted or unclear third-party data.</p>
+<h2 id="listing-the-library">Listing the library<a class="heading-anchor" href="#listing-the-library" aria-label="Link to section">#</a></h2>
+<p><code>wgsextract ref library --list</code> shows every catalog row (one per source) with its state in your library: installed (with its <code>.fai</code>), unindexed, incomplete (a <code>.partial</code> download) or missing, and its size on disk. <code>--json</code> prints it as the result manifest's <code>details</code> (fields in <a href="https://wgsextract.github.io/wgsextract-cli/api.html" target="_blank" rel="noopener noreferrer">api.md</a>, <code>library_list</code>).</p>
+<p><code>--remote-sizes</code> also looks up each genome's download size from its source (HTTP <code>HEAD</code>, FTP <code>SIZE</code>; each network wait times out after 4 s, and the lookup gives up after 8 s). Sizes found are kept for 30 days in the library's <code>.remote-sizes.json</code>, and later listings show them without going online.</p>
+<h2 id="detecting-the-genome-build">Detecting the genome build<a class="heading-anchor" href="#detecting-the-genome-build" aria-label="Link to section">#</a></h2>
+<p>Build detection prefers sequence-dictionary signatures and chromosome lengths over name hints. When only a file or reference-folder name is available, only that name is considered, not its ancestor folders. Build identifiers must be separate tokens (for example <code>sample_GRCh38.bam</code>), with catalog variants such as <code>hs37d5</code>, <code>hs38d1s</code> and <code>CHM13v2.0</code> recognized. An unknown build stays unknown; placing it under a folder named <code>hg19</code> or <code>chm13</code> does not identify it.</p>
+<p>FASTA descriptions and assembly tags, and VCF reference/assembly metadata, remain build evidence. Tool command-history lines in VCF headers are not.</p>
+<h2 id="verification-and-gene-maps">Verification and gene maps<a class="heading-anchor" href="#verification-and-gene-maps" aria-label="Link to section">#</a></h2>
+<p><code>ref verify</code> checks gzip integrity, the FASTA index and catalog sequence-dictionary signature, failing on mismatch. <code>ref library --install</code> also verifies the signature after indexing. The catalog's <code>md5</code> is a sequence-name/length dictionary signature, <strong>not a FASTA content checksum</strong>.</p>
+<h3 id="n-counts">N counts<a class="heading-anchor" href="#n-counts" aria-label="Link to section">#</a></h3>
+<p>Depth and breadth leave out each reference's N (unsequenceable) bases, counted from that reference's own FASTA, upper- and lowercase alike. The release ships the counts of every catalog genome in <code>assets/reference/reference_ncounts.tsv</code>, read at run time, keyed by FASTA file name and sequence-dictionary signature (two FASTAs can share a signature, so one could mask regions the other doesn't). Installing a genome the release didn't measure counts its Ns once, into the library's own <code>genomes/reference_ncounts.tsv</code>.</p>
+<p><code>info</code> and genotype QC take the counts for a <code>--ref</code> FASTA from its entry under the header's signature, else from that FASTA's own <code>_ncnt.csv</code> (<code>ref count-ns</code> writes it and <code>_nbin.csv</code> beside the FASTA, or in <code>--outdir</code>; only rows with a length apply), else from its entry under its name alone; never from another genome. Without <code>--ref</code>, they use the entry for the header's signature. A contig gets a count only at the length it was measured at, and none when two of the header's contigs share a name (chr1 and 1). Otherwise they warn <code>n_counts_unavailable</code> (<code>n_counts_ambiguous</code> when genomes sharing the signature differ) and leave the N gaps in; run <code>ref count-ns</code> on the reference's FASTA and pass it with <code>--ref</code>. Maintainers regenerate the shipped table with <code>scripts/gen_reference_ncounts.py</code>.</p>
+<p>Gene-name filtering (<code>--gene</code>) requires <code>ref gene-map</code> maps for hg19/hg38; T2T is rejected. Rebuild maps installed by older versions with <code>ref gene-map</code>. The same download also keeps UCSC refGene's RefSeq transcripts (primary contigs only) as <code>downloads/transcripts_&lt;build&gt;.bed.gz</code>, a BGZF BED12 with a tabix index whose name column is <code>SYMBOL|ACCESSION</code> and whose thick part is the CDS. The genome viewer shows them as the <strong>RefSeq transcripts</strong> track, and <a href="variants.html#one-gene"><code>info gene</code></a> reads a gene's exons from them; a library whose gene maps came from an older version gets them by running <code>ref gene-map</code> again.</p>
+<h3 id="offline-cytobands">Offline cytobands<a class="heading-anchor" href="#offline-cytobands" aria-label="Link to section">#</a></h3>
+<p>The library viewer can display chromosome ideograms from UCSC's public <code>cytoBand</code> data. Install the appropriate assembly explicitly:</p>
+<pre><code class="language-sh">wgsextract ref cytobands --build hg19 --download
+wgsextract ref cytobands --build hg38 --download</code></pre>
+<p>Use the same <code>config.toml</code> as the desktop, or pass <code>--ref /path/to/reference-library</code>. Without <code>--download</code>, the command validates the installed asset offline; missing or invalid data produces an error naming it and the explicit command. It does not inherit the persistent download opt-in. Tables are installed as <code>downloads/cytobands_hg19.tsv</code> and <code>downloads/cytobands_hg38.tsv</code> in the configured reference library. The viewer never downloads them. Validation-only runs record the table as an input and leave its installation manifest unchanged. The default is the configured reference library even when <code>reference_fasta</code> points elsewhere; only an explicit <code>--ref</code> FASTA selects its containing library. Repair hints retain the selected library and configuration.</p>
+<p>The installer checks pinned SHA-256 snapshots of <code>cytoBand.txt.gz</code>, gzip integrity, five columns, zero-based half-open coordinates, continuous chromosome coverage, band names and stains before publishing the table atomically. Only primary chromosomes 1–22, X and Y are retained; UCSC's unbanded alternate contigs are validated but excluded. Partial downloads use the standard URL-bound resume helper. UCSC changing a snapshot requires a reviewed pin update, not accepting unchecked replacement bytes. Downloads and publication are serialized per assembly. Completed archives use private staging without replacing user archives; new public tables follow the process umask. Installed tables must stay within the library, use LF or CRLF row endings and contain at most 10,000 primary bands, matching viewer validation.</p>
+<p>Source URLs are under <code>https://hgdownload.soe.ucsc.edu/goldenPath/{hg19,hg38}/database/cytoBand.txt.gz</code>. The <a href="https://hgdownload.soe.ucsc.edu/downloads.html#terms" target="_blank" rel="noopener noreferrer">UCSC download terms</a> permit use of downloaded data for any purpose except directory-specific exceptions; see the <a href="https://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/README.txt" target="_blank" rel="noopener noreferrer">database README</a> and assembly credits. These are annotation data, not UCSC's separately licensed Genome Browser software. Credit UCSC and its assembly contributors. No new redistribution mirror is introduced.</p>
+<h2 id="download-safety">Download safety<a class="heading-anchor" href="#download-safety" aria-label="Link to section">#</a></h2>
+<p>Reference HTTP downloads resume only explicit <code>.partial</code> files bound to their source URL and to the version of the file the server named (a strong ETag, else a Last-Modified date at least a second older than the reply) by a <code>.partial.source</code> sidecar. Segmented downloads record the URL hash, that version and per-segment progress in <code>.partial.segments</code>. A resume asks for the rest of that version only (<code>If-Range</code>): a file replaced at the same URL, even by one of the same size, downloads again from the start instead of mixing old and new bytes. Without a version from the server, a partial restarts unless a pinned SHA-256 will check the result, and a large file is fetched over one connection. Legacy or invalid state and changed URLs cause the download to restart. Refreshing a complete file starts from zero and preserves it until replacement finishes and passes available checksums, then publishes atomically. Diagnostic URLs omit userinfo and queries, while requests keep the original URL. MD5-pinned benchmark files enter the dev cache only after verification.</p>
+<h2 id="the-test-genome">The test genome<a class="heading-anchor" href="#the-test-genome" aria-label="Link to section">#</a></h2>
+<p><code>wgsextract ref test-genome --install</code> downloads and verifies the small HG00096 dataset. Its human-readable status identifies it as <strong>WGS Extract hg19 mini benchmark genome</strong>, the same title shown by the app. The status and path are also available in the JSON result's <code>details</code>.</p>
+<h2 id="shared-library-permissions">Shared-library permissions<a class="heading-anchor" href="#shared-library-permissions" aria-label="Link to section">#</a></h2>
+<p>On POSIX systems, new <code>.lock</code> and <code>.guard</code> coordination files use <code>0666</code> filtered by the process umask. For a group-writable reference library, use a shared group, writable directories and a umask such as <code>0002</code> for every writer. Existing guards keep their permissions. If an older guard denies access, ask its owner or administrator to grant the shared users read/write access to the named file and access to its directory. Do not delete guards while any run may be using the library: replacing a guard can break locking between processes.</p>
+<h2 id="deleting-a-genome">Deleting a genome<a class="heading-anchor" href="#deleting-a-genome" aria-label="Link to section">#</a></h2>
+<p><code>wgsextract ref library --delete CODE</code> (or the file name, such as <code>hs38.fa.gz</code>) deletes a catalog genome from the library's genomes folder, as the app's Library page does: the FASTA, a partial download, its <code>.fai</code>, <code>.gzi</code> and <code>.dict</code>, the bwa and bwa-mem2 indexes, dense suffix-array files, their run manifests and an interrupted index build's staging folders. Its N counts stay, since the library bootstrap ships them for every catalog genome. Only files in the genomes folder itself are deleted; a link there is removed, not what it points to. While another run builds its bwa index or dense suffix array, the delete is refused. With <code>--json</code>, the result's <code>details</code> lists the deleted paths and the bytes freed (fields in <a href="https://wgsextract.github.io/wgsextract-cli/api.html" target="_blank" rel="noopener noreferrer">api.md</a>, <code>library_delete</code>).</p>
+<h2 id="how-a-copy-is-made-and-checked">How a copy is made and checked<a class="heading-anchor" href="#how-a-copy-is-made-and-checked" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong>Made like an install:</strong> the <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/.github/workflows/mirror_reference_genomes.yml" target="_blank" rel="noopener noreferrer">Mirror reference genomes</a> workflow installs each genome from its original source exactly as a user's install does, using <code>scripts/mirror_reference_genomes.py</code>. It recompresses the file to BGZF, indexes it and checks its sequence-dictionary signature against the catalog's. Then it uploads the BGZF file under its catalog name to a <code>reference-genomes-N</code> release.</li>
+<li><strong>Same sequences:</strong> the copy holds the original's sequences unchanged; only the compression differs.</li>
+<li><strong>Pinned:</strong> the catalog's <code>SHA256</code> column pins each GitHub copy.
+<ul>
+<li>A download that doesn't match is discarded, and the next source is tried.</li>
+<li>The install also checks the genome's signature, whichever source it came from.</li>
+</ul></li>
+<li><strong>Older copies:</strong> the <code>v0.1.0</code> release copies (hs38, hs37, the hs38d1 variants and others) predate the workflow and are pinned the same way.</li>
+<li><strong>Adding a genome:</strong> run the workflow with the genome's file name, then record its row with <code>python scripts/mirror_reference_genomes.py catalog TAG RECORD.json...</code> (the records are in the release's <code>records.tar.gz</code>).</li>
+</ul>
+<h2 id="sources-and-terms">Sources and terms<a class="heading-anchor" href="#sources-and-terms" aria-label="Link to section">#</a></h2>
+<p>The genomes are public data. Recompressing a file doesn't change its terms.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Original host</th><th>Genomes</th><th>Terms</th></tr></thead>
+<tbody>
+<tr><td>T2T Consortium (AWS)</td><td>T2T-CHM13 v2.0 and drafts v0.9 to v1.1, HG002 XY v2.0 and v2.7</td><td>Public domain (CC0); citation of the T2T Consortium is requested (<a href="https://github.com/marbl/CHM13#data-reuse-and-license" target="_blank" rel="noopener noreferrer">CHM13</a>, <a href="https://github.com/marbl/HG002#data-reuse-and-license" target="_blank" rel="noopener noreferrer">HG002</a>)</td></tr>
+<tr><td>Human Pangenome Reference Consortium (AWS)</td><td>CHM13v11Y (HPP freeze 1)</td><td>Public domain, under the HPRC's <a href="https://humanpangenome.org/data-use/" target="_blank" rel="noopener noreferrer">data-use protocol</a></td></tr>
+<tr><td>NCBI and 1000 Genomes</td><td>GRCh38 analysis sets, hs37d5, human_g1k_v37, T2T-CHM13 (GCA_009914755.4), dog and cat RefSeq</td><td>"NCBI places no restrictions on the use or distribution of the GenBank data" (<a href="https://www.ncbi.nlm.nih.gov/genbank/" target="_blank" rel="noopener noreferrer">policy</a>); submitters may hold rights</td></tr>
+<tr><td>UCSC</td><td>hg19, hg38</td><td>hg19: "freely available for public use" (<a href="https://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/README.txt" target="_blank" rel="noopener noreferrer">README</a>); hg38 follows NCBI's terms (<a href="https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/README.txt" target="_blank" rel="noopener noreferrer">README</a>)</td></tr>
+<tr><td>Ensembl and GENCODE (EBI)</td><td>GRCh38 and GRCh37 top-level and primary assemblies</td><td>"Available without restriction"; EBI adds none (<a href="https://www.ebi.ac.uk/about/terms-of-use/" target="_blank" rel="noopener noreferrer">terms</a>)</td></tr>
+</tbody>
+</table></div>
+<p><strong>Not copied:</strong></p>
+<ul>
+<li><strong>JHU's Puerto Rican PR1 assembly (<code>THG1243v3</code>):</strong> it states no licence.</li>
+<li><strong>YSEQ's <code>hg19.zip</code> and <code>hg38_CP086569</code> (<code>hg37</code>, <code>THGySeqp</code>):</strong> YSEQ publishes no terms for them.</li>
+</ul>
+<p>These download from their original source only.</p>
+<p><strong>hs38DH:</strong> <code>GRCh38_full_analysis_set_plus_decoy_hla</code> includes HLA sequences from IMGT/HLA, whose <a href="https://www.ebi.ac.uk/ipd/imgt/hla/licence/" target="_blank" rel="noopener noreferrer">licence</a> is CC BY-ND, explicitly asks people not to mirror the data, and requires permission to redistribute modified data. The composite FASTA is therefore excluded from the new benchmark mirrors (the coordinate-only <code>.fai</code> may be copied). Its copy in <code>v0.1.0</code> predates #701 (reference-genome mirrors) and remains under review there.</p>
+<p>GitHub limits each release file to 2 GiB. Every genome's BGZF file fits.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/reference-genomes.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/reference-genomes.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

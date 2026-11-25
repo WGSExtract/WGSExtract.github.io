@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WGS Extract CLI (wgsextract-cli) | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/readme.html" />
+    <link rel="stylesheet" href="assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="index.html">Home</a><a href="install.html">Install CLI</a><a href="gui.html">GUI</a><a href="cli.html">CLI</a><a href="workflows.html">Workflows</a><a href="wgs-guide.html">WGS guide</a><a href="reference.html">Reference</a><a class="active" href="docs/index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="index.html">WGS Extract CLI</a> / <a href="docs/index.html">CLI Docs</a> / <span>WGS Extract CLI (wgsextract-cli)</span></nav>
+<h1 id="wgs-extract-cli-wgsextract-cli">WGS Extract CLI (<code>wgsextract-cli</code>)</h1>
+<p><a href="https://www.gnu.org/licenses/gpl-3.0" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3" /></a> <a href="https://www.python.org/downloads/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/python-3.10-blue.svg" alt="Python 3.10" /></a> <a href="https://github.com/astral-sh/ruff" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json" alt="Ruff" /></a></p>
+<p>An independent command-line recreation of <a href="https://github.com/WGSExtract/WGSExtract-Dev/" target="_blank" rel="noopener noreferrer">WGS Extract</a>. Inspect BAM/CRAM files, simulate consumer microarray files, extract Y/mtDNA, call and annotate variants, and manage reference genomes from the terminal. It wraps samtools, bcftools, bwa/minimap2, GATK, Haplogrep, VEP and other tools, with native Yleaf-derived Y-DNA analysis. <a href="https://pixi.sh" target="_blank" rel="noopener noreferrer">Pixi</a> provides Python and bioinformatics tools on macOS, Linux and Windows.</p>
+<ul>
+<li><a href="https://wgsextract.github.io/wgsextract-cli/" target="_blank" rel="noopener noreferrer">Documentation site</a></li>
+<li><a href="docs/index.html">All topic guides</a></li>
+<li><a href="app/readme.html">Desktop app</a>, which bundles this CLI; installers ship with each <a href="https://github.com/WGSExtract/wgsextract-cli/releases" target="_blank" rel="noopener noreferrer">release</a>. See the <a href="https://wgsextract.github.io/wgsextract-cli/app/" target="_blank" rel="noopener noreferrer">app site</a>.</li>
+</ul>
+<h2 id="privacy">Privacy<a class="heading-anchor" href="#privacy" aria-label="Link to section">#</a></h2>
+<p>Default commands stay offline: no telemetry, background update checks or silent reference downloads. Missing public data requires an explicit <code>--download</code>; sample-derived information must never be sent without a separate, documented opt-in. See <a href="docs/privacy.html">network permissions and destinations</a>.</p>
+<h2 id="install">Install<a class="heading-anchor" href="#install" aria-label="Link to section">#</a></h2>
+<p>On macOS or Linux, open Terminal and run:</p>
+<pre><code class="language-bash">curl -fsSL https://raw.githubusercontent.com/WGSExtract/wgsextract-cli/main/install.sh | sh</code></pre>
+<p>The script comes from <code>main</code> but installs the latest published release into <code>./wgsextract-cli/</code>, not the development branch. On macOS it checks for Xcode Command Line Tools. Linux x86_64 and native ARM64 use the same installer; see <a href="docs/linux-arm64.html">Linux ARM64 support and limitations</a>.</p>
+<p>On Windows, clone or download this repository, then run in PowerShell:</p>
+<pre><code class="language-powershell">.\install_windows.bat</code></pre>
+<p>This installs Pixi when missing and native Windows tools; no WSL or MSYS2 is needed. See the <a href="docs/windows.html">Windows guide</a>.</p>
+<p><a href="docs/installation.html">Installer options and uninstall details</a> cover pinned versions, custom directories, verification and preserved data. The <a href="https://wgsextract.github.io/wgsextract-cli/install.html" target="_blank" rel="noopener noreferrer">site install guide</a> also walks through platform setup and the reference library.</p>
+<h3 id="running-the-cli">Running the CLI<a class="heading-anchor" href="#running-the-cli" aria-label="Link to section">#</a></h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Install type</th><th>Command</th></tr></thead>
+<tbody>
+<tr><td>macOS/Linux installer</td><td><code>./wgsextract-cli/wgsextract</code>, or add <code>wgsextract-cli/</code> to <code>PATH</code></td></tr>
+<tr><td>Source checkout or Windows install</td><td><code>pixi run wgsextract</code>, from the repository directory</td></tr>
+</tbody>
+</table></div>
+<p>Examples below write plain <code>wgsextract</code>; substitute your launcher. Optional tools must be <a href="docs/developer_setup.html#pixi-environments">installed explicitly</a> before use. Feature commands check dependencies; they never install them.</p>
+<h3 id="uninstall">Uninstall<a class="heading-anchor" href="#uninstall" aria-label="Link to section">#</a></h3>
+<pre><code class="language-bash">./wgsextract-cli/uninstall.sh --yes</code></pre>
+<p>This removes the installation, including reference data inside it. Back up anything you want to keep first. Configuration and user-level Pixi are kept unless you request <code>--remove-config</code> or <code>--remove-pixi</code>. For Windows and custom locations, see the <a href="docs/installation.html#uninstall">uninstall guide</a>.</p>
+<h2 id="quick-start">Quick start<a class="heading-anchor" href="#quick-start" aria-label="Link to section">#</a></h2>
+<p>Use your own BAM/CRAM in place of <code>sample.cram</code>. Install the exact reference it was aligned to: <code>hs38</code> below is an example, not interchangeable with every GRCh38 reference.</p>
+<pre><code class="language-bash"># Explicit downloads: library metadata, then a matching reference genome
+wgsextract ref bootstrap
+wgsextract ref library --list
+wgsextract ref library --install hs38
+
+# Validate installed tools (exit 3 if a mandatory tool is missing)
+wgsextract deps check
+
+# Inspect the alignment and its reference build
+wgsextract info --input sample.cram --detailed
+
+# Simulate a 23andMe v5 raw-data file
+wgsextract microarray --input sample.cram --formats 23andme_v5
+
+# Extract mitochondrial variants and predict the maternal haplogroup
+wgsextract extract mito-vcf --input sample.cram
+wgsextract lineage mt-haplogroup --input sample.cram --download</code></pre>
+<p><code>--download</code> explicitly allows the first-use public haplogroup tree download, which <code>ref bootstrap</code> does not include. Omit it for offline use once cached; no sample data is uploaded.</p>
+<p>Try a small region (<code>--region chrM</code>, where supported) before a whole genome: large jobs can take hours and hundreds of gigabytes of working space. See <a href="docs/resource_estimates.html">resource estimates</a> before starting.</p>
+<p>Find the next command with <code>wgsextract help --all</code> or the <a href="https://wgsextract.github.io/wgsextract-cli/commands.html" target="_blank" rel="noopener noreferrer">command reference</a>. For scripts and agents, use <code>wgsextract help --all --json</code> for the compact index, then <code>wgsextract help &lt;command&gt; --json</code> for required arguments, options, examples and typed input schemas. Key flags in the index are hints, not complete invocations.</p>
+<p>Commands exit non-zero on failure. Writers record inputs, outputs, warnings and provenance in a <a href="docs/result-manifest.html">result manifest</a>; <code>--json</code> prints structured results while logs stay on stderr. See <a href="docs/usage.html">running commands</a> for option placement, progress and logging.</p>
+<h2 id="where-to-go-next">Where to go next<a class="heading-anchor" href="#where-to-go-next" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Task</th><th>Guide</th></tr></thead>
+<tbody>
+<tr><td>Choose a workflow or find a command</td><td><a href="https://wgsextract.github.io/wgsextract-cli/commands.html" target="_blank" rel="noopener noreferrer">Command reference</a>, <a href="https://wgsextract.github.io/wgsextract-cli/workflows.html" target="_blank" rel="noopener noreferrer">workflow recipes</a></td></tr>
+<tr><td>Export consumer chips or AADR panels</td><td><a href="docs/microarray.html">Microarray rules and formats</a>, <a href="docs/aadr.html">AADR</a></td></tr>
+<tr><td>Extract Y/mtDNA or find haplogroups</td><td><a href="docs/lineage.html">Lineage and yBrowse</a></td></tr>
+<tr><td>Call variants, annotate or type pharmacogenes</td><td><a href="docs/variants.html">Variant workflows</a>, <a href="docs/variant-confidence.html">confidence and accuracy</a></td></tr>
+<tr><td>Work with Nanopore or PacBio</td><td><a href="docs/ont.html">Long-read support</a></td></tr>
+<tr><td>Choose hardware and plan disk/RAM</td><td><a href="docs/hardware.html">Hardware and acceleration</a>, <a href="docs/resource_estimates.html">resource estimates</a></td></tr>
+<tr><td>Configure paths, resources or keep-awake</td><td><a href="https://wgsextract.github.io/wgsextract-cli/configuration.html" target="_blank" rel="noopener noreferrer">Configuration</a></td></tr>
+<tr><td>Organise samples or download example genomes</td><td><a href="docs/sample-workspace.html#dataset-library">Dataset library and sample workspace</a></td></tr>
+<tr><td>Install and verify reference genomes</td><td><a href="docs/reference-genomes.html">Reference genomes</a></td></tr>
+<tr><td>Resume an interrupted workflow</td><td><a href="docs/step-resume.html">Step journals</a></td></tr>
+<tr><td>Combine pipeline outputs or MultiQC reports</td><td><a href="docs/interop.html">Professional pipeline interoperability</a></td></tr>
+<tr><td>Read a local personal report</td><td><a href="docs/personal-report.html">Personal report</a>, <a href="docs/genotype-qc.html">genotype QC</a></td></tr>
+<tr><td>Integrate from Python, HTTP or MCP</td><td><a href="https://wgsextract.github.io/wgsextract-cli/api.html" target="_blank" rel="noopener noreferrer">Typed Python API</a>, <a href="docs/server.html">local server</a></td></tr>
+<tr><td>Browse every guide</td><td><a href="docs/index.html">Documentation index</a></td></tr>
+</tbody>
+</table></div>
+<h2 id="reporting-a-problem">Reporting a problem<a class="heading-anchor" href="#reporting-a-problem" aria-label="Link to section">#</a></h2>
+<p>Run <code>wgsextract report-issue --last-failed</code> to prepare a locally redacted report, or <code>wgsextract report-issue --print</code> to inspect the last run without opening a browser. Nothing is uploaded automatically: review before submitting. See <a href="docs/usage.html#reporting-a-problem">report contents, privacy and options</a>, or <a href="https://github.com/WGSExtract/wgsextract-cli/issues/new/choose" target="_blank" rel="noopener noreferrer">open an issue</a>.</p>
+<h2 id="development">Development<a class="heading-anchor" href="#development" aria-label="Link to section">#</a></h2>
+<p>Start with <a href="docs/developer_setup.html">developer setup</a> for the setup scripts, Pixi environments, tests and contribution workflow. The desktop app has its <a href="app/docs/index.html">user documentation</a> and <a href="app/devdocs/developer_setup.html">developer setup guide</a>. See <a href="docs/releasing.html">releasing</a> for coordinated CLI/app releases.</p>
+<h2 id="data-licences">Data licences<a class="heading-anchor" href="#data-licences" aria-label="Link to section">#</a></h2>
+<p>Downloaded reference data is separate from the program and retains its own licences. See the <a href="docs/lineage.html#data-licences">data-module licence table</a> and <a href="docs/reference-genomes.html#sources-and-terms">reference sources and terms</a>.</p>
+<p>Y-DNA prediction credits Yleaf's authors at Erasmus MC: Arwin Ralf, Diego Montiel Gonzalez, Kaiyin Zhong, Manfred Kayser and Bram van Wersch. Please cite Ralf et al., <em>Molecular Biology and Evolution</em> 35(5):1291–1294 (2018), <a href="https://doi.org/10.1093/molbev/msy032" target="_blank" rel="noopener noreferrer">doi:10.1093/molbev/msy032</a>. Modified Yleaf-derived files remain GPL-3.0-or-later; see <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/NOTICE" target="_blank" rel="noopener noreferrer">NOTICE</a> and the <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/src/wgsextract_cli/ydna/yleaf_native/README.md" target="_blank" rel="noopener noreferrer">upstream sync procedure</a>.</p>
+<h2 id="license">License<a class="heading-anchor" href="#license" aria-label="Link to section">#</a></h2>
+<p>Distributed under <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">GPL-3.0</a>. Downloaded data modules have their own licences; they do not change the program's licence.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>README.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/README.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Recorded resource releases, ref recheck and report-delta | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/recheck-and-delta.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Recorded resource releases, ref recheck and report-delta</span></nav>
+<h1 id="recorded-resource-releases-ref-recheck-and-report-delta">Recorded resource releases, <code>ref recheck</code> and <code>report-delta</code></h1>
+<p>A finding rests on the public data it was annotated with. ClinVar reclassifies variants every week, so the same calls can give a different report a month later. WGS Extract records which release of each resource a run used, says when newer releases exist and shows what changed between two runs.</p>
+<h2 id="recorded-releases">Recorded releases<a class="heading-anchor" href="#recorded-releases" aria-label="Link to section">#</a></h2>
+<p>Every <a href="result-manifest.html">result manifest</a> has a <code>resources</code> list: the public resources the run used, each with:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>id</code>, <code>name</code>, <code>role</code></td><td><code>clinvar</code>, <code>revel</code>, <code>gnomad</code>, <code>spliceai</code>, <code>alphamissense</code>, <code>pharmgkb</code>, <code>phylop</code>, <code>cadd</code> (and <code>cadd-indel</code>, its indel table), <code>gerp</code> (annotation) or <code>gene-list</code> (the report's gene list).</td></tr>
+<tr><td><code>build</code></td><td><code>hg19</code> or <code>hg38</code> when the resource states it (ClinVar's <code>##reference</code>).</td></tr>
+<tr><td><code>release</code>, <code>release_basis</code></td><td>The exact release used. <code>file_header</code>: ClinVar's own <code>##fileDate</code> (with <code>##source=ClinVar</code>), e.g. <code>2026-11-15</code>. <code>pinned_sha256</code>: a built-in gene list, named by its SHA-256-pinned id, e.g. <code>acmg-sf-3.3</code>. <code>unrecorded</code>: the file doesn't say, so <code>release</code> is <code>null</code>. A release is never guessed from a file name, date or size.</td></tr>
+<tr><td><code>path</code>, <code>fingerprint</code></td><td>The file and its <a href="result-manifest.html#fingerprints">fingerprint</a>.</td></tr>
+<tr><td><code>source_url</code>, <code>licence</code>, <code>licence_url</code>, <code>attribution</code></td><td>The publisher and its terms from the audited <a href="resource-mirrors.html">resource catalog</a>. Recording a resource's terms doesn't make the data redistributable; see the source's own terms.</td></tr>
+</tbody>
+</table></div>
+<p>The <code>vcf</code> annotators (<code>vcf clinvar</code>, <code>vcf revel</code>, <code>vcf gnomad</code>, ...) record the resource they read. <code>report</code> records its gene list and copies the resources of the runs its sections show, so a report's manifest keeps the releases its findings rest on. Manifests written before this have no <code>resources</code> field: their releases are unknown.</p>
+<h2 id="ref-recheck-are-newer-releases-out"><code>ref recheck</code>: are newer releases out?<a class="heading-anchor" href="#ref-recheck-are-newer-releases-out" aria-label="Link to section">#</a></h2>
+<pre><code class="language-sh">wgsextract ref recheck HG002/HG002_personal_report.manifest.json --answers answers.json
+wgsextract ref recheck HG002/HG002_personal_report.manifest.json --online --save-answers answers.json</code></pre>
+<p>It reads the manifests' recorded releases and compares each with the newest release, which comes from one of two explicit sources:</p>
+<ul>
+<li><strong><code>--answers FILE</code></strong> (offline): a JSON file you or an earlier run wrote.</li>
+<li><strong><code>--online</code></strong>: asks the resource's public release listing. For ClinVar that is NCBI's weekly VCF listing, <code>https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/weekly/</code> (or <code>vcf_GRCh37/weekly/</code> for hg19). The request is a plain GET of that URL: it sends no sample name, path, position, genotype or file. Only resources with a known listing are asked; the others stay <code>unknown</code>. <code>--save-answers FILE</code> keeps what it found, so the same check can be repeated offline.</li>
+</ul>
+<p>With neither, the command makes no connection and stops (exit 2), naming the resources and releases it would check and both ways to continue. It never downloads data or reruns an analysis. Each resource gets a <code>status</code>:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Status</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>up_to_date</code></td><td>The runs used the newest release.</td></tr>
+<tr><td><code>newer_available</code></td><td>The answers name a later release.</td></tr>
+<tr><td><code>different_release</code></td><td>The answers name another release that can't be ordered by date.</td></tr>
+<tr><td><code>unknown</code></td><td>The run didn't record its release, the answers don't cover the resource, or they name an older release than the run used (out-of-date answers).</td></tr>
+<tr><td><code>lookup_error</code></td><td>The online lookup failed. A failed lookup is never reported as up to date.</td></tr>
+</tbody>
+</table></div>
+<p><code>installed</code> says whether the file at the recorded path is still the one the runs used (<code>same</code>, <code>changed</code> with its release as <code>installed_release</code>, <code>missing</code> or <code>unknown</code>; a server job checks only files in its allowed folders). Copies of the same release at different paths are checked separately. <code>used_by</code> lists the runs, and <code>next_step</code> says what to do: download the newer release yourself (for ClinVar from NCBI, then pass it with <code>vcf clinvar --clinvar-file</code>), then rerun those commands, the analyses before the report. If the installed file already has that release, rerun without downloading it again. <code>wgsextract ref &lt;resource&gt;</code> installs the release this WGS Extract pins, often an audited mirror snapshot, which may be older than the newest. A truncated or failed listing is a <code>lookup_error</code>. The result has the warnings <code>newer_release_available</code>, <code>release_differs</code> (for <code>different_release</code>), <code>release_lookup_failed</code> and <code>resources_not_recorded</code>; its <code>details</code> follow <code>wgsextract.recheck/1</code> (<a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/src/wgsextract_cli/assets/schemas/wgsextract.recheck.1.schema.json" target="_blank" rel="noopener noreferrer">schema</a>), and <code>details.answers</code> records where the answers came from: the file's path, SHA-256, <code>retrieved</code> time and <code>source</code>, or the URLs contacted. The answers file is also an input of the result, with its fingerprint.</p>
+<h3 id="answers-file">Answers file<a class="heading-anchor" href="#answers-file" aria-label="Link to section">#</a></h3>
+<pre><code class="language-json">{
+  &quot;schema&quot;: &quot;wgsextract.release_answers/1&quot;,
+  &quot;retrieved&quot;: &quot;2026-11-22T08:00:00+00:00&quot;,
+  &quot;source&quot;: &quot;NCBI ClinVar weekly listing&quot;,
+  &quot;answers&quot;: [
+    {&quot;id&quot;: &quot;clinvar&quot;, &quot;build&quot;: &quot;hg38&quot;, &quot;latest&quot;: &quot;2026-11-22&quot;},
+    {&quot;id&quot;: &quot;clinvar&quot;, &quot;build&quot;: &quot;hg19&quot;, &quot;latest&quot;: null, &quot;error&quot;: &quot;timed out&quot;}
+  ]
+}</code></pre>
+<p>Omit <code>build</code> or use <code>null</code> for an answer that applies to any build without a build-specific answer. Omit <code>latest</code> or use <code>null</code> when the latest release is unknown. A file of another schema is refused with error code <code>unsupported_schema</code>.</p>
+<h2 id="report-delta-what-changed-between-two-runs"><code>report-delta</code>: what changed between two runs<a class="heading-anchor" href="#report-delta-what-changed-between-two-runs" aria-label="Link to section">#</a></h2>
+<pre><code class="language-sh">wgsextract report-delta --before old/HG002/HG002_personal_report.manifest.json \
+                        --after HG002/HG002_personal_report.manifest.json</code></pre>
+<p>It compares two result manifests of the same command and sample (a report's sample, else the sample the run recorded selecting, else the input's file name), by meaning rather than bytes. Timestamps, ordering, file paths and regenerated documents are ignored, and no network request is made. Two report manifests are compared section by section; any other pair of manifests (two <code>vcf clinvar</code> runs, say) is compared by status, warnings, metrics, outputs and provenance.</p>
+<p>Report findings are matched by section and variant (<code>chrom:pos:ref:alt</code>), or by section and label for structural variants (their type, span and size) and non-variant findings. Each changed finding lists its <code>changes</code>:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Change</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>added</code>, <code>removed</code></td><td>The finding is in only one report.</td></tr>
+<tr><td><code>reclassified</code></td><td>Same variant and genotype, another classification (e.g. Pathogenic to Likely pathogenic).</td></tr>
+<tr><td><code>review_changed</code></td><td>ClinVar's review status, stars or conflicting-submitter evidence changed.</td></tr>
+<tr><td><code>genotype_changed</code></td><td>The sample's genotype or zygosity at the variant changed, or which calls it is phased with, on the same or the other copy (<code>phased_with</code>; phase-set ids themselves may be renumbered).</td></tr>
+<tr><td><code>result_changed</code></td><td>A non-variant result changed (a diplotype, a haplogroup; PharmCAT's candidate diplotypes compare as a set), or a variant's evidence did (its ClinVar condition, ACMG criteria, transcript or consequence, an SV's population frequency).</td></tr>
+<tr><td><code>confidence_changed</code></td><td>The call's confidence label or reasons changed: its callability.</td></tr>
+<tr><td><code>ambiguity_changed</code></td><td>A PharmCAT gene became resolved, ambiguous or no-call.</td></tr>
+</tbody>
+</table></div>
+<p>Unchanged findings are counted per section. A section that failed or did not run in either report is not compared (<code>compared: false</code>, with a note): its findings are not reported as removed. Within a section that has several runs (pharmacogenomics, lineage), a run that failed or did not run in either report is listed in <code>not_compared</code>, with a note, and its own findings are not reported as added or removed. <code>changes</code> lists the status change of each such run (area <code>status</code>, key <code>section command</code>) and each change in a gene's interpretation (area <code>gene</code>: a ClinVar gene's status and phase, such as <code>biallelic</code> to <code>possible_biallelic</code>). <code>releases</code> lists each recorded resource as <code>same</code>, <code>changed</code>, <code>content_changed</code> (same release name, different file), <code>added</code>, <code>removed</code> or <code>unknown</code> (release unrecorded and the file differs). A changed finding names the releases its section rests on that changed (<code>release_changes</code>), and <code>summary.resource_only</code> is true when releases changed but no finding, section, run status, gene interpretation, metric or output did.</p>
+<p>Each changed finding keeps its confidence label and disclaimer as the report gave them, and the document carries the report's disclaimer and its <code>limitations</code>: release changes are an association, not a proven cause; a ClinVar finding added after an update may be a reclassified call or a new call, because a report lists only P/LP calls; sections not compared are not removals. These are technical results, not diagnosis.</p>
+<p>The command refuses runs it can't compare, with error codes <code>delta_command_mismatch</code> (different commands), <code>delta_sample_mismatch</code> (different samples), <code>delta_build_mismatch</code> (hg19 against hg38, or a run whose sections, reference or resources name different builds: positions differ) and <code>unsupported_schema</code> (not a <code>wgsextract.result/1</code> manifest, or a report of another schema). Its <code>details</code> follow <code>wgsextract.delta/1</code> (<a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/src/wgsextract_cli/assets/schemas/wgsextract.delta.1.schema.json" target="_blank" rel="noopener noreferrer">schema</a>).</p>
+<p>Both commands are also typed API operations (<code>api.ref.recheck</code>, <code>api.report.delta</code>) and server operations; a read-only server session can't set <code>online</code>.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/recheck-and-delta.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/recheck-and-delta.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

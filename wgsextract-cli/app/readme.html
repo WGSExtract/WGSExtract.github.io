@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WGS Extract GUI | WGS Extract GUI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/app/readme.html" />
+    <link rel="stylesheet" href="assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a href="index.html">Home</a><a href="architecture.html">GUI Architecture</a><a href="wgsextract.html">WGSExtract</a><a class="active" href="docs.html">Docs</a><a href="../index.html">WGSExtract CLI</a><a href="whats-different.html">What&#x27;s Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="index.html">WGS Extract GUI</a> / <a href="docs/index.html">User Docs</a> / <span>WGS Extract GUI</span></nav>
+<h1 id="wgs-extract-gui">WGS Extract GUI</h1>
+<blockquote>
+<p><strong>End users:</strong> Looking for how to use the WGS Extract desktop app? Start with the <strong><a href="docs/index.html">User Documentation</a></strong> (<a href="https://wgse.bio/wgsextract-cli/app/docs/index.html" target="_blank" rel="noopener noreferrer">rendered web docs</a>). This README and <a href="devdocs/index.html"><code>devdocs/</code></a> are oriented toward developers, bundle authors and packagers.</p>
+</blockquote>
+<p>WGS Extract GUI turns a portable CLI-tool bundle into an installable desktop app for Windows, macOS, and Linux. It is one TypeScript app: a Web UI and a local Node backend, packaged as a native desktop app with <a href="https://tauri.app" target="_blank" rel="noopener noreferrer">Tauri</a>.</p>
+<p><img src="docs/readme-screenshot.png" alt="WGS Extract GUI running the WGS Extract example bundle (Extract page, dark mode)" /></p>
+<p>The first real app built with WGS Extract GUI is the WGSExtract interface in <code>examples/WGSExtract</code>. It exercises setup steps, long-running commands, dynamic data sources, localization, configuration, terminal output, file pickers, and release packaging against a realistic genomics workflow.</p>
+<p>This folder is part of the <a href="../readme.html">wgsextract-cli</a> repository: the app ships in the same <code>vX.Y.Z</code> release as the CLI it bundles (see <a href="../docs/releasing.html">releasing</a>), and the root's <code>just gui-*</code> recipes run the commands below from anywhere in the repository. Its history up to the move is in the former <a href="https://github.com/WGSExtract/gui-for-cli" target="_blank" rel="noopener noreferrer">gui-for-cli</a> repository too, with app releases up to v0.6.6.</p>
+<p>Earlier work, including the SwiftUI macOS app, the Swift CLI, Electron and a dozen experimental renderers, and the benchmarks across them, is preserved on the <a href="https://github.com/WGSExtract/gui-for-cli/tree/old-experimental" target="_blank" rel="noopener noreferrer"><code>old-experimental</code></a> branch.</p>
+<p>The <a href="docs/genome-viewer.html">built-in genome viewer</a> opens indexed local BAM, CRAM and VCF/gVCF files offline. You can opt into <a href="docs/genome-viewer.html#view-files-on-a-remote-server">remote viewing</a> through the desktop backend; it retains the server token and proxies selected file ranges.</p>
+<h2 id="layout">Layout<a class="heading-anchor" href="#layout" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Path</th><th>Contents</th></tr></thead>
+<tbody>
+<tr><td><code>app/shared</code></td><td>Runtime shared by client and server: rendering, localization, types.</td></tr>
+<tr><td><code>app/web/src/server</code></td><td>Node backend: bundle loading, setup, action execution, config.</td></tr>
+<tr><td><code>app/web/src/client</code></td><td>Browser UI.</td></tr>
+<tr><td><code>app/web/packagers/tauri</code></td><td>Tauri desktop shell (Rust): window, menus, native pickers, updater.</td></tr>
+<tr><td><code>examples/</code></td><td>Example bundles.</td></tr>
+<tr><td><code>resources/</code></td><td>Built-in localized strings and icon map.</td></tr>
+<tr><td><code>docs/</code></td><td>End-user guides (<a href="docs/index.html">user README</a>), privacy guide, genome viewer, gene page, and changelog.</td></tr>
+<tr><td><code>devdocs/</code></td><td>Developer documentation (<a href="devdocs/index.html">developer index</a>): architecture, setup, distribution, job server, prerequisites, result documents, and JSON Schemas (<code>devdocs/schema/</code>).</td></tr>
+<tr><td><code>tools/</code>, <code>scripts/</code></td><td>Python repo tooling: task runner, packaging, localization lint, site builder.</td></tr>
+<tr><td><code>mockups/</code></td><td>Redesign mockups, design system and icons for review (<code>make mockups</code>); not part of the app. See <code>mockups/README.md</code>.</td></tr>
+</tbody>
+</table></div>
+<h2 id="requirements">Requirements<a class="heading-anchor" href="#requirements" aria-label="Link to section">#</a></h2>
+<ul>
+<li>Node.js 22 or newer.</li>
+<li>Python 3.11 or newer for repository tooling (<a href="https://docs.astral.sh/uv/" target="_blank" rel="noopener noreferrer">uv</a> recommended).</li>
+<li>Rust/Cargo and the <a href="https://v2.tauri.app/start/prerequisites/" target="_blank" rel="noopener noreferrer">Tauri prerequisites</a> for your OS to build the desktop app.</li>
+</ul>
+<p><code>make setup</code> (Windows: <code>powershell -ExecutionPolicy Bypass -File .\make.ps1 setup</code>) bootstraps missing user-level tools, installs locked dependencies, and runs a quick Web UI smoke test. It never elevates or installs system packages. See <a href="devdocs/developer_setup.html">developer setup</a> for manual OS prerequisites, the change-to-PR loop, and an AI-agent walkthrough.</p>
+<h2 id="getting-started">Getting started<a class="heading-anchor" href="#getting-started" aria-label="Link to section">#</a></h2>
+<pre><code class="language-bash">make setup      # user tools, locked deps, smoke test
+make precheck   # verify the toolchain
+make run        # serve the Web UI at http://127.0.0.1:8787 with examples/WGSExtract
+make tauri      # run the desktop app in dev mode</code></pre>
+<p>On Windows, use <code>powershell -ExecutionPolicy Bypass -File .\make.ps1 &lt;target&gt;</code> with the same target names; no machine execution-policy change is needed.</p>
+<p><code>make run</code> and <code>make dev</code> take <code>BUNDLE=&lt;path&gt;</code> and <code>PORT=&lt;port&gt;</code>:</p>
+<pre><code class="language-bash">make dev BUNDLE=examples/GitHelper PORT=9000</code></pre>
+<h2 id="common-commands">Common commands<a class="heading-anchor" href="#common-commands" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><code>make run</code></td><td>Build and serve the Web UI in a browser.</td></tr>
+<tr><td><code>make dev</code></td><td>Serve the Web UI with TypeScript watch and server reload.</td></tr>
+<tr><td><code>make tauri</code></td><td>Run the Tauri desktop app in dev mode.</td></tr>
+<tr><td><code>make build</code> / <code>make build-tauri</code></td><td>Compile the Web UI / build the desktop app.</td></tr>
+<tr><td><code>make lint</code></td><td>Typecheck, validate example bundles, lint locales, compile Python tooling, check duplication.</td></tr>
+<tr><td><code>make test</code></td><td>Run TypeScript and Python tooling tests.</td></tr>
+<tr><td><code>make ci</code></td><td>Lint and test, as CI does.</td></tr>
+<tr><td><code>make package</code></td><td>Build Tauri distributables for this host into <code>out/release/tauri/</code>.</td></tr>
+<tr><td><code>make package-windows-cross</code></td><td>Cross-build the Windows installer from macOS or Linux.</td></tr>
+<tr><td><code>make site</code></td><td>Regenerate the static project site into <code>site/</code> from <code>site_src/</code>.</td></tr>
+</tbody>
+</table></div>
+<p>Development targets run through <code>tools/tasks.py</code>, so <code>uv run python tools/tasks.py &lt;action&gt; [target]</code> works too.</p>
+<h2 id="bundles">Bundles<a class="heading-anchor" href="#bundles" aria-label="Link to section">#</a></h2>
+<p>A bundle is a folder containing <code>manifest.json</code>, page files, scripts, and assets. Pass its path with <code>BUNDLE=&lt;path&gt;</code>; it defaults to <code>examples/WGSExtract</code>. The path can also be a <code>manifest.json</code> file or a <code>.zip</code>, <code>.tar</code>, <code>.tar.gz</code>/<code>.tgz</code> archive whose root, or single top-level folder, holds <code>manifest.json</code> (a gzipped <code>manifest.json.gz</code> works too). Archives are extracted to a cache under the system temp folder.</p>
+<p>Every load checks the manifest and pages against the rules in <code>devdocs/schema</code>, the setup steps' platform script folders, and tool version files. Check bundles without starting the app:</p>
+<pre><code class="language-bash">npm --prefix app run bundle:validate -- examples/WGSExtract path/to/bundle.zip</code></pre>
+<p>Bundles can include <code>strings.toml</code> and <code>strings.&lt;language-code&gt;.toml</code> localization tables next to <code>manifest.json</code>. Schema files live in <code>devdocs/schema/manifest.schema.json</code> and <code>devdocs/schema/page.schema.json</code>.</p>
+<p>Actions can also run as cancellable jobs on a local server that the bundle declares; see <a href="devdocs/job-server.html">job servers</a>. Commands that describe their run in a JSON result document get their outputs, warnings and metrics shown from it; see <a href="devdocs/result-documents.html">result documents</a>. A bundle can check, before an action runs, for data it needs that isn't installed and offer to install it; see <a href="devdocs/prerequisites.html">prerequisites</a>. A data source can map what a command prints to the payload it shows with a module in the bundle; see <a href="devdocs/data-sources.html">data sources</a>.</p>
+<p>Run a bundle's action test plans with:</p>
+<pre><code class="language-bash">npm --prefix app run bundle:test -- --help</code></pre>
+<h2 id="configuration">Configuration<a class="heading-anchor" href="#configuration" aria-label="Link to section">#</a></h2>
+<p>The app keeps its own data in a <code>WGSExtract-gui</code> folder in the platform Application Support directory: <code>~/Library/Application Support/WGSExtract-gui</code> on macOS, <code>%LOCALAPPDATA%\WGSExtract-gui</code> on Windows, <code>~/.local/share/WGSExtract-gui</code> (or under <code>$XDG_DATA_HOME</code>) on Linux. Bundles reach it as <code>{{appData}}</code>, and their scripts as <code>$WGSEXTRACT_GUI_APP_DATA</code>. It holds the app's <code>settings.json</code> and the WGS Extract CLI that setup installs (<code>runtime/wgsextract-cli</code>, with its <code>bin/wgsextract</code> launcher). The CLI stays there wherever the app itself is installed, since the app's install folder is replaced on every update and often isn't writable. Set <code>WGSEXTRACT_GUI_APP_DATA_NAME</code> to use a different folder name for isolated tests or scripts. The desktop app's webview data and logs are in a separate folder named for its identifier, <code>dev.wgsextract-gui</code>.</p>
+<p>Apps up to 0.8.6 kept their settings in a <code>dev.guiforcli.web.embed.wgsextract</code> folder and the CLI in the workspace's <code>runtime</code> folder. On its first launch, a newer app moves the settings over, removes that folder, and offers setup again. Once setup has installed the CLI in the new place, it deletes the copy in the workspace.</p>
+<p>WGS Extract keeps two workspaces:</p>
+<ul>
+<li><code>{{usersWorkspace}}</code>, the users workspace, defaults to <code>~/wgs-extract</code> (<code>%USERPROFILE%\wgs-extract</code> on Windows). It holds the settings file (<code>config.toml</code>) and the folders you manage: the My Genomes library (<code>mygenomes/</code>), and, since the app installed the CLI, the Reference Data and Reference Genomes libraries and the temporary folder. These folders can become very large, so they are kept visible and in your own space. A standalone WGS Extract CLI uses the same folder, so the two share their settings and libraries. A bundle sets it with <code>defaultUsersWorkspace</code> in its manifest; without one, <code>{{usersWorkspace}}</code> is the bundle workspace.</li>
+<li><code>{{bundleWorkspace}}</code>, the bundle workspace, is the app's own: its copy of the bundle, its saved state and the run logs, in the app's data folder (<code>%LOCALAPPDATA%\WGSExtract-gui\BundleWorkspaces</code>, <code>~/Library/Application Support/WGSExtract-gui/BundleWorkspaces</code>, <code>~/.local/share/WGSExtract-gui/BundleWorkspaces</code>). You never need to move it; <strong>Open Bundle Workspace</strong> on the Settings page shows it.</li>
+</ul>
+<p>Outputs default to a <code>wgse</code> folder beside each command's input BAM, CRAM, FASTQ, VCF or microarray file from the lab (in that order, when it reads several), or beside an input already in a <code>wgse</code> folder; the lab's own folder is treated as immutable, gaining only the indexes that must sit beside their files. Only Advanced mode can set an Output Directory override in the GUI. Basic mode hides and ignores advanced-only GUI overrides without changing their saved values; a default configured for the CLI still applies when the CLI reads that config.</p>
+<p>Releases 0.8.5 to 0.8.7 kept everything in <code>~/wgs-extract</code>. On its first start, a newer app makes that folder (including a previously moved workspace) the users workspace: your settings file, libraries and outputs stay there, and the app's copy of the bundle and its state move to the bundle workspace. Existing <code>datasets</code> libraries stay put so saved input paths remain valid. Releases before 0.8.5 kept the workspace in the app's data folder: the settings file moves to the users workspace, and the folders it names stay where they are until you move them. The standalone CLI follows the desktop's workspace location record, including suffixed defaults, unless it already has a legacy CLI config. If both configs exist, the CLI keeps its legacy file and warns with both paths; use <code>--config PATH</code> to choose explicitly.</p>
+<p><code>WGSEXTRACT_GUI_USERS_WORKSPACE</code> and <code>WGSEXTRACT_GUI_CLI_INSTALL</code> are internal bundle-script inputs supplied by the app, not user configuration options. Persistent folder choices belong in Settings or <code>config.toml</code>.</p>
+<p>The desktop package includes production Node dependencies, including the TOML parser, beside <code>app/dist</code>; end users do not need npm or a development <code>node_modules</code> tree.</p>
+<p>On Windows, setup installs WGS Extract's tools (its Pixi environments) for the current Windows account in <code>%LOCALAPPDATA%\WGSExtractPixi</code>, outside the workspace. If they aren't there, the pages say so; run Setup again. This happens when setup ran under another account, or was started from an app that Windows keeps apart from the rest of AppData\Local, such as an MSIX-packaged app. It also happens when that folder was deleted.</p>
+<p>The app never takes over a folder of yours. If <code>~/wgs-extract</code> already exists and isn't a WGS Extract workspace (or is a file, or a folder the app can't read), the app uses <code>~/wgs-extract-2</code> instead, or the next free name. It records that folder in its <code>settings.json</code>, so the users workspace stays there. If the folder chosen in Settings holds such a folder, the app doesn't start. It reports the folder: move that folder away, or remove it from <code>usersWorkspaces</code> in the app's <code>settings.json</code> to go back to the default location.</p>
+<p>To move the users workspace, for example to a larger or faster drive, choose a <strong>Users Workspace Folder</strong> under <strong>Users Workspace Location</strong> on the Settings page and click <strong>Move</strong>. Everything in it moves with it, and paths shown under <code>{{usersWorkspace}}</code> follow, while folders you set elsewhere stay where they are. Changing one folder under <strong>Users Workspace Settings</strong> (a library, the temporary or run log folder, or an Output Directory) asks whether to move what is in it too, so you can put each on the disk that suits it.</p>
+<p>A setting-folder move cannot move the users workspace, the bundle or its source, or a folder containing any settings editor's config file. Use <strong>Users Workspace Location</strong> to move the workspace as a whole; <strong>Change Setting Only</strong> never moves or deletes existing contents.</p>
+<p>Changing a bound library folder on My Genomes or Library opens the same Move / Change Setting Only / Cancel dialog on that page, in Basic and Advanced; it never requires opening the Settings editor.</p>
+<p>The move dialog receives keyboard focus, traps Tab/Shift+Tab and supports Escape cancellation, returning focus to the initiating control. Workspace roots that are symlink or junction aliases of the same physical directory are refused before migration, preserving saved state.</p>
+<p>Uninstalling removes the bundle workspace with the app, but asks before deleting the users workspace, wherever it is, since its libraries may be shared. Folders the settings file names inside the app's data folder (an older install's libraries) are kept the same way. A silent Windows uninstall keeps them all. So does the quick-uninstall script published with each Windows release.</p>
+<h2 id="distribution">Distribution<a class="heading-anchor" href="#distribution" aria-label="Link to section">#</a></h2>
+<p><code>make package</code> builds the macOS <code>.app</code>/<code>.dmg</code>, the Linux <code>.deb</code>/<code>.rpm</code>/<code>.pkg.tar.zst</code>/<code>.AppImage</code>, or the Windows NSIS installer, depending on the host. Packaging defaults to the bundled WGSExtract app; set <code>packaging.embedded_bundle_path</code> and <code>packaging.app_name</code> in <code>.devconfig.toml</code> to package a different bundle.</p>
+<p>Tagged releases build on all three OSes in GitHub Actions, sign and notarize the macOS app, and publish a Tauri updater feed. See <a href="devdocs/distribution.html"><code>devdocs/distribution.md</code></a> for signing, notarization, and self-updates.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract GUI</strong><p>Rendered from <code>gui/README.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/gui/README.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

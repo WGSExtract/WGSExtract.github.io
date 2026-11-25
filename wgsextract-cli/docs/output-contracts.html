@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Output contracts | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/output-contracts.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Output contracts</span></nav>
+<h1 id="output-contracts">Output contracts</h1>
+<p>WGS Extract's structured outputs are contracts with three tiers. The classification is <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/contracts/output-contracts.json" target="_blank" rel="noopener noreferrer"><code>contracts/output-contracts.json</code></a>, and every change is compared with a <strong>pinned baseline of the previous release</strong> in <a href="https://github.com/WGSExtract/wgsextract-cli/tree/main/contracts/baselines" target="_blank" rel="noopener noreferrer"><code>contracts/baselines/</code></a>, so a field cannot disappear just because its writer and its schema changed together.</p>
+<h2 id="tiers">Tiers<a class="heading-anchor" href="#tiers" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Tier</th><th>Guarantee</th><th>Examples</th></tr></thead>
+<tbody>
+<tr><td><strong>stable</strong></td><td>Within a schema major version (<code>wgsextract.result/1</code>), a stable field is never removed, never widened to new types or values, never made optional, and keeps its recorded meaning. Only additions are allowed.</td><td>The result manifest's envelope: <code>status</code>, <code>exit_code</code>, <code>error.kind</code>, <code>inputs</code>/<code>outputs</code> file records, <code>warnings[].code</code>, <code>provenance.version</code>; the output roles <code>input</code>, <code>mt_bam</code>, <code>result_card</code></td></tr>
+<tr><td><strong>experimental</strong></td><td>May change in any release, but each removal or incompatible change since the last release must be announced in the release notes.</td><td>Command-specific <code>details</code>, <code>metrics</code>, the personal report's sections, detected sample facts, HTTP response bodies</td></tr>
+<tr><td><strong>internal</strong></td><td>No guarantee. Only the in-repository modules listed as its consumers may read it.</td><td>The step journal (<code>wgsextract.steps/1</code>)</td></tr>
+</tbody>
+</table></div>
+<p>A field takes the tier of its nearest classified ancestor, and otherwise its document's. A stable field needs stable parents: a stable value inside an experimental object is not reachable stably. Paths name what a reader sees: <code>inputs[].role</code> is the role of every input record, and <code>metrics.*</code> is any value of the <code>metrics</code> map. Output roles, the <code>role</code> strings in manifests' <code>inputs</code> and <code>outputs</code>, are classified under <code>roles</code>; a role that is not listed is experimental. A stable role names its <code>producers</code>: a command that records it and, with <code>when</code>, the option that makes it do so (<code>vcf trio</code> records <code>proband</code> when given <code>--proband</code>). Adding a role, metric, warning code or <code>details</code> key is always compatible.</p>
+<h3 id="scientific-meaning">Scientific meaning<a class="heading-anchor" href="#scientific-meaning" aria-label="Link to section">#</a></h3>
+<p>A stable JSON shape does not make a scientific result stable. Fields that hold a scientific call (haplogroups, sex, ancestry, findings and their confidence labels) are marked <code>scientific</code>, and the check refuses to make one stable unless its entry names <code>validation</code> evidence: a document or test in this repository that validates what the value means. Until then such fields stay experimental, however settled their shape. Stable fields may record their <code>meaning</code> in the registry; the meaning is pinned with the baseline, so reusing a field for something else is a breaking change even when its type is unchanged.</p>
+<h2 id="what-the-check-compares">What the check compares<a class="heading-anchor" href="#what-the-check-compares" aria-label="Link to section">#</a></h2>
+<p><code>python scripts/output_contracts.py check</code> flattens each registered JSON Schema (the generated files in <code>src/wgsextract_cli/assets/schemas/</code>) into paths and the values a reader can see at each: JSON types, allowed values, format, pattern, numeric bounds, minimum string length and whether the field is always present. Every alternative of an <code>anyOf</code> counts, so adding a looser one (an unrestricted object, say) widens the fields under it. It then compares them with the newest pinned baseline, from the reader's side:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Finding</th><th>Stable</th><th>Experimental</th></tr></thead>
+<tbody>
+<tr><td>Field, document or role removed</td><td>error</td><td>notice</td></tr>
+<tr><td>Document holding any stable field removed</td><td>error</td><td>—</td></tr>
+<tr><td>Type, values, format, pattern or bounds widened</td><td>error</td><td>notice</td></tr>
+<tr><td>Always-present field made optional</td><td>error</td><td>notice</td></tr>
+<tr><td>Recorded meaning changed</td><td>error</td><td>notice</td></tr>
+<tr><td>Stable field or role demoted to another tier</td><td>error</td><td>—</td></tr>
+<tr><td>Field added, or a value narrowed</td><td>compatible</td><td>compatible</td></tr>
+</tbody>
+</table></div>
+<p>Internal documents are not compared. Announce an experimental change in its <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/release-notes/unreleased/README.md" target="_blank" rel="noopener noreferrer">release-note fragment</a>, <code>docs/release-notes/unreleased/&lt;number&gt;-&lt;slug&gt;.md</code>. Name the changed output there (`<code> </code>wgsextract.report/1:guide<code> </code><code>, or </code><code> </code>role:aadr<code> </code>` for a role). Notes from a release after the baseline also count; an older release's mention does not announce a new change. The check also rejects registry entries for paths that no longer exist, a stable role without producers, an internal document without declared consumers, and an unvalidated scientific field marked stable.</p>
+<p><code>python scripts/output_contracts.py instance FILE...</code> checks real output documents (a manifest, <code>--json</code> output or an API <code>Result.to_dict()</code>) against the baseline: every stable field must be present with an allowed value (type, values, pattern, bounds, length and <code>date-time</code> format), and each stable role's producers must still record it. The test suite runs it on real outputs of every stable role's producers: <code>extract mt-bam</code> (with <code>--card</code>) through the CLI, its manifest and the Python API, <code>vcf trio --proband</code> and <code>vcf filter --vcf-input</code>.</p>
+<p>Every check runs offline. Ordinary checks read only files in the checkout and, when present, local git objects.</p>
+<h2 id="approved-breaking-changes">Approved breaking changes<a class="heading-anchor" href="#approved-breaking-changes" aria-label="Link to section">#</a></h2>
+<p>A stable change that would break readers follows this procedure:</p>
+<ol>
+<li>The repository owner approves it on an issue, which records why readers must change.</li>
+<li>Preferably, the change ships as a new schema major version (<code>wgsextract.result/2</code>) with its own schema file and registry entry. Retiring the old document later is itself a break (<code>stable_document_removed</code>, with an empty <code>path</code>) approved as in step 3.</li>
+<li>For that, or an exceptional fix within a major version (for example a field that never carried a usable value), the PR adds an entry to <code>approved_breaks</code> in the registry: <code>document</code>, <code>path</code>, the finding <code>code</code>, the <code>approval</code> (the owner's issue or PR) and the <code>reason</code>. The finding is then reported as approved. An entry that matches no finding fails the check, so the release that pins the next baseline removes the entries it absorbed.</li>
+<li>The release notes describe the change under a <strong>Breaking</strong> heading.</li>
+</ol>
+<h2 id="pinned-baselines">Pinned baselines<a class="heading-anchor" href="#pinned-baselines" aria-label="Link to section">#</a></h2>
+<p>Each baseline records the release tag, its commit, the git blob of every schema it read, the registry it classified them with, the flattened surface and a SHA-256 digest of the whole. Baselines are immutable:</p>
+<ul>
+<li>Pinning one is a maintainer release step (see <a href="releasing.html">Releasing</a>), run once the <code>vX.Y.Z</code> tag exists locally:</li>
+</ul>
+<pre><code class="language-bash">  python scripts/output_contracts.py pin --release vX.Y.Z</code></pre>
+<p>It reads the tag's own schema and registry files from git, refuses to overwrite an existing baseline and does not use the network: fetch the tag first if it is missing (<code>git fetch origin tag vX.Y.Z</code>). The first baseline, v0.8.9, predates the registry, so it recorded the registry introduced with it (<code>tiers_source: bootstrap</code>). Only the oldest baseline, of a tag without a registry, may do that; every later one takes its tiers from its tag.</p>
+<ul>
+<li><code>check</code> verifies each baseline's digest and, when the tag is in the local repository, that it regenerates exactly from the tag's files. A shallow checkout without the tag reports that it skipped this.</li>
+<li>On pull requests and in the merge queue, the <code>changes</code> job runs <code>check --base &lt;base commit&gt;</code> with the full history: it compares the change with the baselines <strong>as they are on the base</strong>, so editing or deleting a baseline in the same change is reported (<code>baseline_modified</code>, <code>baseline_removed</code>) and cannot erase the comparison, and a new baseline must regenerate from a real release tag (<code>baseline_unverified</code>).</li>
+</ul>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/output-contracts.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/output-contracts.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

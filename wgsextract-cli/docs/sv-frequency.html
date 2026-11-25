@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Structural-variant population frequencies (vcf sv-freq) | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/sv-frequency.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Structural-variant population frequencies (vcf sv-freq)</span></nav>
+<h1 id="structural-variant-population-frequencies-vcf-sv-freq">Structural-variant population frequencies (<code>vcf sv-freq</code>)</h1>
+<p><code>vcf sv</code> and <code>vcf cnv</code> list hundreds to tens of thousands of structural variants (SVs). Most of them are common in the population and unlikely to matter for a rare condition. <code>vcf sv-freq</code> looks up each call in gnomAD's SV catalogues, adds its population frequency, and flags the common ones, so the variant table and the personal report can put the rare SVs first.</p>
+<pre><code class="language-sh">wgsextract ref gnomad-sv --install              # once: gnomAD-SV (GRCh38 1.7 GB, GRCh37 141 MB downloads)
+wgsextract ref gnomad-sv --install --source lr  # optional, GRCh38: gnomAD-LR long-read SVs (53 GB, one chromosome at a time)
+wgsextract vcf sv --input me.cram               # or vcf cnv, or any VCF of SVs
+wgsextract vcf sv-freq --vcf-input sv.vcf.gz
+wgsextract vcf table --vcf-input sv_freq_annotated.vcf.gz</code></pre>
+<h2 id="catalogues">Catalogues<a class="heading-anchor" href="#catalogues" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Source</th><th>Build</th><th>Samples</th><th>Licence</th><th>Installed table</th></tr></thead>
+<tbody>
+<tr><td>gnomAD-SV v4.1 (<code>--source sr</code>)</td><td>GRCh38</td><td>63,046 short-read genomes</td><td>no use restriction (CC0)</td><td><code>gnomad-sv/gnomad_sv_v4.1_hg38.tsv.gz</code></td></tr>
+<tr><td>gnomAD-SV v2.1 (<code>--source sr</code>)</td><td>GRCh37</td><td>10,847 short-read genomes</td><td>no use restriction (CC0)</td><td><code>gnomad-sv/gnomad_sv_v2.1_hg19.tsv.gz</code></td></tr>
+<tr><td>gnomAD-LR 0.1 beta (<code>--source lr</code>)</td><td>GRCh38</td><td>1,027 All of Us long-read (PacBio HiFi) genomes</td><td>"publicly released without use restriction" (<a href="https://gnomad.broadinstitute.org/news/2026-10-long-read-genome-data-in-gnomad/" target="_blank" rel="noopener noreferrer">announcement</a>, 2026-10-22)</td><td><code>gnomad-sv/gnomad_lr_0.1_hg38.tsv.gz</code></td></tr>
+</tbody>
+</table></div>
+<p>Each source VCF is downloaded from gnomAD's public bucket, checked against a pinned SHA-256, reduced to a small table (CHROM, POS, END, SVTYPE, SVLEN, AF, POPMAX_AF, ID; bgzip and tabix) and deleted. A marker beside the table records its digest, which is checked before every use, so a changed table is refused until it is installed again. One source VCF is on disk at a time: the command refuses to start without room for the largest one (4.3 GB for gnomAD-LR) plus the table.</p>
+<p>Only PASS sites with an allele frequency are kept, plus gnomAD-SV's multi-allelic CNVs, whose frequency is the non-reference carrier frequency (<code>CN_NONREF_FREQ</code>). Breakends, translocations and complex SVs are left out. Pooled CNV rows are retained in the installed table for provenance, but are not used for <code>SV_AF</code>: their non-reference <strong>carrier</strong> denominator and pooled gain/loss directions do not describe a direction-specific allele frequency. gnomAD-LR contributes its SV alleles of 50 bp or more (deletions, insertions and tandem duplications), not its tandem-repeat alleles.</p>
+<p><strong>GRCh37.</strong> gnomAD-SV v2.1 is native GRCh37, so no liftover is needed. gnomAD-LR is GRCh38 only; a GRCh37 VCF is annotated with gnomAD-SV v2.1 alone. T2T-CHM13 is not supported (<code>--gnomad-sv-file</code> takes your own table). A table whose <code>##build=</code> header names a different build from the VCF's is refused.</p>
+<p><strong>gnomAD-LR caveats.</strong> It is a beta. Its All of Us participants self-identified as Black or African American, so its frequencies describe that population; <code>SV_POPMAX_AF</code> is the highest within it. It finds many SVs in repeats and segmental duplications that short reads miss.</p>
+<h2 id="matching">Matching<a class="heading-anchor" href="#matching" aria-label="Link to section">#</a></h2>
+<p>SV calls rarely share exact breakpoints with a catalogue SV, so a call matches a catalogue SV by the rules truvari and SVAFotate use:</p>
+<ul>
+<li><strong>Deletions, duplications and inversions</strong>: the same event type and a reciprocal overlap of at least <code>--min-overlap</code> (default 0.5): the shared span divided by the longer of the two.</li>
+<li><strong>Insertions</strong>: starts at most <code>--max-distance</code> bp apart (default 500, truvari's default) and sizes at least <code>--min-size-similarity</code> alike (shorter / longer; default 0.5) when both are known. Only insertion-to-insertion matches are used. A nearby duplication of similar size is insufficient evidence of sequence equivalence, even for sequence-resolved insertions.</li>
+<li><strong>Nondirectional CNVs</strong>: neither matched to DEL/DUP nor to other CNVs; without direction-specific allele frequencies, their frequency is left unset (<code>novel</code>). This also applies to copy-number symbolic calls such as <code>&lt;CN0&gt;</code> recorded as <code>SVTYPE=CNV</code>; no baseline ploidy is guessed.</li>
+<li>Calls are recognised from <code>SVTYPE</code> and <code>END</code>/<code>SVLEN</code> (Delly, Sniffles, pbsv, <code>vcf cnv</code>'s <code>&lt;CN0&gt;</code>... alleles), or, for sequence-resolved VCFs without <code>SVTYPE</code>, from the REF and ALT lengths (50 bp or more).</li>
+</ul>
+<p>Of all the matching SVs, in every catalogue, the one with the highest allele frequency is reported, as SVAFotate does, with its match quality. So an SV that is common in any matching record is flagged common. This matters: gnomAD-SV lists some SVs twice at identical breakpoints, once rare and once common (e.g. two 6,041 bp deletions at chr1:184,845,609, AF 0.00002 and 0.58).</p>
+<p>Why not run truvari, SVAFotate or svdb? None installs on Windows (all need pysam or cyvcf2), truvari has no mode that annotates calls from a catalogue, SVAFotate ships its own older catalogue, and svdb has no size-similarity rule for insertions. The rules above are short and use only bcftools, bgzip and tabix.</p>
+<h2 id="outputs">Outputs<a class="heading-anchor" href="#outputs" aria-label="Link to section">#</a></h2>
+<p><code>sv_freq_annotated.vcf.gz</code> (+ <code>.tbi</code>) adds these INFO fields to every SV it could look up; other records pass through unchanged:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>SV_AF</code></td><td>Allele frequency of the matching gnomAD SV.</td></tr>
+<tr><td><code>SV_POPMAX_AF</code></td><td>Its highest genetic-ancestry-group frequency.</td></tr>
+<tr><td><code>SV_AF_ID</code>, <code>SV_AF_SOURCE</code></td><td>Its ID and catalogue (<code>gnomAD-SV_v4.1</code>, <code>gnomAD-SV_v2.1</code>, <code>gnomAD-LR_0.1</code>).</td></tr>
+<tr><td><code>SV_AF_MATCH</code></td><td>Match quality, 0-1: the reciprocal overlap, or for insertions the mean of breakpoint closeness and size similarity.</td></tr>
+<tr><td><code>SV_FREQ</code></td><td><code>common</code> (AF ≥ <code>--common-af</code>, default 0.01), <code>low</code>, <code>rare</code> (AF &lt; <code>--rare-af</code>, default 0.001) or <code>novel</code> (no eligible same-type match; nondirectional CNVs are unassessed).</td></tr>
+<tr><td><code>SV_COMMON</code></td><td>Flag: a common SV.</td></tr>
+</tbody>
+</table></div>
+<p><code>sv_freq.tsv</code> has one row per SV with the same values. The result manifest's metrics count the SVs, the matched fraction and each class. <code>vcf table</code> fills its <code>sv_af</code> and <code>sv_freq</code> columns from the VCF, and <code>report</code> lists each carried PASS SV with <code>SV_FREQ=rare</code> in its "Rare structural variants" section, labelled "rare (AF &lt; 0.001)".</p>
+<p>"Novel" means no eligible same-type match in these catalogues, which is not the same as rare: many novel calls are caller artefacts or SVs in repeats that short reads cannot resolve. The same-type geometric matches are population screening annotations, not proof of sequence-level allele equivalence, particularly for insertions whose sequence is unknown. The VCF INFO description, run log, and personal report use "no eligible same-type match" rather than implying absence from gnomAD. Nondirectional CNV comparisons are unassessed even when a pooled CNV is present in the catalogue; their <code>novel</code> label is not evidence of absence or rarity.</p>
+<h2 id="validation-on-hg002">Validation on HG002<a class="heading-anchor" href="#validation-on-hg002" aria-label="Link to section">#</a></h2>
+<p>On 2026-11-14, the direction-specific matcher annotated the complete GIAB HG002 v5.0q SV benchmark with real bcftools and the installed gnomAD tables:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>VCF</th><th>Catalogues</th><th>SVs</th><th>Matched</th><th>Common</th><th>Low</th><th>Rare</th><th>No eligible match</th></tr></thead>
+<tbody>
+<tr><td>GRCh38</td><td>gnomAD-SV v4.1 + gnomAD-LR</td><td>46,504</td><td>33,107</td><td>29,150</td><td>3,007</td><td>950</td><td>13,397</td></tr>
+<tr><td>GRCh37</td><td>gnomAD-SV v2.1</td><td>36,051</td><td>5,657</td><td>4,810</td><td>197</td><td>650</td><td>30,394</td></tr>
+</tbody>
+</table></div>
+<h3 id="historical-permissive-matching">Historical permissive matching<a class="heading-anchor" href="#historical-permissive-matching" aria-label="Link to section">#</a></h3>
+<p>The measurements below predate the direction-specific matching fix and used the former permissive CNV and INS/DUP matching rules; they are historical, not accuracy or match-rate claims for the current matcher.</p>
+<p>On 2026-11-10, against the GIAB HG002 v5.0q SV benchmark (SVs of 50 bp or more from <code>HG002_GRCh38_v5.0q_stvar.vcf.gz</code>, 46,504 calls; GRCh37 36,051) and <code>vcf sv</code> Sniffles 2.8.1 calls on the #431 whole-genome ONT CRAM (24,587 SVs):</p>
+<div class="table-wrap"><table>
+<thead><tr><th>VCF</th><th>Catalogues</th><th>Matched</th><th>Common</th><th>Low</th><th>Rare</th><th>Not in gnomAD</th></tr></thead>
+<tbody>
+<tr><td>v5.0q GRCh38</td><td>gnomAD-SV v4.1</td><td>35.5%</td><td>11,172</td><td>1,873</td><td>3,442</td><td>30,017</td></tr>
+<tr><td>v5.0q GRCh38</td><td>+ gnomAD-LR</td><td>73.0%</td><td>30,380</td><td>2,632</td><td>922</td><td>12,570</td></tr>
+<tr><td>v5.0q GRCh37</td><td>gnomAD-SV v2.1</td><td>18.0%</td><td>5,021</td><td>291</td><td>1,161</td><td>29,578</td></tr>
+<tr><td>Sniffles, ONT</td><td>gnomAD-SV v4.1</td><td>45.9%</td><td>8,212</td><td>1,061</td><td>2,004</td><td>13,310</td></tr>
+<tr><td>Sniffles, ONT</td><td>+ gnomAD-LR</td><td>91.5%</td><td>21,134</td><td>996</td><td>367</td><td>2,090</td></tr>
+</tbody>
+</table></div>
+<p>Short-read gnomAD-SV misses most of the SVs in tandem repeats and segmental duplications that long reads resolve (most benchmark SVs are 50-1,000 bp insertions and deletions in repeats); gnomAD-LR finds them. The median allele frequency of the matched Sniffles calls is 0.26 with gnomAD-LR (0.21 without): one person's SVs are mostly common, as expected.</p>
+<p><strong>Common SVs stay common through caller noise.</strong> Of the Sniffles calls that match a benchmark SV inside the benchmark regions which gnomAD calls common, 99.6% (18,282 of 18,364) get SV_AF &gt; 1% themselves with gnomAD-LR, and 96.9% (7,607 of 7,849) with gnomAD-SV alone (the acceptance bar is 90%).</p>
+<p><strong>Known common deletions</strong> in the benchmark are all matched and common: GSTM1 (18 kb, AF 0.64), LCE3B/LCE3C (32 kb, AF 0.41), UGT2B17 (111 kb, AF 0.35) and GSTT1 (37 kb, AF 0.27), all from gnomAD-SV v4.1.</p>
+<p>Annotating 46,504 SVs against both catalogues takes about 7 s and 0.4 GB.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/sv-frequency.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/sv-frequency.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sample workspace (wgsextract.sample.toml) | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/sample-workspace.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Sample workspace (wgsextract.sample.toml)</span></nav>
+<h1 id="sample-workspace-wgsextractsampletoml">Sample workspace (<code>wgsextract.sample.toml</code>)</h1>
+<p>Several commands need the same facts about a sample: its sex (Y-DNA, ploidy, repeat typing), its sequencing platform (variant caller models, aligner presets), the reference build and the read depth (genotype QC). Each used to work them out again on every run. Counting chrX/chrY reads in a 30x CRAM, for example, takes about a minute. A sample workspace records each fact once, with where it came from, and lets you correct it.</p>
+<p>The workspace is a genome folder: the folder of a <code>--genome</code> library entry, or any folder holding <code>wgsextract.sample.toml</code> or <code>genome-config.toml</code>. Inputs in other folders are not recorded (<code>info</code>'s own <code>&lt;input&gt;.wgse_info.json</code> cache still applies to them), unless you set an override for one of them, which creates the workspace there.</p>
+<h2 id="dataset-library">Dataset library<a class="heading-anchor" href="#dataset-library" aria-label="Link to section">#</a></h2>
+<p>Set <code>dataset_library</code> (formerly <code>genome_library</code>) to a directory with one subfolder per person/sample. The subfolder name is its <code>--genome</code> ID:</p>
+<pre><code class="language-text">/data/datasets/
+  joe/
+    joe.cram
+    joe.vcf.gz
+    raw-fastqs/joe_R1.fastq.gz, joe_R2.fastq.gz
+  ken mcdonald/
+    bam files/sample.bam</code></pre>
+<p>Nested IDs use <code>/</code>, for example <code>test-1000genomes/na12878-lowcov-bam</code>; absolute IDs or <code>.</code>/<code>..</code> parts are forbidden. A genome folder may link to another disk, but its leading folders must remain inside the library.</p>
+<p><code>--genome ID</code> recursively finds inputs and writes outputs there unless <code>--outdir</code> is given. It creates <code>genome-config.toml</code>; multiple matching BAM/CRAMs, VCFs or FASTQ sets fail instead of guessing. Select files there:</p>
+<pre><code class="language-toml">alignment = &quot;bam files/sample.bam&quot;
+vcf = &quot;variants/sample.vcf.gz&quot;
+fastq_r1 = &quot;raw-fastqs/sample_R1.fastq.gz&quot;
+fastq_r2 = &quot;raw-fastqs/sample_R2.fastq.gz&quot;</code></pre>
+<pre><code class="language-bash">wgsextract info --genome joe
+wgsextract microarray --genome &quot;ken mcdonald&quot; --formats 23andme_v5
+wgsextract vcf filter --genome joe --expr &#x27;QUAL&gt;30&#x27;</code></pre>
+<p>For commands that accept <code>--vcf-input</code> and <code>--input</code> for the same VCF, <code>--vcf-input</code> wins over <code>--input</code>. Either explicit option skips VCF selection from the genome folder, even when it has multiple VCFs. <code>vcf phase</code> and <code>vcf trio</code> have separate input roles.</p>
+<h2 id="example-genomes">Example genomes<a class="heading-anchor" href="#example-genomes" aria-label="Link to section">#</a></h2>
+<p><code>example-genome</code> downloads curated 1000 Genomes/HGSVC2 datasets into the library. Check size with <code>--dry-run</code>: some are very large. Interrupted downloads resume; <code>--force</code> starts over and bypasses developer cache reads/writes. Switching an interrupted segmented HTTP download to Aspera discards sparse partial data before resuming.</p>
+<pre><code class="language-bash">wgsextract example-genome list
+wgsextract example-genome download hgsvc2-hg00733-pacbio-hifi-bam --dry-run
+wgsextract example-genome download hgsvc2-hg00733-pacbio-hifi-bam
+
+pixi run -e pacbio wgsextract --genome test-1000genomes/hgsvc2-hg00733-pacbio-hifi-bam align --platform hifi --ref /path/to/hs38.fa
+pixi run -e pacbio wgsextract --genome test-1000genomes/hgsvc2-hg00733-pacbio-hifi-bam vcf sv --pacbio --ref /path/to/hs38.fa</code></pre>
+<p>See <a href="reference-genomes.html#download-safety">download safety</a> for partial-file identity and checksum handling.</p>
+<h2 id="what-it-records">What it records<a class="heading-anchor" href="#what-it-records" aria-label="Link to section">#</a></h2>
+<p>The bundled <code>assets/schemas/wgsextract.sample.1.schema.json</code> is generated from the Python types in <code>core/sample_document.py</code> (<code>scripts/regen.py</code> regenerates it). It describes the TOML document below, not the JSON view returned by <code>sample show</code>. Unknown document keys and detected facts remain compatible with schema version 1. Python writers use fact-name-specific value types, so a <code>sex</code> record accepts <code>&quot;Male&quot;</code> or <code>&quot;Female&quot;</code>, while an ancestry record accepts numeric proportions. The CLI still normalizes user override aliases such as <code>m</code> and <code>nanopore</code>.</p>
+<pre><code class="language-toml">schema = &quot;wgsextract.sample/1&quot;
+
+[override]
+sex = &quot;Female&quot;
+
+[override.&quot;HG002.ont.bam&quot;]
+fingerprint = &quot;wgse-fp1:41d7…&quot;
+platform = &quot;ont&quot;
+
+[detected.&quot;HG002.cram&quot;]
+fingerprint = &quot;wgse-fp1:9b1c…&quot;
+
+[detected.&quot;HG002.cram&quot;.sex]
+value = &quot;Male&quot;
+method = &quot;GRCh37/38 sampled non-PAR depth / autosomal depth (screening)&quot;
+confidence = &quot;medium&quot;
+version = 4
+by = &quot;wgsextract 0.9.0 info&quot;
+at = &quot;2026-11-04T22:18:27+00:00&quot;
+
+[detected.&quot;HG002.cram&quot;.build]
+value = &quot;hg38&quot;
+method = &quot;alignment header contigs&quot;
+confidence = &quot;high&quot;
+version = 1
+by = &quot;wgsextract 0.9.0 info&quot;
+at = &quot;2026-11-04T22:18:27+00:00&quot;
+
+[outputs.&quot;HG002_snps.vcf.manifest.json&quot;]
+command = &quot;vcf snp&quot;
+status = &quot;ok&quot;
+at = &quot;2026-11-04T22:31:02+00:00&quot;</code></pre>
+<ul>
+<li><code>[override]</code>: facts you set, which win over detection (see <a href="#overrides">Overrides</a>). <code>sex</code> (<code>Male</code>, <code>Female</code>) and <code>platform</code> (<code>illumina</code>, <code>ont</code>, <code>pacbio</code>, <code>ultima</code>, <code>dnbseq</code>) can be overridden. The build and depths are facts of each file, not of the sample. Use <code>--ref</code> or <code>--build</code> on a run instead.</li>
+<li><code>[detected.&quot;&lt;file&gt;&quot;]</code>: what commands detected from each file. The file is named relative to the workspace, or absolute if it lies elsewhere. Each fact has its value, the method that found it, a confidence (<code>high</code>, <code>medium</code>, <code>low</code>), the detector's version, the command and the time. Platform facts inferred from FASTQ samples also carry a <code>statistics</code> table: sampled read and byte counts, median/N50 length, mean/max Q and p90/p10 length spread. These statistics contain no read names, sequences or header tag values. An inconclusive FASTQ sample is recorded as detected <code>Unknown</code> (low confidence), not an override choice. Its evidence is retained when you choose <code>--platform</code>; an ambiguous long-read sample still requires that explicit choice on subsequent runs. FASTQ platform facts also include an <code>evidence_fingerprint</code> of the bounded sampled prefix, checked in addition to the generic file fingerprint. Edits anywhere in that prefix invalidate the detection, including same-size edits outside the generic fingerprint's three windows.</li>
+<li><code>fingerprint</code>: the file's <a href="result-manifest.html">content fingerprint</a> when its facts were detected. If the file is replaced or changed (for example by <code>realign</code> into the same name), its facts no longer match and are detected again on next use. A fact from an older detector version is also detected again.</li>
+<li><code>[outputs]</code>: the <a href="result-manifest.html">result manifests</a> that <code>--genome</code> runs wrote in the folder.</li>
+</ul>
+<div class="table-wrap"><table>
+<thead><tr><th>Fact</th><th>Detected by</th><th>Used by</th></tr></thead>
+<tbody>
+<tr><td><code>sex</code></td><td><code>info --detailed</code>, or sampled non-PAR/autosomal depth on first use</td><td><code>lineage y-haplogroup</code>, <code>extract ydna</code>, chrX/chrY ploidy in <code>vcf snp</code>/<code>indel</code>, <code>microarray</code> and <code>vep</code>, <code>typing str</code>, <code>vcf trio</code> (proband)</td></tr>
+<tr><td><code>platform</code></td><td>read-group <code>PL</code> tag, else the first read name or a bounded FASTQ header/length/quality sample (see <a href="ont.html">platform detection</a>)</td><td><code>vcf snp</code>, <code>vcf deepvariant</code>, <code>vcf sv</code>, <code>methylation</code>, <code>align</code></td></tr>
+<tr><td><code>build</code></td><td>header contig MD5s or lengths</td><td>reference resolution for every command</td></tr>
+<tr><td><code>target_depths</code></td><td><code>info --detailed</code>, else a read count on first use</td><td>the low-depth warning of <code>vcf snp</code>/<code>indel</code>, <code>microarray</code> and <code>lineage</code></td></tr>
+<tr><td><code>read_length</code>, <code>mean_coverage</code></td><td><code>info</code></td><td><code>target_depths</code>; shown by <code>sample show</code></td></tr>
+<tr><td><code>somalier_sex</code></td><td><code>qc relate</code> (chrX heterozygosity, chrY depth)</td><td>checked against <code>sex</code>: a disagreement is a <code>sex_mismatch</code> warning</td></tr>
+<tr><td><code>superpopulation</code></td><td><code>qc relate</code> with <code>ref somalier --install</code></td><td>shown by <code>sample show</code></td></tr>
+<tr><td><code>ancestry</code></td><td><code>qc ancestry</code> (K=7 reference proportions of at least 0.5%)</td><td>the personal report; shown by <code>sample show</code></td></tr>
+<tr><td><code>contamination</code></td><td><code>qc contamination</code> (VerifyBamID2 FREEMIX)</td><td>the contamination warning of <code>vcf snp</code>/<code>indel</code>, <code>microarray</code> and <code>lineage</code>; confidence labels of rare and clinical findings in the genome folder; the personal report</td></tr>
+</tbody>
+</table></div>
+<h3 id="sex-evidence-and-unknown-ploidy">Sex evidence and Unknown ploidy<a class="heading-anchor" href="#sex-evidence-and-unknown-ploidy" aria-label="Link to section">#</a></h3>
+<p>Observed sex and a declared override remain separate: <code>info</code> reports the observed call, method and confidence (including <code>Unknown</code>/<code>low</code>) in its result manifest; <code>declared_sex</code> records the override, when present. The workspace keeps the declaration under <code>[override]</code> and the observed call under <code>[detected]</code>.</p>
+<p>For GRCh37 and GRCh38 chromosome lengths, inference samples five dispersed 10 kb windows per chromosome. X/Y windows lie strictly between the build's PAR1 and PAR2 boundaries, at 10%, 30%, 50%, 70% and 90% of that interval to avoid telomeric gaps. Mean aligned-base depth is divided by the sampled base length and compared with mean depth of available chr7/chr19 windows, not raw cross-chromosome read counts. MAPQ/baseQ below 20 and unmapped, secondary, supplementary, duplicate and QC-failed reads are excluded. For Y, the sampled interval ends before the Yq12 N block (at 28,819,361 in GRCh37 and 26,673,214 in GRCh38), rather than diluting the denominator with unmappable assembly gaps. X uses the full central non-PAR interval.</p>
+<p>The screen requires autosomal depth at least 3x, autosomal breadth at least 50%, X breadth at least 30%, and agreement between the sampled autosomal depths. X/autosome 0.35–0.65 with Y/autosome 0.1–0.8 supports <code>Male</code>; X/autosome 0.8–1.2 with Y/autosome below 0.05 supports <code>Female</code>. These deliberately conservative heuristics return <strong>medium</strong>, not high confidence. They are not validated sensitivity/specificity estimates or a karyotype diagnosis. Sampled windows cannot certify an assay's scope; exomes, narrow capture, very low coverage, X0-like/discordant dosage, Y-only extracts and unsupported assemblies (including T2T) may remain <code>Unknown</code>. No supporting-marker or clinical accuracy claim is made.</p>
+<p>An unavailable measurement (for example, a missing index or CRAM reference) is not persisted as observed evidence. It is retried on the next call; a cached <code>info</code> result with that failure is also recomputed after prerequisites are restored; other cached metrics are retained while an index is still missing. Detection reads alignment headers for both BAM and CRAM, so an unindexed BAM does not undergo a whole-file <code>idxstats</code> scan just to discover it cannot be sampled.</p>
+<p>An <code>Unknown</code> call <strong>refuses sex-dependent bcftools ploidy</strong>, rather than assuming female X/Y ploidy. Declare sex with <code>wgsextract sample set --input FILE --sex Male</code> (or <code>Female</code>), or explicitly choose numeric <code>--ploidy</code> or a sex-independent custom ploidy file. Autosomal-only regions and sex-independent ploidy need no sex scan. For whole-file calls, the alignment's header supplies the called contigs. Autosomal-only trio calls likewise do not require a proband sex. <code>typing str</code> likewise refuses Unknown sex-dependent repeat ploidy; its run-specific <code>--sex male|female</code> option is an explicit declaration.</p>
+<h2 id="commands">Commands<a class="heading-anchor" href="#commands" aria-label="Link to section">#</a></h2>
+<pre><code class="language-sh">wgsextract sample show --genome HG002            # overrides, facts, results
+wgsextract sample set --genome HG002 --sex Female
+wgsextract sample unset --genome HG002 --sex
+wgsextract sample set --input ~/Downloads/mom.bam --sex Female --platform ont
+wgsextract sample show --input ~/genomes/HG002/HG002.cram --json</code></pre>
+<p><code>--workspace DIR</code> names the folder directly. Without it, <code>--genome</code> or the <code>--input</code>'s folder is used. <code>sample show</code> lists the facts in effect for the input, the facts and overrides recorded for each file (and whether that file has changed since) and the results. <code>--json</code> prints the same data as the result's <code>details</code>. The <a href="https://wgsextract.github.io/wgsextract-cli/api.html" target="_blank" rel="noopener noreferrer">typed API</a> has the same operations: <code>api.sample.show</code>, <code>api.sample.set_overrides</code> and <code>api.sample.unset_overrides</code>.</p>
+<h2 id="overrides">Overrides<a class="heading-anchor" href="#overrides" aria-label="Link to section">#</a></h2>
+<p>An override changes how commands work (chrX/chrY ploidy, keeping chrY, aligner presets, the DeepVariant model), so it applies only where it is sure to be right:</p>
+<ul>
+<li><strong>Sex, in a genome folder: folder-wide.</strong> A genome folder (the <code>--genome</code> folder, a dataset-library entry or a folder with <code>genome-config.toml</code>) holds one person's files, so <code>sample set --sex</code> there applies to all of them (<code>[override] sex = …</code>).</li>
+<li><strong>Sex elsewhere, and the platform always: one file.</strong> Any other folder, such as Downloads, may hold several people's files, and one person's folder may hold reads from several platforms. These overrides belong to the <code>--input</code> file (<code>[override.&quot;&lt;file&gt;&quot;]</code>) and are refused without one. They record the file's fingerprint and lapse, with a warning, when the file changes: set them again if they still hold. With <code>--genome</code>, the input defaults to the genome's alignment.</li>
+<li>A folder-wide <code>platform</code>, or a folder-wide <code>sex</code> outside a genome folder (for example written by hand), is ignored with a warning.</li>
+</ul>
+<p><code>sample unset</code> removes the folder-wide override and, with <code>--input</code>, that file's own.</p>
+<p>Commands still check an override against the reads: the recorded fact, else a cheap detection (the read groups or first read name for the platform; chrX/chrY sampled non-PAR depth, once per file revision, for sex). When they disagree, the command uses the override and warns <code>sex_override_differs</code> or <code>platform_override_differs</code>, with the file, the detected value and the override, in its <a href="result-manifest.html">result manifest</a>.</p>
+<h2 id="robustness">Robustness<a class="heading-anchor" href="#robustness" aria-label="Link to section">#</a></h2>
+<ul>
+<li>Recording is best effort. A read-only folder never fails a command; the facts just aren't recorded.</li>
+<li>A file that isn't valid TOML, or that a newer release wrote (<code>wgsextract.sample/2</code>), is ignored with a warning and never overwritten. <code>sample set</code> refuses to change it.</li>
+<li>A file from before the schema existed keeps its overrides; its detected facts are dropped and detected again.</li>
+<li>Writes take a lock (<code>.wgsextract.sample.toml.guard</code>) and replace the file atomically, so concurrent commands on one sample don't lose facts.</li>
+<li>You may edit <code>[override]</code> by hand. wgsextract rewrites the file when it records facts, so comments are not kept. Invalid override values are reported and ignored.</li>
+</ul>
+<p>The JSON Schema of the parsed document is <code>src/wgsextract_cli/assets/schemas/wgsextract.sample.1.schema.json</code>.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/sample-workspace.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/sample-workspace.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

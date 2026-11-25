@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Distribution packaging | WGS Extract GUI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/app/devdocs/distribution.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../architecture.html">GUI Architecture</a><a href="../wgsextract.html">WGSExtract</a><a class="active" href="../docs.html">Docs</a><a href="../../index.html">WGSExtract CLI</a><a href="../whats-different.html">What&#x27;s Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract GUI</a> / <a href="index.html">Developer Docs</a> / <span>Distribution packaging</span></nav>
+<h1 id="distribution-packaging">Distribution packaging</h1>
+<p>WGS Extract GUI ships one Tauri desktop app, built natively on each OS:</p>
+<ul>
+<li><strong>macOS</strong> → <code>.app</code>, <code>.dmg</code>, and a signed updater archive (<code>&lt;App&gt;_&lt;arch&gt;.app.tar.gz</code>)</li>
+<li><strong>Linux</strong> → <code>.deb</code>, <code>.rpm</code>, Arch Linux <code>.pkg.tar.zst</code>, and <code>.AppImage</code></li>
+<li><strong>Windows</strong> → NSIS installer <code>.exe</code></li>
+</ul>
+<h2 id="local-commands">Local commands<a class="heading-anchor" href="#local-commands" aria-label="Link to section">#</a></h2>
+<p>Build distributables for the current host into <code>out/release/tauri/</code>:</p>
+<pre><code class="language-bash">make package           # macOS / Linux
+powershell -ExecutionPolicy Bypass -File .\make.ps1 package     # Windows</code></pre>
+<p><code>make package-windows-cross</code> builds the Windows x64 NSIS installer on macOS or Linux (into <code>out/release/tauri-windows</code>), cross-compiled with <a href="https://github.com/rust-cross/cargo-xwin" target="_blank" rel="noopener noreferrer">cargo-xwin</a> and NSIS as Tauri documents for non-Windows hosts. It needs <code>cargo-xwin</code>, <code>makensis</code>, LLVM's <code>clang-cl</code>/<code>llvm-rc</code>/<code>lld-link</code> on <code>PATH</code>, and the <code>x86_64-pc-windows-msvc</code> Rust target, and checks for them first. The installer is unsigned; the WGS Extract install lab uses it to test the Windows app from a Mac.</p>
+<p>On Linux, Tauri does not provide a native Arch bundle target, so the Arch package installs the generated AppImage under <code>/opt/&lt;package&gt;</code> with a pacman-managed launcher and desktop entry.</p>
+<h3 id="embedded-bundle-and-app-identity">Embedded bundle and app identity<a class="heading-anchor" href="#embedded-bundle-and-app-identity" aria-label="Link to section">#</a></h3>
+<p>Packaged releases default to the bundled WGSExtract app while generic distribution mode is still pending. To use a different embedded bundle, set these in <code>.devconfig.toml</code>:</p>
+<pre><code class="language-toml">[packaging]
+embedded_bundle_path = &quot;examples/WGSExtract&quot;
+app_name = &quot;WGSExtract&quot;</code></pre>
+<p>The branded name is used for the app bundle name, installer/DMG name, and native window title. If you omit <code>app_name</code>, packaging falls back to the bundle directory name. <code>TAURI_PRODUCT_SUFFIX</code> appends a suffix (for example <code>Ubuntu WebUI</code>) for side-by-side test builds.</p>
+<p>Packaging reads <code>version</code> from the bundle's <code>manifest.json</code> and uses it as the app version. For example, the bundled WGSExtract manifest currently sets <code>&quot;version&quot;: &quot;0.8.10&quot;</code>, so installers are named with <code>0.8.10</code> instead of WGS Extract GUI's own version. Bundle-authored JSON files support <code>//</code> and <code>/* ... */</code> comments. Use SemVer-compatible values because Tauri/NSIS and macOS marketing versions reject arbitrary tags. Set <code>app_version</code> in <code>.devconfig.toml</code> or <code>PACKAGE_APP_VERSION</code> / <code>EMBEDDED_APP_VERSION</code> to override the manifest version.</p>
+<p>Embedded bundle scripts can be split by platform under <code>scripts/windows</code>, <code>scripts/macos</code>, <code>scripts/linux</code>, <code>scripts/linux/&lt;distro&gt;</code>, and <code>scripts/posix</code>. Runtime resolution chooses the most specific folder for the host and falls back to <code>posix</code> for POSIX platforms. Every platform folder present in a bundle must include the full referenced script set, otherwise bundle validation fails.</p>
+<p>Bundles can define <code>uninstall.steps</code> with the same step shape as <code>setup.steps</code>. The app exposes those as uninstall hooks for cleaning runtime state that lives outside normal app binaries or cannot be safely handled by deleting the bundle workspace alone.</p>
+<h2 id="signing-and-notarization">Signing and notarization<a class="heading-anchor" href="#signing-and-notarization" aria-label="Link to section">#</a></h2>
+<h3 id="macos">macOS<a class="heading-anchor" href="#macos" aria-label="Link to section">#</a></h3>
+<p>Tauri signs the app when a signing identity is available, from (in order) <code>TAURI_MACOS_SIGNING_IDENTITY</code>, <code>APPLE_SIGNING_IDENTITY</code>, or <code>.devconfig.toml</code>:</p>
+<pre><code class="language-toml">[apple.signing]
+signing_identity = &quot;Developer ID Application: Your Name (YOURTEAMID)&quot;</code></pre>
+<p><code>uv run python scripts/dev.py signing autosetup</code> detects your Xcode team and keychain identities and writes that section. It also reports expired identities; remove them from the keychain search list with <code>uv run python scripts/dev.py signing delete-expired-identities</code> (<code>--dry-run</code> to preview).</p>
+<p>Tauri notarizes when it finds notarization credentials in the environment: either an App Store Connect API key (<code>APPLE_API_KEY</code>, <code>APPLE_API_ISSUER</code>, <code>APPLE_API_KEY_PATH</code>) or an Apple ID (<code>APPLE_ID</code>, <code>APPLE_PASSWORD</code>, <code>APPLE_TEAM_ID</code>). See <a href="https://v2.tauri.app/distribute/sign/macos/" target="_blank" rel="noopener noreferrer">Tauri's macOS signing guide</a>.</p>
+<h3 id="linux-and-windows">Linux and Windows<a class="heading-anchor" href="#linux-and-windows" aria-label="Link to section">#</a></h3>
+<p>No signing is required to build the Linux packages or the Windows NSIS installer.</p>
+<h3 id="windows-installer-lifecycle-test">Windows installer lifecycle test<a class="heading-anchor" href="#windows-installer-lifecycle-test" aria-label="Link to section">#</a></h3>
+<p>The repository's <code>.github/workflows/gui-tauri-installer.yml</code> builds the NSIS installer, silently installs it, launches the packaged app, runs bundle setup, runs bundle uninstall hooks, runs the native uninstaller, and checks cleanup. Run the same check locally on Windows with <code>pwsh -File scripts\validate-windows-tauri-lifecycle.ps1 -AutomatedAdmin</code> after <code>powershell -ExecutionPolicy Bypass -File .\make.ps1 package</code>.</p>
+<p>Window close must stop both the app and all matched app processes within <code>-ShutdownTimeoutSeconds</code> (30 seconds by default). The harness waits for asynchronous descendant cleanup without killing or ignoring survivors; it logs their PIDs, parent PIDs, names, and command lines when waiting or failing.</p>
+<h2 id="ci-release-automation">CI / release automation<a class="heading-anchor" href="#ci-release-automation" aria-label="Link to section">#</a></h2>
+<p>The repository's <code>.github/workflows/gui-distribution.yml</code> builds the Tauri app on macOS, Linux, and Windows runners. Run it by hand (<code>gh workflow run gui-distribution.yml --ref BRANCH</code>) for unsigned artifacts (pull requests that change packaging build them too); the release workflow (<code>release.yml</code>) calls it for each <code>vX.Y.Z</code> release, which ships the CLI and the app together (see <code>docs/releasing.md</code> at the repository root).</p>
+<p>The macOS job signs and notarizes when these secrets are present (releases fail without them):</p>
+<ul>
+<li><code>APPLE_CERTIFICATE_P12</code>, <code>APPLE_CERTIFICATE_PASSWORD</code>, <code>APPLE_SIGNING_IDENTITY</code></li>
+<li>notarization, either:
+<ul>
+<li>an App Store Connect API key (preferred; no Apple ID password or 2FA): <code>APPLE_API_KEY_P8</code> (the <code>.p8</code> file's contents), <code>APPLE_API_KEY_ID</code>, <code>APPLE_API_ISSUER_ID</code>; or</li>
+<li><code>APPLE_ID</code>, <code>APPLE_APP_SPECIFIC_PASSWORD</code> and <code>APPLE_TEAM_ID</code>.</li>
+</ul></li>
+</ul>
+<p>The workflow maps those onto the variables Tauri reads. Notarization fails (HTTP 403) until the account holder has accepted Apple's current Program License Agreement.</p>
+<p>To set the certificate secrets from a Mac that has the Developer ID identity, run <code>tools/packaging/posix/upload_apple_signing_secrets.sh</code>. It exports only that identity directly with Apple's Security framework (macOS asks to allow the export), encrypts it with a random password, and uploads <code>APPLE_CERTIFICATE_P12</code>, <code>APPLE_CERTIFICATE_PASSWORD</code> and <code>APPLE_SIGNING_IDENTITY</code> without printing them. No unrelated private keys are exported. Xcode Command Line Tools are required for the Swift export helper. Use <code>--keychain PATH</code> to select a custom keychain; otherwise the user's keychain search list is used. Selection uses the valid certificate's SHA1 fingerprint, so an expired certificate with the same name does not interfere with renewal. Rerun it when the certificate is renewed.</p>
+<p>GitHub updates secrets individually. If an upload fails, the matching certificate and password remain in a private <code>out/apple-signing.*</code> directory. Retry with <code>--resume &lt;directory&gt;</code> and the same <code>--repo OWNER/NAME</code>; this uploads the same pair rather than generating a new password. Do not run GUI distribution until the retry succeeds. Successful uploads remove the local recovery files; otherwise remove those specific files once recovery is complete.</p>
+<p>The macOS release builds natively on an Apple Silicon runner and an Intel runner, producing separate arm64 and x64 apps, DMGs, and updater archives.</p>
+<h3 id="bundling-a-new-wgsextract-cli-release">Bundling a new WGSExtract CLI release<a class="heading-anchor" href="#bundling-a-new-wgsextract-cli-release" aria-label="Link to section">#</a></h3>
+<p><code>scripts/bump-wgsextract-cli.py vX.Y.Z</code> points the WGSExtract bundle at another wgsextract-cli release: the tag setup installs, the bundle version that names the installers, and the tests that pin both. Release assembly updates the <a href="../docs/CHANGELOG.html">changelog</a>; see <a href="../../docs/releasing.html">the release process</a>. The bump script changes nothing if any file can't be updated. The root's <code>scripts/bump_version.py X.Y.Z</code> runs it with the CLI's own version bump, since the app and the CLI it bundles ship in the same release; the release workflow refuses a tag the bundle doesn't pin.</p>
+<p>The script also generates <code>examples/WGSExtract/scripts/pixi-minimum-version.txt</code> from the root <code>pixi.toml</code>'s <code>requires-pixi</code>. Rerunning it with the current tag refreshes this requirement without bumping the release. Setup checks existing Pixi versions on POSIX and Windows and stops with update instructions if one is too old; it never upgrades the user's Pixi automatically. A missing Pixi is installed as before.</p>
+<h2 id="self-updates">Self-updates<a class="heading-anchor" href="#self-updates" aria-label="Link to section">#</a></h2>
+<p>The app uses Tauri's v2 updater plugin with GitHub Releases as the release source of truth. Release builds enable updater metadata when <code>TAURI_UPDATER_PUBKEY</code> is present and create signed updater artifacts when <code>TAURI_SIGNING_PRIVATE_KEY</code> is present.</p>
+<p>Generate a Tauri updater keypair once and store the private key in GitHub Actions secrets:</p>
+<pre><code class="language-bash">npm --prefix app run tauri -- signer generate -w ~/.tauri/wgsextract-gui.key</code></pre>
+<p>Configure release automation with:</p>
+<ul>
+<li><code>TAURI_UPDATER_PUBKEY</code> repository variable or secret containing the generated public key.</li>
+<li><code>TAURI_SIGNING_PRIVATE_KEY</code> secret containing the private key content or path.</li>
+<li>optional <code>TAURI_SIGNING_PRIVATE_KEY_PASSWORD</code> secret.</li>
+<li>optional <code>TAURI_UPDATER_ENDPOINTS</code> / <code>.devconfig.toml</code> <code>[tauri.updater] endpoint = &quot;...&quot;</code>; the default endpoint is <code>https://github.com/WGSExtract/wgsextract-cli/releases/latest/download/latest.json</code> (the app ships in each <code>vX.Y.Z</code> release of this repository; see <code>docs/releasing.md</code> at the repository root).</li>
+</ul>
+<p>When updater signing is configured, Tauri emits <code>.sig</code> files next to the macOS <code>.app.tar.gz</code>, the Windows NSIS installer, and the Linux AppImage. Packaging renames the macOS archive to <code>&lt;App&gt;_&lt;arch&gt;.app.tar.gz</code> so the feed can tell architectures apart. Release publishing replaces spaces with dots in asset names.</p>
+<p>The app includes a <strong>Check for Updates...</strong> menu item in the <strong>File</strong> menu. It checks the configured endpoint, prompts before installing, verifies the Tauri signature, installs the update, and restarts the app.</p>
+<h3 id="github-release-feed-generation">GitHub Release feed generation<a class="heading-anchor" href="#github-release-feed-generation" aria-label="Link to section">#</a></h3>
+<p>For a release, <code>gui-distribution.yml</code> downloads the packaged artifacts and passes the build matrix's target list as <code>EXPECTED_TARGETS</code> (a JSON array). Before uploading assets to the <code>vX.Y.Z</code> GitHub Release, it runs:</p>
+<pre><code class="language-bash">python3 gui/tools/packaging/generate_update_feeds.py \
+  --repo &quot;$GITHUB_REPOSITORY&quot; \
+  --tag &quot;$RELEASE_TAG&quot; \
+  --version &quot;${RELEASE_TAG#v}&quot; \
+  --expected-targets &quot;$EXPECTED_TARGETS&quot; \
+  --artifacts-root release-artifacts \
+  --output-dir updater-feed</code></pre>
+<p>It writes <code>latest.json</code> with <code>windows-x86_64</code>, <code>linux-x86_64</code>, and <code>darwin-aarch64</code>/<code>darwin-x86_64</code> entries for the release targets. Each must have exactly one updater artifact with a nonempty <code>.sig</code> beside it. A missing or ambiguous artifact or signature fails the job before it uploads anything, so it cannot replace an existing feed with a partial one. Release builds set <code>PACKAGE_APP_VERSION</code> from the tag name so the packaged apps and the feed agree on the update version.</p>
+<p>Artifact-only workflow runs (without a release tag) skip feed generation. For local development, replace <code>--expected-targets ...</code> with <code>--allow-unsigned</code> to write entries only for the signed platforms present, or no feed if none are signed. Use a clean output directory for an unsigned build so an old feed cannot be mistaken for a new one. This mode still rejects ambiguous artifacts.</p>
+<p>For end-to-end update testing before a production release, build the app with <code>TAURI_UPDATER_ENDPOINTS</code> pointed at a test release's <code>latest.json</code> instead of the <code>latest</code> URL. On Windows, <code>scripts/validate-windows-tauri-update.ps1</code> installs an older release and drives the update.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract GUI</strong><p>Rendered from <code>gui/devdocs/distribution.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/gui/devdocs/distribution.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

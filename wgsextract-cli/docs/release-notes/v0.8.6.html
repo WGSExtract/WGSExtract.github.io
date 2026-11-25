@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WGS Extract 0.8.6 | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/release-notes/v0.8.6.html" />
+    <link rel="stylesheet" href="../../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../../index.html">Home</a><a href="../../install.html">Install CLI</a><a href="../../gui.html">GUI</a><a href="../../cli.html">CLI</a><a href="../../workflows.html">Workflows</a><a href="../../wgs-guide.html">WGS guide</a><a href="../../reference.html">Reference</a><a class="active" href="../index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../../index.html">WGS Extract CLI</a> / <a href="../index.html">CLI Docs</a> / <span>WGS Extract 0.8.6</span></nav>
+<h1 id="wgs-extract-086">WGS Extract 0.8.6</h1>
+<p>This release adds the desktop app's Basic and Advanced modes and reorganises its pages, with the CLI commands behind them.</p>
+<h2 id="new">New<a class="heading-anchor" href="#new" aria-label="Link to section">#</a></h2>
+<ul>
+<li><code>extract region</code> writes one region (MT only, Y only, Y and MT, or the autosomes and X) as any of BAM, VCF and FASTA in one run.</li>
+<li>New settings <code>reference_genome_library</code> (only the reference genomes and the files made from them; default <code>genomes/</code> in the reference library) and <code>dataset_library</code> (one folder per person or sample; the old <code>genome_library</code> is still read). <code>ref status --dataset-library</code> replaces <code>--genome-library</code>, which still works, and <code>help dataset-library</code> replaces <code>help genome-library</code>. Unset, the dataset library defaults to <code>datasets</code>, no longer <code>genomes</code>.</li>
+<li><code>info calculate-coverage --with-bins</code> reports the depth bins (0, 1-3, 4-7 and 8+ reads per chromosome) after the coverage table. A run whose two reports are newer than the input shows them again instead of rescanning. The GUI's Detailed Coverage button uses it.</li>
+<li><strong>Library installs can be deleted:</strong> <code>ref aadr</code>, <code>ref ybrowse</code>, <code>ref spliceai</code>, <code>ref alphamissense</code> and <code>ref pharmgkb</code> take <code>--delete</code>, <code>vep delete</code> removes one release of the VEP cache, and the new <code>ref microarray-targets</code> builds (or with <code>--delete</code> removes) the genome-wide hg19 and hg38 microarray targets. On the app's Library page each Install button becomes a confirmed Delete once its item is installed.</li>
+<li><code>ref bootstrap</code> also installs the AADR 2M SNP metadata and the hg19ToHg38 chain, so microarray's AADR 2M export works on every library. A library bootstrapped before this shows as not bootstrapped until <code>ref bootstrap</code> runs again. The app no longer asks for a separate VEP cache folder: the cache is the reference library's <code>vep</code> folder (or config <code>vep_cache_directory</code>).</li>
+<li><code>align</code> and <code>realign</code> write the BAM or CRAM index while sorting instead of reading the whole output again to index it, saving about 5 CPU-minutes on a 30x genome. The records are unchanged (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/545" target="_blank" rel="noopener noreferrer">#545</a>).</li>
+<li><a href="../apple-silicon-16gb.html">A 30x genome on a 16 GB Apple M1</a> records how every command runs on a base Mac mini, and a whole 35x HG002 genome from <code>realign</code> to <code>report</code> with default settings: 7.3 hours, with SNP recall of 99.1% and precision of 97.5% against GIAB v4.2.1 (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/549" target="_blank" rel="noopener noreferrer">#549</a>).</li>
+<li><strong>Faster SNP and indel calling by default:</strong> <code>vcf snp</code> and <code>vcf indel</code> call contigs in parallel when <code>--threads</code> is above 1, as <code>microarray</code> already did; the VCF records match a single-stream run's. On a 16 GB M1 a whole-genome SNP call took 211 s instead of 849 s. Contigs without reads are skipped and small ones (decoys, ALTs, HLA) are called together, so references with thousands of contigs don't slow it down. <code>--no-parallel</code> keeps one stream (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/549" target="_blank" rel="noopener noreferrer">#549</a>).</li>
+</ul>
+<h2 id="fixes">Fixes<a class="heading-anchor" href="#fixes" aria-label="Link to section">#</a></h2>
+<ul>
+<li><code>microarray</code> reuses an earlier run's outputs only when that run's inputs are unchanged; it saves them beside the outputs as JSON and regenerates when they differ.</li>
+<li><code>realign</code>'s FASTQ extraction now shows progress while it runs: the share of the input read, then the reads written. Before, a whole-genome extraction showed 0% until it finished.</li>
+<li><code>analyze comprehensive</code> no longer stops before variant calling when the Y haplogroup can't be called, for example on a low-coverage male genome. It records a <code>y_haplogroup_failed</code> warning and carries on; a rerun retries the Y haplogroup (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/549" target="_blank" rel="noopener noreferrer">#549</a>).</li>
+</ul>
+<h2 id="desktop-app">Desktop app<a class="heading-anchor" href="#desktop-app" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong>Basic and Advanced modes:</strong> a sidebar switch. Basic (the default) shows the common pages and options; Advanced shows everything, including the CLI features the app didn't offer before and a new Workflows page.</li>
+<li>Pages reorganised: FASTQ, BAM, VCF, Extract, Microarray, Ancestry and Library each start with an Inputs section; Align, Realign and Variant Calling move to Extract, and VCF annotation to the VCF page.</li>
+<li><strong>Detailed Coverage</strong> shows the depth bins at the end, and just displays them when the run is already done.</li>
+<li>Extract's MT-only, Y-only, Y and MT, and Autosomes and X buttons, with FASTA / BAM / VCF checkboxes.</li>
+<li>Microarray formats in one row per vendor; Reich Lab AADR (HO v1, 1240K, 2M), WGSE Combined v3 and the 23andMe API option.</li>
+<li>The Library page splits into <strong>Reference Data</strong> (databases, annotation data and VEP caches; Install buttons become Delete once installed) and <strong>Reference Genomes</strong> (the genome list, which gains Code and SNs columns).</li>
+<li>A new <strong>Datasets</strong> page, just above Reference Data, is the place for your own WGS result files: the Dataset Library folder, the Test Dataset and the Example Datasets.</li>
+<li>Two separate library folders: <strong>Dataset Library</strong> (<code>dataset_library</code>, formerly <code>genome_library</code>, which is still read) for your datasets, and <strong>Reference Genomes Library</strong> (<code>reference_genome_library</code>) for the reference genomes and the files made from them, and nothing else. New installs use <code>datasets</code> and <code>genomes</code> in the workspace; existing installs keep their folders.</li>
+<li>Languages: English, French, German and Brazilian Portuguese.</li>
+</ul>
+<p>See the app's <a href="https://github.com/WGSExtract/wgsextract-cli/blob/v0.8.6/gui/docs/CHANGELOG.md" target="_blank" rel="noopener noreferrer">CHANGELOG</a> for details.</p>
+<p><strong>Full changelog:</strong> <a href="https://github.com/WGSExtract/wgsextract-cli/compare/v0.8.5...v0.8.6" target="_blank" rel="noopener noreferrer">https://github.com/WGSExtract/wgsextract-cli/compare/v0.8.5...v0.8.6</a></p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/release-notes/v0.8.6.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/release-notes/v0.8.6.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

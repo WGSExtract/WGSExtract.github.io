@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CI compiler caches | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/compiler_caches.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>CI compiler caches</span></nav>
+<h1 id="ci-compiler-caches">CI compiler caches</h1>
+<p>Expensive Tauri builds use <code>.github/actions/rust-cache</code> (SHA-pinned Swatinem/rust-cache); native builds use <code>.github/actions/compiler-cache</code>. Keep these steps in the compile job when moving a workflow to a reusable workflow. Neither helper changes triggers or concurrency.</p>
+<h2 id="trust-and-release-builds">Trust and release builds<a class="heading-anchor" href="#trust-and-release-builds" aria-label="Link to section">#</a></h2>
+<p>Production caches are written only by successful main builds. Pull requests restore only. Native caching splits <code>actions/cache/restore</code> and <code>actions/cache/save</code>; Rust caching sets <code>save-if</code> in the shared wrapper. The reusable GUI build additionally refuses to write when a caller requests an arbitrary older commit or a release tag.</p>
+<p>GitHub caches are scoped to the creating ref. Tagged release runs can restore main's objects, <strong>not</strong> caches from a PR merge ref or a different branch. ccache revalidates compiler contents, source, headers and flags; no sloppiness is enabled. Rust retains dependencies only, not workspace binaries, installers, Cargo-installed tools or signing credentials. Compilation/linking and all existing artifact tests still run; a cache hit never skips those checks.</p>
+<p>The owner-authorized measurement exception is limited to <code>workflow_dispatch</code> on <code>ci/916-compiler-cache</code> by <code>theontho</code>. It uses <code>measure-916-*</code> keys, with no production fallback prefix, so even main or tagged runs cannot consume it. Remove those experimental entries through the Actions cache UI after measuring.</p>
+<h2 id="keys-and-budget">Keys and budget<a class="heading-anchor" href="#keys-and-budget" aria-label="Link to section">#</a></h2>
+<p>Native keys contain OS, architecture, compiler version/target (and macOS SDK), build family, recipe hash and source content hash. A restore prefix permits reuse across source edits only within the same recipe/toolchain family. Cache entries are immutable, so a source edit can publish its newly compiled objects. ccache also hashes the actual compiler binary, including the conda compiler when a recipe selects one. Recipes include toolchain variant manifests in their keys; changing a recipe forces a cold build. Rattler uses <code>--no-build-id</code> to avoid timestamped work paths defeating object reuse, without caching its build/host environments.</p>
+<p>Each native family is capped and cleaned to <strong>128 MB</strong> before saving: Linux CPU aligners (two architectures), macOS aligners, Linux/macOS DeepVariant, Windows tools and GLIMPSE2: seven entries, at most about <strong>0.9 GB</strong> per recipe generation before archive compression. Typical Tauri dependency archives are estimated at <strong>150–400 MB/platform</strong>, four platforms shared across distribution and installer jobs (about <strong>0.6–1.6 GB</strong>). These are estimates, not measured archive sizes; inspect the action summaries and Actions cache UI after seeding. Rust's own pruning drops workspace crates and incremental output; its target cache is not a hard size cap.</p>
+<p>The repository was already at roughly 10 GiB / 76 entries during the inventory on 2026-11-14. GitHub evicts least-recently-used caches at the repository's 10 GB limit. This rollout reserves roughly 2.5 GB of that budget; it does not claim extra quota or silently remove other workflows' caches. Monitor eviction and hit rates before widening coverage or retaining multiple recipe generations. There are no run-id/SHA-per-push native keys or cross-recipe restore prefixes.</p>
+<h2 id="inventory-exclusions">Inventory exclusions<a class="heading-anchor" href="#inventory-exclusions" aria-label="Link to section">#</a></h2>
+<p>The full dated main-run inventory and raw job timings are in <code>out/916/baseline.md</code> (gitignored evidence). These workflows intentionally do not get new caches:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Workflow</th><th>Reason</th></tr></thead>
+<tbody>
+<tr><td><code>gui-distribution.yml</code></td><td>Compilation already delegates to cached <code>gui-build.yml</code>.</td></tr>
+<tr><td><code>gatk_windows.yml</code></td><td>Uses installed GATK/GKL; only compiles a small Java parity probe, not native kernels.</td></tr>
+<tr><td><code>linux_bwa_mem3.yml</code></td><td>Tests installed Bioconda binaries, no compilation.</td></tr>
+<tr><td><code>gkl_windows.yml</code></td><td>Native package step 31s; installing/restoring a cache is unlikely to pay.</td></tr>
+<tr><td><code>mimalloc.yml</code></td><td>Package step 17s; cache setup would cost more than compilation.</td></tr>
+<tr><td><code>linux_aligners.yml</code> package/CUDA jobs</td><td>Package steps 17–87s; conda/CUDA setup dominates. First cache the CPU development jobs (45–140s).</td></tr>
+<tr><td><code>aligner_bench.yml</code></td><td>Arbitrary refs, some predate CI helpers; successful compile step 50s. Benchmark execution dwarfs compilation.</td></tr>
+<tr><td><code>windows_arm64.yml</code></td><td>Mixed MSVC/vcpkg/source builds; latest main run never reached native packaging. Requires separate toolchain-specific cache qualification.</td></tr>
+<tr><td><code>vep_rs.yml</code></td><td>No recent main run; isolated conda Rust workspace/toolchain is created after setup, unlike Tauri. Needs separate target-cache integration and measurements before enabling.</td></tr>
+</tbody>
+</table></div>
+<p>The rollout does not promise a 40% end-to-end improvement for workflows whose tests, source downloads or toolchain installation dominate. Compare the same ref on a cold and warm dispatch, build-step wall time separately from total job time, and report actual hits/bytes rather than assuming a restored archive was useful. All scientific smoke/parity tests remain unchanged.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/compiler_caches.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/compiler_caches.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

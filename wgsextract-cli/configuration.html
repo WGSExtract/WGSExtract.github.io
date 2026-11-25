@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Supported config.toml settings and their defaults." />
+    <title>WGS Extract configuration reference</title>
+    <meta property="og:site_name" content="WGS Extract CLI" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="WGS Extract configuration reference" />
+    <meta property="og:description" content="Supported config.toml settings and their defaults." />
+    <meta property="og:url" content="https://wgsextract.github.io/wgsextract-cli/configuration.html" />
+    <meta property="og:image" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta property="og:image:secure_url" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="WGSExtract CLI social preview showing the desktop app screenshot." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="WGS Extract configuration reference" />
+    <meta name="twitter:description" content="Supported config.toml settings and their defaults." />
+    <meta name="twitter:image" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta name="twitter:image:alt" content="WGSExtract CLI social preview showing the desktop app screenshot." />
+    <link rel="canonical" href="https://wgsextract.github.io/wgsextract-cli/configuration.html" />
+    <link rel="image_src" href="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".82em" font-size="84">🧬</text></svg>' />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="index.html">Home</a><a href="install.html">Install CLI</a><a href="gui.html">GUI</a><a href="cli.html">CLI</a><a href="workflows.html">Workflows</a><a href="wgs-guide.html">WGS guide</a><a href="reference.html">Reference</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-hero">
+        <div class="wrap">
+          <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Reference</p>
+          <h1>config.toml settings</h1>
+          <p class="lede">Configure paths, resources, output locations and server options.</p>
+        </div>
+      </header>
+
+<section><div class="wrap"><p>WGS Extract reads its settings from config.toml: <code>wgsextract config</code> prints where it is and every setting's value, and <code>--config PATH</code> picks another file for one run. Command-line options override settings for a run.</p>
+<p>config.toml lives in the users workspace, <code>~/wgs-extract</code> (<code>%USERPROFILE%\wgs-extract</code> on Windows), beside the default My Genomes library (<code>mygenomes/</code>): the folders you manage and may want on another disk. An install that already keeps config.toml where earlier versions did (the per-user config folder, <code>~/.config/wgsextract</code> on macOS) keeps using it. Reference data, reference genomes and temporary files stay in the CLI's own data folder unless config.toml names other folders. The WGS Extract desktop app keeps its settings in the same folder, so the two share them.</p>
+<p>If both a legacy CLI config and a users-workspace config exist, the CLI keeps using the legacy file and warns with both paths. Use <code>--config PATH</code> to select the other explicitly. Opening the desktop app does not change this precedence or erase saved advanced settings.</p>
+<p>Without output_directory, a command writes to a <code>wgse/</code> folder beside its input from the lab (a BAM or CRAM, else FASTQs, else a VCF, else a raw microarray file), or beside an input already in a <code>wgse/</code> folder. The folder of the lab's original files stays untouched: only indexes that must sit beside their files are written there, and writing a BAM, CRAM, FASTQ, VCF or microarray file into it warns (<code>primary_overwrite</code>).</p>
+<p>Every value is checked when the file loads: a value of the wrong type, outside its range or not one of its choices stops the run with an error that names the setting and what it expects. An unknown setting is ignored with a warning that suggests the closest name.</p>
+<h2>Choosing and editing a config</h2>
+<p><code>--config FILE</code> works anywhere on the command line and selects the file for
+both reading and saving, before validation. An invalid unused default cannot
+block a valid alternate file; a bundling tool can choose a separate config.
+The CLI and desktop app otherwise share the users-workspace config described
+above. Former per-user locations, still recognized for existing installs, are:</p>
+<ul>
+<li>macOS: <code>~/.config/wgsextract/config.toml</code> if that file exists, otherwise
+<code>~/Library/Application Support/wgsextract/config.toml</code> if present;</li>
+<li>Linux: <code>~/.config/wgsextract/config.toml</code>;</li>
+<li>Windows: <code>%LocalAppData%\theontho\wgsextract\config.toml</code>.</li>
+</ul>
+<p>Saves are atomic; <code>wgsextract config</code> prompts only in an interactive terminal.
+A save from the CLI or the desktop app waits while another is in progress,
+holding a hidden <code>.config.toml.lock</code> beside the file, and keeps the other's
+changes; after 60 seconds it fails, naming the lock.
+If the selected file contains invalid TOML or is not UTF-8, the CLI stops and
+reports the file path and error location. Correct the file or select a valid
+one with <code>--config</code>.
+Boolean values must be unquoted <code>true</code>/<code>false</code>, never <code>&quot;false&quot;</code>.
+Threads accept a positive integer or <code>&quot;auto&quot;</code>; legacy numeric strings such
+as <code>&quot;4&quot;</code> still work. Integer thresholds/TTLs require integers, not quoted
+numbers or booleans. Memory (<code>&quot;2G&quot;</code>), paths and image names are strings;
+<code>vcf_input_paths</code>/<code>server_allowed_paths</code> also accept string arrays.
+Ports, job counts and thresholds must be in range; choice settings
+(<code>server_mcp_transport</code>, <code>microarray_quirks</code>, <code>native_aligners</code>) must match
+their listed choices. Aliases obey the same rules as canonical keys.</p>
+<p>Invalid configured thread counts warn and use automatic threads, unless
+explicit <code>--threads</code> overrides them; saves still require a valid count.
+Other invalid types stop startup with one concise line naming key, file and
+expected type. There is no <code>config set</code> or <code>config show</code> repair command:
+edit the file, or choose a valid <code>--config PATH</code>, before rerunning even help
+or <code>config</code>. Missing-setting defaults and valid values are unchanged.</p>
+<h2>Example</h2>
+<pre><code class="language-toml"># Defaults for --input and --outdir
+input = &quot;/data/genomes/joe/joe.cram&quot;
+outdir = &quot;/data/wgse-out&quot;
+
+# FASTA (--ref); reference library; reference genomes only
+ref = &quot;/data/reference/genomes/hs38.fa.gz&quot;
+reflib = &quot;/data/reference&quot;
+reference_genome_library = &quot;/data/reference/genomes&quot;
+
+# One folder per person/sample, selected by --genome
+dataset_library = &quot;/data/datasets&quot;
+
+threads = &quot;auto&quot;  # Apple Silicon per-stage core plan; all cores elsewhere
+memory = &quot;auto&quot;   # sort memory per thread; see hardware guide
+
+# Optional external-tool overrides (otherwise use PATH)
+haplogrep_path = &quot;/path/to/haplogrep3&quot;
+haplogrep_tree = &quot;phylotree-fu-rcrs&quot;  # or phylotree-rcrs, mitotree-rcrs
+y_tree = &quot;yfull&quot;                    # or yfull_v10, ftdna, isogg, [y_trees] id
+vep_cache = &quot;~/.vep&quot;
+</code></pre>
+<p>Short keys are aliases: <code>wgsextract config</code> displays <code>input_path</code>,
+<code>output_directory</code>, <code>reference_fasta</code>, <code>reference_library</code>, <code>cpu_threads</code>,
+<code>memory_limit</code> and the other canonical names. Either spelling works;
+explicit command-line options win for that run. Other settings include
+annotation paths (<code>clinvar_vcf_path</code>, <code>gnomad_vcf_path</code>, <code>gnomad_sv_path</code>,
+<code>gnomad_lr_sv_path</code>, <code>revel_tsv_path</code>, …), <code>mother_vcf</code>/<code>father_vcf</code>, and
+the <code>[dev]</code> settings below.</p>
+<p>By default the reference library is <code>reference/</code> in the app data folder;
+reference genomes are its <code>genomes/</code>. A <code>--ref</code> FASTA chooses sequence.
+When it is in the configured library's <code>reference_genome_library</code> (else
+<code>genomes/</code>), that library supplies other assets. Only genomes and their derived
+files go there; datasets belong in <code>dataset_library</code>. Otherwise the FASTA's
+folder is searched first, then configured <code>reference_library</code>, for chains,
+ploidy files, chip templates and annotations. Missing-file errors name the
+searched folders. See <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/sample-workspace.md#dataset-library">dataset discovery and example genomes</a>.</p>
+<p>For resource defaults, <code>memory = &quot;auto&quot;</code> uses up to 25% of effective RAM
+(including Linux cgroup v2 limits) split across threads; <code>&quot;2G&quot;</code> sets a
+per-thread budget, still subject to the sort caps. See
+<a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/hardware.md#threads-and-memory">threads and memory</a> rather than treating it
+as a whole-pipeline RAM cap.</p>
+<h2>Temporary files and atomic outputs</h2>
+<p>Set <code>temp_directory = &quot;/data/scratch&quot;</code> or pass <code>--tmp-dir DIRECTORY</code> for
+samtools/sambamba sort spills, GATK temp files and realign staging.
+It must exist and be writable. Each run owns a workspace, normally removed
+on success/failure; final files stay in <code>--outdir</code>. If realign fails after
+extracting FASTQs, it retains the workspace and prints <code>--r1</code>/<code>--r2</code> reuse
+paths; remove it after recovery. <code>--keep-fastq</code> instead keeps extracted reads
+in the output directory. Unset defaults/tool arguments are unchanged.
+Native pbmm2's sorter cannot honor this option: omit it or use minimap2.
+This controls placement/capacity, not promised speed.</p>
+<p>BWA/bwa-mem2 indexes require all nonempty index files, build under an exclusive
+lock with a staged prefix, and rebuild after interruption rather than trusting
+partial files. See <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/hardware.md#cpu-aligners">hardware-specific index requirements</a>
+for native versions that do not need <code>.0123</code>.</p>
+<p><code>align</code> always validates and publishes atomically, even with <code>--no-atomic-output</code>,
+so validation failure preserves previous alignments. <code>vcf to-fasta</code> also stages
+its FASTA, indexes, and requested chain beside their destinations; if generation
+or indexing fails, the previous files are unchanged. A hidden lock file stays
+in the output directory so concurrent retries cannot mix results.
+<code>--atomic-output</code> (or
+<code>atomic_outputs = true</code>) opts realign, SNP/InDel/GATK/FreeBayes callers and
+main extract writers into rename publication, with indexes generated afterward.
+Failed writes preserve previous files. Other commands keep the opt-in default:
+staged paths alter tool provenance headers and can need extra disk.
+<code>--no-atomic-output</code> disables their configured opt-in, not alignment or consensus
+safety.
+This adds no resume/skip behaviour; see <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/step-resume.md">step journals</a>.</p>
+<h2>Keep-awake</h2>
+<p><code>--keep-awake</code> or <code>keep_awake = true</code> requests idle/sleep inhibition until
+exit. <code>--no-keep-awake</code> overrides config, including delegated analyze,
+annotation-chain and benchmark commands; <code>keep_awake = false</code> is the default.
+macOS uses <code>caffeinate</code>, Linux uses already-installed/permitted
+<code>systemd-inhibit</code>, and native Windows uses <code>SetThreadExecutionState</code>.
+Missing helpers, denied permissions or cleanup errors never fail the run.
+This prevents automatic sleep, not shutdown or forced/manual suspension;
+display sleep is allowed. Report-only help/config/deps never inhibit sleep.</p>
+<h2>Settings</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>allow_reference_downloads</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Allow first-use public reference/model downloads for commands with --download (hosts and request data: docs/privacy.md); no sample uploads</td>
+</tr>
+<tr>
+<td><code>input_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Default input BAM/CRAM or FASTQ file</td>
+</tr>
+<tr>
+<td><code>output_directory</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Default output directory (default: wgse/ beside the primary input BAM, CRAM, FASTQ, VCF or microarray file, or that folder if already wgse/)</td>
+</tr>
+<tr>
+<td><code>temp_directory</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Temporary Workload directory: every command's temporary work (sort spills, staging, scratch files)</td>
+</tr>
+<tr>
+<td><code>atomic_outputs</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Publish completed main outputs by rename (changes tool provenance paths)</td>
+</tr>
+<tr>
+<td><code>reference_fasta</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to the reference genome FASTA</td>
+</tr>
+<tr>
+<td><code>reference_library</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Reference data directory (annotation data, gene maps, VEP caches)</td>
+</tr>
+<tr>
+<td><code>reference_genome_library</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Folder holding only the reference genomes (FASTAs) and the files made from them, for reference_library (default: genomes/ in it)</td>
+</tr>
+<tr>
+<td><code>mygenomes_library</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>My Genomes library: one folder per person or sample (default: mygenomes/ in the users workspace; formerly dataset_library)</td>
+</tr>
+<tr>
+<td><code>cpu_threads</code></td>
+<td>integer or <code>auto</code></td>
+<td><code>&quot;auto&quot;</code></td>
+<td>CPU threads: a positive integer for every stage, or auto (per-stage core-layout plan on Apple Silicon; all cores elsewhere)</td>
+</tr>
+<tr>
+<td><code>memory_limit</code></td>
+<td>string</td>
+<td><code>&quot;auto&quot;</code></td>
+<td>Memory limit per thread, e.g. 2G (auto: 25% of RAM split across threads)</td>
+</tr>
+<tr>
+<td><code>debug_mode</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Enable verbose debug logging</td>
+</tr>
+<tr>
+<td><code>quiet_mode</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Enable quiet mode (errors only)</td>
+</tr>
+<tr>
+<td><code>log_dir</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Opt-in directory for unique persistent DEBUG run logs and provenance; it keeps the newest 100 runs</td>
+</tr>
+<tr>
+<td><code>state_directory</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Folder for the last-run record and saved bug reports (report-issue); default: state/ in the data folder</td>
+</tr>
+<tr>
+<td><code>server_port</code></td>
+<td>integer, 0 to 65535</td>
+<td><code>0</code></td>
+<td>Default HTTP/JSON listen port (0: any free port); an embedded server.listen port overrides this default, and explicit --port wins</td>
+</tr>
+<tr>
+<td><code>server_allowed_paths</code></td>
+<td>string or array of strings, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Folders (a string or an array) <code>wgsextract serve</code> requests may read and write, besides mygenomes_library, reference_library, reference_genome_library and output_directory</td>
+</tr>
+<tr>
+<td><code>server_mcp_transport</code></td>
+<td><code>stdio</code> or <code>http</code></td>
+<td><code>&quot;stdio&quot;</code></td>
+<td>How <code>wgsextract serve --mcp</code> speaks MCP: stdio, or http (streamable HTTP on 127.0.0.1 with a per-launch token; needs the optional 'mcp' package)</td>
+</tr>
+<tr>
+<td><code>server_mcp_port</code></td>
+<td>integer, 0 to 65535</td>
+<td><code>0</code></td>
+<td>Port <code>wgsextract serve --mcp-transport http</code> listens on at 127.0.0.1 (0: any free port)</td>
+</tr>
+<tr>
+<td><code>server_max_jobs</code></td>
+<td>integer, at least 1</td>
+<td><code>1</code></td>
+<td>Long <code>wgsextract serve</code> jobs that run at once; more wait in a queue</td>
+</tr>
+<tr>
+<td><code>keep_awake</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Best-effort sleep inhibition while commands run (opt-in)</td>
+</tr>
+<tr>
+<td><code>result_card</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Also write <code>&lt;name&gt;.card.html</code>, a shareable page of each run's result, beside its manifest</td>
+</tr>
+<tr>
+<td><code>haplogrep_executable</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to the Haplogrep 3 executable or JAR</td>
+</tr>
+<tr>
+<td><code>dorado_executable</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to ONT's dorado executable for <code>basecall</code></td>
+</tr>
+<tr>
+<td><code>discvrseq_jar</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to DISCVRseq.jar for <code>vcf variantqc</code></td>
+</tr>
+<tr>
+<td><code>java17_executable</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to a Java 17 binary for tools requiring Java 17 (such as <code>vcf variantqc</code>)</td>
+</tr>
+<tr>
+<td><code>granite_executable</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to the granite executable for <code>vcf granite-qc</code></td>
+</tr>
+<tr>
+<td><code>native_aligners</code></td>
+<td><code>auto</code> or <code>off</code></td>
+<td>unset</td>
+<td>Apple Silicon: <code>align</code>/<code>realign</code> use wgse-bwa, wgse-bwa-mem2, wgse-bwa-mem3 and wgse-minimap2 when on PATH (auto, the default) or never (off); Linux: Bioconda's bwa-mem3 in place of bwa/bwa-mem2; Windows x86-64: use wgse-bwa and wgse-minimap2 when installed</td>
+</tr>
+<tr>
+<td><code>wgse_bwa_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to an optional native Windows x86-64 wgse-bwa executable</td>
+</tr>
+<tr>
+<td><code>output_profile</code></td>
+<td><code>default</code> or <code>archive</code> or <code>calling</code></td>
+<td><code>&quot;default&quot;</code></td>
+<td><code>align</code>/<code>realign</code>: default keeps --format; archive selects lossless CRAM 3.1 (GATK 4.7+); calling selects compatible CRAM 3.0</td>
+</tr>
+<tr>
+<td><code>prefer_native_gpu</code></td>
+<td>boolean</td>
+<td>unset</td>
+<td><code>align</code>/<code>realign</code>: on Windows, native CUDA is automatic when it fits; set false to force CPU. Elsewhere, set true to prefer wgse-bwa's native GPU even above the RAM budget after normal sort step-down; retain explicit memory, otherwise cap default/config sort at 256M (may swap heavily)</td>
+</tr>
+<tr>
+<td><code>dense_suffix_array</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td><code>align</code>/<code>realign</code>: wgse-bwa reads the reference's dense suffix-array file from <code>ref dense-sa</code> (opt-in; used only when wgse-bwa aligns; holds it in RAM, 0.8 GB for hs38)</td>
+</tr>
+<tr>
+<td><code>dorado_models_directory</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Folder <code>basecall</code> downloads Dorado models into (default: the wgsextract cache's dorado-models)</td>
+</tr>
+<tr>
+<td><code>mimalloc</code></td>
+<td><code>auto</code> or <code>off</code></td>
+<td>unset</td>
+<td>Apple Silicon: <code>vcf snp</code>/<code>vcf indel</code> run bcftools with WGS Extract's wgse-mimalloc allocator. Native Windows: <code>bam to-cram --cram-version 3.1</code> with a local reference uses the matching samtools-mimalloc encoder. Only validated installed variants run (auto, default), or never (off)</td>
+</tr>
+<tr>
+<td><code>baq</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td><code>vcf snp</code>/<code>vcf indel</code>: enable heuristic base alignment quality (BAQ) in bcftools mpileup (slower; may reduce low-depth recall); off by default; see docs/variant-confidence.md</td>
+</tr>
+<tr>
+<td><code>reference_evidence</code></td>
+<td><code>none</code> or <code>gvcf</code></td>
+<td><code>&quot;none&quot;</code></td>
+<td><code>vcf snp</code>/<code>vcf indel</code>/<code>vcf deepvariant</code>/<code>vcf gatk</code>/<code>vcf clair3</code>: also write a gVCF of reference evidence (bcftools.g.vcf.gz, deepvariant.g.vcf.gz, gatk.g.vcf.gz, clair3.g.vcf.gz) beside the variant VCF (gvcf), or not (none, the default); see docs/reference-evidence.md</td>
+</tr>
+<tr>
+<td><code>haplocheck_executable</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to the haplocheck executable or JAR</td>
+</tr>
+<tr>
+<td><code>report_gene_list</code></td>
+<td>string</td>
+<td>unset</td>
+<td><code>report</code>: genes of the ClinVar section, a built-in list (acmg-sf-3.3, the default, or acmg-sf-3.2) or a TSV or BED file</td>
+</tr>
+<tr>
+<td><code>haplogrep_tree</code></td>
+<td>string</td>
+<td>unset</td>
+<td>Haplogrep 3 tree for mtDNA haplogroups: phylotree-fu-rcrs (default), phylotree-rcrs or mitotree-rcrs</td>
+</tr>
+<tr>
+<td><code>y_tree</code></td>
+<td>string</td>
+<td>unset</td>
+<td>Y haplogroup tree for <code>lineage y-haplogroup</code>: yfull (default), yfull_v10, ftdna, isogg or a [y_trees] id</td>
+</tr>
+<tr>
+<td><code>y_trees</code></td>
+<td>tables</td>
+<td>unset</td>
+<td>Your own Y haplogroup trees, one [y_trees.&lt;id&gt;] table each (see the Yleaf README)</td>
+</tr>
+<tr>
+<td><code>jar_directory</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Directory for JAR tools</td>
+</tr>
+<tr>
+<td><code>vep_cache_directory</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to VEP cache</td>
+</tr>
+<tr>
+<td><code>vep_engine</code></td>
+<td><code>vep-rs</code> or <code>ensembl</code></td>
+<td>unset</td>
+<td>Engine <code>vep run</code> annotates with: vep-rs (default) or ensembl</td>
+</tr>
+<tr>
+<td><code>pharmcat_directory</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Extracted PharmCAT pipeline release</td>
+</tr>
+<tr>
+<td><code>parabricks_image</code></td>
+<td>string</td>
+<td>unset</td>
+<td>NVIDIA Parabricks Docker image for GPU alignment and calling (default nvcr.io/nvidia/clara/clara-parabricks:4.8.0-1)</td>
+</tr>
+<tr>
+<td><code>deepvariant_image</code></td>
+<td>string</td>
+<td>unset</td>
+<td>DeepVariant Docker image for CPU calling (default google/deepvariant:1.10.0 on x64; local localhost/wgsextract-deepvariant:1.10.0-arm64 on Linux ARM64)</td>
+</tr>
+<tr>
+<td><code>deepvariant_native</code></td>
+<td><code>auto</code> or <code>off</code></td>
+<td>unset</td>
+<td><code>vcf deepvariant</code> runs wgse-deepvariant (Apple Silicon, Linux x86-64) when it is on PATH (auto, the default) or never (off)</td>
+</tr>
+<tr>
+<td><code>deepvariant_weights</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Folder of the weights wgse-deepvariant calls with (from its macos-deepvariant or linux-deepvariant release)</td>
+</tr>
+<tr>
+<td><code>deepvariant_ultima_image</code></td>
+<td>string</td>
+<td>unset</td>
+<td>DeepVariant Docker image with the ULTIMA model, for Ultima reads (default google/deepvariant:gh1100-ultima)</td>
+</tr>
+<tr>
+<td><code>deepvariant_ultima_gpu_image</code></td>
+<td>string</td>
+<td>unset</td>
+<td>DeepVariant GPU Docker image with the ULTIMA model, for <code>vcf deepvariant --gpu</code> on Ultima reads (default google/deepvariant:gh1100-ultima-gpu, pinned by digest)</td>
+</tr>
+<tr>
+<td><code>clair3_model</code></td>
+<td>string</td>
+<td>unset</td>
+<td>Clair3 ONT model for <code>vcf clair3</code>: a model directory or the name of one Clair3 bundles (default: chosen from the reads' basecaller metadata)</td>
+</tr>
+<tr>
+<td><code>clair3_gpu_image</code></td>
+<td>string</td>
+<td>unset</td>
+<td>Clair3 GPU Docker image for <code>vcf clair3 --gpu</code> (default hkubal/clair3:v2.0.5_gpu, pinned by digest)</td>
+</tr>
+<tr>
+<td><code>methylation_context</code></td>
+<td><code>cpg</code> or <code>all</code></td>
+<td><code>&quot;cpg&quot;</code></td>
+<td><code>methylation pileup</code> context: cpg (CpG sites) or all (every cytosine)</td>
+</tr>
+<tr>
+<td><code>methylation_5hmc</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td><code>methylation pileup</code>: also report 5hmC (Nanopore 5mCG_5hmCG models)</td>
+</tr>
+<tr>
+<td><code>methylation_combine_strands</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td><code>methylation pileup</code>: sum both strands of each CpG into one row</td>
+</tr>
+<tr>
+<td><code>default_input_vcf</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Default input VCF file</td>
+</tr>
+<tr>
+<td><code>microarray_min_gq</code></td>
+<td>integer, at least 0</td>
+<td><code>20</code></td>
+<td>Microarray minimum sample GQ (0 disables filtering)</td>
+</tr>
+<tr>
+<td><code>microarray_min_dp</code></td>
+<td>integer, at least 0</td>
+<td><code>10</code></td>
+<td>Microarray minimum sample DP (0 disables filtering)</td>
+</tr>
+<tr>
+<td><code>microarray_assume_hom_ref</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Treat absent VCF markers on represented contigs as homozygous reference</td>
+</tr>
+<tr>
+<td><code>microarray_exclude_filtered</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Write microarray no-calls for VCF FILTER values other than PASS or .</td>
+</tr>
+<tr>
+<td><code>microarray_call_reasons</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Write a companion CombinedKit_reasons.tsv with explicit call/no-call reasons</td>
+</tr>
+<tr>
+<td><code>microarray_strand_ambiguous</code></td>
+<td><code>keep</code> or <code>no-call</code></td>
+<td><code>&quot;keep&quot;</code></td>
+<td>Keep or no-call known biallelic A/T and C/G input SNP sites</td>
+</tr>
+<tr>
+<td><code>microarray_resolve_rsids</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Resolve packaged dbSNP rsID aliases and no-call retired/ambiguous IDs</td>
+</tr>
+<tr>
+<td><code>microarray_quirks</code></td>
+<td><code>corrected</code> or <code>vendor</code></td>
+<td><code>&quot;corrected&quot;</code></td>
+<td>Write microarray calls on the forward strand (corrected) or as the vendor reported known reverse-strand markers (vendor)</td>
+</tr>
+<tr>
+<td><code>qc_min_diploid_depth</code></td>
+<td>number, at least 0</td>
+<td><code>15.0</code></td>
+<td>Warn before microarray/VCF genotypes below this mean autosomal depth (0 disables)</td>
+</tr>
+<tr>
+<td><code>qc_min_haploid_depth</code></td>
+<td>number, at least 0</td>
+<td><code>3.0</code></td>
+<td>Warn before chrY/mtDNA haplogroups below this mean depth (0 disables)</td>
+</tr>
+<tr>
+<td><code>qc_min_autosomal_homozygosity</code></td>
+<td>number, 0 to 1</td>
+<td><code>0.6</code></td>
+<td>Warn when fewer microarray autosomal calls are homozygous (contamination)</td>
+</tr>
+<tr>
+<td><code>qc_max_autosomal_homozygosity</code></td>
+<td>number, 0 to 1</td>
+<td><code>0.88</code></td>
+<td>Warn when more microarray autosomal calls are homozygous (low-pass or heavily imputed input)</td>
+</tr>
+<tr>
+<td><code>qc_max_no_call_rate</code></td>
+<td>number, 0 to 1</td>
+<td><code>0.1</code></td>
+<td>Warn when a microarray output has more autosomal no-calls than this</td>
+</tr>
+<tr>
+<td><code>qc_max_contamination</code></td>
+<td>number, 0 to 1</td>
+<td><code>0.03</code></td>
+<td>Warn, and cap confidence labels at moderate, when <code>qc contamination</code> estimates more of the reads (FREEMIX) come from another person</td>
+</tr>
+<tr>
+<td><code>confidence_min_depth</code></td>
+<td>number, at least 0</td>
+<td><code>10.0</code></td>
+<td>Label rare/clinical variant calls below this read depth low confidence (halved for haploid calls)</td>
+</tr>
+<tr>
+<td><code>confidence_high_depth</code></td>
+<td>number, at least 0</td>
+<td><code>20.0</code></td>
+<td>Label rare/clinical variant calls below this read depth (and at least confidence_min_depth) moderate confidence</td>
+</tr>
+<tr>
+<td><code>confidence_min_gq</code></td>
+<td>number, at least 0</td>
+<td><code>20.0</code></td>
+<td>Label rare/clinical variant calls below this genotype quality low confidence</td>
+</tr>
+<tr>
+<td><code>confidence_high_gq</code></td>
+<td>number, at least 0</td>
+<td><code>30.0</code></td>
+<td>Label rare/clinical variant calls below this genotype quality (and at least confidence_min_gq) moderate confidence</td>
+</tr>
+<tr>
+<td><code>mother_vcf_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Default Mother VCF for trios</td>
+</tr>
+<tr>
+<td><code>father_vcf_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Default Father VCF for trios</td>
+</tr>
+<tr>
+<td><code>batch_file_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to batch processing CSV/TSV</td>
+</tr>
+<tr>
+<td><code>vcf_input_paths</code></td>
+<td>string or array of strings, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Multiple VCF inputs</td>
+</tr>
+<tr>
+<td><code>clinvar_vcf_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to ClinVar VCF data</td>
+</tr>
+<tr>
+<td><code>revel_tsv_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to REVEL TSV data</td>
+</tr>
+<tr>
+<td><code>phylop_tsv_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to PhyloP bigWig (or TSV/VCF) data</td>
+</tr>
+<tr>
+<td><code>cadd_tsv_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to CADD whole-genome SNV TSV data</td>
+</tr>
+<tr>
+<td><code>cadd_indel_tsv_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to CADD indel TSV data</td>
+</tr>
+<tr>
+<td><code>gerp_bigwig_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to GERP++ RS bigWig data</td>
+</tr>
+<tr>
+<td><code>gnomad_vcf_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to gnomAD VCF data</td>
+</tr>
+<tr>
+<td><code>acmg_sa_dir</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Folder of fastVEP annotation databases for vcf acmg</td>
+</tr>
+<tr>
+<td><code>acmg_gff3</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Ensembl GFF3 of transcript models for vcf acmg</td>
+</tr>
+<tr>
+<td><code>gnomad_sv_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to a gnomAD-SV sites table (ref gnomad-sv)</td>
+</tr>
+<tr>
+<td><code>gnomad_lr_sv_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to a gnomAD-LR SV sites table (ref gnomad-sv --source lr)</td>
+</tr>
+<tr>
+<td><code>spliceai_vcf_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to SpliceAI VCF data</td>
+</tr>
+<tr>
+<td><code>alphamissense_vcf_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to AlphaMissense VCF data</td>
+</tr>
+<tr>
+<td><code>pharmgkb_vcf_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to PharmGKB data</td>
+</tr>
+<tr>
+<td><code>signing_key</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>OpenSSH private key used by <code>sign create</code></td>
+</tr>
+<tr>
+<td><code>pgs_scoring_file</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Custom scoring TSV[.gz], overriding Catalog weights</td>
+</tr>
+<tr>
+<td><code>pgs_min_match</code></td>
+<td>number, 0 to 1</td>
+<td><code>0.75</code></td>
+<td>Minimum PGS match fraction for percentile eligibility</td>
+</tr>
+<tr>
+<td><code>pgs_keep_ambiguous</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Keep palindromic SNPs only with independently verified forward-strand alleles</td>
+</tr>
+</tbody>
+</table></div>
+<p>Older names still read: <code>dataset_library</code> (<code>mygenomes_library</code>), <code>father_vcf</code> (<code>father_vcf_path</code>), <code>genome_library</code> (<code>mygenomes_library</code>), <code>genomes</code> (<code>mygenomes_library</code>), <code>haplocheck_path</code> (<code>haplocheck_executable</code>), <code>haplogrep_path</code> (<code>haplogrep_executable</code>), <code>input</code> (<code>input_path</code>), <code>input_vcf</code> (<code>default_input_vcf</code>), <code>jar_dir</code> (<code>jar_directory</code>), <code>memory</code> (<code>memory_limit</code>), <code>mother_vcf</code> (<code>mother_vcf_path</code>), <code>outdir</code> (<code>output_directory</code>), <code>ref</code> (<code>reference_fasta</code>), <code>reflib</code> (<code>reference_library</code>), <code>threads</code> (<code>cpu_threads</code>), <code>vep_cache</code> (<code>vep_cache_directory</code>).</p>
+<h2>The [server] table</h2>
+<p>Operator opt-ins for HTTP/JSON listening and viewer files. See <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/server.md#remote-http-access">server mode</a> for exposure and TLS requirements.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listen</code></td>
+<td>string</td>
+<td><code>&quot;127.0.0.1&quot;</code></td>
+<td>HTTP listen address[:port]; explicit --port overrides the embedded port; loopback by default</td>
+</tr>
+<tr>
+<td><code>allowed_hosts</code></td>
+<td>string or array of strings</td>
+<td>unset</td>
+<td>Exact external Host headers, including ports; never wildcards</td>
+</tr>
+<tr>
+<td><code>allowed_origins</code></td>
+<td>string or array of strings</td>
+<td>unset</td>
+<td>Exact app origins allowed to read viewer files; never wildcards</td>
+</tr>
+<tr>
+<td><code>viewer_files</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Enable authenticated, guarded viewer byte ranges</td>
+</tr>
+<tr>
+<td><code>public_url</code></td>
+<td>string</td>
+<td>unset</td>
+<td>Advertised HTTP/HTTPS client origin; required for non-loopback listening, with its authority in allowed_hosts</td>
+</tr>
+<tr>
+<td><code>max_connections</code></td>
+<td>integer, 1 to 256</td>
+<td><code>32</code></td>
+<td>Maximum accepted HTTP connections, including unauthenticated peers</td>
+</tr>
+<tr>
+<td><code>header_timeout_seconds</code></td>
+<td>number, 0.1 to 60</td>
+<td><code>10.0</code></td>
+<td>Absolute request-header and keep-alive idle deadline; does not limit authenticated responses</td>
+</tr>
+</tbody>
+</table></div>
+<h2>The [dev] table</h2>
+<p>Developer and test settings live in their own table, at the end of config.toml (after a table header, every key belongs to that table):</p>
+<pre><code class="language-toml">[dev]
+download_cache = true
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pet_r1_fastq</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to PET R1 reads</td>
+</tr>
+<tr>
+<td><code>pet_r2_fastq</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to PET R2 reads</td>
+</tr>
+<tr>
+<td><code>pet_reference_fasta</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to PET reference genome</td>
+</tr>
+<tr>
+<td><code>real_genome_test_path</code></td>
+<td>string, path (<code>~</code> expands)</td>
+<td>unset</td>
+<td>Path to a local real genome dataset</td>
+</tr>
+<tr>
+<td><code>real_genome_tests_enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Enable real smoke tests from real_genome_test_path</td>
+</tr>
+<tr>
+<td><code>download_cache</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Cache downloads under $XDG_CACHE_HOME/wgsextract for reuse</td>
+</tr>
+<tr>
+<td><code>download_cache_ttl_seconds</code></td>
+<td>integer, at least 0</td>
+<td><code>604800</code></td>
+<td>Seconds before an unused download cache item is pruned</td>
+</tr>
+</tbody>
+</table></div>
+<p>These used to be top-level settings; a config.toml that still has one there fails to load, naming its place in [dev]: <code>dev_download_cache</code> (now <code>download_cache</code>), <code>dev_download_cache_ttl_seconds</code> (now <code>download_cache_ttl_seconds</code>), <code>pet_r1_fastq</code> (now <code>pet_r1_fastq</code>), <code>pet_r2_fastq</code> (now <code>pet_r2_fastq</code>), <code>pet_reference_fasta</code> (now <code>pet_reference_fasta</code>), <code>real_genome_test_path</code> (now <code>real_genome_test_path</code>), <code>real_genome_tests_enabled</code> (now <code>real_genome_tests_enabled</code>).</p>
+</div></section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>See the command reference for command-line overrides.</p></div>
+        
+      </div>
+    </footer>
+    <script>
+      (() => {
+        const copyText = async (text) => {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            return;
+          }
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "fixed";
+          textarea.style.left = "-9999px";
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          textarea.remove();
+        };
+
+        document.addEventListener("click", async (event) => {
+          const button = event.target.closest(".copy-button");
+          if (!button) return;
+          const panel = button.closest(".code-panel");
+          const code = panel?.querySelector("pre code");
+          if (!code) return;
+          const previous = button.textContent;
+          try {
+            await copyText(code.innerText);
+            button.textContent = "Copied";
+          } catch {
+            button.textContent = "Failed";
+          }
+          window.setTimeout(() => {
+            button.textContent = previous;
+          }, 1400);
+        });
+
+        let tooltip;
+        let activeTooltipTarget;
+        let tooltipTimer;
+
+        const ensureTooltip = () => {
+          if (!tooltip) {
+            tooltip = document.createElement("div");
+            tooltip.className = "site-tooltip";
+            tooltip.hidden = true;
+            tooltip.setAttribute("role", "tooltip");
+            document.body.appendChild(tooltip);
+          }
+          return tooltip;
+        };
+
+        const positionTooltip = () => {
+          if (!tooltip || !activeTooltipTarget) return;
+          const rect = activeTooltipTarget.getBoundingClientRect();
+          const tipRect = tooltip.getBoundingClientRect();
+          const margin = 12;
+          let left = rect.left + rect.width / 2 - tipRect.width / 2;
+          left = Math.max(margin, Math.min(left, window.innerWidth - tipRect.width - margin));
+          let top = rect.top - tipRect.height - 10;
+          if (top < margin) top = rect.bottom + 10;
+          tooltip.style.left = `${Math.round(left + window.scrollX)}px`;
+          tooltip.style.top = `${Math.round(top + window.scrollY)}px`;
+        };
+
+        const showTooltip = (target) => {
+          const text = target.dataset.tooltip;
+          if (!text) return;
+          activeTooltipTarget = target;
+          const tip = ensureTooltip();
+          tip.textContent = text;
+          tip.hidden = false;
+          tip.classList.remove("visible");
+          window.requestAnimationFrame(() => {
+            positionTooltip();
+            tip.classList.add("visible");
+          });
+        };
+
+        const scheduleTooltip = (target) => {
+          window.clearTimeout(tooltipTimer);
+          tooltipTimer = window.setTimeout(() => showTooltip(target), 120);
+        };
+
+        const hideTooltip = () => {
+          window.clearTimeout(tooltipTimer);
+          activeTooltipTarget = undefined;
+          if (!tooltip) return;
+          tooltip.classList.remove("visible");
+          tooltip.hidden = true;
+        };
+
+        document.addEventListener("mouseover", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (!target || target === activeTooltipTarget) return;
+          scheduleTooltip(target);
+        });
+
+        document.addEventListener("mouseout", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (!target || target.contains(event.relatedTarget)) return;
+          hideTooltip();
+        });
+
+        document.addEventListener("focusin", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (target) scheduleTooltip(target);
+        });
+        document.addEventListener("focusout", hideTooltip);
+        window.addEventListener("scroll", positionTooltip, { passive: true });
+        window.addEventListener("resize", positionTooltip);
+      })();
+    </script>
+  </body>
+</html>

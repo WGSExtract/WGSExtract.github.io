@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reference evidence (gVCF) | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/reference-evidence.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Reference evidence (gVCF)</span></nav>
+<h1 id="reference-evidence-gvcf">Reference evidence (gVCF)</h1>
+<p>A variant VCF lists the places a genome differs from the reference. It can't say whether a base it doesn't list was read confidently as reference, read poorly, or not read at all. Polygenic scores, PharmCAT and confidence labels need the difference: treating every missing base as reference turns a coverage gap into a confident genotype.</p>
+<p><code>--reference-evidence gvcf</code> asks a caller to also write a gVCF, which records every base it assessed, beside its variant VCF. The variant VCF is unchanged, except that GATK genotypes it from the gVCF (see <a href="#gatk">GATK</a>). It is opt-in (<code>reference_evidence = &quot;gvcf&quot;</code> in <code>config.toml</code> makes it the default) because it costs time, memory and disk.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Caller</th><th>gVCF</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td><code>vcf snp</code>, <code>vcf indel</code> (bcftools)</td><td><code>bcftools.g.vcf.gz</code></td><td>available</td></tr>
+<tr><td><code>vcf deepvariant</code> (Google's image, <code>wgse-deepvariant</code>, Parabricks)</td><td><code>deepvariant.g.vcf.gz</code></td><td>available</td></tr>
+<tr><td><code>vcf gatk</code> (HaplotypeCaller on the CPU; not <code>--gpu</code> or <code>--scatter</code>)</td><td><code>gatk.g.vcf.gz</code></td><td>available</td></tr>
+<tr><td><code>vcf clair3</code> (CPU and <code>--gpu</code>)</td><td><code>clair3.g.vcf.gz</code></td><td>available, about 2.4x slower on the CPU and 4.3x with <code>--gpu</code></td></tr>
+</tbody>
+</table></div>
+<p><code>analyze</code> follows the <code>config.toml</code> setting: its SNP step writes the gVCF (its indel step doesn't repeat it), and a rerun repeats the SNP step when the gVCF or its index is missing.</p>
+<h2 id="outputs">Outputs<a class="heading-anchor" href="#outputs" aria-label="Link to section">#</a></h2>
+<p>The gVCF and its index are separate outputs in the <a href="result-manifest.html">result manifest</a>: role <code>reference_evidence</code> (with the provenance below as its <code>metrics</code>) and <code>reference_evidence_index</code>. The gVCF is written under a temporary name and renamed into place, then its index, so a failed run never leaves a partial gVCF or an index that describes another file.</p>
+<p>The gVCF's <code>##wgseReferenceEvidence</code> header (schema <code>wgsextract.reference_evidence/1</code>) records how it was made:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>Engine</code>, <code>Version</code></td><td>The caller and its version.</td></tr>
+<tr><td><code>QualityModel</code></td><td><code>gq</code>: reference blocks carry a genotype quality. <code>depth_only</code>: they carry only depth (bcftools).</td></tr>
+<tr><td><code>Bands</code></td><td>The depth (bcftools) or GQ bands its blocks are grouped by.</td></tr>
+<tr><td><code>MinMQ</code></td><td>Reads below this mapping quality are left out of the evidence.</td></tr>
+<tr><td><code>Region</code></td><td>The bases the run assessed, as <code>contig:start-end</code> items (a BED or literal <code>--region</code>, resolved); empty for the whole genome.</td></tr>
+<tr><td><code>Ploidy</code>, <code>Sex</code>, <code>PloidyPolicy</code></td><td>The ploidy rules and sex used, and a digest of both.</td></tr>
+<tr><td><code>PloidyZero</code></td><td>Bases with ploidy 0 for this sample, such as a woman's chrY.</td></tr>
+</tbody>
+</table></div>
+<h2 id="bcftools">bcftools<a class="heading-anchor" href="#bcftools" aria-label="Link to section">#</a></h2>
+<p>The gVCF comes from its own pileup of SNPs and indels together. <code>vcf snp</code>'s SNP-only pileup can't be reused: it reports indel sites as reference (420 of 3,007 GIAB truth variants in a 2 Mb test). Its blocks are grouped by minimum depth with bands <code>0,5,10,20</code>, the smallest of those tested, and carry no GQ, only DP and MIN_DP. Reads below mapping quality 20 are left out, as GATK's HaplotypeCaller does by default, so reads that map equally well elsewhere don't make a repeat look like confident reference. Its variant records come from that pileup too; the call set is still <code>snps.vcf.gz</code>/<code>indels.vcf.gz</code>. Each contig with reads is called in its own process, so its records don't depend on <code>--threads</code>.</p>
+<p>Measured on HG002 (35x Illumina, GRCh38) against GIAB v4.2.1:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Region</th><th><code>vcf snp</code></th><th>with the gVCF</th><th>gVCF + index</th></tr></thead>
+<tbody>
+<tr><td>chr20:10-12 Mb, 1 thread</td><td>13.2 s</td><td>24.4 s</td><td>0.23 MB</td></tr>
+<tr><td>chr20, 2 threads</td><td>240 s</td><td>468 s</td><td>7.8 MB (about 0.4 GB for a genome)</td></tr>
+</tbody>
+</table></div>
+<p>The variant VCF was identical with and without it. Of the 82,588 truth variants in chr20's confident regions, 432 sit on bases the gVCF calls callable reference, variants bcftools missed (335 SNVs and 97 indels).</p>
+<h2 id="deepvariant">DeepVariant<a class="heading-anchor" href="#deepvariant" aria-label="Link to section">#</a></h2>
+<p>DeepVariant writes the gVCF in the same run as its VCF, which is unchanged: Google's image or a local <code>run_deepvariant</code> and <code>wgse-deepvariant</code> with <code>--output_gvcf</code>, Parabricks (<code>--gpu</code>) with <code>--gvcf</code>. Its blocks carry GQ, in DeepVariant's bins of 5, and MIN_DP. It writes bases no read covers as <code>0/0</code> blocks with GQ 0 and MIN_DP 0, which read as <code>uncovered</code>, and its <code>RefCall</code> and <code>NoCall</code> records as <code>filtered</code>. Only the gVCF's header changes when it is published (<code>bcftools reheader</code>), so every record stays as DeepVariant wrote it. Bases a sex/PAR ploidy of 0 leaves out of calling (a woman's chrY) are recorded in <code>PloidyZero</code>. Parabricks calls a man's haploid chrX and chrY apart from the rest and its gVCF is gathered from the parts (see <a href="#sex-and-par">Sex and PAR</a>); <code>wgse-deepvariant</code> requires 0.4.0 or later for non-diploid policies. Like Google's pipeline it accepts PAR intervals directly, preserving one resumable run; its reference blocks split at PAR boundaries and use haploid likelihoods outside PAR. Haploid GT and PL retain Google's diploid encoding, with heterozygous likelihoods suppressed. The readers use the published ploidy intervals, not GT length, for haploid depth thresholds; PAR remains diploid. The variant-only VCF carries the same policy under <code>##wgsePloidyPolicy</code> (not a reference-evidence declaration). PAR BEDs describe the full policy on the selected haploid contigs, even for a bounded selection, so deletions reaching into PAR keep diploid treatment. <code>wgse-deepvariant</code>'s diploid gVCF agrees with Google's in every field the states read; before 0.3.1 its variant records lacked the PL values of genotypes with <code>&lt;*&gt;</code> (#999).</p>
+<p>The gVCF and its index are outputs of the <code>postprocess_variants</code> stage: if that stage is interrupted, a rerun repeats it alone. Its stages' work is deleted once the run finishes, so a gVCF deleted later reruns every stage, as do turning <code>--reference-evidence</code> on or off, which changes what <code>make_examples</code> writes, and a change to the gVCF's provenance alone (such as a wider <code>--region</code> on a woman's chrY). A run that keeps no stage gets the full preflight check.</p>
+<p>Memory: Google's <code>postprocess_variants</code> streams each partition's reference records into the gVCF, so it needs no more memory (chr20 as one partition: 1.14 GiB either way). <code>wgse-deepvariant</code> keeps every contig's calls until it writes the gVCF, so its preflight allows about 20 GiB for a whole genome, against 5 GiB without; on a smaller machine call a <code>--region</code>, or use Google's image (see <a href="resource_estimates.html#deepvariant-postprocess_variants">resource_estimates.md</a>).</p>
+<p>Measured on HG002 (35x Illumina, GRCh38) chr20, 8 threads, against GIAB v4.2.1:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Engine</th><th>VCF only</th><th>with the gVCF</th><th>gVCF + index</th></tr></thead>
+<tbody>
+<tr><td>Google's image, CPU</td><td>859 s</td><td>1,030 s</td><td>20.8 MB (about 1 GB for a genome)</td></tr>
+<tr><td><code>wgse-deepvariant</code>, CPU</td><td>500 s</td><td>575 s</td><td>19.4 MB</td></tr>
+<tr><td>Parabricks, RTX 3090</td><td>78 s</td><td>99 s</td><td>21.0 MB</td></tr>
+</tbody>
+</table></div>
+<p>Times are from a shared host (load 9-20 on 12 cores); on a quieter one Google's image took 943 and 989 s. Parabricks' row is pbrun with the same options, run directly.</p>
+<p>The variant VCFs were identical with and without the gVCF. Of the 82,588 truth variants in chr20's confident regions, 116 sit on bases the gVCF calls callable reference, against bcftools' 432.</p>
+<h2 id="gatk">GATK<a class="heading-anchor" href="#gatk" aria-label="Link to section">#</a></h2>
+<p>HaplotypeCaller writes the gVCF (<code>-ERC GVCF</code>), and GenotypeGVCFs genotypes the variant VCF from it, so one HaplotypeCaller run makes both. Its blocks carry GQ and MIN_DP, with <code>&lt;NON_REF&gt;</code>, banded by GQ at <code>10,20,30,60</code>: GATK's default (one band per GQ below 60) made a genome's gVCF about 6.5 GB, these about 1.4 GB, with the same bases at GQ 20 or more. Reads below mapping quality 20 are left out, GATK's default. Parabricks' HaplotypeCaller (<code>--gpu</code>) and Ultima's <code>--scatter</code> aren't supported with the gVCF; a run asking for both stops before calling.</p>
+<p>Measured on HG002 (35x Illumina, GRCh38) against GIAB v4.2.1, 4 threads:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Region</th><th>VCF only</th><th>with the gVCF</th><th>gVCF + index</th></tr></thead>
+<tbody>
+<tr><td>chr20:10-12 Mb</td><td>25.5 s</td><td>38.4 s</td><td>0.76 MB</td></tr>
+<tr><td>chr20</td><td>1,374 s</td><td>1,432 s</td><td>28.3 MB (about 1.4 GB for a genome)</td></tr>
+</tbody>
+</table></div>
+<p>HaplotypeCaller took the same time either way; GenotypeGVCFs added 17 s and cutting and publishing the gVCF 4 s. GenotypeGVCFs' VCF had 134,083 records against HaplotypeCaller's 134,073 without the gVCF: it genotypes each site from the gVCF's likelihoods, so a few borderline sites differ. Of the 82,588 truth variants in chr20's confident regions, 102 sit on bases the gVCF calls callable reference (DeepVariant 116, bcftools 432). GATK also writes blocks over reference N, with MIN_DP 0, so they read as <code>uncovered</code>.</p>
+<h2 id="clair3">Clair3<a class="heading-anchor" href="#clair3" aria-label="Link to section">#</a></h2>
+<p>Clair3 writes the gVCF (<code>--gvcf</code>) in the same run as its VCF, whose calls and filters it doesn't change, on the CPU and in HKU's GPU image (<code>--gpu</code>). Its blocks carry GQ, in Clair3's bins of 5, and MIN_DP; reads below mapping quality 5 (Clair3's default) are left out. Its pileup step is much slower with it, so a run that asks for it warns (<code>clair3_gvcf_cost</code>) and its preflight scales the time it reports: about 2.4x on the CPU and 4.3x on the GPU. In that 5 Mb measurement the CPU path was faster than <code>--gpu</code> with the gVCF, which a <code>--gpu</code> run's warning reports; larger runs weren't measured, and it still calls on the GPU. Clair3 skips contigs the index places no reads on, and with none left writes no gVCF; their bases read as <code>uncovered</code>. A missing gVCF when a called contig has reads fails the run. Without a <code>--region</code> it calls chr1-22, X and Y, so the gVCF's <code>Region</code> lists those and other contigs read as <code>not_assessed</code>.</p>
+<p>Measured on HG002 ONT R10.4.1 chr20:10-15 Mb, 4 threads: on the CPU 75 s for the VCF and 179 s with the gVCF (2.4x); with <code>--gpu</code> on an RTX 3090 106 s and 452 s (4.3x). The gVCF was 1.6 MB. The calls and filters were identical.</p>
+<p>Clair3 builds a reference base's depth and GQ from the reads that show a base there; a read that deletes the base counts for neither. A deletion it saw but didn't call is a no-call (or a filtered record) at its first base, followed by confident <code>0/0</code> blocks over the deleted bases, with the deleting reads missing from their depth (#1028). So in a Clair3 gVCF (its <code>Engine</code>, or a <code>##source=Clair3</code> line), reference bases directly after a no-call or filtered record, within 10 bases of it, read as <code>low_quality_reference</code> while their depth stays below 70% of that record's. Consecutive or overlapping no-call and filtered records use the deepest depth and the furthest end of that anchor chain; disjoint anchors separated by reference start separate chains. Queries include the complete contributing chain, so a point lookup and a full-region scan agree. Overlapping calls keep their own state, regardless of reference-block boundaries. In the initial qualification, of the 7,055 truth variants in the confident regions, 41 (40 deletions) had a base of their REF on callable reference before this rule (2 at their position) and 3 after; it took 0.4% of the callable bases (4,879,943 to 4,862,257).</p>
+<h2 id="sex-and-par">Sex and PAR<a class="heading-anchor" href="#sex-and-par" aria-label="Link to section">#</a></h2>
+<p>GATK, Clair3 and Parabricks DeepVariant call a man's haploid chrX and chrY apart from the diploid rest (see <a href="caller-ploidy.html">caller-ploidy.md</a>), so the gVCF is written in parts. Each part's blocks are cut at its edges (a block cut at its start begins on its own reference base, read from the FASTA or, for a gzip one, its decompressed copy) and the parts are gathered in reference order, so every base has one record in the ploidy it was called with: <code>0</code> on a man's chrX, <code>0/0</code> in its PAR (DeepVariant writes <code>0/0</code> in both). Any other record belongs to the part its POS is in; one starting before the selection, such as a deletion whose REF reaches into it, is kept where it covers the selected bases, once. Bases the policy gives ploidy 0, such as a woman's chrY, aren't called and are recorded in <code>PloidyZero</code>.</p>
+<p><code>vcf gatk</code>, <code>vcf clair3</code> and Parabricks DeepVariant keep no step journal: a rerun calls again, with or without the gVCF.</p>
+<h2 id="evidence-states">Evidence states<a class="heading-anchor" href="#evidence-states" aria-label="Link to section">#</a></h2>
+<p><code>wgsextract_cli.core.reference_evidence</code> reads a gVCF (one written here, or another caller's) and puts every base in one state. An explicit provenance quality model wins; otherwise a recorded bcftools <code>-g</code>/<code>--gvcf</code> option selects depth-only blocks, even if variants declare GQ. Other files use their FORMAT/GQ declaration. Filenames containing <code>-g</code> are not options. Where records overlap, the state higher in this table wins.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>State</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>excluded_by_policy</code></td><td>Ploidy 0 for this sample (<code>PloidyZero</code>): not expected to exist.</td></tr>
+<tr><td><code>variant</code></td><td>Inside the REF span of a called non-reference allele.</td></tr>
+<tr><td><code>filtered</code></td><td>A record with a failing FILTER (DeepVariant's <code>RefCall</code>, for example) or sample filter (<code>FORMAT/FT</code>).</td></tr>
+<tr><td><code>no_call</code></td><td>A missing genotype (<code>.</code> or <code>./.</code>).</td></tr>
+<tr><td><code>low_quality_reference</code></td><td>Reference, but with depth below <code>confidence_min_depth</code> (halved for a haploid call) or, for the <code>gq</code> model, GQ below <code>confidence_min_gq</code>; in a Clair3 gVCF, also the bases a deletion it didn't call may remove (see <a href="#clair3">Clair3</a>).</td></tr>
+<tr><td><code>uncovered</code></td><td>Assessed, but no reads: no record (bcftools, Clair3, or DeepVariant over reference N) or a block with MIN_DP 0 (DeepVariant, GATK).</td></tr>
+<tr><td><code>callable_reference</code></td><td>Reference, with enough depth (and GQ).</td></tr>
+<tr><td><code>not_assessed</code></td><td>Outside the region the caller assessed.</td></tr>
+</tbody>
+</table></div>
+<p>The thresholds are the <code>confidence_*</code> settings shared with <a href="variant-confidence.html">variant confidence labels</a>.</p>
+<p>END-tagged reference blocks, including blocks clipped to a single base, need an explicit <code>FORMAT/MIN_DP</code> or <code>INFO/MIN_DP</code> depth floor. A block's <code>DP</code> alone does not establish depth throughout the block: without a minimum, reference evidence is <code>low_quality_reference</code>, and microarray export reports missing depth at enabled depth thresholds. Explicit single-site calls can still use <code>DP</code>. This also applies if a tool removed <code>MIN_DP</code> from an otherwise valid gVCF; do not strip that field when transferring reference evidence.</p>
+<h2 id="commands-that-read-it">Commands that read it<a class="heading-anchor" href="#commands-that-read-it" aria-label="Link to section">#</a></h2>
+<p>A command given a variant VCF finds its gVCF through the <a href="result-manifest.html">result manifest</a> of the run that wrote the VCF: a manifest in the VCF's folder, or one its <a href="sample-workspace.html">sample workspace</a> recorded, that lists the VCF and a <code>reference_evidence</code> output, both unchanged since (same recorded fingerprint; a manifest without fingerprints isn't trusted), the gVCF indexed. A server job follows only manifests and files inside the folders it allows. Without one, the command works as before.</p>
+<ul>
+<li><code>score pgs</code> counts a scoring site the VCF doesn't list as homozygous reference only where the gVCF calls it <code>callable_reference</code> (an indexed <code>--ref</code> checks the alleles). Anywhere else the site stays missing, counted under its state's name in <code>match_counts</code>; <code>details.reference_evidence</code> names the gVCF and counts the scored sites in each state. A gVCF given as the input itself is read the same way, its explicit <code>0/0</code> records included. See <a href="pgs.html#inputs-and-matching">pgs.md</a>.</li>
+<li><code>vcf pharmcat</code> gives a PharmCAT definition the VCF doesn't list a reference genotype only where every base of it is <code>callable_reference</code> with one ploidy; otherwise it is passed as a no-call (so <code>--absent-to-ref</code> can't make it reference) with the state as its <code>PGX_STATE</code>. See <a href="variant-confidence.html">variant-confidence.md</a>. An explicit BAM/CRAM can replace this evidence for a variants-only input; see <a href="variants.html#pharmacogenomics-and-repeat-typing">Pharmacogenomics and repeat typing</a>.</li>
+<li><code>vcf clinvar</code>, <code>vcf gnomad --max-af</code> and <code>analyze</code> add the gVCF's state at the sites they checked to their confidence details (<code>details.confidence[].reference_evidence</code>): at the calls they labelled (<code>calls</code>), and for <code>vcf clinvar</code> and <code>analyze</code> at every ClinVar pathogenic/likely pathogenic site (<code>clinvar_pathogenic_sites</code>), so a site the sample doesn't carry reads as confident reference, uncovered, low-quality, filtered or not assessed. Sites that are neither a call nor callable reference (policy exclusions aside) raise a <code>reference_evidence_unassessed_sites</code> warning. A site's state is <code>callable_reference</code> only when every base of it is. See <a href="variant-confidence.html#reference-evidence-at-the-sites-checked">variant-confidence.md</a>.</li>
+<li><code>vcf callability</code> classifies every base of a gene list's coding exons and calls an exon callable only when every base is <code>callable_reference</code> or a call, outside known short-read limitations; the report then tells genes with nothing reported from genes it could not read. See <a href="exon-callability.html">exon-callability.md</a>.</li>
+<li>The ancestry projection (<code>qc ancestry</code> on a VCF, and <code>score pgs</code>'s PCA projection) fills an ancestry site the VCF doesn't list as hom-ref only where the gVCF calls it <code>callable_reference</code>, instead of assuming every missing site of a whole-genome variants-only VCF is reference. A variants-only VCF of part of the genome is then usable too, and a gVCF given as the input itself. The missing sites' states are reported (<code>ancestry_missing_sites_&lt;state&gt;</code> metrics, <code>ancestry_calibration.pca_missing_site_states</code>). See <a href="ancestry.html#inputs">ancestry.md</a>.</li>
+</ul>
+<p>Measured on HG002 chr20 (35x Illumina), with PGS000018 (CAD, 1.75 million sites, about 44,000 on chr20): <code>score pgs</code> matched 12,723 sites from the variant VCF alone and 44,307 with bcftools' gVCF (31,584 more callable reference sites; 10 low-quality), 44,185 with DeepVariant's (31,475 more; 56 low-quality, 31 filtered, 36 no-call, 12 uncovered). Inside GIAB v4.2.1's confident regions, 30,771 of the 30,774 sites bcftools' gVCF made homozygous reference agree with the truth set, and all 30,694 of DeepVariant's. Reading the gVCF at the 1.75 million sites added 30-50 s to the run.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/reference-evidence.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/reference-evidence.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

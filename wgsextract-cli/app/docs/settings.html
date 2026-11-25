@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Settings | WGS Extract GUI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/app/docs/settings.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../architecture.html">GUI Architecture</a><a href="../wgsextract.html">WGSExtract</a><a class="active" href="../docs.html">Docs</a><a href="../../index.html">WGSExtract CLI</a><a href="../whats-different.html">What&#x27;s Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract GUI</a> / <a href="index.html">User Docs</a> / <span>Settings</span></nav>
+<h1 id="settings">Settings</h1>
+<p>The <strong>Settings</strong> page (at the bottom of the sidebar) controls initial CLI setup, appearance and language, bug reporting, and — in <a href="modes.html">Advanced mode</a> — your workspace location and <code>config.toml</code> preferences.</p>
+<h2 id="setup">Setup<a class="heading-anchor" href="#setup" aria-label="Link to section">#</a></h2>
+<p>The <strong>Setup</strong> card at the top of Settings installs and verifies the bundled WGS Extract CLI and its core bioinformatics tools:</p>
+<ul>
+<li><strong>Run Setup / Rerun Setup:</strong> Installs the locked WGS Extract CLI runtime into the app's data folder and verifies its core dependencies. You can cancel a running setup at any time.</li>
+<li><strong>Step list:</strong> Expands automatically before first setup, while setup is running, or if a step fails; collapses cleanly once setup succeeds (click the chevron to inspect steps anytime).</li>
+<li><strong>Open Bundle Workspace:</strong> Opens the app's internal bundle workspace folder (run logs and saved UI state) in Finder / File Explorer.</li>
+</ul>
+<blockquote>
+<p><strong>Windows note:</strong> Setup installs Pixi tool environments under <code>%LOCALAPPDATA%\WGSExtractPixi</code> for the current Windows user account. If you switch Windows user accounts or delete that folder, rerun <strong>Setup</strong>.</p>
+</blockquote>
+<h2 id="standard-options-appearance-and-language">Standard Options (Appearance and Language)<a class="heading-anchor" href="#standard-options-appearance-and-language" aria-label="Link to section">#</a></h2>
+<p>Always visible in both Basic and Advanced mode:</p>
+<ul>
+<li><strong>Language:</strong> Defaults to <strong>Use system default</strong> (matching your OS language). You can switch explicitly among available languages; AI-translated locales are labeled clearly in the dropdown.</li>
+<li><strong>Icon Set:</strong> Choose between <strong>Bootstrap Icons</strong> (crisp vector icons) and <strong>Emoji</strong> icons.</li>
+<li><strong>Color Theme:</strong> Follow your OS (<strong>System</strong>), or force <strong>Light</strong> or <strong>Dark</strong> mode.</li>
+<li><strong>Web Font:</strong> Choose the default system font priority or prefer <strong>SF Pro</strong> when available.</li>
+</ul>
+<h2 id="report-an-issue">Report an Issue<a class="heading-anchor" href="#report-an-issue" aria-label="Link to section">#</a></h2>
+<p>Collapsed by default in both Basic and Advanced mode. Expand it when something fails and you want to report a bug:</p>
+<ul>
+<li><strong>Last failed run:</strong> Check this to report the most recent failed action rather than the most recent run overall.</li>
+<li><strong>Description:</strong> Optional summary of what you expected to happen.</li>
+<li><strong>Preview report (<code>--print</code>):</strong> Runs <code>wgsextract report-issue --print</code> locally and prints a redacted diagnostic report (tool versions, OS, CPU, RAM, error, and log tail — with personal names, paths, genotypes, and secrets scrubbed). Nothing is sent over the network.</li>
+<li><strong>Open GitHub issue (<code>--open</code>):</strong> Asks for confirmation, then opens a pre-filled GitHub issue draft in your browser. No issue is submitted until you review and submit it yourself on GitHub.</li>
+<li>In <a href="modes.html">Advanced mode</a>, you can also customize the issue title, number of log lines, and maximum URL length.</li>
+</ul>
+<h2 id="users-workspace-vs-bundle-workspace">Users Workspace vs. Bundle Workspace<a class="heading-anchor" href="#users-workspace-vs-bundle-workspace" aria-label="Link to section">#</a></h2>
+<p>WGS Extract keeps your data and the app's internal files cleanly separated:</p>
+<ul>
+<li><strong>Users Workspace</strong> (default <code>~/wgs-extract</code>, or <code>%USERPROFILE%\wgs-extract</code> on Windows): Holds <code>config.toml</code>, your <strong>My Genomes</strong> folder, <strong>Reference Data</strong>, <strong>Reference Genomes</strong>, and temporary/log folders. A standalone WGS Extract CLI shares this same folder and <code>config.toml</code>, so settings and libraries stay in sync.</li>
+<li><strong>Bundle Workspace</strong> (in your OS Application Support / AppData folder): Holds the app's internal bundle copy, UI state, and session logs. You do not need to move it, and uninstalling removes it while keeping your Users Workspace unless you explicitly ask to delete it.</li>
+</ul>
+<p>If <code>~/wgs-extract</code> already exists and belongs to something else, the app never overwrites it — it chooses <code>~/wgs-extract-2</code> (or the next free name) instead.</p>
+<h2 id="users-workspace-location-advanced-mode">Users Workspace Location (Advanced mode)<a class="heading-anchor" href="#users-workspace-location-advanced-mode" aria-label="Link to section">#</a></h2>
+<p>In <a href="modes.html">Advanced mode</a>, the <strong>Users Workspace Location</strong> card lets you move your entire Users Workspace (for example, to a larger or faster SSD):</p>
+<ol>
+<li>Click <strong>Choose...</strong> (or edit the path) to select a new folder.</li>
+<li>Click <strong>Move</strong> and confirm. Everything inside the Users Workspace moves together, and paths inside <code>config.toml</code> update automatically. Folders you had already pointed elsewhere stay where they are.</li>
+<li>Click <strong>Use Default</strong> to move back to the default location if desired.</li>
+</ol>
+<h2 id="users-workspace-settings-configtoml-advanced-mode">Users Workspace Settings (<code>config.toml</code>, Advanced mode)<a class="heading-anchor" href="#users-workspace-settings-configtoml-advanced-mode" aria-label="Link to section">#</a></h2>
+<p>In <a href="modes.html">Advanced mode</a>, the <strong>Users Workspace Settings</strong> card edits your shared <code>config.toml</code> directly (see the CLI <a href="https://wgse.bio/wgsextract-cli/configuration.html" target="_blank" rel="noopener noreferrer">Configuration reference</a> for every key):</p>
+<ul>
+<li><strong>Folder paths</strong> (changing any folder asks <strong>Move / Change Setting Only / Cancel</strong>):
+<ul>
+<li><strong>Output Directory</strong> (<code>output_directory</code>) — Advanced-only override; ignored in Basic mode so Basic runs always use the <code>wgse/</code> folder beside each input.</li>
+<li><strong>My Genomes Library</strong> (<code>mygenomes_library</code>)</li>
+<li><strong>Reference Data Library</strong> (<code>reference_library</code>)</li>
+<li><strong>Reference Genome Library</strong> (<code>reference_genome_library</code>)</li>
+<li><strong>Temporary Directory</strong> (<code>temp_directory</code>) — useful for placing large sorting/calling temp files on a fast scratch drive.</li>
+<li><strong>Log Directory</strong> (<code>log_dir</code>)</li>
+</ul></li>
+<li><strong>Behavior toggles:</strong>
+<ul>
+<li><strong>Atomic outputs</strong> (<code>atomic_outputs</code>) — writes main outputs to temporary names and renames atomically when finished.</li>
+<li><strong>Keep awake</strong> (<code>keep_awake</code>) — best-effort sleep prevention during long runs.</li>
+<li><strong>Allow missing public-data downloads</strong> (<code>allow_reference_downloads</code>, <strong>off by default</strong>) — lets CLI commands fetch missing public references/trees automatically without prompting. See <a href="privacy.html">Privacy and network access</a> for the exact hosts and request metadata before enabling.</li>
+</ul></li>
+<li><strong>Default inputs &amp; tools:</strong>
+<ul>
+<li>Default <strong>Reference FASTA</strong>, default <strong>Input VCF</strong>, <strong>Mother VCF</strong> / <strong>Father VCF</strong> (for trio workflows), and custom <strong>Haplogrep</strong> executable path.</li>
+</ul></li>
+</ul>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract GUI</strong><p>Rendered from <code>gui/docs/settings.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/gui/docs/settings.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

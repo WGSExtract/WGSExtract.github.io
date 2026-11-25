@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sex, relatedness and ancestry (qc relate) | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/relate.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Sex, relatedness and ancestry (qc relate)</span></nav>
+<h1 id="sex-relatedness-and-ancestry-qc-relate">Sex, relatedness and ancestry (<code>qc relate</code>)</h1>
+<p><code>wgsextract qc relate</code> answers three questions with <a href="https://github.com/brentp/somalier" target="_blank" rel="noopener noreferrer">somalier</a> (Pedersen et al. 2020, <em>Genome Medicine</em>):</p>
+<ul>
+<li><strong>Is this file really mine?</strong> It infers the sex from chrX and chrY and checks it against the sex already recorded for the file.</li>
+<li><strong>Are these kits from relatives?</strong> It estimates the relatedness of every pair of inputs: about 1 for the same person, 0.5 for parent and child or full siblings, 0.25 for second-degree relatives and about 0 for unrelated people.</li>
+<li><strong>Which continental group?</strong> It predicts one of the five 1000 Genomes superpopulations (AFR, AMR, EAS, EUR, SAS). This is a coarse continental estimate, not an ancestry breakdown.</li>
+</ul>
+<pre><code class="language-sh">pixi install -e somalier                 # once: the optional somalier tool
+wgsextract ref somalier --install        # once: sites and 1000 Genomes sketches (~85 MB)
+wgsextract qc relate me.cram
+wgsextract qc relate child.cram mother.cram father.cram --ped trio.ped
+wgsextract qc relate me.cram somalier/cousin.somalier</code></pre>
+<h2 id="inputs">Inputs<a class="heading-anchor" href="#inputs" aria-label="Link to section">#</a></h2>
+<p>BAM, CRAM and VCF files, and <code>.somalier</code> sketches from an earlier run. Each BAM, CRAM or VCF is sketched at about 17,800 common SNPs (a few seconds for a VCF, a few minutes for a 30x CRAM). The reference is found from the file's header, as for other commands, or given with <code>--ref</code>. The sketches are kept in <code>&lt;outdir&gt;/somalier/</code>: they are a few hundred kilobytes, so a relative can send theirs instead of a whole genome.</p>
+<p>somalier picks the sites file that matches each input's build and contig names (hg38, hg19/GRCh37 and T2T-CHM13). Kits on different builds can be compared. <code>--sites</code> uses your own sites VCF instead, for example for an exome.</p>
+<p>A BAM or CRAM gives the most accurate results. A VCF's genotypes are used as called (REF and the site's ALT only; filtered, missing or other-allele calls are unknown). A VCF lists only variants, so a site it lacks is usually homozygous reference, but only in a whole-genome call set:</p>
+<ul>
+<li>For a sample of a <strong>whole-genome, variants-only</strong> VCF (single-sample or joint-called), missing autosomal sites are written into its sketch as homozygous reference. Such a sketch can be reused, or compared with BAMs, without changing the result. "Whole genome" means non-reference calls on at least 95% of the autosomes, at least 80% of the variant sites the sites' allele frequencies predict, and at least 400 records per autosomal megabase in the whole file. Whole-genome VCFs reach 89-100% of the sites (GIAB HG002/HG003/HG004 v4.2.1 98%, 1000 Genomes NA19240 89% and HG00513 92%); HG002's chromosomes 1-6 alone reach 38% and its chr20 3%. somalier's sites suit exomes, so HG002 in the xGen exome (+-100 bp) still reaches 90%; its 25 records per megabase, against 1,408 for the whole VCF, tell it apart.</li>
+<li>For any other variants-only VCF (one chromosome, an exome or panel), missing sites stay unknown. The sample's relatedness then rests on its variant sites alone, so its pairs are reported as <code>uncertain</code>, with a <code>vcf_called_sites_only</code> warning.</li>
+<li>An all-sites VCF writes its hom-ref calls out, so they are used as they are, and its missing sites stay unknown, as a BAM's uncovered sites do; no warning.</li>
+</ul>
+<p>chrX and chrY are never filled, so the sex reads only real calls. gVCFs are refused: their no-call blocks can't be told from reference blocks.</p>
+<p>Sample names come from the read group (SM; else the file name) or the VCF header, and for a sketch from the name stored inside it, so a renamed <code>.somalier</code> file still matches its pedigree row. A BAM/CRAM of several samples, and names with path separators, are refused. When a BAM, CRAM or VCF has the sample name of another input, it is prefixed with its file name.</p>
+<h2 id="outputs">Outputs<a class="heading-anchor" href="#outputs" aria-label="Link to section">#</a></h2>
+<p>In <code>--outdir</code>, else beside the first input (for sketches in an earlier run's <code>somalier/</code> folder, in that run's folder):</p>
+<div class="table-wrap"><table>
+<thead><tr><th>File</th><th>Contents</th></tr></thead>
+<tbody>
+<tr><td><code>relate.samples.tsv</code></td><td>One row per sample: inferred sex and its confidence, the sex recorded before, the superpopulation and its probability, depths and chrX heterozygosity</td></tr>
+<tr><td><code>relate.pairs.tsv</code></td><td>One row per pair: relatedness, likely relationship, IBS0/IBS2, sites shared, expected relatedness from <code>--ped</code>, and whether it is flagged</td></tr>
+<tr><td><code>relate.html</code>, <code>relate.ancestry.html</code></td><td>somalier's interactive reports</td></tr>
+<tr><td><code>somalier/&lt;sample&gt;.somalier</code></td><td>The sketches</td></tr>
+<tr><td><code>relate.manifest.json</code></td><td>The <a href="result-manifest.html">result manifest</a></td></tr>
+</tbody>
+</table></div>
+<p><code>--format parquet</code> writes the two tables as Parquet.</p>
+<h2 id="warnings">Warnings<a class="heading-anchor" href="#warnings" aria-label="Link to section">#</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>sex_mismatch</code></td><td>somalier's sex disagrees with the sex recorded for the file: your override, a sex detected earlier, or for a BAM its chrX/chrY read counts (a CRAM is compared only once <code>info</code> or another command has recorded its sex)</td></tr>
+<tr><td><code>vcf_called_sites_only</code></td><td>A VCF sample isn't a whole-genome variant call set: its pairs are <code>uncertain</code></td></tr>
+<tr><td><code>same_person</code></td><td>Two inputs are the same person</td></tr>
+<tr><td><code>relationship_mismatch</code></td><td>With <code>--ped</code>: a pair is more than 0.1 away from the relatedness the pedigree implies, for example a swapped file</td></tr>
+<tr><td><code>ped_sex_mismatch</code></td><td>With <code>--ped</code>: a sample's sex disagrees with the pedigree</td></tr>
+</tbody>
+</table></div>
+<p><code>--ped</code> takes a PED or PLINK <code>.fam</code> file (family, sample, father, mother, sex), tab- or space-separated, naming the samples as <code>qc relate</code> does.</p>
+<p>The sex and superpopulation of each BAM or CRAM are recorded in its <a href="sample-workspace.html">sample workspace</a> as <code>somalier_sex</code> and <code>superpopulation</code>.</p>
+<h2 id="resources-and-licences">Resources and licences<a class="heading-anchor" href="#resources-and-licences" aria-label="Link to section">#</a></h2>
+<p><code>ref somalier --install</code> downloads, and checks against pinned SHA-256 digests:</p>
+<ul>
+<li>somalier's sites files (MIT), from the brentp/somalier release attachments;</li>
+<li><code>ancestry-labels-1kg.tsv</code> (MIT), from the somalier repository;</li>
+<li><code>1kg.somalier.tar.gz</code>, sketches of the 2,504 unrelated 1000 Genomes samples from the NYGC high-coverage data, from <a href="https://zenodo.org/records/3479773" target="_blank" rel="noopener noreferrer">Zenodo record 3479773</a> (CC BY 4.0, Brent Pedersen).</li>
+</ul>
+<p>They go in <code>&lt;library&gt;/somalier/</code>. Each sketch's SHA-256 is recorded when the archive is unpacked and checked before every use (well under a second); <code>ref somalier --delete</code> removes them. Ancestry runs when they are installed, unless <code>--sites</code> gives another panel (<code>--no-ancestry</code> skips it).</p>
+<h2 id="platforms">Platforms<a class="heading-anchor" href="#platforms" aria-label="Link to section">#</a></h2>
+<p>somalier is built for Linux and macOS (x86-64 and ARM64) and is not available on Windows; use WSL2 there.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/relate.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/relate.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

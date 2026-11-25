@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sequence-defined microarray insertion/deletion probes | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/microarray-indels.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Sequence-defined microarray insertion/deletion probes</span></nav>
+<h1 id="sequence-defined-microarray-insertiondeletion-probes">Sequence-defined microarray insertion/deletion probes</h1>
+<p>CHM13 alignments use a separate, complete-flank-evidenced native caller; see <a href="microarray-chm13.html">microarray-chm13.md</a>. Its default SNP route and native VCF inputs remain exclusion-only for known I/D/non-SNV probes. Unverified manifest contexts always remain no-calls. The GRCh37/38 implementation below is unchanged.</p>
+<p>Indel calling is <strong>opt-in</strong>. Supply the actual manufacturer manifest applicable to each selected chip/export layout, rather than inferring DNA alleles from a person's <code>II</code>, <code>DD</code> or <code>DI</code> call:</p>
+<pre><code class="language-sh">wgsextract microarray --input sample.bam --ref reference \
+  --formats 23andme_v5,ancestry_v2cd \
+  --indel-manifest 23andme_v5=exact-chip-build37.csv \
+  --indel-manifest ancestry_v2cd=another-exact-chip-build37.csv.zip \
+  --region chr20 --outdir out/indels</code></pre>
+<p>An uncompressed, gzip-compressed or single-CSV ZIP Illumina manifest is accepted. It must provide <code>Name</code>, <code>SNP</code>, <code>GenomeBuild</code>, <code>Chr</code>, <code>MapInfo</code> and <code>SourceSeq</code>. Only GRCh37, sequence-defined <code>[I/D]</code>/<code>[D/I]</code> probes are eligible. The manifest must identify the same marker <strong>and</strong> coordinate in the selected vendor template. A generic manufacturer's array is not a guarantee of a vendor's customized chip revision. Bind manifests separately to format IDs; conflicting definitions are quarantined, including unsupported duplicate definitions, not resolved by first/last row order.</p>
+<h2 id="calling-and-output">Calling and output<a class="heading-anchor" href="#calling-and-output" aria-label="Link to section">#</a></h2>
+<ul>
+<li>Both complete flanks and the actual insertion/deletion sequence must match exactly one reference haplotype. Both orientations are considered, but a strand label alone is never enough to infer an allele. Ambiguous/unmatched reference contexts stay missing. GRCh38 uses a unique primary-contig forward mapping to locate the context, then verifies it against the actual reference sequence. Mitochondrial GRCh37/38 coordinates share rCRS and bypass UCSC liftover; the actual mitochondrial reference context must still verify.</li>
+<li><code>bcftools norm</code> left-aligns and verifies DNA alleles. Conflicting distinct allele definitions at the same normalized position are excluded.</li>
+<li>Alignments use a separate indel-enabled <code>bcftools mpileup</code> stream and constrained known-allele <code>bcftools call -m -C alleles</code>. This calls reference homozygotes as well as alternate/heterozygous indels; no reference genotype is inferred merely because an indel is absent.</li>
+<li>VCF input must explicitly contain the matching DNA alleles and a valid genotype. Absent, unsupported, conflicting or quality-rejected calls stay missing. The existing GQ/DP/FILTER options apply to the indel call itself. Enabled rsID identity rejection checks both the manifest marker and input record IDs; a later duplicate cannot restore a rejected call. A plain VCF or unindexed BCF is indexed as a working copy (sorted only when unsorted), never beside the original input; see <a href="microarray.html#call-evidence">VCF input</a>.</li>
+<li>Verified vendor layouts are 23andMe, AncestryDNA and MyHeritage. <code>I</code> means the longer sequence and <code>D</code> the shorter one, regardless of which is the reference. Diploid homozygotes are <code>II</code>/<code>DD</code>; unphased heterozygotes are canonically <code>DI</code>. Ancestry writes separate allele columns; MyHeritage writes its quoted CSV. 23andMe uses single-letter calls at haploid loci.</li>
+<li>Real donated exports verify these encoding tokens. Ancestry exports contain both <code>ID</code> and <code>DI</code>; canonical unphased <code>DI</code> is <strong>not</strong> a claim to reproduce its proprietary per-probe allele order. Without a verified exact vendor definition, no order or private <code>i…</code> DNA sequence is invented.</li>
+</ul>
+<p>The SNP CombinedKit/calling stream remains separate. Only explicitly bound, manifest-defined indel rows are overlaid into the selected vendor exports. Known manifest I/D IDs with mismatched coordinates or unresolved definitions remain missing; unrelated rows retain their existing behavior. This does not certify or resolve every proprietary probe missing from a supplied manifest.</p>
+<p>An invocation-local <code>Indels_*</code> directory retains normalized definitions, calling VCF, <code>probe-map.tsv</code> (normalized alleles and original template rows), <code>indel-calls.tsv</code>, and <code>summary.json</code> with counts and manifest SHA256 hashes. These outputs can contain genotypes; keep them private. Source manifests are not bundled or automatically downloaded, and their original licence/terms apply. No new executable dependency is needed beyond the existing microarray tools. <code>--call-reasons</code> still describes the unchanged SNP CombinedKit, not this separate I/D table. Manufacturer bindings are run-specific CLI arguments.</p>
+<h2 id="evidence-and-limits">Evidence and limits<a class="heading-anchor" href="#evidence-and-limits" aria-label="Link to section">#</a></h2>
+<p>The public Illumina <a href="https://support.illumina.com/array/array_kits/infinium-global-screening-array/downloads.html" target="_blank" rel="noopener noreferrer">GSA v3 manifest downloads</a> provide real sequence contexts for 10,118 I/D probes. A research audit of GSA-24v3-0 A1 (archive SHA256 <code>35036a85eb79db22bec068ef69caba68f8ba9cdd1b1eef0e3f901b259e3b49af</code>) found strict marker/coordinate overlaps with audited 23andMe, Ancestry and MyHeritage exports (1,643 on a 2025 23andMe v5 export, 3,520 on a 2024 Ancestry v2d export, and 448 on a 2025 MyHeritage GSA export), before reference-context verification. That is evidence for a conservative subset, <strong>not</strong> proof that this generic manifest describes all customized vendor probes/revisions. In particular, its probe ordering did not reproduce every tested Ancestry heterozygote. It is not redistributed as a certified vendor definition.</p>
+<p>Native-tool tests exercise all three diploid genotypes from actual synthetic aligned reads, reference/alternate length reversal, reverse-complement contexts, manifest conflicts, quality masking and explicit unsupported VCF records. Chromosome-only validation uses public HG002; no whole-genome validation is necessary to enable this opt-in path. Without <code>--indel-manifest</code>, existing consumer and AADR output behavior and paths are unchanged.</p>
+<h2 id="implementation-layout">Implementation layout<a class="heading-anchor" href="#implementation-layout" aria-label="Link to section">#</a></h2>
+<p>The internal <code>core/microarray/</code> package keeps marker identity policy and the packaged rsID lookup in <code>identity.py</code>, sequence-defined manufacturer probe parsing/matching in <code>indel_probes.py</code>, and GRCh37/38 indel call preparation and export overlays in <code>indels.py</code>. Scientific rules and the packaged rsID asset are unchanged by this grouping; public API operations retain their existing import paths.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/microarray-indels.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/microarray-indels.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Download WGSExtract v6 Alpha v0.8.10 for Windows, macOS, and Linux, bundling WGSExtract CLI v0.8.10." />
+    <title>WGSExtract v6 Alpha</title>
+    <meta property="og:site_name" content="WGS Extract GUI" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="WGSExtract v6 Alpha" />
+    <meta property="og:description" content="Download WGSExtract v6 Alpha v0.8.10 for Windows, macOS, and Linux, bundling WGSExtract CLI v0.8.10." />
+    <meta property="og:url" content="https://wgsextract.github.io/wgsextract-cli/app/" />
+    <meta property="og:image" content="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
+    <meta property="og:image:secure_url" content="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="WGSExtract social preview showing the desktop app screenshot." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
+    <meta name="twitter:image:alt" content="WGSExtract social preview showing the desktop app screenshot." />
+    <link rel="canonical" href="https://wgsextract.github.io/wgsextract-cli/app/" />
+    <link rel="image_src" href="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".82em" font-size="84">%E2%8C%98</text></svg>' />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a class="active" href="index.html">Home</a><a href="architecture.html">GUI Architecture</a><a href="wgsextract.html">WGSExtract</a><a href="docs.html">Docs</a><a href="https://wgsextract.github.io/wgsextract-cli/">WGSExtract CLI</a><a href="whats-different.html">What's Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main>
+
+<header class="hero download-hero">
+  <div class="wrap">
+    <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Simple desktop downloads</p>
+    <h1>WGSExtract v6 Alpha</h1>
+    <p class="lede">A desktop app for the back-end CLI for working with whole-genome sequencing files. Pick your platform and install the latest alpha build.</p>
+    <figure class="hero-screenshot">
+      <img src="assets/gui-screenshot.webp" alt="Earlier WGSExtract alpha desktop app showing the FASTQ workflow in WGS Extract GUI." width="2648" height="2122" fetchpriority="high" />
+      <figcaption class="release-note">Earlier alpha interface shown; the current release includes the workflows described below.</figcaption>
+    </figure>
+    <div class="download-grid" aria-label="Primary downloads">
+      <article class="card download-card">
+        <div class="platform-heading">
+          <i class="bi bi-windows" aria-hidden="true"></i>
+          <span>Windows</span>
+        </div>
+        <a class="primary-download" href="https://github.com/WGSExtract/wgsextract-cli/releases/download/v0.8.10/WGSExtract_0.8.10_x64-setup.exe">
+          <strong>Download installer</strong>
+          <span>64-bit .exe setup</span>
+        </a>
+        <a class="download-note" href="#windows-smartscreen">
+          <i class="bi bi-shield-exclamation" aria-hidden="true"></i>
+          <span>Windows SmartScreen may appear. See the two-click install note.</span>
+        </a>
+      </article>
+      <article class="card download-card">
+        <div class="platform-heading">
+          <i class="bi bi-apple" aria-hidden="true"></i>
+          <span>macOS</span>
+        </div>
+        <a class="primary-download" href="https://github.com/WGSExtract/wgsextract-cli/releases/download/v0.8.10/WGSExtract_0.8.10_aarch64.dmg">
+          <strong>Download for Apple Silicon</strong>
+          <span>Signed and notarized .dmg</span>
+        </a>
+        <a class="download-note" href="https://github.com/WGSExtract/wgsextract-cli/releases/download/v0.8.10/WGSExtract_0.8.10_x64.dmg">Intel Mac .dmg</a>
+      </article>
+      <article class="card download-card linux-card">
+        <div class="platform-heading">
+          <i class="bi bi-terminal" aria-hidden="true"></i>
+          <span>Linux</span>
+        </div>
+        <a class="primary-download" href="https://github.com/WGSExtract/wgsextract-cli/releases/download/v0.8.10/WGSExtract_0.8.10_amd64.AppImage">
+          <strong>Download AppImage</strong>
+          <span>64-bit portable app</span>
+        </a>
+        <div class="linux-variants" aria-label="Linux package downloads">
+          <a href="https://github.com/WGSExtract/wgsextract-cli/releases/download/v0.8.10/WGSExtract_0.8.10_amd64.deb"><i class="bi bi-ubuntu" aria-hidden="true"></i> Ubuntu .deb</a>
+          <a href="https://github.com/WGSExtract/wgsextract-cli/releases/download/v0.8.10/WGSExtract-0.8.10-1.x86_64.rpm"><i class="bi bi-box-seam" aria-hidden="true"></i> Fedora .rpm</a>
+          <a href="https://github.com/WGSExtract/wgsextract-cli/releases/download/v0.8.10/wgsextract-0.8.10-1-x86_64.pkg.tar.zst"><i class="bi bi-archive" aria-hidden="true"></i> Arch package</a>
+        </div>
+      </article>
+    </div>
+    <p class="release-note">Current alpha release: <a class="inline-link" href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.8.10">v0.8.10</a>, bundling WGSExtract CLI v0.8.10. See <a class="inline-link" href="wgsextract.html">available workflows</a> or the <a class="inline-link" href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.8.10">release notes</a>.</p>
+  </div>
+</header>
+<section id="windows-smartscreen" class="smartscreen-section">
+  <div class="wrap">
+    <div class="section-head smartscreen-head">
+      <div>
+        <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Windows install note</p>
+        <h2>If SmartScreen appears, continue in two clicks.</h2>
+      </div>
+      <p>WGSExtract v6 Alpha is new, free, open-source software. Microsoft Defender SmartScreen can warn about newer apps until enough people have downloaded and run them. If you downloaded the installer from this project, press <strong>More info</strong>, then <strong>Run anyway</strong>.</p>
+    </div>
+    <div class="smartscreen-steps">
+      <article class="smartscreen-step">
+        <div class="kicker">Step 1</div>
+        <h3>Press <strong>More info</strong>.</h3>
+        <img src="assets/windows-smartscreen-step1.png" alt="Windows SmartScreen warning with the More info link visible" width="676" height="640" loading="lazy" />
+      </article>
+      <article class="smartscreen-step">
+        <div class="kicker">Step 2</div>
+        <h3>Press <strong>Run anyway</strong>.</h3>
+        <img src="assets/windows-smartscreen-step2.png" alt="Windows SmartScreen warning after expanding details, showing the Run anyway button" width="675" height="634" loading="lazy" />
+      </article>
+    </div>
+  </div>
+</section>
+<section>
+<div class="wrap">
+<h2>Install and start</h2>
+<ul>
+<li><strong>Windows (x64):</strong> run the <code>.exe</code> installer, then launch WGSExtract. If SmartScreen appears, follow the steps above only for an installer downloaded from this project's releases.</li>
+<li><strong>macOS:</strong> choose Apple Silicon or Intel, open the <code>.dmg</code>, and drag WGSExtract to Applications. The app and disk images are signed and notarized.</li>
+<li><strong>Linux (x86_64):</strong> make the AppImage executable (<code>chmod +x WGSExtract_0.8.10_amd64.AppImage</code>) and run it, or install the <code>.deb</code>, <code>.rpm</code>, or Arch package with your distro's package manager.</li>
+</ul>
+<p>On first launch, run the bundle's setup to install the pinned CLI and its runtime tools; downloads need a network connection. Windows CLI setup runs natively without WSL or MSYS2. Reference data and optional tools have separate requirements; install the resources needed for your chosen workflow before running it. Linux and Windows ARM64 desktop installers are not yet published.</p>
+<p>Release builds support signed self-updates. macOS also offers <strong>File &gt; Uninstall</strong> to remove setup, app data, and the app.</p>
+</div>
+</section>
+<section>
+<div class="wrap">
+<h2>Related rough sites</h2>
+<p>This site and the <a href="https://wgsextract.github.io/wgsextract-cli/">WGSExtract CLI website</a> are rough AI-generated websites while WGSExtract v6 Alpha is still being assembled.</p>
+</div>
+</section>
+<section>
+<div class="wrap">
+<h2>More information</h2>
+<p>The download page stays intentionally small. The WGS Extract GUI project background, architecture notes, and documentation map live on the other pages.</p>
+<a class="btn primary" href="wgsextract.html">WGS Extract GUI story</a>
+<a class="btn" href="architecture.html">GUI Architecture</a>
+<a class="btn" href="docs.html">Documentation</a>
+<a class="btn" href="https://wgsextract.github.io/wgsextract-cli/">WGSExtract CLI</a>
+<a class="btn" href="whats-different.html">What's Different</a>
+</div>
+</section>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGSExtract v6 Alpha</strong><p>Simple alpha downloads for the WGSExtract desktop app.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli">Source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

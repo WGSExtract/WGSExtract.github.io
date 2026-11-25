@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WGS Extract GUI Architecture | WGS Extract GUI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/app/devdocs/architecture.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract GUI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../architecture.html">GUI Architecture</a><a href="../wgsextract.html">WGSExtract</a><a class="active" href="../docs.html">Docs</a><a href="../../index.html">WGSExtract CLI</a><a href="../whats-different.html">What&#x27;s Different</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract GUI</a> / <a href="index.html">Developer Docs</a> / <span>WGS Extract GUI Architecture</span></nav>
+<h1 id="wgs-extract-gui-architecture">WGS Extract GUI Architecture</h1>
+<p>WGS Extract GUI is a single TypeScript application — a Web UI and a local Node backend — packaged as a native desktop app for Windows, macOS, and Linux with <a href="https://tauri.app" target="_blank" rel="noopener noreferrer">Tauri</a>.</p>
+<h2 id="runtime-layers">Runtime layers<a class="heading-anchor" href="#runtime-layers" aria-label="Link to section">#</a></h2>
+<ol>
+<li><strong>Shared TypeScript (<code>gui/app/shared/</code>)</strong>: Bundle manifest types, UI mode filtering (<code>basic</code> vs <code>advanced</code>), localization tables, workspace path formatting, result-document parsing, and documentation URL helpers.</li>
+<li><strong>Local Node backend (<code>gui/app/web/src/server/</code>)</strong>: Loads and validates bundles against <a href="https://github.com/WGSExtract/wgsextract-cli/tree/main/gui/devdocs/schema" target="_blank" rel="noopener noreferrer"><code>devdocs/schema/</code></a>, runs setup scripts and CLI actions, manages the local job server (<a href="job-server.html"><code>job-server.md</code></a>), checks prerequisites (<a href="prerequisites.html"><code>prerequisites.md</code></a>), reads/writes <code>config.toml</code>, and serves the Web UI over an authenticated loopback socket (<code>127.0.0.1</code> with a per-launch token). Packaged installers embed Node so end users do not need a separate Node installation.</li>
+<li><strong>Browser Web UI (<code>gui/app/web/src/client/</code>)</strong>: Renders pages, forms, streaming terminal output, result cards, the built-in Genome Viewer (<code>igv.js</code>), and the offline Gene Page.</li>
+<li><strong>Tauri desktop shell (<code>gui/app/web/packagers/tauri/</code>)</strong>: Native window, application menus, native file/folder pickers, OS installers, and signed self-updates (<a href="distribution.html"><code>distribution.md</code></a>).</li>
+</ol>
+<p>The app keeps two workspaces cleanly separated:</p>
+<ul>
+<li><strong>Users Workspace (<code>{{usersWorkspace}}</code>, default <code>~/wgs-extract</code>)</strong>: Shared with the standalone CLI (<code>config.toml</code>, <code>mygenomes/</code>, Reference Data, Reference Genomes, temp/logs). Movable to another drive from Settings or library pages.</li>
+<li><strong>Bundle Workspace (<code>{{bundleWorkspace}}</code>)</strong>: App-managed bundle copy, saved UI state, and run logs in the OS Application Support / LocalAppData folder.</li>
+</ul>
+<h2 id="privacy-and-network-boundary">Privacy and network boundary<a class="heading-anchor" href="#privacy-and-network-boundary" aria-label="Link to section">#</a></h2>
+<p>WGS Extract serves two audiences with different expectations:</p>
+<ul>
+<li><strong>CLI / automation / air-gapped users</strong> expect a deterministic, strictly offline engine that never opens a socket unless explicitly instructed.</li>
+<li><strong>Casual (Basic mode) desktop users</strong> expect a helpful app that tells them when updates exist and offers to download missing reference genomes, gene maps, or tools with a single click instead of leaving them stuck on a CLI error.</li>
+</ul>
+<p>We resolve this tension with a <strong>two-layer consent boundary</strong> rather than weakening the CLI's offline guarantees:</p>
+<h3 id="layer-1-cli-back-end-wgsextract-strictly-offline-by-default">Layer 1 — CLI back-end (<code>wgsextract</code>): strictly offline by default<a class="heading-anchor" href="#layer-1-cli-back-end-wgsextract-strictly-offline-by-default" aria-label="Link to section">#</a></h3>
+<ul>
+<li>Ordinary analysis, inspection, and reporting commands <strong>never</strong> make network requests, never check for updates, and never install missing tools or data implicitly.</li>
+<li>Runtime Pixi launches always pass <code>--no-install --frozen</code>.</li>
+<li>Network access in the CLI happens <em>only</em> in:
+<ol>
+<li>Explicit install/download subcommands (<code>deps install</code>, <code>ref library --install</code>, <code>ref bootstrap</code>, <code>ref gene-map</code>, <code>vep download</code>, etc.); or</li>
+<li>Explicit opt-in flags/settings (<code>--download</code>, <code>--online</code>, <code>--remote-sizes</code>, or <code>allow_reference_downloads = true</code>).</li>
+</ol></li>
+<li>This contract keeps scripts, servers, MCP clients, and air-gapped machines safe by construction. See <a href="../../docs/privacy.html"><code>docs/privacy.md</code></a>.</li>
+</ul>
+<h3 id="layer-2-desktop-gui-front-end-helpful-transparent-and-controllable">Layer 2 — Desktop GUI front-end: helpful, transparent, and controllable<a class="heading-anchor" href="#layer-2-desktop-gui-front-end-helpful-transparent-and-controllable" aria-label="Link to section">#</a></h3>
+<p>The desktop app sits <em>above</em> the CLI and invokes the CLI's explicit commands on the user's behalf. GUI network activity is strictly classified into four tiers:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Tier</th><th>Policy</th><th>Examples</th></tr></thead>
+<tbody>
+<tr><td><strong>1. Automatic update / catalog metadata checks</strong></td><td>Allowed by default in desktop builds for user convenience, <strong>always opt-out via Settings</strong> (a single toggle / offline preference that silences all background checks). Read-only metadata only; never downloads large assets automatically and never transmits sample data. Must disclose IP/HTTP-header visibility in <a href="../docs/privacy.html">GUI Privacy</a>.</td><td>App self-update check on launch (#1548, startup update checks and privacy mode); planned update notifications for Reference Data, Reference Genomes, and Tools catalogs.</td></tr>
+<tr><td><strong>2. Interactive missing-prerequisite offers</strong></td><td>Never downloads silently. Before running an action (or opening the Gene Page), the GUI checks local prerequisites offline (<code>wgsextract ref needs</code>), stops if required public data is missing, and offers <strong>Cancel / Continue / Install and Continue</strong>. Downloading occurs only on click, via the CLI's explicit install command.</td><td>Missing CRAM reference genome; missing RefSeq <code>gene-map</code> on Gene Page; missing annotation database for a VCF annotation action.</td></tr>
+<tr><td><strong>3. Explicit management &amp; help actions</strong></td><td>Runs only when the user clicks an explicit button or link.</td><td><strong>Run Setup</strong>, <strong>Install / Download</strong> on Reference Data / Reference Genomes / Tools, confirmed <strong>Look up sizes</strong>, <strong>Open GitHub issue</strong> (redacted &amp; confirmed), clicking rendered documentation links (<code>https://wgse.bio/...</code>).</td></tr>
+<tr><td><strong>4. Sample-derived network operations</strong></td><td><strong>Never default-on</strong> in Basic or Advanced mode. Always requires explicit per-action user confirmation naming the destination host and the sample-derived data (paths/byte ranges) that will be transmitted.</td><td>Remote Genome Viewer (<strong>Connect and view remote file</strong>); remote alignment URLs (<code>realign --input https://...</code>); any future remote variant/position query.</td></tr>
+</tbody>
+</table></div>
+<h3 id="design-rules-for-new-gui-features">Design rules for new GUI features<a class="heading-anchor" href="#design-rules-for-new-gui-features" aria-label="Link to section">#</a></h3>
+<ol>
+<li><strong>Never bypass Layer 1 silently:</strong> The GUI must never inject <code>--download</code> or flip <code>allow_reference_downloads = true</code> without explicit user consent.</li>
+<li><strong>One kill switch for background checks:</strong> As update checks expand from the app itself (#1548, startup update checks and privacy mode) to Reference Data, Reference Genomes, and Tools, every automatic check must obey the same user-facing Settings toggle (and remain strictly metadata-only — notifying the user with a badge/button rather than auto-downloading multi-gigabyte files).</li>
+<li><strong>Never leak sample metadata in update or catalog checks:</strong> Tier 1 checks must never include filenames, local paths, sample IDs, builds inferred from a user's BAM/VCF, or genomic coordinates.</li>
+<li><strong>Clickable documentation links are user-initiated:</strong> Error messages and terminal output may render <code>https://wgse.bio/wgsextract-cli/...</code> links so users can open formatted HTML help in one click, but the app never prefetches those pages in the background.</li>
+</ol>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract GUI</strong><p>Rendered from <code>gui/devdocs/architecture.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/gui/devdocs/architecture.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

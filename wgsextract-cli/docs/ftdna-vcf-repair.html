@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Repairing FTDNA VCF files | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/ftdna-vcf-repair.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Repairing FTDNA VCF files</span></nav>
+<h1 id="repairing-ftdna-vcf-files">Repairing FTDNA VCF files</h1>
+<p>Older FamilyTreeDNA (FTDNA) Big Y <code>variants.vcf</code> files write expressions such as <code>DP=1</code> or <code>QUAL=12.5</code> in the FILTER column. VCF allows only IDs there, each declared by a <code>##FILTER</code> header line, so bcftools, VEP and other tools reject or misread those records. <code>wgsextract repair ftdna-vcf</code> rewrites the column into declared IDs that keep the failure's meaning:</p>
+<pre><code class="language-sh">wgsextract repair ftdna-vcf --input variants.vcf        # writes wgse/variants_repaired.vcf
+bcftools view variants.vcf | wgsextract repair ftdna-vcf &gt; fixed.vcf</code></pre>
+<p>The repair runs offline and needs no reference data. It reads plain, gzipped or BCF input (BCF needs bcftools) and writes plain VCF.</p>
+<h2 id="filter-mapping">FILTER mapping<a class="heading-anchor" href="#filter-mapping" aria-label="Link to section">#</a></h2>
+<p>Each <code>;</code>-separated entry of a FILTER value is handled on its own:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Input entry</th><th>Output ID</th><th>Header description</th></tr></thead>
+<tbody>
+<tr><td><code>PASS</code> or <code>.</code> (whole value)</td><td>unchanged</td><td>unchanged</td></tr>
+<tr><td>an ID declared in the header (<code>LowQual</code>, <code>VQSRTrancheSNP99.90to100.00+</code>)</td><td>unchanged</td><td>the input's own</td></tr>
+<tr><td>a valid ID the header doesn't declare</td><td>unchanged</td><td>declared as "meaning unknown"</td></tr>
+<tr><td><code>DP=1</code></td><td><code>DP1</code></td><td>a single read covers the site</td></tr>
+<tr><td><code>DP=n</code>, n &gt; 750</td><td><code>DPM</code></td><td>more than 750 reads cover the site</td></tr>
+<tr><td><code>DP=n</code>, 2 ≤ n ≤ 750</td><td><code>DPF</code></td><td>failed an FTDNA depth filter of undocumented threshold</td></tr>
+<tr><td><code>QUAL=q</code>, q &lt; 40</td><td><code>Q40</code></td><td>site quality below 40</td></tr>
+<tr><td><code>QUAL=q</code>, q ≥ 40</td><td><code>QF</code></td><td>failed an FTDNA quality filter of undocumented threshold</td></tr>
+<tr><td><code>GTL=x</code></td><td><code>GTL</code></td><td>failed FTDNA's undocumented GTL filter</td></tr>
+<tr><td>anything else (<code>Low Coverage</code>, <code>DP&lt;5</code>, an empty value or <code>;</code>)</td><td><code>FTDNA_UNKNOWN</code></td><td>failed a vendor filter of unknown meaning</td></tr>
+</tbody>
+</table></div>
+<ul>
+<li>A failed call never becomes <code>PASS</code>: <code>PASS</code> next to a failing entry (<code>PASS;DP=1</code>) is dropped, and the remaining failure is kept. A value of only <code>PASS</code> entries (<code>PASS;PASS</code>) becomes <code>PASS</code>, one of only <code>.</code> entries (<code>.;.</code>) becomes <code>.</code>, and <code>.</code> or empty entries beside others (<code>PASS;</code>, <code>.;DP=1</code>) are dropped: an empty separator is not evidence of a failure.</li>
+<li>Several entries stay several IDs (<code>DP=1;QUAL=19.1</code> becomes <code>DP1;Q40</code>).</li>
+<li>Each replaced expression is kept, percent-encoded, in <code>INFO/FTDNA_FILTER</code> (<code>DP%3D1,QUAL%3D19.1</code>), so the original evidence is still in the file.</li>
+<li>Only IDs the records use are declared, and new declarations go just before the <code>#CHROM</code> line. An input whose FILTER values are all valid and declared, and that has no undeclared <code>HG</code>/<code>ISOGG</code> keys, is copied unchanged.</li>
+<li>If the input already declares one of these IDs, or <code>INFO/FTDNA_FILTER</code>, with another description, the repair keeps the input's declaration and uses a new name (<code>DP1_WGSE</code>) for its own category.</li>
+<li><code>INFO/HG</code> and <code>INFO/ISOGG</code> values are copied as they are. If records use them without a header declaration, they're declared as <code>Number=.,Type=String</code>; the repair never adds haplogroup values. Filling them from yBrowse is a separate, explicit step (see <a href="lineage.html">Lineage</a>).</li>
+</ul>
+<h2 id="warnings-and-failures">Warnings and failures<a class="heading-anchor" href="#warnings-and-failures" aria-label="Link to section">#</a></h2>
+<p>The result manifest (<code>--json</code>) counts <code>records</code>, <code>repaired_records</code> and <code>unknown_filter_records</code>, and carries structured warnings:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Code</th><th>When</th></tr></thead>
+<tbody>
+<tr><td><code>ftdna_vcf_unknown_filter</code></td><td>Some entries matched no rule and became <code>FTDNA_UNKNOWN</code></td></tr>
+<tr><td><code>ftdna_vcf_undeclared_filter</code></td><td>Valid IDs were used without a declaration</td></tr>
+<tr><td><code>ftdna_vcf_id_conflict</code></td><td>A mapped ID was renamed because the input already used it</td></tr>
+</tbody>
+</table></div>
+<p>A record before the <code>#CHROM</code> line, a missing <code>#CHROM</code> line or a record with fewer than eight columns stops the repair with an error. The repair reads the whole input first, so malformed input produces nothing on stdout in pipe mode. When using <code>--input</code>, the output cannot be the input file, even through a hard link. If the output is a symlink, choose a regular file path instead. The command writes to a temporary file next to the destination and replaces the destination only on success. A failed repair leaves any existing output intact. On Unix, the repaired file is private to the current user, even when replacing an existing output. Empty input gives empty output. Records beyond 64 MiB are held in an unnamed temporary file in <code>--tmp-dir</code> (or the <code>temp_directory</code> setting), else beside the output, else the system temporary folder; memory use doesn't grow with the number of records.</p>
+<h2 id="differences-from-wgs-extract-v4">Differences from WGS Extract v4<a class="heading-anchor" href="#differences-from-wgs-extract-v4" aria-label="Link to section">#</a></h2>
+<p>WGS Extract v4's standalone <code>fixFTDNAvcf.py</code> declared <code>PASS</code>, <code>DP1</code>, <code>DPM</code>, <code>Q40</code> and <code>GTL</code> and the <code>HG</code>/<code>ISOGG</code> INFO keys in every file, then mapped each entry by substring: <code>DP=1</code> to <code>DP1</code>, any other <code>DP=</code> to <code>DPM</code> ("More than 750 reads"), <code>GTL=</code> to <code>GTL</code> and <code>QUAL=</code> to <code>Q40</code> ("Quality below 40"). This command differs in that it:</p>
+<ul>
+<li>checks the value, so <code>DP=37</code> and <code>QUAL=55</code> don't get a description that is untrue for them (<code>DPF</code> and <code>QF</code> instead);</li>
+<li>keeps already-valid IDs such as <code>LowQual</code> and declares undeclared ones, where v4 blanked every entry it didn't recognise, which could leave an empty FILTER or a bare <code>;</code>;</li>
+<li>maps unrecognised expressions to the declared <code>FTDNA_UNKNOWN</code> and warns, rather than dropping them;</li>
+<li>keeps the original expressions in <code>INFO/FTDNA_FILTER</code>;</li>
+<li>declares only the IDs and INFO keys the file uses, and resolves conflicts with existing declarations.</li>
+</ul>
+<p>The previous version of this command only deleted characters VCF forbids (<code>Low Qual;q&lt;10</code> became <code>LowQual;q10</code>), which could leave undeclared IDs or borrow the meaning of an unrelated declared filter.</p>
+<p>A synthetic corpus of these cases (no donor data) is in <code>tests/fixtures/ftdna_vcf/legacy_filters.vcf</code>.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/ftdna-vcf-repair.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/ftdna-vcf-repair.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

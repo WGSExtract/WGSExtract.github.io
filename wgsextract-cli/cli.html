@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="WGS Extract CLI command guide with command groups, global options, common recipes, and Pixi environments." />
+    <title>CLI Guide | WGS Extract CLI</title>
+    <meta property="og:site_name" content="WGS Extract CLI" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="CLI Guide | WGS Extract CLI" />
+    <meta property="og:description" content="WGS Extract CLI command guide with command groups, global options, common recipes, and Pixi environments." />
+    <meta property="og:url" content="https://wgsextract.github.io/wgsextract-cli/cli.html" />
+    <meta property="og:image" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta property="og:image:secure_url" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="WGSExtract CLI social preview showing the desktop app screenshot." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CLI Guide | WGS Extract CLI" />
+    <meta name="twitter:description" content="WGS Extract CLI command guide with command groups, global options, common recipes, and Pixi environments." />
+    <meta name="twitter:image" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta name="twitter:image:alt" content="WGSExtract CLI social preview showing the desktop app screenshot." />
+    <link rel="canonical" href="https://wgsextract.github.io/wgsextract-cli/cli.html" />
+    <link rel="image_src" href="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".82em" font-size="84">🧬</text></svg>' />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="index.html">Home</a><a href="install.html">Install CLI</a><a href="gui.html">GUI</a><a class="active" href="cli.html">CLI</a><a href="workflows.html">Workflows</a><a href="wgs-guide.html">WGS guide</a><a href="reference.html">Reference</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-hero">
+        <div class="wrap">
+          <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Command reference</p>
+          <h1>A map of the <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract command line.</h1>
+          <p class="lede">The <abbr data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">CLI</abbr> is the best interface for repeatable work: scripts, batch jobs, remote machines, AI-agent workflows, and long-running analyses where exact commands matter.</p>
+          <div class="toc"><a href="#global">Global options</a><a href="#journeys">Start from what you have</a><a href="#groups">Command groups</a><a href="#recipes">Recipes</a><a href="#environments">Pixi environments</a><a href="#patterns">Best practices</a></div>
+        </div>
+      </header>
+
+<section id="global">
+<div class="wrap split">
+<div>
+<h2>Global options</h2>
+<p class="lede">Shared options can go before or after the subcommand. <code>--threads</code> and <code>--memory</code> accept <code>auto</code> (the default). Every command exits non-zero on failure (1 failure, 2 usage error, 3 missing tool), so commands can be chained safely in scripts. <code>--json</code> prints a machine-readable result manifest on stdout instead of human text; commands that write files also save it as <code>&lt;output&gt;.manifest.json</code>. Examples write plain <code>wgsextract</code>; see <a class="inline-link" href="install.html#running" data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">Running the CLI</a> for the launcher that matches your install.</p>
+<p>For long jobs, <code>--log-file out/run.log</code> records diagnostics and provenance, <code>--tmp-dir /data/work</code> selects a writable staging volume, and opt-in <code>--keep-awake</code> requests sleep inhibition. <code>--atomic-output</code> protects existing results for supported writers. Memory/disk preflight is advisory; it does not replace existing safety guards.</p>
+</div>
+<div class="code-panel">
+<header class="code-panel-top"><div class="window-controls" aria-hidden="true"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><span class="code-panel-title">global-options.sh</span><button class="copy-button" type="button">Copy</button></header>
+<pre><code><span class="cmd">wgsextract \</span>
+<span class="cmd">  --input /data/sample.cram \</span>
+<span class="cmd">  --outdir /data/out/sample \</span>
+<span class="cmd">  --ref /refs/hs38.fa \</span>
+<span class="cmd">  --threads auto \</span>
+<span class="cmd">  --memory 2G \</span>
+<span class="cmd">  info --detailed</span></code></pre>
+</div>
+</div>
+</section>
+<section id="journeys">
+<div class="wrap">
+<div class="section-head">
+<h2>Start from what you have</h2>
+<p>Pick the line that matches your file and run its commands in order. Each command's <code>--help</code> lists its options, examples and output files.</p>
+</div>
+<div class="grid three">
+<article class="card">
+<h3>Nothing yet (a first run)</h3>
+<ul>
+<li><code>deps check</code>: check that the external tools are installed</li>
+<li><code>ref bootstrap</code>: download the small shared files, e.g. liftover chains</li>
+<li><code>ref library</code>: download a reference genome</li>
+<li><code>example-genome download</code>: get a public example genome to practise on</li>
+</ul>
+</article>
+<article class="card">
+<h3>A <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr> or <abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr> from a sequencing service (Nebula, Dante Labs, Sequencing.com, ...)</h3>
+<ul>
+<li><code>info</code>: check the reference build, file health and coverage</li>
+<li><code>microarray</code>: make 23andMe/AncestryDNA-style files to upload</li>
+<li><code>lineage y-haplogroup</code>: find the paternal haplogroup</li>
+<li><code>lineage mt-haplogroup</code>: find the maternal haplogroup</li>
+<li><code>vcf snp</code>: call <abbr data-tooltip="SNPs: Single Nucleotide Polymorphisms: one-base markers or variants, commonly used by microarray SNP chips." aria-label="SNPs: Single Nucleotide Polymorphisms: one-base markers or variants, commonly used by microarray SNP chips.">SNPs</abbr> into a <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr></li>
+<li><code>vep run</code>: predict each variant's effect on genes</li>
+<li><code>report</code>: summarise everything in one <abbr data-tooltip="HTML: HyperText Markup Language: the document format generated for the static website." aria-label="HTML: HyperText Markup Language: the document format generated for the static website.">HTML</abbr> report</li>
+</ul>
+</article>
+<article class="card">
+<h3>A <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr> or <abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr> on the wrong build (hg19 when you want hg38, or the reverse)</h3>
+<ul>
+<li><code>info</code>: see which build it is</li>
+<li><code>realign</code>: re-map it to the other build</li>
+<li><code>info</code>: check the new file, then continue as above</li>
+</ul>
+</article>
+<article class="card">
+<h3><abbr data-tooltip="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores." aria-label="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores.">FASTQ</abbr> files (raw reads)</h3>
+<ul>
+<li><code>align</code>: map the reads to a reference, making a <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>/<abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr></li>
+<li><code>info</code>: check the result, then continue as for a <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>/<abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr></li>
+</ul>
+</article>
+<article class="card">
+<h3>A <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr> (from a provider or another pipeline)</h3>
+<ul>
+<li><code>vcf prepare</code>: fix its compression, sorting, contig names and index</li>
+<li><code>vcf clinvar</code>: add <a class="term-link" href="https://www.ncbi.nlm.nih.gov/clinvar/">ClinVar</a> clinical significance</li>
+<li><code>vcf filter</code>: keep a gene, region or quality range</li>
+<li><code>vep run</code>: predict each variant's effect on genes</li>
+<li><code>vcf table</code>: one row per variant, for spreadsheets and SQL</li>
+</ul>
+</article>
+<article class="card">
+<h3>A consumer raw-data file (23andMe, AncestryDNA, ...)</h3>
+<ul>
+<li><code>info chip</code>: identify the vendor, chip and revision</li>
+</ul>
+</article>
+</div>
+</div>
+</section>
+<section id="groups">
+<div class="wrap">
+<div class="section-head">
+<h2>Command groups</h2>
+<p><code>wgsextract --help</code> lists the core commands first, in the order you would usually run them, then setup and advanced commands. Run <code>wgsextract help --all</code> for one line per command. Agents: start with <code>wgsextract help --all --json</code> for a compact index of paths, summaries, tiers and key flags, then <code>wgsextract help &lt;command&gt; --json</code> for full options and typed JSON Schemas. Use <code>wgsextract help --all --json --full</code> only when the complete schema dump is needed. Run <code>wgsextract help &lt;command&gt;</code> for one command's options, examples and output files (<code>--help-all</code> adds the advanced options), <code>wgsextract help topics</code> for concepts such as references, builds and exit codes, or <code>wgsextract help</code> for the full tree. The <a class="inline-link" href="commands.html">command reference</a> lists every command with its outputs and an example. A mistyped command or option gets a "Did you mean" hint, and on a terminal some commands suggest what to run next.</p>
+</div>
+<div class="grid three">
+<article class="card">
+<h3>Start here, in this order</h3>
+<ul>
+<li><code>info</code>: Check a <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>/<abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr>: reference build, file health, coverage.</li>
+<li><code>microarray</code>: Make 23andMe/AncestryDNA-style raw-data files to upload.</li>
+<li><code>lineage</code>: Find your paternal (<abbr data-tooltip="Y-DNA: Y-chromosome DNA: DNA on the Y chromosome, often used for paternal-line genealogy." aria-label="Y-DNA: Y-chromosome DNA: DNA on the Y chromosome, often used for paternal-line genealogy.">Y-DNA</abbr>) and maternal (<abbr data-tooltip="mtDNA: Mitochondrial DNA: DNA inherited mostly through the maternal line and stored in mitochondria." aria-label="mtDNA: Mitochondrial DNA: DNA inherited mostly through the maternal line and stored in mitochondria.">mtDNA</abbr>) haplogroups.</li>
+<li><code>extract</code>: Copy Y, <abbr data-tooltip="mtDNA: Mitochondrial DNA: DNA inherited mostly through the maternal line and stored in mitochondria." aria-label="mtDNA: Mitochondrial DNA: DNA inherited mostly through the maternal line and stored in mitochondria.">mtDNA</abbr>, unmapped or one region's reads to a file.</li>
+<li><code>realign</code>: Re-map a <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>/<abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr> to another build, e.g. hg19 to hg38.</li>
+<li><code>align</code>: Map raw <abbr data-tooltip="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores." aria-label="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores.">FASTQ</abbr> reads to a reference, making a <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>/<abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr>.</li>
+<li><code>vcf</code>: Call variants into a <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr>, then annotate and filter them.</li>
+<li><code>vep</code>: Predict what each variant does to genes, with Ensembl <a class="term-link" href="https://www.ensembl.org/info/docs/tools/vep/index.html" data-tooltip="VEP: Variant Effect Predictor: an annotation tool that predicts variant effects on genes and transcripts." aria-label="VEP: Variant Effect Predictor: an annotation tool that predicts variant effects on genes and transcripts.">VEP</a>.</li>
+<li><code>report</code>: Summarise a sample's results in one local <abbr data-tooltip="HTML: HyperText Markup Language: the document format generated for the static website." aria-label="HTML: HyperText Markup Language: the document format generated for the static website.">HTML</abbr> report.</li>
+</ul>
+</article>
+<article class="card">
+<h3>Setup</h3>
+<ul>
+<li><code>ref</code>: Download and check reference genomes and annotation data.</li>
+<li><code>deps</code>: Check, install and remove the external tools.</li>
+<li><code>example-genome</code>: Download public example genomes to practise on.</li>
+<li><code>sample</code>: Show recorded sample facts; correct sex or platform.</li>
+<li><code>config</code>: Show the settings in use and the config.toml path.</li>
+<li><code>report-issue</code>: Report a problem: a redacted, pre-filled <a class="term-link" href="https://github.com/WGSExtract/wgsextract-cli">GitHub</a> bug report.</li>
+<li><code>help</code>: List every command, or explain one: 'help vcf snp'.</li>
+</ul>
+</article>
+<article class="card">
+<h3>Advanced</h3>
+<ul>
+<li><code>bam</code>: Sort, index, convert and merge <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>/<abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr> files.</li>
+<li><code>qc</code>: Read and <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr> quality reports; fake test data.</li>
+<li><code>fastq</code>: Archive and restore <abbr data-tooltip="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores." aria-label="FASTQ: FASTQ read format: raw sequencing reads with per-base quality scores.">FASTQ</abbr> reads without changing bytes.</li>
+<li><code>cohort</code>: Summarize variants across a local cohort.</li>
+<li><code>repair</code>: Fix <abbr data-tooltip="FTDNA: FamilyTreeDNA: a consumer genealogy service and raw-data format target." aria-label="FTDNA: FamilyTreeDNA: a consumer genealogy service and raw-data format target.">FTDNA</abbr> <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>/<abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr> formatting problems.</li>
+<li><code>analyze</code>: Run several analyses in one go, for one or many genomes.</li>
+<li><code>typing</code>: CYP2D6, SMN1/2, HLA and repeat expansions (30x <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr>).</li>
+<li><code>methylation</code>: 5mC/5hmC methylation from Nanopore and PacBio reads.</li>
+<li><code>basecall</code>: Nanopore POD5 signal to reads with Dorado (optional).</li>
+<li><code>panel</code>: Gene lists to <abbr data-tooltip="BED: Browser Extensible Data: a text format for genomic intervals such as regions, targets, or gene coordinates." aria-label="BED: Browser Extensible Data: a text format for genomic intervals such as regions, targets, or gene coordinates.">BED</abbr> targets; research panel file checks.</li>
+<li><code>pet-align</code>: Align and call variants for a cat or dog genome.</li>
+<li><code>sign</code>: Checksum and sign output files; verify them.</li>
+<li><code>score</code>: Research-only polygenic scores from local genotypes.</li>
+<li><code>lookup</code>: Genotype and evidence at an rsID, locus or gene.</li>
+<li><code>report-delta</code>: What changed between two reports: findings, releases.</li>
+<li><code>benchmark</code>: Time the main workflows on test data.</li>
+<li><code>serve</code>: Local HTTP/JSON and MCP server for apps and AI agents.</li>
+</ul>
+<p>Advanced subcommands of core groups: <code>extract bam-subset</code>, <code>lineage y-private</code>, <code>vcf acmg</code>, <code>vcf alphamissense</code>, <code>vcf cadd</code>, <code>vcf callability</code>, <code>vcf chain-annotate</code>, <code>vcf clair3</code>, <code>vcf cnv</code>, <code>vcf deepvariant</code>, <code>vcf freebayes</code>, <code>vcf gatk</code>, <code>vcf gerp</code>, <code>vcf impute</code>, <code>vcf pharmcat</code>, <code>vcf phase</code>, <code>vcf phylop</code>, <code>vcf spliceai</code>, <code>vcf sv</code>, <code>vcf to-fasta</code>, <code>vcf trio</code>.</p>
+</article>
+</div>
+</div>
+</section>
+<section id="recipes">
+<div class="wrap">
+<div class="section-head">
+<h2>Common <abbr data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">CLI</abbr> recipes</h2>
+<p>These examples are intentionally small and explicit. Replace paths and references with your own. Output names keep the full input stem, so <code>HG002.chr20.bam</code> produces <code>HG002.chr20_sorted.bam</code>.</p>
+</div>
+<div class="code-panel">
+<header class="code-panel-top"><div class="window-controls" aria-hidden="true"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><span class="code-panel-title">recipes.sh</span><button class="copy-button" type="button">Copy</button></header>
+<pre><code><span class="comment"># Identify a BAM/CRAM and inspect metadata</span>
+<span class="cmd">wgsextract --input sample.cram info --detailed</span>
+
+<span class="comment"># Sort and index an alignment (sample.bam -&gt; out/sample/sample_sorted.bam)</span>
+<span class="cmd">wgsextract --input sample.bam --outdir out/sample bam sort</span>
+<span class="cmd">wgsextract --input out/sample/sample_sorted.bam bam index</span>
+
+<span class="comment"># Convert BAM to CRAM for storage</span>
+<span class="cmd">wgsextract --input sample.bam --ref /refs/hs38.fa bam to-cram</span>
+
+<span class="comment"># Generate consumer microarray-style outputs</span>
+<span class="cmd">wgsextract --input sample.bam microarray --formats 23andme_v5,ancestry_v2</span>
+
+<span class="comment"># Extract mitochondrial variants and Y-DNA reads</span>
+<span class="cmd">wgsextract --input sample.bam extract mito-vcf</span>
+<span class="cmd">wgsextract --input sample.bam extract ydna-bam</span>
+
+<span class="comment"># Call and filter variants</span>
+<span class="cmd">wgsextract --input sample.bam --ref /refs/hs38.fa vcf snp</span>
+<span class="cmd">wgsextract vcf filter --vcf-input calls.vcf.gz --expr &#x27;QUAL&gt;30&#x27;</span>
+
+<span class="comment"># Show the full command tree</span>
+<span class="cmd">wgsextract help</span></code></pre>
+</div>
+</div>
+</section>
+<section id="environments">
+<div class="wrap">
+<div class="section-head">
+<h2><a class="term-link" href="https://pixi.sh/">Pixi</a> environments</h2>
+<p>Some specialized tools live in dedicated <a class="term-link" href="https://pixi.sh/">Pixi</a> environments. Install them explicitly with <code>pixi install --locked -e &lt;environment&gt;</code> before use. <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract can route tools such as <code>vep</code> or <code>pbsv</code> through an existing environment, but validates dependencies rather than installing them during a feature. You can also run a whole command inside an installed environment, from the <code>app/</code> folder or a source checkout.</p>
+</div>
+<div class="grid three">
+<article class="card">
+<h3>default</h3>
+<p>General <abbr data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">CLI</abbr>, <a class="term-link" href="https://www.htslib.org/">samtools</a>/<a class="term-link" href="https://samtools.github.io/bcftools/">bcftools</a>, <a class="term-link" href="https://github.com/lh3/bwa">bwa</a>/<a class="term-link" href="https://github.com/lh3/minimap2">minimap2</a>, <a class="term-link" href="https://github.com/OpenGene/fastp">fastp</a>/<a class="term-link" href="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/">fastqc</a>, Delly where supported, native Yleaf-derived analysis, <a class="term-link" href="https://haplogrep.i-med.ac.at/">Haplogrep</a>, and common workflows. <a class="term-link" href="https://github.com/genid/Yleaf">Yleaf</a> tables are verified on-demand data assets, not an external tool or bundle dependency. <a class="term-link" href="https://gatk.broadinstitute.org/" data-tooltip="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows." aria-label="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows.">GATK</a> and <a class="term-link" href="https://github.com/freebayes/freebayes">FreeBayes</a> are separate.</p>
+<pre><code><span class="cmd">pixi run wgsextract deps check</span></code></pre>
+</article>
+<article class="card">
+<h3>pacbio</h3>
+<p>PacBio-aware structural variant workflows using pbmm2, pbsv, and sniffles where available.</p>
+<pre><code><span class="cmd">pixi run -e pacbio wgsextract vcf sv --pacbio</span></code></pre>
+</article>
+<article class="card">
+<h3>vep</h3>
+<p>Ensembl <a class="term-link" href="https://www.ensembl.org/info/docs/tools/vep/index.html" data-tooltip="VEP: Variant Effect Predictor: an annotation tool that predicts variant effects on genes and transcripts." aria-label="VEP: Variant Effect Predictor: an annotation tool that predicts variant effects on genes and transcripts.">VEP</a> for <code>vep run</code>, <code>vep download</code>, and <code>vep verify</code>. Not available on native Windows.</p>
+<pre><code><span class="cmd">pixi run -e vep wgsextract vep run</span></code></pre>
+</article>
+<article class="card">
+<h3>gatk and <a class="term-link" href="https://github.com/freebayes/freebayes">freebayes</a></h3>
+<p><a class="term-link" href="https://gatk.broadinstitute.org/" data-tooltip="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows." aria-label="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows.">GATK</a> (<a class="term-link" href="https://www.python.org/">Python</a> 3.10, Java 17) and <a class="term-link" href="https://github.com/freebayes/freebayes">FreeBayes</a> live in their own environments. Install the locked environment before calling; neither is downloaded on first use. The Windows installer prepares <a class="term-link" href="https://gatk.broadinstitute.org/" data-tooltip="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows." aria-label="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows.">GATK</a> with its native <abbr data-tooltip="GKL: Genomics Kernel Library: native numerical kernels used to accelerate GATK." aria-label="GKL: Genomics Kernel Library: native numerical kernels used to accelerate GATK.">GKL</abbr> sidecar. <a class="term-link" href="https://github.com/freebayes/freebayes">FreeBayes</a> is not supported on native Windows; <a class="term-link" href="https://gatk.broadinstitute.org/" data-tooltip="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows." aria-label="GATK: Genome Analysis Toolkit: a widely used suite of tools for variant discovery and genomics workflows.">GATK</a> is gated on Linux <abbr data-tooltip="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers." aria-label="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers.">ARM64</abbr>.</p>
+</article>
+<article class="card">
+<h3>cyrius, t1k, and expansionhunter</h3>
+<p>Gene and repeat typing: <code>typing cyp2d6</code> (Cyrius), <code>typing hla</code> (T1K), and <code>typing str</code> (ExpansionHunter). Linux x86_64 and macOS, where packaged; not qualified on Linux <abbr data-tooltip="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers." aria-label="ARM64: 64-bit ARM architecture: the native processor architecture used by Apple Silicon and many Linux servers.">ARM64</abbr>. Install once with <code>pixi install --locked -e &lt;environment&gt;</code>; Cyrius's PolyForm Strict license allows noncommercial use only, and no distribution or modification; <abbr data-tooltip="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis." aria-label="WGS: Whole Genome Sequencing: sequencing that reads across nearly all of the genome for reusable analysis.">WGS</abbr> Extract doesn't bundle it.</p>
+</article>
+<article class="card">
+<h3>paraphase</h3>
+<p><code>typing paraphase</code> calls copy number and haplotypes at paralogous loci from PacBio HiFi reads. <abbr data-tooltip="ONT: Oxford Nanopore Technologies: a long-read sequencing platform; variant calling in WGS Extract is not yet validated." aria-label="ONT: Oxford Nanopore Technologies: a long-read sequencing platform; variant calling in WGS Extract is not yet validated.">ONT</abbr> is experimental and unvalidated. Install pinned BSD-licensed Paraphase 3.3.1 on Linux or macOS with <code>pixi install --locked -e paraphase</code>.</p>
+</article>
+<article class="card">
+<h3>modkit</h3>
+<p><code>methylation pileup</code> tabulates CpG methylation from Nanopore and PacBio MM/ML tags with <abbr data-tooltip="ONT: Oxford Nanopore Technologies: a long-read sequencing platform; variant calling in WGS Extract is not yet validated." aria-label="ONT: Oxford Nanopore Technologies: a long-read sequencing platform; variant calling in WGS Extract is not yet validated.">ONT</abbr>'s modkit. Linux and macOS only; install it with <code>pixi install --locked -e modkit</code>.</p>
+</article>
+<article class="card">
+<h3>dev</h3>
+<p>Contributor tooling: pytest, ruff, mypy, pre-commit, actionlint. Development tasks select it automatically.</p>
+<pre><code><span class="cmd">pixi run test</span>
+<span class="cmd">pixi run lint</span></code></pre>
+</article>
+</div>
+</div>
+</section>
+<section id="patterns">
+<div class="wrap">
+<div class="section-head">
+<h2><abbr data-tooltip="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows." aria-label="CLI: Command-Line Interface: a terminal-based way to run repeatable commands and automate workflows.">CLI</abbr> best practices</h2>
+<p>Genome jobs are expensive. These habits prevent wasted hours and corrupted assumptions.</p>
+</div>
+<div class="grid four">
+<article class="card">
+<h3>Use regions first</h3>
+<p>Try <code>chrM</code>, <code>chrY</code>, or a small gene region before whole-genome commands.</p>
+</article>
+<article class="card">
+<h3>Keep outputs isolated</h3>
+<p>Use <code>--outdir</code> per sample or <code>--genome</code> folders to avoid mixing files.</p>
+</article>
+<article class="card">
+<h3>Match builds</h3>
+<p>Keep <abbr data-tooltip="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome." aria-label="BAM: Binary Alignment Map: a compressed binary file of sequencing reads aligned to a reference genome.">BAM</abbr>/<abbr data-tooltip="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome." aria-label="CRAM: Compressed Reference-oriented Alignment Map: a space-saving alignment format that depends on a matching reference genome.">CRAM</abbr>, <abbr data-tooltip="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences." aria-label="FASTA: FASTA sequence format: a plain-text format for reference genomes or other biological sequences.">FASTA</abbr>, <abbr data-tooltip="VCF: Variant Call Format: a standard text format for variants and their annotations." aria-label="VCF: Variant Call Format: a standard text format for variants and their annotations.">VCF</abbr>, gene maps, and annotations on the same reference build.</p>
+</article>
+<article class="card">
+<h3>Log the command</h3>
+<p>Save exact commands, <a class="term-link" href="https://pixi.sh/">Pixi</a> environment, reference build, and tool versions for repeatability.</p>
+</article>
+</div>
+</div>
+</section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Command guide and recipes.</p></div>
+        <p><a href="workflows.html">Next: workflows</a></p>
+      </div>
+    </footer>
+    <script>
+      (() => {
+        const copyText = async (text) => {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            return;
+          }
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "fixed";
+          textarea.style.left = "-9999px";
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          textarea.remove();
+        };
+
+        document.addEventListener("click", async (event) => {
+          const button = event.target.closest(".copy-button");
+          if (!button) return;
+          const panel = button.closest(".code-panel");
+          const code = panel?.querySelector("pre code");
+          if (!code) return;
+          const previous = button.textContent;
+          try {
+            await copyText(code.innerText);
+            button.textContent = "Copied";
+          } catch {
+            button.textContent = "Failed";
+          }
+          window.setTimeout(() => {
+            button.textContent = previous;
+          }, 1400);
+        });
+
+        let tooltip;
+        let activeTooltipTarget;
+        let tooltipTimer;
+
+        const ensureTooltip = () => {
+          if (!tooltip) {
+            tooltip = document.createElement("div");
+            tooltip.className = "site-tooltip";
+            tooltip.hidden = true;
+            tooltip.setAttribute("role", "tooltip");
+            document.body.appendChild(tooltip);
+          }
+          return tooltip;
+        };
+
+        const positionTooltip = () => {
+          if (!tooltip || !activeTooltipTarget) return;
+          const rect = activeTooltipTarget.getBoundingClientRect();
+          const tipRect = tooltip.getBoundingClientRect();
+          const margin = 12;
+          let left = rect.left + rect.width / 2 - tipRect.width / 2;
+          left = Math.max(margin, Math.min(left, window.innerWidth - tipRect.width - margin));
+          let top = rect.top - tipRect.height - 10;
+          if (top < margin) top = rect.bottom + 10;
+          tooltip.style.left = `${Math.round(left + window.scrollX)}px`;
+          tooltip.style.top = `${Math.round(top + window.scrollY)}px`;
+        };
+
+        const showTooltip = (target) => {
+          const text = target.dataset.tooltip;
+          if (!text) return;
+          activeTooltipTarget = target;
+          const tip = ensureTooltip();
+          tip.textContent = text;
+          tip.hidden = false;
+          tip.classList.remove("visible");
+          window.requestAnimationFrame(() => {
+            positionTooltip();
+            tip.classList.add("visible");
+          });
+        };
+
+        const scheduleTooltip = (target) => {
+          window.clearTimeout(tooltipTimer);
+          tooltipTimer = window.setTimeout(() => showTooltip(target), 120);
+        };
+
+        const hideTooltip = () => {
+          window.clearTimeout(tooltipTimer);
+          activeTooltipTarget = undefined;
+          if (!tooltip) return;
+          tooltip.classList.remove("visible");
+          tooltip.hidden = true;
+        };
+
+        document.addEventListener("mouseover", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (!target || target === activeTooltipTarget) return;
+          scheduleTooltip(target);
+        });
+
+        document.addEventListener("mouseout", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (!target || target.contains(event.relatedTarget)) return;
+          hideTooltip();
+        });
+
+        document.addEventListener("focusin", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (target) scheduleTooltip(target);
+        });
+        document.addEventListener("focusout", hideTooltip);
+        window.addEventListener("scroll", positionTooltip, { passive: true });
+        window.addEventListener("resize", positionTooltip);
+      })();
+    </script>
+  </body>
+</html>

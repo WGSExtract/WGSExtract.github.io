@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WGS Extract 0.8.9 | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/release-notes/v0.8.9.html" />
+    <link rel="stylesheet" href="../../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../../index.html">Home</a><a href="../../install.html">Install CLI</a><a href="../../gui.html">GUI</a><a href="../../cli.html">CLI</a><a href="../../workflows.html">Workflows</a><a href="../../wgs-guide.html">WGS guide</a><a href="../../reference.html">Reference</a><a class="active" href="../index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../../index.html">WGS Extract CLI</a> / <a href="../index.html">CLI Docs</a> / <span>WGS Extract 0.8.9</span></nav>
+<h1 id="wgs-extract-089">WGS Extract 0.8.9</h1>
+<p>This release adds a built-in genome viewer to the desktop app, shareable result cards, a Tools page that installs missing optional tools, and CombinedKit v5 microarray templates. Coverage breadth now leaves out reference N gaps. Native DeepVariant handles haploid sex chromosomes and runs faster on Apple Silicon, and GATK and Clair3 gain opt-in Apple Silicon acceleration.</p>
+<h2 id="changed">Changed<a class="heading-anchor" href="#changed" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong>Coverage breadth leaves out reference N bases.</strong> <code>info calculate-coverage</code> and <code>info coverage-sample</code> divided breadth by the full contig length, so the reference's N gaps counted as uncovered: on a 30x GRCh38 genome chr1 read 92.5 % and chrY 41.3 %, now 99.9 % and 99.97 %. The N counts come from the reference's <code>_ncnt.csv</code>, else built-in counts for the standard assemblies; partial regions keep every position. <code>info calculate-coverage --with-bins</code> (the app's Detailed Coverage) prints the v4-style <em>Bin Coverage by Sequence Name</em> table with an N Len column, subtracting Ns once (v4 subtracted them twice) (#1203).</li>
+<li>Annotation data that <code>ref</code> commands download (ClinVar, CADD, gnomAD, PhyloP, GERP, gene maps, PharmGKB, SpliceAI, ACMG data, the HLA index) now goes in the reference library's <code>downloads/</code> folder instead of <code>ref/</code>. Libraries that already have data in <code>ref/</code> keep working without moving it, and <code>ref bootstrap</code> removes the empty <code>ref/</code> its archive leaves behind.</li>
+<li>A mitochondrial reference is identified as rCRS or CHM13 by its sequence (M5/MD5, else the indexed FASTA), not by its 16,569-base length; length alone now leaves it unknown (#1194).</li>
+</ul>
+<h2 id="new">New<a class="heading-anchor" href="#new" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong>Result cards.</strong> <code>--card</code> (config <code>result_card</code>, off by default) writes a shareable <code>&lt;name&gt;.card.html</code> beside the run's manifest: the command, status, printed result, metrics, warnings and outputs, with the WGS Extract and tool versions, the input file's name, size and short fingerprint, the reference and the run time. Files appear by name only and home paths as <code>~</code>, so a card can be shared; the manifest keeps full paths (#1143).</li>
+<li><code>deps list</code> reports every mandatory and optional tool, whether it is installed, its version and the Pixi environment that provides it, without failing on a missing tool. <code>deps install TOOL</code> and <code>deps uninstall TOOL</code> install or remove the Pixi environment of an optional tool packaged in one (#1191).</li>
+<li><strong>Microarray CombinedKit v5</strong> adds letter-named vendor variants: AncestryDNA <code>ancestry_v2ab</code>, <code>ancestry_v2cd</code> and <code>ancestry_v2e</code>; FamilyTreeDNA <code>ftdna_v4</code> and the GRCh38 Y files <code>ftdna_v2y</code>, <code>ftdna_v3y</code> and <code>ftdna_v4y</code>; <code>myheritage_v3</code>; and <code>tellmegen</code>, <code>genera</code>, <code>mthfr</code>, <code>meudna_v1</code>, <code>meudna_v2</code> and <code>selfdecode</code> (#1107). CHM13v2 input now covers all of them instead of writing no-calls for the v5 additions (#1108).</li>
+<li><code>ref cytobands --build hg19|hg38 --download</code> installs pinned, checksummed UCSC cytoband tables for the genome viewer (#1153).</li>
+<li><code>serve --listen ADDRESS[:PORT]</code> (opt-in; loopback stays the default) serves the job API beyond this computer. A non-loopback bind requires bearer authentication, a <code>server.public_url</code> (<code>--public-url</code>) and its authority in <code>server.allowed_hosts</code>. The listener speaks plain HTTP: put it behind a TLS reverse proxy or a trusted encrypted tunnel so tokens and genomic data stay protected. Authenticated file range reads for the viewer are off by default, stay inside the guard roots, and need a Linux or macOS host. See the <a href="https://github.com/WGSExtract/wgsextract-cli/blob/v0.8.9/docs/server.md" target="_blank" rel="noopener noreferrer">server guide</a> (#1173).</li>
+<li><code>vcf gatk --pair-hmm-neon JAR</code> (opt-in, Apple Silicon) runs GATK HaplotypeCaller's PairHMM with GKL's NEON kernels in double precision instead of GATK's Java fallback: about 9x faster over five HG002 chr20 windows, with identical sites, alleles, GT and FILTER. A few reads near the informative cutoff are counted differently in difficult regions (9 of 306,024 reference blocks, 8 final records), so it is not the default. Build the sidecar jar as <a href="https://github.com/WGSExtract/wgsextract-cli/blob/v0.8.9/packaging/arm64/gkl/README.md" target="_blank" rel="noopener noreferrer"><code>packaging/arm64/gkl/README.md</code></a> describes (#1117).</li>
+<li>Native <code>wgse-deepvariant</code> 0.4.1 optimizes Apple Silicon small-model CPU work and realigner CIGAR parsing without changing inference or defaults. On HG002 35x whole genome, M1 Pro (32 GiB), ten workers, batch 1024 with gVCF, measured wall time fell 8,831.4 → 7,984.3 s (9.6%) and CPU time 50,708.6 → 46,455.5 s (8.4%). All 7,709,239 VCF and 72,210,019 gVCF non-header records, including 64,500,780 reference blocks, are exactly equal to 0.4.0 by full-body SHA-256. Peak RSS grew 11.95 → 13.32 GB (about 1.4 GB); sampled temporary space was 29.4 → 29.5 GB, with zero swap growth. One run each, M1 Pro only; 16 GB base-M1 qualification remains follow-up. Requires installing the separately published native 0.4.1 binary on PATH; updating the CLI alone does not replace it (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/1116" target="_blank" rel="noopener noreferrer">#1116, Apple Silicon performance</a>).</li>
+<li>Native <code>wgse-deepvariant</code> 0.4.0 supports haploid chrX/Y/MT with diploid PARs, including gVCF reference confidence. It matches Google's haploid likelihood adjustment while retaining diploid GT/PL encoding. Empty-read partitions now retain zero-depth reference evidence instead of leaving gVCF gaps. Older native builds still refuse non-diploid policies (#1103). The Linux CUDA environment pins the published 0.4.0 build 2 (#1136).</li>
+<li><code>vcf clair3 --gpu</code> runs Clair3's networks on the Apple Silicon GPU (MPS) through the code-only <code>wgse-clair3</code> package, which <code>pixi install -e clair3</code> now installs on Apple Silicon. It keeps Clair3's CPU streaming pipeline and gVCF; on a 1 Mb HG002 ONT slice its calls and gVCF reference blocks match the CPU run. CPU stays the default, and no model weights are redistributed (#1101).</li>
+<li><code>vcf acmg</code> runs on Windows: fastVEP 0.5.0 is now packaged by this project for Linux (x86-64, ARM64), macOS (Intel, Apple Silicon) and Windows x86-64, in the optional <code>fastvep</code> environment (#1164).</li>
+<li>On Windows x64, <code>bam to-cram --cram-version 3.1</code> uses a qualified mimalloc build of samtools with a local reference (<code>mimalloc = &quot;auto&quot;</code>), which encodes CRAM 3.1 faster; <code>--mimalloc off</code> keeps the system allocator. CRAM 3.0 stays the default, and other platforms and commands are unchanged (#1195).</li>
+</ul>
+<h2 id="fixes">Fixes<a class="heading-anchor" href="#fixes" aria-label="Link to section">#</a></h2>
+<ul>
+<li><code>lineage y-haplogroup --tree ftdna</code> and <code>--tree isogg</code> correct independently verified ancestral/derived reversals using a pinned, separately licensed YBrowse polarity module. This fixes inverted backbone evidence and wrong haplogroup calls, including reverse-strand T2T markers. Ancient panels are filtered after correction. Version 2 requires compatible source branches and reference-lineage agreement; name-only matching in the superseded version 1 incorrectly flipped valid sister-branch markers. Use version 2, not version 1. First use requires <code>--download</code>; custom marker panels are unchanged (<a href="https://github.com/WGSExtract/wgsextract-cli/issues/1168" target="_blank" rel="noopener noreferrer">#1168, Y marker polarity</a>).</li>
+<li><code>repair ftdna-vcf</code> maps FTDNA's legacy FILTER expressions to declared IDs that keep their meaning (<code>DP=1</code> → <code>DP1</code>, <code>QUAL&lt;40</code> → <code>Q40</code> and so on), instead of stripping characters into undeclared IDs or into an unrelated filter's name (<code>q&lt;10</code> → <code>q10</code>). Unrecognised expressions become <code>FTDNA_UNKNOWN</code> with a warning, and a failed call never becomes PASS (#1204).</li>
+<li>Single-VCF commands use <code>--vcf-input</code> first and <code>--input</code> second, without looking for another VCF in the selected genome folder, and the manifest records only the input used (#1240).</li>
+<li><code>analyze comprehensive</code> uses the configured VCFs only when it is given no inputs; an explicit BAM is no longer paired with an unrelated configured VCF (#1253).</li>
+<li><code>report</code> asks for <code>--input</code> when source manifests describe unrelated samples whose input files share a name, and lists their paths, instead of merging them into one report (#1258).</li>
+<li><code>vcf to-fasta</code> (consensus genome) keeps uncovered bases as N for any gVCF its header declares, even when its first block starts late or it has only single-base calls (#1261).</li>
+<li><code>serve</code> stops on Ctrl-C or SIGTERM that arrives while a request is being dispatched, instead of continuing to listen (#1255).</li>
+<li>Windows setup extracts archives correctly with the PowerShell Archive module 1.2.7, and PharmCAT reference downloads are checked so a truncated install is caught (#1146).</li>
+<li>Setup checks an already installed Pixi and stops, naming its path and version, when it is older than this release requires, instead of failing later; your Pixi is never upgraded for you. On Windows only the message is shown, not PowerShell's error record (#1139, #1172).</li>
+<li><strong>Resume checks file integrity.</strong> A resumed run reuses a completed step only when its files still match: files up to 64 MiB by SHA-256, larger ones by sampled blocks plus size and modification time. Directory outputs are checked by each file's path, size and modification time, without reading them. Journals written by earlier versions have no digests, so the first resumed run after upgrading reruns each completed step once (#1202).</li>
+<li>A resumable run no longer fails with "An unexpected error occurred" on macOS when a process exits while leftover tools are being looked for (#1109).</li>
+</ul>
+<h2 id="desktop-app">Desktop app<a class="heading-anchor" href="#desktop-app" aria-label="Link to section">#</a></h2>
+<ul>
+<li><strong>Built-in genome viewer.</strong> <strong>Genome viewer</strong> in the sidebar, or <strong>View reads</strong> beside a BAM/CRAM/VCF input, shows reads and variants with the matching installed reference, entirely offline. BAM, CRAM and indexed VCF/gVCF results get <strong>Show in viewer</strong>; a single-region <strong>Extract custom</strong> result opens at its extracted locus. It adds local BED, bedGraph and bigWig tracks, installed RefSeq gene spans with gene-symbol search, and installed cytobands. <strong>Connect and view remote file</strong> views files on a WGS Extract server after you consent to each transfer. See the <a href="https://github.com/WGSExtract/wgsextract-cli/blob/v0.8.9/gui/docs/genome-viewer.md" target="_blank" rel="noopener noreferrer">genome viewer guide</a> (#1090, #1112, #1149, #1150, #1151, #1153, #1157, #1159, #1160, #1192).</li>
+<li><strong>Result cards.</strong> Analysis actions show their result card when the run ends, even with the terminal collapsed, and <strong>View Card</strong> shows it again. Report-writing tools (FastQC, fastp, MultiQC, Personal Report, PharmCAT) open their report (#1143).</li>
+<li><strong>Tools page.</strong> Lists every tool, installed or not, with <strong>Install</strong> and <strong>Uninstall</strong> for optional tools. An action that needs a missing optional tool offers <strong>Install and Continue</strong>, as a missing genome does (#1191).</li>
+<li>The Variant Calling <strong>Default</strong> button is named for its callers: <strong>BCFTools</strong> in Basic, <strong>BCFTools, Delly</strong> in Advanced (#1190).</li>
+<li>Bug-report actions stay off until setup succeeds (#1139).</li>
+</ul>
+<p>See the app's <a href="https://github.com/WGSExtract/wgsextract-cli/blob/v0.8.9/gui/docs/CHANGELOG.md" target="_blank" rel="noopener noreferrer">CHANGELOG</a> for details.</p>
+<p><strong>Full changelog:</strong> <a href="https://github.com/WGSExtract/wgsextract-cli/compare/v0.8.8...v0.8.9" target="_blank" rel="noopener noreferrer">https://github.com/WGSExtract/wgsextract-cli/compare/v0.8.8...v0.8.9</a></p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/release-notes/v0.8.9.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/release-notes/v0.8.9.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Native Linux ARM64 DeepVariant | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/deepvariant-arm64.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Native Linux ARM64 DeepVariant</span></nav>
+<h1 id="native-linux-arm64-deepvariant">Native Linux ARM64 DeepVariant</h1>
+<p>The CPU path uses a locally built <strong>DeepVariant 1.10.0</strong> image on Linux aarch64. Google's released image is x86-only; this is an unofficial native source build, not an official Google ARM distribution. No QEMU, x86 image, ONNX conversion, INT8 quantization or BF16 autoconfiguration is used.</p>
+<h2 id="provision-dependencies-explicitly">Provision dependencies explicitly<a class="heading-anchor" href="#provision-dependencies-explicitly" aria-label="Link to section">#</a></h2>
+<p>Install native Docker, Git and Python 3 before building. The CLI never installs dependencies or pulls/builds an image when calling variants. Building is a separate, explicit administrator/developer action; use a native ARM64 Linux builder with 64 GB RAM and enough disk space for Bazel/TensorFlow.</p>
+<p>From a checkout of this repository on that builder:</p>
+<pre><code class="language-bash">bash packaging/deepvariant-arm64/build.sh out/deepvariant-arm64-build</code></pre>
+<p>This creates and loads <code>localhost/wgsextract-deepvariant:1.10.0-arm64</code>, the Linux ARM64 default. The <code>localhost/</code> prefix prevents Docker Hub namespace resolution; there is no published image to pull. One multi-stage Dockerfile uses its internal <code>builder</code> stage directly, including with buildx's docker-container driver, rather than resolving a builder tag from a registry. The build saves the resulting image ID in <code>out/deepvariant-arm64-build/image-id.txt</code>. Architecture checks are not a provenance signature: build from the audited recipe and retain this ID; the CLI does not authenticate arbitrary custom images. For another trusted installed tag or immutable image digest, set the existing configuration option:</p>
+<pre><code class="language-toml">deepvariant_image = &quot;my-local-native-image@sha256:...&quot;</code></pre>
+<p>Calling uses the normal command and flags, for example:</p>
+<pre><code class="language-bash">wgsextract vcf deepvariant -i sample.bam --ref reference.fna -r chr20 -t 16 -o results</code></pre>
+<p>Both Docker's engine architecture and the image's <code>linux/arm64</code> metadata are validated before the caller prepares inputs. An arbitrary PATH launcher is not used on ARM: its Python, native modules and child executables cannot be proved native from its shell-script architecture. The container entrypoint is explicitly overridden to <code>run_deepvariant</code>, preventing community auto-configuration scripts from silently switching inference precision. Writable home/temporary files stay inside the caller's intermediate directory and are removed after the run. CRAM 3.1+ compatibility staging also runs for ARM images, with temporary CRAM 3.0 and its index inside that mounted intermediate directory. The known htslib 1.18 / htscodecs 1.5.1 SSE4 rANS decoder bug concerns x86-64 images, not the ARM build's NEON decoder; staging is deliberately architecture-independent.</p>
+<p>Only the default WGS model is enabled on Linux ARM64. WES (<code>--wes</code>), PACBIO (<code>--pacbio</code>), ONT_R104, HYBRID_PACBIO_ILLUMINA, MASSEQ, RNASEQ, ULTIMA (including automatic read-group detection) and <code>--checkpoint</code> are refused, even if a custom image is configured. Other release models are packaged for checksum auditing, not enabled: each requires its own real-data qualification before a future implementation can permit it. Parabricks <code>--gpu</code> remains unavailable.</p>
+<h2 id="apple-silicon-macs">Apple Silicon Macs<a class="heading-anchor" href="#apple-silicon-macs" aria-label="Link to section">#</a></h2>
+<p>On a Mac, prefer <code>wgse-deepvariant</code>, WGS Extract's native Apple Silicon build of DeepVariant 1.10.0 (<a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/native/deepvariant/README.md" target="_blank" rel="noopener noreferrer">native/deepvariant</a>): it needs no Docker, runs call_variants on the GPU and makes the same PASS calls, genotypes and filters as Google's image. On HG003's whole genome (0.1.1, an M1 Pro, 2 h 42 min) its PASS calls, genotypes and filters match Google's published VCF (two QUAL-0 RefCalls differ) and hap.py against GIAB v4.2.1 gives identical counts; the details are in its <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/native/deepvariant/README.md#same-results-as-googles-image" target="_blank" rel="noopener noreferrer">README</a>. Install it and its weights from a <code>macos-deepvariant</code> release (0.1.1 or later), put it on <code>PATH</code>, and name the weights folder in <code>config.toml</code>:</p>
+<pre><code class="language-toml">deepvariant_weights = &quot;/path/to/wgse-deepvariant-weights-1.10.0-wgs&quot;</code></pre>
+<p><code>vcf deepvariant</code> then runs it instead of Docker, through the same resumable stages (an interrupted make_examples reruns in full). Before each run it checks the build's version and every weight file against its published SHA-256, and stops with the setup steps if either is wrong. Only the WGS model is qualified: WES, PacBio, ONT, Ultima and <code>--checkpoint</code> are refused. A region selection of any size (literals, BED files or both) is passed to it as one BED file, and CRAM 3.1 is read directly (its htslib is 1.25 on ARM, without the x86 image's rANS bug). call_variants' GPU batch follows the Mac's memory, so 16 GB Macs fit. To use the Docker image below even with <code>wgse-deepvariant</code> installed, set <code>deepvariant_native = &quot;off&quot;</code>.</p>
+<p>Without it, Docker Desktop on Apple Silicon runs a Linux aarch64 VM, so <code>vcf deepvariant</code> takes the same native path there: the default image is the one above, and the engine and image architectures are checked the same way. Google's <code>google/deepvariant</code> image is linux/amd64 only; under Docker Desktop's x86-64 emulation (QEMU or Rosetta) TensorFlow finds no AVX and aborts (exit 134) in the first stage, so an amd64 image is refused before any input is prepared. This holds under Rosetta too: Apple Silicon is detected from the Mac (<code>sysctl hw.optional.arm64</code>), and on every path the image's architecture is checked against the Docker engine's. Without <code>wgse-deepvariant</code> or a native image, use <code>vcf clair3</code> for ONT reads, <code>vcf snp</code>/<code>vcf indel</code> for short reads, or an x86-64 host.</p>
+<p><code>build.sh</code> runs only on Linux aarch64: build there and move the image with <code>docker save</code> / <code>docker load</code>. The image uses generic AArch64 code (TensorFlow and oneDNN choose kernels at run time, and the build adds no <code>-march</code>), which the Apple M-series cores run; this has not yet been run on a Mac. Give Docker Desktop's VM enough memory for <code>call_variants</code> (about 26 GiB at the default batch size; see <code>--batch-size</code> below), since the CLI caps its plan by the VM's memory, not the Mac's. Native Apple-GPU options are researched in #647.</p>
+<h2 id="source-and-numerical-provenance">Source and numerical provenance<a class="heading-anchor" href="#source-and-numerical-provenance" aria-label="Link to section">#</a></h2>
+<ul>
+<li>Official scientific source: Google <code>v1.10.0</code>, <code>d6b15e21323d9d15b347083f1d256ad62998c4cf</code>.</li>
+<li>ARM build scaffolding: Lambda-Biolab <code>v1.10.0-arm64.1</code>, <code>ff2a2a949c8dd244908499ceb6a9fda381fcccf6</code>, BSD-3.</li>
+<li>Only the fork's HTS NEON selection and libssw sse2neon build declarations are retained in scientific directories. Its CIGAR normalization limit, haplotype cap, image-buffer changes and modified inference code are <strong>not</strong> retained.</li>
+<li>TensorFlow CPU 2.16.1 and the original 1.10.0 SavedModels/small models are used. Essential Python runtime versions match the pinned x64 Google image, including NumPy, JAX, Keras and ml-dtypes. Fixed internal TensorFlow image settings are not additional user/environment-variable configuration.</li>
+<li><code>out/deepvariant-arm64-build/scientific-source.patch</code> records the actual source delta. The image includes the upstream sources/licenses and model SHA256s. All 38 model blobs are checksum-verified against the immutable x64 image <code>google/deepvariant:1.10.0@sha256:962e5a83b1d76aae6990625d47102785f791603f2138aa1fa9aa4fb6a2eecbe6</code>. The relocated Python 3.10 virtualenv and Bazel launchers support the invoking user's non-root UID; system Python is not used to import its native modules. Runfile extraction uses checked <code>unzip</code> argument lists, preserving symlinks and supporting output/TMPDIR paths containing spaces without invoking a shell.</li>
+</ul>
+<p>Image metadata alone cannot prove every binary native. Audit the interpreter, TensorFlow libraries, and the ELF modules inside all three Bazel ZIPs using <code>file</code>/ELF <code>e_machine=183</code>, and compare model hashes against the x64 golden. Do not substitute the community image on the strength of its F1 claims: its scientific changes are not equivalent to this source build.</p>
+<p>x64 Linux and Intel macOS defaults and commands are unchanged. Qualification evidence, unnormalized VCF differences, matched-vCPU timings and cloud cost are recorded in the task's <code>out/arm64/deepvariant/report.md</code>; a draft PR does not by itself establish full-genome or performance qualification.</p>
+<p>Public HG002 chr20 qualification has 210,390 identical sites and genotypes against the pinned x64 control. Differences are confined to QUAL (at most 0.5), GQ (at most 2) and PL (at most 1), not alleles, FILTER, depth or model routing. FP32 TensorFlow kernels differ between architectures; confidence fields are not promised byte-identical. Other models remain unqualified until equivalent evidence exists.</p>
+<p>All 81,898 large-model input tensors and decoded candidate variants match exactly. Maximum probability differences before postprocessing are 2.81e-6 (large model) and 2.39e-7 (small model), with no argmax changes. Three repetitions on each architecture have identical within-architecture VCF bodies.</p>
+<p>Matched standard 16-vCPU/64-GB Azure guests give a three-run chr20 wall median of 487.97 s on Cobalt AArch64 versus 424.51 s on AMD x64: <strong>14.95% slower</strong>, within the 20% target. ARM has 16 physical cores; x64 has eight with SMT. CPU-time medians are 6,614.15 / 6,173.57 s and maximum-child RSS medians 26,979,616 / 12,075,748 KiB (ARM / x64). The native path needs materially more memory.</p>
+<h2 id="completed-public-whole-genome-qualification">Completed public whole-genome qualification<a class="heading-anchor" href="#completed-public-whole-genome-qualification" aria-label="Link to section">#</a></h2>
+<p>The complete public HG002 35x BAM (46,033,519,192 bytes) was verified on both guests: SHA256 <code>b5f1255aa08ecda8f0ec01682d32d9a37a7327ca21ea681d94c250f6a2f22de6</code>. Both original WGS pipelines completed successfully, with no region restriction. All <strong>7,709,239 REF/ALT sites</strong> match; all PASS-site genotypes match. One non-PASS genotype differs: chr1:31445438 CG&gt;C is x64 <code>0/0;RefCall;GQ=20</code> versus ARM <code>./.;NoCall;GQ=19</code>. Its unchanged reference argmax has actual Phred scores 19.5000106 / 19.4999183. Original integer rounding and the GQ-20 hom-reference no-call safeguard explain this difference.</p>
+<p>Confidence is not byte-identical. There are 244,796 changed records: 241,646 QUAL, 10,521 GQ, 351 PL, five MID changes and the above GT/FILTER change. Maximum QUAL/GQ/PL deltas are 29.7 / 30 / 19, not the smaller chr20 bounds. Two additional numerical effects explain those larger bounds:</p>
+<ul>
+<li>Six candidates cross the original small-model acceptance thresholds (SNP GQ 20 / indel GQ 28), changing their small/large-model route. Passing-side scores are only 20.0000300 or 28.0000156. Five final MID labels change; the sixth is a multiallelic merge at chr10:24436757 (PL delta 19). All six candidates retain the same argmax across the alternative routes.</li>
+<li>At chr6:170418998 C&gt;T, the small model's homozygous-alt probability is exactly 1.0 on x64 versus 0.9999998807907104 on ARM. The original capped Phred calculation gives QUAL/GQ 99/99 versus 69.3/69 without changing GT or PL.</li>
+</ul>
+<p>Every actual full-run CVO was compared: all 8,286,723 combined candidate keys match, including the six cross-stage substitutions. The 8,286,717 same-stage vectors have no argmax differences; maximum absolute errors are 3.10e-6 (large model) and 4.77e-7 (small model). The actual probabilities, original threshold/rounding source and exhaustive unnormalized VCF differences are saved. Full-genome image tensors were not traced; the tensor-identity claim is chr20-only. These boundaries are disclosed, not hidden by precision changes or VCF rewriting.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Whole-genome measurement</th><th>x64</th><th>AArch64</th></tr></thead>
+<tbody>
+<tr><td>Wall seconds</td><td>13,143 (3:39:03)</td><td>14,157 (3:55:57)</td></tr>
+<tr><td>User + system CPU seconds</td><td>202,727.02</td><td>208,481.02</td></tr>
+<tr><td>Maximum-child RSS KiB</td><td>12,381,064</td><td>25,920,200</td></tr>
+<tr><td>Aggregate cgroup peak bytes, including cache</td><td>64,424,509,440</td><td>54,063,599,616</td></tr>
+</tbody>
+</table></div>
+<p>The matched-vCPU whole-genome ARM wall time is <strong>7.72% slower</strong>, meeting the 20% target. This is one complete run per architecture, separately from the three-run chr20 medians. Both task-owned guests and related resources were deleted after the outputs and scientific evidence were saved.</p>
+<h2 id="resident-memory-diagnosis-and-optional-mitigation">Resident-memory diagnosis and optional mitigation<a class="heading-anchor" href="#resident-memory-diagnosis-and-optional-mitigation" aria-label="Link to section">#</a></h2>
+<p>The reported full-run RSS is the Linux maximum-child RSS, not an aggregate and not multiplied by the 16 shards. Both guests used 16 vCPUs, 16 shards and 4,096-byte pages. Aggregate cgroup memory including cache is a different metric.</p>
+<p>A bounded native chr20 replay instrumented all three scientific executables:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Stage</th><th>Timed processes</th><th>Maximum-child RSS KiB</th></tr></thead>
+<tbody>
+<tr><td><code>make_examples</code></td><td>16</td><td>984,812 (each shard at most this much)</td></tr>
+<tr><td><code>call_variants</code></td><td>1</td><td>26,971,300</td></tr>
+<tr><td><code>postprocess_variants</code></td><td>1, including children</td><td>626,044</td></tr>
+</tbody>
+</table></div>
+<p>Thus inference reproduces the original chr20 ~27-million-KiB peak and explains the similar full-run 25,920,200-KiB maximum. The original full run did not record per-stage RSS; its stage attribution is corroborated by this replay, not falsely presented as an original full-run measurement.</p>
+<p>Actual model convolution tracing shows oneDNN 3.2.1 <code>indirect_gemm:acl</code>, FP32, batch <code>mb1024</code>, on AArch64 SVE-128. The ARM TensorFlow/ACL inference tensor/scratch/buffer working set is dominant. This is a backend/batch footprint, not duplicated biological inputs or extra shards. Separate TensorFlow activations, prefetch buffers and ACL scratch allocations were not individually traced, and x64 primitive-level allocation was not reprofiled.</p>
+<p>Allocator experiments preserve the exact chr20 VCF body but do not solve the footprint: <code>MALLOC_ARENA_MAX=2</code> gives 26,553,356 KiB (only 1.55% lower); <code>TF_CPU_ALLOCATOR_USE_BFC=1</code> gives 27,035,236 KiB. Neither is installed as a new default or exposed as user/environment-variable configuration.</p>
+<p>Google's existing inference <code>batch_size=256</code> reduces <code>call_variants</code> to <strong>7,981,020 KiB (70.41% lower)</strong>. All 210,390 records, genotypes and other VCF fields remain byte-identical to the qualified native chr20 body. Instrumented pipeline wall was 537.12 s versus baseline 539.25 s; these are single diagnostic runs, not new full-genome or repeat-median speed claims.</p>
+<p>Use the CPU-only, opt-in forwarding option:</p>
+<pre><code class="language-bash">wgsextract vcf deepvariant -i sample.bam --ref reference.fna \
+    --batch-size 256 -t 8 -o results</code></pre>
+<p>It forwards <code>--call_variants_extra_args batch_size=256</code>; no weights, precision or DeepVariant scientific code change. Omit it to retain all existing defaults, including byte-identical x64 command construction. <code>--threads</code> controls <code>make_examples</code> shards, not the inference batch.</p>
+<p>Preflight uses the largest sequential-stage budget, not the sum: inference allowance <code>2 + 30 × batch_size/1024</code> GiB, <code>2 × shards</code> GiB, or whole-genome <code>postprocess_variants</code> (see <a href="resource_estimates.html#deepvariant-postprocess_variants">resource estimates</a>), plus 1 GiB driver/headroom. Defaults at 16 shards estimate 33 GiB for inference; the example estimates 17 GiB. A whole genome's 16 postprocess workers would need about 52 GiB, so with less free RAM the command splits postprocess into more partitions, or fewer workers, to fit. These are conservative WGS estimates against reclaimable, cgroup-aware available memory, not allocations or custom-model guarantees. The smaller batch is chr20-qualified; the full-genome results above retain the original default batch. The additional replay compute estimate was $0.8131 (under $2 even with a $0.50 allowance); its resources were deleted.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/deepvariant-arm64.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/deepvariant-arm64.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>
