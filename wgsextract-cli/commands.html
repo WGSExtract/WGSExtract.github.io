@@ -1102,6 +1102,13 @@
 <td><code>wgsextract panel check --panel my_panel.toml</code></td>
 </tr>
 <tr>
+<td><code>panel audit</code></td>
+<td>Audit one local annotated genome against a research panel: variant filters, coding callability, watched loci and phased allele patterns.</td>
+<td>&lt;sample&gt;.panel_audit.json, &lt;sample&gt;.panel_audit.tsv (or Parquet) and a result manifest.</td>
+<td>bcftools; seconds on a 30x genome</td>
+<td><code>wgsextract panel audit --panel my_panel.toml --vcf-input sample.vcf.gz --research-panel</code></td>
+</tr>
+<tr>
 <td><code>pet-align</code></td>
 <td>Align and call variants for a cat or dog genome.</td>
 <td>&lt;reads stem&gt;<em>&lt;species&gt;.bam or .cram (+ index) and &lt;reads stem&gt;</em>&lt;species&gt;.vcf.gz (+ .tbi).</td>
