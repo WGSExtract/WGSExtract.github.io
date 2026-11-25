@@ -57,6 +57,7 @@
 </ul>
 <h2 id="deployment">Deployment<a class="heading-anchor" href="#deployment" aria-label="Link to section">#</a></h2>
 <p><code>.github/workflows/pages.yml</code> rebuilds and publishes <code>site/</code> when site sources, the generators, or reference inputs (including CLI source) change on <code>main</code>. Run <code>pixi run site-build</code> for a local preview; commit only the source and hand-maintained assets.</p>
+<p>The deploy job waits for the build job and verifies its exact artifact is visible before publishing. A full workflow rerun gives its new artifact a different name; rerunning just a failed deploy uses the successful build's original artifact.</p>
       </div>
     </main>
     <footer class="footer">
