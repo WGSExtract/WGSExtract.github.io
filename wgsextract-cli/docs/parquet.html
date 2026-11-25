@@ -55,6 +55,7 @@
 </tbody>
 </table></div>
 <p>The vendor kits, VCF, BAM/CRAM and bedMethyl files keep their own formats, because downstream tools need them exactly. <code>microarray --formats</code> still picks the vendor kits; <code>--format</code> only adds the genotype table.</p>
+<p><code>methylation regions</code> streams either sorted BGZF bedMethyl or typed bedMethyl Parquet. It does not use a Tabix index to skip sites, and reads only the columns it needs from Parquet. The input format does not determine the summary format: <code>--format parquet</code> selects Parquet <strong>output</strong>. See <a href="resource_estimates.html#methylation-regions">methylation region resource estimates</a> for a same-input comparison.</p>
 <h2 id="what-the-parquet-files-contain">What the Parquet files contain<a class="heading-anchor" href="#what-the-parquet-files-contain" aria-label="Link to section">#</a></h2>
 <ul>
 <li><strong>Typed columns.</strong> Text, 64-bit integers, doubles and booleans. A missing value is null, where the TSV leaves the field empty. Each column's description is in its field metadata.</li>
