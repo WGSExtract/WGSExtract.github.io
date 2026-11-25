@@ -89,7 +89,7 @@ wgsextract report --input sample.cram</code></pre>
 <tr><td><code>not_applicable</code></td><td>ploidy 0 for this sample (<code>excluded_by_policy</code>, such as chrY in a woman); left out of every count</td></tr>
 </tbody>
 </table></div>
-<p>An exon's <code>reasons</code> list the states and limitations of its unread bases.</p>
+<p>An exon's <code>reasons</code> list the states and limitations of its unread bases. The <code>specialist</code> field names a follow-up caller where one is known for that gene and build, such as long-read <code>typing paraphase --genes pms2</code>. This is the same guidance used for <code>specialist_caller_required</code> in <a href="variants.html#target-copy-number-screening"><code>typing target-cnv</code></a>. Neither a copy-number screen nor a phased-allele result changes the small-variant callability measured from the gVCF.</p>
 <div class="table-wrap"><table>
 <thead><tr><th>Gene state</th><th>Meaning</th></tr></thead>
 <tbody>
@@ -124,8 +124,8 @@ wgsextract report --input sample.cram</code></pre>
 <p>The gVCF's <code>##contig</code> lengths must match the exon model's (<code>#contig</code> lines): a bundled model is chosen by them, and a mismatch (another build, such as T2T, or a model for another build) stops the run, naming the contigs that differ. Contig names may differ by <code>chr</code> (and M/MT).</p>
 <h2 id="outputs">Outputs<a class="heading-anchor" href="#outputs" aria-label="Link to section">#</a></h2>
 <ul>
-<li><code>exon_callability.json</code> (role <code>exon_callability</code>, schema <code>wgsextract.exon_callability/1</code>): the gene list, the exon model (file, SHA-256, transcripts and source lines), the reference identity (build, the contigs checked, the FASTA's name), the evidence (the gVCF, relative to the document; engine and version, quality model, minimum mapping quality, assessed region), the thresholds, counts, and per gene its <code>state</code>, <code>reasons</code>, exons per status, the exon numbers not callable (most severe status first), and its assessed, read and limited bases.</li>
-<li><code>exon_callability.tsv</code> (role <code>exon_callability_table</code>): one row per coding exon with its status, reasons, assessed region, bases per evidence state, read and limited bases, and limitation intervals.</li>
+<li><code>exon_callability.json</code> (role <code>exon_callability</code>, schema <code>wgsextract.exon_callability/1</code>): the gene list, the exon model (file, SHA-256, transcripts and source lines), the reference identity (build, the contigs checked, the FASTA's name), the evidence (the gVCF, relative to the document; engine and version, quality model, minimum mapping quality, assessed region), the thresholds, counts, and per gene its <code>state</code>, <code>reasons</code>, exons per status, the exon numbers not callable (most severe status first), its suggested <code>specialist</code> if any, and its assessed, read and limited bases.</li>
+<li><code>exon_callability.tsv</code> (role <code>exon_callability_table</code>): one row per coding exon with its status, reasons, assessed region, bases per evidence state, read and limited bases, limitation intervals, and the suggested <code>specialist</code> on applicable exons.</li>
 </ul>
 <p>The result manifest records the gVCF as an input (<code>vcf_input</code> when given directly, <code>reference_evidence</code> when found as a companion), the metrics <code>genes_&lt;state&gt;</code> and <code>exons_&lt;status&gt;</code>, and the warnings <code>exons_not_callable</code> and <code>genes_without_exon_model</code>.</p>
 <h2 id="exon-model-format">Exon model format<a class="heading-anchor" href="#exon-model-format" aria-label="Link to section">#</a></h2>
