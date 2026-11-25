@@ -43,6 +43,7 @@
 <thead><tr><th>Command</th><th>Table</th><th>TSV (default)</th><th>With <code>--format parquet</code></th></tr></thead>
 <tbody>
 <tr><td><code>vcf table</code></td><td>One row per variant allele (<a href="variant-table.html">docs</a>)</td><td><code>&lt;stem&gt;_variants.tsv</code></td><td><code>&lt;stem&gt;_variants.parquet</code>, in place of the TSV. The SQLite database is unchanged.</td></tr>
+<tr><td><code>vcf compare</code></td><td>Pairwise allele concordance, N-way support, and optional per-allele states (<a href="variant-comparison.html">docs</a>)</td><td><code>compare.summary.tsv</code>, <code>compare.support.tsv</code>, optional <code>compare.variants.tsv</code></td><td>The requested tables as <code>.parquet</code>; <code>compare.summary.json</code> is unchanged.</td></tr>
 <tr><td><code>methylation pileup</code></td><td>Per-modification summary</td><td><code>&lt;stem&gt;.&lt;context&gt;.methylation.tsv</code></td><td><code>&lt;stem&gt;.&lt;context&gt;.methylation.parquet</code></td></tr>
 <tr><td><code>methylation pileup</code></td><td>Every site in modkit's bedMethyl</td><td>Not written: <code>.bedmethyl.gz</code> is the source</td><td><code>&lt;stem&gt;.&lt;context&gt;.bedmethyl.parquet</code>, besides the bedMethyl</td></tr>
 <tr><td><code>methylation regions</code></td><td>RefSeq promoters or UCSC CpG islands</td><td><code>&lt;stem&gt;.&lt;build&gt;.&lt;preset&gt;.methylation.tsv</code></td><td><code>&lt;stem&gt;.&lt;build&gt;.&lt;preset&gt;.methylation.parquet</code></td></tr>

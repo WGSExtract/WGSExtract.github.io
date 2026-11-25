@@ -255,6 +255,13 @@
 <td><code>wgsextract vcf prepare --vcf-input sample.vcf.gz</code></td>
 </tr>
 <tr>
+<td><code>vcf compare</code></td>
+<td>Compare normalized small alleles across local callsets.</td>
+<td>compare.summary.json and compare.summary.tsv (or .parquet); optional compare.variants table and indexed compare.anchor.vcf.gz.</td>
+<td>bcftools; depending on options and inputs, also: samtools, tabix; minutes on a 30x genome</td>
+<td><code>wgsextract vcf compare --callset a=caller-a.vcf.gz --callset b=caller-b.vcf.gz --ref GRCh38.fa</code></td>
+</tr>
+<tr>
 <td><code>vcf clinvar</code></td>
 <td>Annotate VCF with ClinVar pathogenicity data.</td>
 <td>clinvar_annotated.vcf.gz and clinvar_pathogenic.vcf.gz (+ .tbi).</td>

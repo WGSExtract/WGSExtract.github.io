@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Compare local VCFs | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/variant-comparison.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Compare local VCFs</span></nav>
+<h1 id="compare-local-vcfs">Compare local VCFs</h1>
+<p>Use <code>vcf compare</code> to find small alleles shared by callers, platforms, or samples. Agreement is not a truth benchmark, and sharing does not prove transmission or that two samples have the same haplotype. Nothing is uploaded or downloaded.</p>
+<pre><code class="language-sh">wgsextract vcf compare --callset dv=deepvariant.vcf.gz --callset bc=bcftools.vcf.gz \
+  --ref GRCh38.fa --outdir comparison</code></pre>
+<p>Each label is unique. If a VCF contains multiple samples, select one with <code>--sample dv=SAMPLE</code>. The command does not infer whether two samples are the same person. Labels and their samples are recorded in the manifest.</p>
+<p>The command compares exact <code>CHROM, POS, REF, ALT</code> keys, not just positions. It reconciles <code>chr</code> aliases, splits multiallelic records, and uses an indexed local <code>--ref</code> for left alignment and REF checking. Without <code>--ref</code>, indels that differ in representation may not match. Inputs need a common build identified by header metadata or matching sequence digests. A known build, contig length, sequence digest, or REF mismatch is an error even with <code>--allow-unverified-build</code>. That switch allows only an unverifiable build and records a warning. Without a FASTA, known REF bases must agree where records start at the same position; <code>N</code> is unknown, and longer REF padding is allowed. No file is read from the VCF's <code>##reference</code> URL.</p>
+<p><code>--bed panel.bed</code> accepts zero-based, half-open BED intervals; <code>--region chr22:100-200</code> accepts a one-based inclusive interval or a whole contig. The scope overlaps the <strong>normalized</strong> REF span, including the anchor base of an insertion. Blocks starting outside the panel can still provide reference evidence inside it. MNPs and other equal-length complex alleles are not atomized; symbolic variants, breakends, <code>*</code>, and non-reference placeholders are not counted as comparison alleles.</p>
+<h2 id="select-alleles-across-samples">Select alleles across samples<a class="heading-anchor" href="#select-alleles-across-samples" aria-label="Link to section">#</a></h2>
+<pre><code class="language-sh">wgsextract vcf compare --mode shared --callset sib1=sib1.vcf.gz \
+  --callset sib2=sib2.vcf.gz --callset parent=parent.g.vcf.gz \
+  --include sib1 --include sib2 --exclude parent --reference-evidence gvcf \
+  --ref GRCh38.fa --bed panel.bed --emit-vcf --outdir comparison</code></pre>
+<p><code>shared</code> requires two or more <code>--include</code> labels and permits exclusions. <code>unique</code> requires at least one include and one exclusion. Every included sample must carry the exact ALT. With default <code>--reference-evidence none</code>, missing records and explicit non-carriage are treated as assumed absence for exclusions, not evidence of homozygous reference. Filtered or no-call records and another carried ALT at that position do not satisfy exclusion.</p>
+<p>With <code>--reference-evidence gvcf</code>, a primary gVCF supplies its own evidence; use <code>--gvcf LABEL=PATH</code> to supply a separate gVCF for the same selected sample. The comparison does not search for external companion files. Only <code>callable_reference</code> across the whole REF span qualifies for a strict exclusion; insertions also require the adjacent reference base where defined. The <a href="variant-confidence.html">reference confidence rules</a> apply (minimum block depth and caller-specific GQ policy). A plain VCF's <code>0/0</code> does not qualify. <code>not_assessed</code> (no applicable evidence), <code>uncovered</code>, <code>low_quality_reference</code>, <code>filtered</code>, <code>no_call</code>, <code>excluded_by_policy</code>, <code>other_alt</code>, and <code>variant_evidence</code> are not callable-reference results. Primary ALT calls are kept if a companion disagrees; a callable reference conflict is warned about. gVCF callability is not proof a caller could detect a particular indel.</p>
+<h2 id="read-the-results">Read the results<a class="heading-anchor" href="#read-the-results" aria-label="Link to section">#</a></h2>
+<ul>
+<li><code>compare.summary.tsv</code> and <code>compare.summary.json</code> show all unordered pairs for <code>snv</code>, <code>indel</code>, <code>other_small</code> and <code>all</code>. A shared allele is counted even if dosage differs. <code>gt_compared</code> requires complete original calls of the same ploidy; phase is ignored, and ploidy mismatches are counted separately. <code>gt_concordance</code> divides equal dosages by compared genotypes. Ti/Tv counts apply only to SNVs, and ratios with zero denominators are blank in tables and null in JSON.</li>
+<li><code>compare.support.tsv</code> counts alleles by how many labels carried them. Identical duplicate observations count once; conflicting duplicates are flagged and do not contribute support. A partial genotype that names an ALT supports its presence, but is not used for dosage concordance.</li>
+<li><code>compare.variants.tsv</code> (family modes or <code>--emit-variants</code>) describes each candidate allele's decision and the labels' states and observed dosages, including inconclusive rows. Use <code>--format parquet</code> to write all requested tables as Parquet.</li>
+<li><code>--emit-vcf</code> writes <code>compare.anchor.vcf.gz</code> and its CSI index. The first callset (first include in family modes) supplies the one sample and its allele annotations, for use with <code>vcf table</code>. The VCF contains alleles the anchor carries (only retained alleles in family modes); calls exclusive to other labels are in the tables. <code>WGSE_COMPARE_STATE</code> uses label order from its INFO header, and <code>WGSE_COMPARE_DECISION</code> describes the outcome. The anchor GT is a biallelic projection, not a joint genotype.</li>
+<li><code>compare.manifest.json</code> records the input fingerprints and policies, counts, outputs, and warnings.</li>
+</ul>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/variant-comparison.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/variant-comparison.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

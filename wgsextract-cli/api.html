@@ -3601,6 +3601,128 @@ see docs/exon-callability.md.</p>
 </tr>
 </tbody>
 </table></div>
+<h3><code>api.vcf.compare(VcfCompareParams)</code></h3>
+<p>CLI: <code>wgsextract vcf compare</code>.</p>
+<p>Write local allele concordance tables and optionally an indexed anchor VCF.</p>
+<p><code>VcfCompareParams</code>: Compare normalized small alleles across two or more local callsets.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>CLI</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>callset</code></td>
+<td><code>tuple[str, ...]</code></td>
+<td>required</td>
+<td><code>--callset</code></td>
+<td>Local VCF, gVCF or BCF (repeat for at least two labels).</td>
+</tr>
+<tr>
+<td><code>sample</code></td>
+<td><code>tuple[str, ...]</code></td>
+<td><code>[]</code></td>
+<td><code>--sample</code></td>
+<td>Sample for a labelled input with multiple samples.</td>
+</tr>
+<tr>
+<td><code>gvcf</code></td>
+<td><code>tuple[str, ...]</code></td>
+<td><code>[]</code></td>
+<td><code>--gvcf</code></td>
+<td>Explicit local gVCF evidence for a labelled callset.</td>
+</tr>
+<tr>
+<td><code>mode</code></td>
+<td><code>str</code></td>
+<td><code>'concordance'</code></td>
+<td><code>--mode</code></td>
+<td>Report all pairs, or select alleles shared by an include group. One of: <code>concordance</code>, <code>shared</code>, <code>unique</code></td>
+</tr>
+<tr>
+<td><code>include</code></td>
+<td><code>tuple[str, ...]</code></td>
+<td><code>[]</code></td>
+<td><code>--include</code></td>
+<td>Required carrier in shared/unique mode; repeat.</td>
+</tr>
+<tr>
+<td><code>exclude</code></td>
+<td><code>tuple[str, ...]</code></td>
+<td><code>[]</code></td>
+<td><code>--exclude</code></td>
+<td>Required absence in shared/unique mode; repeat.</td>
+</tr>
+<tr>
+<td><code>reference_evidence</code></td>
+<td><code>str</code></td>
+<td><code>'none'</code></td>
+<td><code>--reference-evidence</code></td>
+<td>Require callable gVCF evidence for strict exclusion (default: none). One of: <code>none</code>, <code>gvcf</code></td>
+</tr>
+<tr>
+<td><code>ref</code></td>
+<td><code>Path | None</code></td>
+<td><code>None</code></td>
+<td><code>--ref</code></td>
+<td>Local FASTA with a .fai index (and .gzi if BGZF); enables left alignment.</td>
+</tr>
+<tr>
+<td><code>allow_unverified_build</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-unverified-build</code></td>
+<td>Allow unknown builds with a warning; never bypass a known mismatch.</td>
+</tr>
+<tr>
+<td><code>bed</code></td>
+<td><code>Path | None</code></td>
+<td><code>None</code></td>
+<td><code>--bed</code></td>
+<td>BED scope in normalized coordinates (zero-based, half-open).</td>
+</tr>
+<tr>
+<td><code>region</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--region</code></td>
+<td>One contig or interval in normalized coordinates (one-based, inclusive).</td>
+</tr>
+<tr>
+<td><code>table_format</code></td>
+<td><code>str</code></td>
+<td><code>'tsv'</code></td>
+<td><code>--format</code></td>
+<td>Concordance table format: tsv (default) or parquet (needs pyarrow). One of: <code>tsv</code>, <code>parquet</code></td>
+</tr>
+<tr>
+<td><code>emit_vcf</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--emit-vcf</code></td>
+<td>Write an indexed single-sample anchor VCF (first callset or first include).</td>
+</tr>
+<tr>
+<td><code>emit_variants</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--emit-variants</code></td>
+<td>Also write per-allele states in concordance mode (always on in family modes).</td>
+</tr>
+<tr>
+<td><code>outdir</code></td>
+<td><code>Path | None</code></td>
+<td><code>None</code> (config <code>output_directory</code>)</td>
+<td><code>--outdir</code>, <code>-o</code></td>
+<td>Outputs (default: config output_directory, else wgse/ beside primary input; otherwise the input's folder).</td>
+</tr>
+</tbody>
+</table></div>
 <h3><code>api.vcf.to_fasta(VcfToFastaParams)</code></h3>
 <p>CLI: <code>wgsextract vcf to-fasta</code>.</p>
 <p>Build the consensus (role <code>consensus_fasta</code>, and <code>liftover_chain</code> with
