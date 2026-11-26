@@ -38,7 +38,7 @@
       <div class="wrap">
         <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract GUI</a> / <a href="index.html">User Docs</a> / <span>Gene page</span></nav>
 <h1 id="gene-page">Gene page</h1>
-<p><strong>Gene page</strong>, in the WGS Extract sidebar below <strong>Genome viewer</strong>, shows one gene from your own files: its transcripts and exons, your variants in it with their annotations, and how well your reads cover each exon. Everything is read on this computer by the WGS Extract CLI (<code>wgsextract info gene</code>); nothing is downloaded, and nothing about your genome is sent anywhere.</p>
+<p><strong>Gene page</strong>, in the WGS Extract sidebar below <strong>Genome viewer</strong>, shows one gene from your own files: its transcripts and exons, your variants in it with their annotations, and how well your reads cover each exon. <strong>Show gene</strong> reads files on this computer with <code>wgsextract info gene</code>. It does not download data or send information about your genome.</p>
 <h2 id="opening-a-gene">Opening a gene<a class="heading-anchor" href="#opening-a-gene" aria-label="Link to section">#</a></h2>
 <p>Enter a gene symbol or alias (NCBI RefSeq, such as <code>BRCA1</code>) and, optionally:</p>
 <ul>
@@ -55,6 +55,10 @@
 <li><strong>Open in genome viewer</strong> opens the <a href="genome-viewer.html">genome viewer</a> at the gene with your reads or variants, its gene span and the RefSeq transcripts track; <strong>Back to the gene page</strong> returns.</li>
 </ul>
 <p>ACMG classes are fastVEP's automated classification, for research only and not a diagnosis.</p>
+<h2 id="open-in-geneiobio">Open in gene.iobio<a class="heading-anchor" href="#open-in-geneiobio" aria-label="Link to section">#</a></h2>
+<p>For GRCh37 or GRCh38, choose <strong>gene.iobio licence and privacy…</strong> on a gene result. Read the notice and choose <strong>Accept and open gene.iobio</strong> to open <code>gene.iobio.io</code> in your default browser. WGS Extract does not bundle or install gene.iobio or its backend. The CLI has no external hand-off.</p>
+<p>gene.iobio is free for academic and personal use; any other use (including commercial) requires a licence from Frameshift Genomics (info@frameshift.io). Not for clinical use.</p>
+<p>The browser sends only the selected gene symbol and reference build in the link, along with ordinary browser request metadata. The gene and build may themselves be sensitive. WGS Extract does not send reads, variants, filenames, paths or sample IDs. If you select local BAM or VCF files and their indexes on the website, it can expose them to iobio's servers through <code>waygate.iobio.io</code>; do not assume access is limited to the selected gene. Each launch requires fresh confirmation. The app records the last acceptance time and notice version locally, without recording the gene or build in the receipt.</p>
 <h2 id="missing-data">Missing data<a class="heading-anchor" href="#missing-data" aria-label="Link to section">#</a></h2>
 <p>Each missing input or resource is listed under <strong>Missing data</strong>, with the command that provides it:</p>
 <div class="table-wrap"><table>
