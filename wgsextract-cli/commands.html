@@ -1075,7 +1075,7 @@
 </tr>
 <tr>
 <td><code>methylation regions</code></td>
-<td>Summarize CpG calls over gene promoters or CpG islands.</td>
+<td>Summarize CpG calls over promoters, CpG islands or imprinted DMRs.</td>
 <td>&lt;input stem&gt;.&lt;build&gt;.&lt;preset&gt;.methylation.tsv (or .parquet) and its run manifest. With --partition-hp, writes .methylation.hp.tsv (or .parquet) instead.</td>
 <td>samtools; depending on options and inputs, also: modkit, curl; minutes on a 30x genome</td>
 <td><code>wgsextract methylation regions -i ont.cpg.bedmethyl.gz --ref hg38.fa --build hg38 --preset promoters</code></td>

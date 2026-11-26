@@ -7012,7 +7012,7 @@ methylation_combine_strands, else CpG, 5mC only and strands combined.</p>
 <p>CLI: <code>wgsextract methylation regions</code>.
 Certification: Validated. HG002 promoter/island BGZF–Parquet parity and chr21 HP checks; not whole-genome read-level phasing validation.</p>
 <p>Summarize methylation over the selected build-matched regions.</p>
-<p><code>MethylationRegionsParams</code>: Summarize pooled or haplotype-split CpG calls over RefSeq promoters or UCSC islands.</p>
+<p><code>MethylationRegionsParams</code>: Summarize pooled or haplotype-split CpG calls over annotated regions.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -7057,7 +7057,7 @@ Certification: Validated. HG002 promoter/island BGZF–Parquet parity and chr21 
 <td><code>str</code></td>
 <td>required</td>
 <td><code>--preset</code></td>
-<td>RefSeq promoters or UCSC masked CpG islands. One of: <code>promoters</code>, <code>cpg-islands</code></td>
+<td>RefSeq promoters, UCSC masked CpG islands, or research-only imprinted DMRs (hg38 only). One of: <code>promoters</code>, <code>cpg-islands</code>, <code>imprinted-dmrs</code></td>
 </tr>
 <tr>
 <td><code>upstream</code></td>
