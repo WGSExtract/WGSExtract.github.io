@@ -8567,7 +8567,8 @@ Certification: Tested. Microarray target files and validation checked on fixture
 <p>Build (output role <code>reference_resource</code>) or delete the targets.</p>
 <p><code>RefMicroarrayTargetsParams</code>: Build the genome-wide hg19 and hg38 microarray targets
 (<code>microarray/All_SNPs_&lt;build&gt;_ref.tab.gz</code>) from the bootstrap's chip
-templates, or delete them. <code>microarray</code> builds a missing one itself.</p>
+templates, or delete them. Missing liftOver chains require <code>download</code>.
+<code>microarray</code> builds a missing target itself.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -8579,6 +8580,13 @@ templates, or delete them. <code>microarray</code> builds a missing one itself.<
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--download</code></td>
+<td>Fetch missing public liftOver chains from UCSC or its mirror; no sample data is sent.</td>
+</tr>
 <tr>
 <td><code>delete</code></td>
 <td><code>bool</code></td>
