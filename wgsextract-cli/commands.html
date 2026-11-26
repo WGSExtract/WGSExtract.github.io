@@ -992,7 +992,7 @@
 <tr>
 <td><code>cohort summarize</code></td>
 <td>Summarize autosomal SNVs from a local cohort manifest and matched gVCFs.</td>
-<td>cohort.variants.tsv (or .parquet) and a result manifest; a private participant join only with --include-identifiers.</td>
+<td>cohort.variants.tsv (or .parquet) and a result manifest; a reduced local table only with --export; a private participant join only with --include-identifiers.</td>
 <td>bcftools; minutes on a 30x genome</td>
 <td><code>wgsextract cohort summarize cohort.json --region chr22 --outdir summary</code></td>
 </tr>

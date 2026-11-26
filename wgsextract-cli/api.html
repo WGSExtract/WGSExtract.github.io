@@ -6193,6 +6193,41 @@ the output doesn't depend on how many.</p>
 <td>Minimum GQ for callers that provide it.</td>
 </tr>
 <tr>
+<td><code>min_samples</code></td>
+<td><code>int | None</code></td>
+<td><code>None</code> (config <code>cohort_min_samples</code>)</td>
+<td><code>--min-samples</code></td>
+<td>Disclosure minimum for cohort size and callable participants (default 21).</td>
+</tr>
+<tr>
+<td><code>min_allele_count</code></td>
+<td><code>int | None</code></td>
+<td><code>None</code> (config <code>cohort_min_allele_count</code>)</td>
+<td><code>--min-allele-count</code></td>
+<td>Disclosure minimum for called ALT copies (default 10).</td>
+</tr>
+<tr>
+<td><code>min_carriers</code></td>
+<td><code>int | None</code></td>
+<td><code>None</code> (config <code>cohort_min_carriers</code>)</td>
+<td><code>--min-carriers</code></td>
+<td>Disclosure minimum for both carriers and callable non-carriers (default 10).</td>
+</tr>
+<tr>
+<td><code>min_relatedness</code></td>
+<td><code>float | None</code></td>
+<td><code>None</code> (config <code>cohort_min_relatedness</code>)</td>
+<td><code>--min-relatedness</code></td>
+<td>Warn at or above this qc relate estimate (twice kinship; default 0.09).</td>
+</tr>
+<tr>
+<td><code>export</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--export</code></td>
+<td>Also write a local, reduced table omitting rows below the disclosure thresholds.</td>
+</tr>
+<tr>
 <td><code>table_format</code></td>
 <td><code>str</code></td>
 <td><code>'tsv'</code></td>

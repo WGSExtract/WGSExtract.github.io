@@ -177,6 +177,30 @@ display sleep is allowed. Report-only help/config/deps never inhibit sleep.</p>
 <td>Allow first-use public reference/model downloads for commands with --download (hosts and request data: docs/privacy.md); no sample uploads</td>
 </tr>
 <tr>
+<td><code>cohort_min_samples</code></td>
+<td>integer, at least 1</td>
+<td><code>21</code></td>
+<td>Cohort disclosure minimum for cohort size and callable participants</td>
+</tr>
+<tr>
+<td><code>cohort_min_allele_count</code></td>
+<td>integer, at least 1</td>
+<td><code>10</code></td>
+<td>Cohort disclosure minimum for called ALT copies</td>
+</tr>
+<tr>
+<td><code>cohort_min_carriers</code></td>
+<td>integer, at least 1</td>
+<td><code>10</code></td>
+<td>Cohort disclosure minimum for both carriers and callable non-carriers</td>
+</tr>
+<tr>
+<td><code>cohort_min_relatedness</code></td>
+<td>number, 0 to 1</td>
+<td><code>0.09</code></td>
+<td>Cohort warning cutoff on the qc relate scale (twice kinship)</td>
+</tr>
+<tr>
 <td><code>input_path</code></td>
 <td>string, path (<code>~</code> expands)</td>
 <td>unset</td>
