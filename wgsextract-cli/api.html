@@ -3651,7 +3651,7 @@ Certification: Tested. Tabular exports checked against fixture variant calls.</p
 <h3><code>api.vcf.compare(VcfCompareParams)</code></h3>
 <p>CLI: <code>wgsextract vcf compare</code>.
 Certification: Validated. Normalized allele and gVCF comparison checked on a 12 kb HG002 slice; no whole-genome or inheritance claim.</p>
-<p>Write local allele concordance tables and optionally an indexed anchor VCF.</p>
+<p>Write local allele concordance tables and optional indexed VCF exports.</p>
 <p><code>VcfCompareParams</code>: Compare normalized small alleles across two or more local callsets.</p>
 <div class="table-wrap"><table>
 <thead>
@@ -3728,6 +3728,13 @@ Certification: Validated. Normalized allele and gVCF comparison checked on a 12 
 <td>Allow unknown builds with a warning; never bypass a known mismatch.</td>
 </tr>
 <tr>
+<td><code>atomize</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--atomize</code></td>
+<td>Compare primitive sequence alleles instead of complex alleles; requires --ref.</td>
+</tr>
+<tr>
 <td><code>bed</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -3754,6 +3761,13 @@ Certification: Validated. Normalized allele and gVCF comparison checked on a 12 
 <td><code>False</code></td>
 <td><code>--emit-vcf</code></td>
 <td>Write an indexed single-sample anchor VCF (first callset or first include).</td>
+</tr>
+<tr>
+<td><code>emit_partition_vcfs</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--emit-partition-vcfs</code></td>
+<td>Write indexed shared, only_a and only_b VCFs for two-callset concordance.</td>
 </tr>
 <tr>
 <td><code>emit_variants</code></td>
