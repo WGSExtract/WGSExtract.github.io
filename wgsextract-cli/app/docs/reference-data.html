@@ -41,7 +41,7 @@
 <p>The <strong>Reference Data</strong> page (near the bottom of the sidebar) manages the shared annotation databases, coordinate maps, liftover chains, microarray templates, and research panels used by WGS Extract workflows, the <a href="genome-viewer.html">Genome Viewer</a>, and the <a href="gene-page.html">Gene Page</a>.</p>
 <p>Reference <strong>genomes</strong> (FASTA sequences and aligner indexes) live on their own <a href="reference-genomes.html">Reference Genomes</a> page.</p>
 <h2 id="reference-data-library-folder">Reference Data Library folder<a class="heading-anchor" href="#reference-data-library-folder" aria-label="Link to section">#</a></h2>
-<p>The <strong>Reference Data Library</strong> path at the top of the page shows where these datasets are stored (by default inside your users workspace, <code>~/wgs-extract</code>).</p>
+<p>The <strong>Reference Data Library</strong> path at the top of the page shows where these datasets are stored (by default inside your users workspace, <code>~/wgs-extract</code>). It shows the resolved absolute path without changing your saved setting.</p>
 <ul>
 <li>You can point this folder to another location, such as a larger external SSD.</li>
 <li>When you change the folder path, the app offers three choices:
@@ -54,10 +54,11 @@
 </ul>
 <h2 id="installed-and-available-datasets">Installed and available datasets<a class="heading-anchor" href="#installed-and-available-datasets" aria-label="Link to section">#</a></h2>
 <p>The table queries <code>wgsextract ref status</code> locally — opening the page does not contact the network. Each row shows its status (<strong>Installed</strong> or <strong>Missing</strong>), version, target genome build, what it is used for, and either its on-disk size (when installed) or approximate download size (when missing). Hover over a row to see its data source, publishing organization, and license summary.</p>
+<p>Library Bootstrap always shows the current archive's download size. If the installed version differs, the versions are listed as installed / available. An older installation is marked <strong>Update available</strong>.</p>
 <div class="table-wrap"><table>
 <thead><tr><th>Dataset</th><th>Purpose</th><th>Notes</th></tr></thead>
 <tbody>
-<tr><td><strong>Library Bootstrap</strong></td><td>Core liftover chains, microarray chip templates, and N-count tables</td><td>Marked <strong>Required</strong> for microarray, liftover, and reference helpers (~15 MB).</td></tr>
+<tr><td><strong>Library Bootstrap</strong></td><td>Core liftover chains, microarray chip templates, and N-count tables</td><td>Marked <strong>Required</strong> for microarray, liftover, and reference helpers.</td></tr>
 <tr><td><strong>Gene Map</strong></td><td>RefSeq gene spans and exon/transcript models (GRCh37 &amp; GRCh38)</td><td>Powers the <a href="gene-page.html">Gene Page</a>, Genome Viewer gene search &amp; transcript tracks, and gene filtering.</td></tr>
 <tr><td><strong>dbSNP (hg38 / hg19)</strong></td><td>NCBI dbSNP common human SNPs (~37M rsIDs) and offline SQLite lookup index</td><td>Enables offline rsID annotation and lookup. Large download; asks for confirmation before downloading.</td></tr>
 <tr><td><strong>Cytobands (hg38 / hg19)</strong></td><td>UCSC chromosome banding tables</td><td>Draws the chromosome ideogram track in the <a href="genome-viewer.html">Genome Viewer</a>.</td></tr>
