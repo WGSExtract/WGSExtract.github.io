@@ -1,0 +1,1416 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Testing and real-data validation evidence for every runnable command." />
+    <title>WGS Extract command certification</title>
+    <meta property="og:site_name" content="WGS Extract CLI" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="WGS Extract command certification" />
+    <meta property="og:description" content="Testing and real-data validation evidence for every runnable command." />
+    <meta property="og:url" content="https://wgsextract.github.io/wgsextract-cli/certification.html" />
+    <meta property="og:image" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta property="og:image:secure_url" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="WGSExtract CLI social preview showing the desktop app screenshot." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="WGS Extract command certification" />
+    <meta name="twitter:description" content="Testing and real-data validation evidence for every runnable command." />
+    <meta name="twitter:image" content="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <meta name="twitter:image:alt" content="WGSExtract CLI social preview showing the desktop app screenshot." />
+    <link rel="canonical" href="https://wgsextract.github.io/wgsextract-cli/certification.html" />
+    <link rel="image_src" href="https://wgsextract.github.io/wgsextract-cli/assets/social-preview.webp" />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".82em" font-size="84">🧬</text></svg>' />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="index.html">Home</a><a href="install.html">Install CLI</a><a href="gui.html">GUI</a><a href="cli.html">CLI</a><a href="workflows.html">Workflows</a><a href="wgs-guide.html">WGS guide</a><a href="reference.html">Reference</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-hero">
+        <div class="wrap">
+          <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Reference</p>
+          <h1>Command certification</h1>
+          <p class="lede">See what each command has been checked against, on which platforms, and where the evidence stops.</p>
+        </div>
+      </header>
+
+<section><div class="wrap"><h2>What the levels mean</h2>
+<ul>
+<li><strong>Certified:</strong> Real-data truth or upstream parity on Linux, macOS and Windows, real-tool regression tests, and production use without open correctness bugs.</li>
+<li><strong>Validated:</strong> Real-data validation on at least one platform, real-tool tests and documented limits.</li>
+<li><strong>Tested:</strong> Fixture or fake-genome tests exercise the real tools or built-in operation.</li>
+<li><strong>Experimental:</strong> Coverage is partial or unverified, or the command is research-only. Use with care.</li>
+</ul>
+<p>A level applies to the evidence listed, not to every input, option or backend. Research features can remain Experimental even when their mechanics have been tested. Platform entries describe the linked qualification; a missing entry is not an unsupported-platform claim.</p>
+<p>Running a Tested or Experimental operation logs a notice; asking for help does not run the operation. Set <code>certification_notices = false</code> in <code>config.toml</code> to hide it without changing the level recorded in results. The notice is not a run warning.</p>
+<h2>Evidence by command</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Tier</th>
+<th>Level</th>
+<th>Evidence</th>
+<th>Platforms</th>
+<th>Reviewed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>info</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Alignment statistics checked against fixture records. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_info.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>info calculate-coverage</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Target depth and enrichment checked on fixture alignments. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_info_targets.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>info coverage-sample</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Sampled chromosome breadth checked on fixture alignments with reference gaps. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_info.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>info gene</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Exon coverage and callability checked on fixture alignments. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_exon_callability.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>info chip</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Chip revision identification and listing checked on fixture kits. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_microarray_revisions.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>microarray</code></td>
+<td>core</td>
+<td>Validated</td>
+<td>HG00096 GRCh38 and CHM13 vendor exports compared with independent chip truth in sampled windows, not at every chip site. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/microarray-benchmarks.md">1</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/install_testing.md#what-one-run-covers">2</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_microarray_chm13_integration.py">3</a></td>
+<td>Linux</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>lineage y-haplogroup</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Fixture lineage results compared across reference builds. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_lineage_chm13_parity.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>lineage y-str</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Fixture Y-STR outputs and no-call cases. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_ystr.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>lineage mt-haplogroup</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Fixture mitochondrial input and lineage checks. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_lineage_haplogroups.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>extract mito-fasta</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Mitochondrial consensus checked against a planted SNP. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_extract_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>extract mito-vcf</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Haploid mitochondrial calling checked against a planted SNP. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_extract_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>extract mt-bam</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Mitochondrial read extraction checked on fixture alignments. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_extract_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>extract ydna-bam</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Y read extraction checked on fixture alignments. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_extract_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>extract ydna-vcf</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Haploid Y calling checked against a planted SNP. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_extract_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>extract y-mt-extract</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Sorted Y and mitochondrial output checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_extract_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>extract unmapped</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Unmapped read and mate preservation checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_extract_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>extract custom</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Region and BED extraction checked on fixture alignments. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_extract_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>extract region</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Regional BAM and CRAM outputs checked on fixture alignments. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_extract_region.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>realign</code></td>
+<td>core</td>
+<td>Validated</td>
+<td>HG002 30× SNP/indel qualification and ONT CUDA parity on tested inputs; not all backends or platforms. <a href="https://github.com/WGSExtract/wgsextract-cli/issues/1121#issuecomment-7160085047">1</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/1122#issuecomment-7040247624">2</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/1024#issuecomment-7046241211">3</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_realign.py">4</a></td>
+<td>Linux, Windows</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>align</code></td>
+<td>core</td>
+<td>Validated</td>
+<td>CPU/CUDA decoded-record parity on 5 million HG002 Illumina read pairs; not an all-backend qualification. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/windows.md#wgse-bwa-and-optional-nvidia-cuda">1</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_alignment_commands.py">2</a></td>
+<td>Windows</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf snp</code></td>
+<td>core</td>
+<td>Validated</td>
+<td>HG002 GRCh38 30× Windows qualification matched published counts; not per-genotype parity or all presets. <a href="https://github.com/WGSExtract/wgsextract-cli/issues/1024#issuecomment-7046241211">1</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_basic.py">2</a></td>
+<td>Windows</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf indel</code></td>
+<td>core</td>
+<td>Validated</td>
+<td>HG002 GRCh38 30× Windows qualification matched published counts; not per-genotype parity or all presets. <a href="https://github.com/WGSExtract/wgsextract-cli/issues/1024#issuecomment-7046241211">1</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_basic.py">2</a></td>
+<td>Windows</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf call</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>SNP/indel and gVCF orchestration checked on fixture alignments. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_call.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf annotate</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Annotation field copying checked with real bcftools. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_basic.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf filter</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Filtering of fixture variants checked with bcftools. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf table</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Tabular exports checked against fixture variant calls. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_table.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf prepare</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Normalization and preparation checked on fixture VCFs. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_prepare.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf compare</code></td>
+<td>core</td>
+<td>Validated</td>
+<td>Normalized allele and gVCF comparison checked on a 12 kb HG002 slice; no whole-genome or inheritance claim. <a href="https://github.com/WGSExtract/wgsextract-cli/issues/1295#issuecomment-7160979567">1</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_compare.py">2</a></td>
+<td>Linux</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf clinvar</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Allele matching checked against local ClinVar fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_clinvar_matching.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf revel</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>REVEL score annotation checked on fixture alleles. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_annotations.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf gnomad</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Frequency annotation checked on fixture alleles. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_gnomad_af.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf sv-freq</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Structural-variant frequency matching checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_sv_frequency.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf pharmgkb</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>PharmGKB annotations checked on fixture variants. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_pharmgkb.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf info</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>VCF statistics and build checks on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_info.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf variantqc</code></td>
+<td>core</td>
+<td>Experimental</td>
+<td>External VariantQC integration does not establish output correctness. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_genotype_qc.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf granite-qc</code></td>
+<td>core</td>
+<td>Experimental</td>
+<td>External GRANITE integration does not establish output correctness. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_genotype_qc.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vep download</code></td>
+<td>core</td>
+<td>Experimental</td>
+<td>Fixture resource acquisition does not qualify all upstream downloads. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vep_resources.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vep verify</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Local cache and resource checks on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vep_resources.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vep delete</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Local cache deletion checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vep_resources.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vep run</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Fixture annotation output checked; not all engines and options are qualified. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vep_rs.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>report</code></td>
+<td>core</td>
+<td>Tested</td>
+<td>Report findings and limitations checked on fixture VCFs; not clinical validation. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_personal_report.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref aadr</code></td>
+<td>setup</td>
+<td>Experimental</td>
+<td>Resource acquisition fixtures do not qualify upstream AADR releases. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/aadr.md">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref ybrowse</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>YBrowse resource preparation checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_ybrowse.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref somalier</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Resource install, validation and removal checked with fixture archives. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_somalier_relate.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref ancestry</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Reference panel installation and reuse checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_qc_ancestry.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref gnomad-sv</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Structural-variant resource preparation checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_sv_frequency.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref imputation</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Panel installation and reuse checked with fixture GLIMPSE2 resources. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_imputation.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref download</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>The shared downloader's checksum verification and local publication are tested against a local HTTP server. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_download_file_http.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref index</code></td>
+<td>setup</td>
+<td>Validated</td>
+<td>Canonical hs38 BWA index used in the HG002 30× Windows qualification; other indexes were not part of that run. <a href="https://github.com/WGSExtract/wgsextract-cli/issues/1024#issuecomment-7046241211">1</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_ref_commands.py">2</a></td>
+<td>Windows</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref dense-sa</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Dense suffix array artifacts checked on fixture FASTAs. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_dense_suffix_array.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref count-ns</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Known N runs counted in fixture FASTAs. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_ref_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref verify</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Reference checks exercised with real faidx and fixture FASTAs. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_ref_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref library</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Local reference inventory and resource state checked. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_ref_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref status</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Resource inventory checked in a local fixture library. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_ref_status.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref recheck</code></td>
+<td>setup</td>
+<td>Experimental</td>
+<td>Release comparison fixtures do not establish real-data correctness. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_release_recheck_delta.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref test-genome</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Build identification checked on fixture references and alignments. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_ref_test_genome.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref needs</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Offline readiness checked against fixture resource states. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_ref_needs.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref gene-map</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Gene maps and aliases checked on fixture annotations. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_gene_map.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref cytobands</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Cytoband normalization checked on fixture resources. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_cytobands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref clinvar</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>ClinVar resource preparation checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_annotation_downloads.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref dbsnp</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>dbSNP resource checks on fixture variants. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_dbsnp.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref revel</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>REVEL resource preparation checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_annotation_downloads.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref phylop</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>phyloP resource preparation checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_annotation_downloads.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref gnomad</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>gnomAD resource preparation checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_annotation_downloads.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref spliceai</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>SpliceAI resource preparation checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_annotation_downloads.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref alphamissense</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>AlphaMissense resource preparation checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_annotation_downloads.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref pharmgkb</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>PharmGKB resource preparation checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_pharmgkb.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref cadd</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>CADD resource preparation checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_annotation_downloads.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref gerp</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>GERP resource preparation checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_annotation_downloads.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref bootstrap</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Local resource bundle setup checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_ref_bootstrap_config.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref acmg-data</code></td>
+<td>setup</td>
+<td>Experimental</td>
+<td>Research resource preparation checked on fixtures; not a clinical resource qualification. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_ref_acmg_data.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>ref microarray-targets</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Microarray target files and validation checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_microarray_targets.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>deps check</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Local dependency probes checked. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_dependency_probes.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>deps list</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Local dependency inventory checked. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_deps_manage.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>deps ready</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Local dependency readiness checked. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_deps_ready.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>deps install</code></td>
+<td>setup</td>
+<td>Experimental</td>
+<td>External installers are mocked in fixture tests. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_deps_manage.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>deps uninstall</code></td>
+<td>setup</td>
+<td>Experimental</td>
+<td>External uninstallers are mocked in fixture tests. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_deps_manage.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>example-genome list</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Local example catalog entries and tag selection checked. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_logic.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>example-genome download</code></td>
+<td>setup</td>
+<td>Experimental</td>
+<td>Resume and publication are exercised against a local HTTP server, but public sources and all transports are not qualified. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_download_file_http.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>sample show</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Local sample metadata lookup checked. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_sample_workspace.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>sample set</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Local sample metadata updates checked. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_sample_workspace.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>sample unset</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Local sample metadata removal checked. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_sample_workspace.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Local CLI configuration tests. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_core_cli.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>report-issue</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>Report content and redaction checked against fixture logs and manifests. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_report_issue.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>help</code></td>
+<td>setup</td>
+<td>Tested</td>
+<td>CLI discovery and help tests. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_cli_help.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>lineage y-private</code></td>
+<td>advanced</td>
+<td>Experimental</td>
+<td>Private Y variants are research evidence, not confirmed novel lineage markers. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_y_private.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>extract bam-subset</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Read fraction and output checked on fixture BAMs. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_extract_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf callability</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Reference and no-call evidence checked on fixture gVCFs. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_reference_evidence.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf to-fasta</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Consensus sequence checked on fixture variants and references. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_consensus.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf trio</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Trio sample and inheritance states checked on fixture variants. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_trio_vcfs.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf cnv</code></td>
+<td>advanced</td>
+<td>Experimental</td>
+<td>Integration fixtures do not qualify CNV accuracy. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_structural.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf sv</code></td>
+<td>advanced</td>
+<td>Validated</td>
+<td>HG002 ONT Sniffles calls scored against GIAB SV truth; does not qualify Delly or other read types. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/ont.md#validation-on-giab-hg002">1</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_ont_hg002.py">2</a></td>
+<td>Linux</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf freebayes</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Real FreeBayes calls checked against a planted SNP. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_callers.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf gatk</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Fixture GATK calls and CRAM/BAM handling checked. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_callers.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf deepvariant</code></td>
+<td>advanced</td>
+<td>Validated</td>
+<td>GIAB-scored ONT chr20 and same-input Linux WGS ARM/x64 parity; not all DeepVariant modes. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/ont.md#validation-on-giab-hg002">1</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/deepvariant-arm64.md#completed-public-whole-genome-qualification">2</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_deepvariant_native.py">3</a></td>
+<td>Linux</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf clair3</code></td>
+<td>advanced</td>
+<td>Validated</td>
+<td>HG002 chr20–22 CPU/MPS checks against GIAB truth; no whole-genome or all-model guarantee. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/ont.md#validation-on-giab-hg002">1</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/1101#issuecomment-7175184245">2</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/issues/1124#issuecomment-7175184658">3</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_ont_hg002.py">4</a></td>
+<td>Linux, macOS</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf phase</code></td>
+<td>advanced</td>
+<td>Validated</td>
+<td>LongPhase and WhatsHap scored against GIAB phasing on HG002 chr20 ONT and a HiFi slice; no whole-genome claim. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/ont.md#phasing">1</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_phasing.py">2</a></td>
+<td>Linux</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf impute</code></td>
+<td>advanced</td>
+<td>Validated</td>
+<td>HG002 ~1× GLIMPSE2 chr21/22 pilot cross-checked against GIAB; not all depths, ancestries or imputation engines. <a href="https://github.com/WGSExtract/wgsextract-cli/issues/1118#issuecomment-7172655613">1</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_imputation.py">2</a></td>
+<td>macOS</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf phylop</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>phyloP annotation checked on fixture score tracks. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_bigwig_scores.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf cadd</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>CADD score annotation checked on fixture alleles. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_annotations.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf gerp</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>GERP annotation checked on fixture score tracks. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_bigwig_scores.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf spliceai</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>SpliceAI scores checked on fixture variants. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_annotations.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf alphamissense</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>AlphaMissense scores checked on fixture variants. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_annotations.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf acmg</code></td>
+<td>advanced</td>
+<td>Experimental</td>
+<td>Research-only interpretation; no clinical classification is certified. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/acmg.md">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf pharmcat</code></td>
+<td>advanced</td>
+<td>Experimental</td>
+<td>Research pharmacogenomics; fixture workflow tests do not qualify medical recommendations. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_pharmcat.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>vcf chain-annotate</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Local annotation chains checked against fixture variants and artifacts. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_vcf_chain.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>bam sort</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Sort order checked on fixture alignments. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_bam_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>bam index</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Index creation checked on fixture alignments. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_bam_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>bam unindex</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Index removal checked on fixture alignments. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_bam_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>bam unsort</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>BAM and CRAM sort-order headers are relabeled without changing any records. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_bam_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>bam to-cram</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>CRAM conversion and reference handling checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_cram_reference.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>bam to-bam</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>BAM conversion checked on fixture alignments. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_bam_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>bam unalign</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>FASTQ output checked on fixture alignments. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_bam_unalign_paths.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>bam identify</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Build identification checked on fixture alignments. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_bam_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>bam merge</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Merge and publication checked on fixture alignments. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_bam_merge_runs.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>bam to-ubam</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Unmapped BAM conversion checked on fixture alignments. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_bam_to_ubam.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>qc fastp</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>FASTQ processing checked on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_qc_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>qc fastqc</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>FastQC reports checked on fixtures when installed. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_qc_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>qc multiqc</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>MultiQC reports checked on fixtures when installed. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_qc_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>qc multiqc-metrics</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Custom content checked against fixture manifests. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_multiqc_metrics.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>qc vcf</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>bcftools QC statistics checked on fixture VCFs. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_qc_commands.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>qc relate</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Relatedness inputs and output checked on fixture genotypes. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_somalier_relate.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>qc ancestry</code></td>
+<td>advanced</td>
+<td>Experimental</td>
+<td>Reference-dependent ancestry estimates are not clinical classifications. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_qc_ancestry.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>qc contamination</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Fixture contamination workflow and report checks. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_contamination.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>qc roh</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>ROH calls and abstention checked on fixture VCFs. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_qc_roh.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>qc fake-data</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Generated fixture alignments and variants checked with real tools. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_fake_data_generation.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>fastq archive</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Byte-preserving FASTQ archive round trips on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_fastq_archive.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>fastq restore</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Archive integrity and byte-exact FASTQ restoration on fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_fastq_archive.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>cohort summarize</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Disclosure thresholds and summaries checked on fixture VCFs. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_cohort.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>repair ftdna-bam</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>BAM repair checked on fixture records. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_repair_ftdna.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>repair ftdna-vcf</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>VCF repair checked on fixture records. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_repair_ftdna.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>analyze comprehensive</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Fixture workflow checks; external backends are not all qualified. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_analyze_comprehensive.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>analyze batch-gen</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Local batch generation with fixture inputs. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_analyze_batch.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>typing cyp2d6</code></td>
+<td>advanced</td>
+<td>Experimental</td>
+<td>Caller integration fixtures do not qualify CYP2D6 results. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_genotyping.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>typing hla</code></td>
+<td>advanced</td>
+<td>Experimental</td>
+<td>Caller integration fixtures do not qualify HLA results. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_genotyping.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>typing paraphase</code></td>
+<td>advanced</td>
+<td>Experimental</td>
+<td>Integration fixtures do not qualify Paraphase calls. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_typing_paraphase.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>typing smn</code></td>
+<td>advanced</td>
+<td>Experimental</td>
+<td>Caller integration fixtures do not qualify SMN results. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_genotyping.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>typing str</code></td>
+<td>advanced</td>
+<td>Validated</td>
+<td>HG002 ONT repeats compared with GIAB and PacBio PureTarget expansions; long or weakly supported alleles remain uncertain. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/ont.md#repeat-expansions">1</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_typing_str_long_reads.py">2</a></td>
+<td>Linux</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>typing target-cnv</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Target-depth and callability checks on fixture alignments; not a clinical validation. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_typing_target_cnv.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>methylation pileup</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>modkit output and tag handling checked on fixture reads. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_methylation.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>methylation regions</code></td>
+<td>advanced</td>
+<td>Validated</td>
+<td>HG002 promoter/island BGZF–Parquet parity and chr21 HP checks; not whole-genome read-level phasing validation. <a href="https://github.com/WGSExtract/wgsextract-cli/issues/1293#issuecomment-7169747432">1</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_methylation_regions.py">2</a></td>
+<td>macOS</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>basecall</code></td>
+<td>advanced</td>
+<td>Experimental</td>
+<td>Dorado integration fixtures do not qualify basecalling accuracy. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_basecall.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>panel bed</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Panel coordinates, aliases and clipping checked on fixture references. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_panel.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>panel check</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Panel inputs and interpretation checked against fixtures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_panel_spec.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>panel audit</code></td>
+<td>advanced</td>
+<td>Experimental</td>
+<td>Capability checks are not a validation of diagnostic completeness. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_panel_expected_counts.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>pet-align</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Paired-end processing checked on fixture FASTQs. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_pet_align.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>sign create</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Fixture signatures created and checked with ssh-keygen. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_sign.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>sign verify</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Verification and tamper detection checked on fixture signatures. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_sign.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>score pgs</code></td>
+<td>advanced</td>
+<td>Experimental</td>
+<td>Research-only polygenic scores; fixture checks are not clinical calibration. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_pgs.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>lookup</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Site evidence states checked on fixtures, including real bcftools gVCF output. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_lookup.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>report-delta</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Differences checked on paired fixture reports. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_release_recheck_delta.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>benchmark</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Benchmark orchestration and outputs checked on fixture inputs. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_benchmark.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+<tr>
+<td><code>serve</code></td>
+<td>advanced</td>
+<td>Tested</td>
+<td>Local HTTP server and worker jobs checked on fixture inputs. <a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/tests/test_server_jobs.py">1</a></td>
+<td>—</td>
+<td>2026-11-25</td>
+</tr>
+</tbody>
+</table></div>
+</div></section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>See the command reference for options and usage.</p></div>
+        
+      </div>
+    </footer>
+    <script>
+      (() => {
+        const copyText = async (text) => {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            return;
+          }
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "fixed";
+          textarea.style.left = "-9999px";
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          textarea.remove();
+        };
+
+        document.addEventListener("click", async (event) => {
+          const button = event.target.closest(".copy-button");
+          if (!button) return;
+          const panel = button.closest(".code-panel");
+          const code = panel?.querySelector("pre code");
+          if (!code) return;
+          const previous = button.textContent;
+          try {
+            await copyText(code.innerText);
+            button.textContent = "Copied";
+          } catch {
+            button.textContent = "Failed";
+          }
+          window.setTimeout(() => {
+            button.textContent = previous;
+          }, 1400);
+        });
+
+        let tooltip;
+        let activeTooltipTarget;
+        let tooltipTimer;
+
+        const ensureTooltip = () => {
+          if (!tooltip) {
+            tooltip = document.createElement("div");
+            tooltip.className = "site-tooltip";
+            tooltip.hidden = true;
+            tooltip.setAttribute("role", "tooltip");
+            document.body.appendChild(tooltip);
+          }
+          return tooltip;
+        };
+
+        const positionTooltip = () => {
+          if (!tooltip || !activeTooltipTarget) return;
+          const rect = activeTooltipTarget.getBoundingClientRect();
+          const tipRect = tooltip.getBoundingClientRect();
+          const margin = 12;
+          let left = rect.left + rect.width / 2 - tipRect.width / 2;
+          left = Math.max(margin, Math.min(left, window.innerWidth - tipRect.width - margin));
+          let top = rect.top - tipRect.height - 10;
+          if (top < margin) top = rect.bottom + 10;
+          tooltip.style.left = `${Math.round(left + window.scrollX)}px`;
+          tooltip.style.top = `${Math.round(top + window.scrollY)}px`;
+        };
+
+        const showTooltip = (target) => {
+          const text = target.dataset.tooltip;
+          if (!text) return;
+          activeTooltipTarget = target;
+          const tip = ensureTooltip();
+          tip.textContent = text;
+          tip.hidden = false;
+          tip.classList.remove("visible");
+          window.requestAnimationFrame(() => {
+            positionTooltip();
+            tip.classList.add("visible");
+          });
+        };
+
+        const scheduleTooltip = (target) => {
+          window.clearTimeout(tooltipTimer);
+          tooltipTimer = window.setTimeout(() => showTooltip(target), 120);
+        };
+
+        const hideTooltip = () => {
+          window.clearTimeout(tooltipTimer);
+          activeTooltipTarget = undefined;
+          if (!tooltip) return;
+          tooltip.classList.remove("visible");
+          tooltip.hidden = true;
+        };
+
+        document.addEventListener("mouseover", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (!target || target === activeTooltipTarget) return;
+          scheduleTooltip(target);
+        });
+
+        document.addEventListener("mouseout", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (!target || target.contains(event.relatedTarget)) return;
+          hideTooltip();
+        });
+
+        document.addEventListener("focusin", (event) => {
+          const target = event.target.closest?.('[data-tooltip]');
+          if (target) scheduleTooltip(target);
+        });
+        document.addEventListener("focusout", hideTooltip);
+        window.addEventListener("scroll", positionTooltip, { passive: true });
+        window.addEventListener("resize", positionTooltip);
+      })();
+    </script>
+  </body>
+</html>

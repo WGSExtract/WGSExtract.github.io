@@ -114,7 +114,8 @@ next checkpoint. A token belongs to one operation.</p>
 <code>info gene</code>: one gene's transcripts, variants and coverage;
 <code>info chip</code>: which microarray chip a raw-data file came from.</p>
 <h3><code>api.info.info(InfoParams)</code></h3>
-<p>CLI: <code>wgsextract info</code>.</p>
+<p>CLI: <code>wgsextract info</code>.
+Certification: Tested. Alignment statistics checked against fixture records.</p>
 <p>Describe a BAM/CRAM.</p>
 <p><code>details</code> holds the metrics (<code>ref_model_str</code>, <code>gender</code>,
 <code>sequencer</code>, <code>avg_read_len</code>, <code>metrics</code>, ...); <code>metrics</code> holds the
@@ -178,7 +179,8 @@ BAM/CRAM. Metrics are cached in the output folder's <code>manifests/</code> as
 </tbody>
 </table></div>
 <h3><code>api.info.gene(InfoGeneParams)</code></h3>
-<p>CLI: <code>wgsextract info gene</code>.</p>
+<p>CLI: <code>wgsextract info gene</code>.
+Certification: Tested. Exon coverage and callability checked on fixture alignments.</p>
 <p>Summarise one gene from local data.</p>
 <p><code>details</code> is the <code>wgsextract.gene/1</code> document: <code>gene</code> (span),
 <code>transcripts</code>, <code>variants</code> (rows with the page <code>filters</code> they pass),
@@ -264,7 +266,8 @@ variants in it with their annotations, and read depth over its exons.
 </tbody>
 </table></div>
 <h3><code>api.info.calculate_coverage(CalculateCoverageParams)</code></h3>
-<p>CLI: <code>wgsextract info calculate-coverage</code>.</p>
+<p>CLI: <code>wgsextract info calculate-coverage</code>.
+Certification: Tested. Target depth and enrichment checked on fixture alignments.</p>
 <p>Exact coverage; outputs the coverage table (or the depth-bins TSV).</p>
 <p><code>CalculateCoverageParams</code>: Exact per-chromosome breadth and depth of coverage (<code>samtools coverage</code>).
 <code>status</code> reads nothing: its <code>details</code> say whether the whole-file
@@ -353,7 +356,8 @@ reports <code>with_bins</code> writes are <code>current</code> (both newer than 
 </tbody>
 </table></div>
 <h3><code>api.info.coverage_sample(CoverageSampleParams)</code></h3>
-<p>CLI: <code>wgsextract info coverage-sample</code>.</p>
+<p>CLI: <code>wgsextract info coverage-sample</code>.
+Certification: Tested. Sampled chromosome breadth checked on fixture alignments with reference gaps.</p>
 <p>Sampled coverage estimate; outputs the coverage table.</p>
 <p><code>CoverageSampleParams</code>: Estimated per-chromosome breadth of coverage from ~1,000 sampled windows.</p>
 <div class="table-wrap"><table>
@@ -405,7 +409,8 @@ reports <code>with_bins</code> writes are <code>current</code> (both newer than 
 </tbody>
 </table></div>
 <h3><code>api.info.chip(ChipParams)</code></h3>
-<p>CLI: <code>wgsextract info chip</code>.</p>
+<p>CLI: <code>wgsextract info chip</code>.
+Certification: Tested. Chip revision identification and listing checked on fixture kits.</p>
 <p>Identify a raw-data file's chip; <code>details</code> holds the candidates and
 <code>metrics</code> the best <code>revision</code>, <code>match</code> and <code>confidence</code>.</p>
 <p><code>ChipParams</code>: Identify the vendor, chip and revision of a consumer microarray
@@ -452,7 +457,8 @@ written to <code>outdir</code>, else beside the input. Calling and consensus com
 (<code>mito_fasta</code>, <code>mito_vcf</code>, <code>ydna_vcf</code>, and <code>region</code> with a VCF or
 FASTA) need the matching reference; the others use it only to decode a CRAM.</p>
 <h3><code>api.extract.mito_fasta(MitoFastaParams)</code></h3>
-<p>CLI: <code>wgsextract extract mito-fasta</code>.</p>
+<p>CLI: <code>wgsextract extract mito-fasta</code>.
+Certification: Tested. Mitochondrial consensus checked against a planted SNP.</p>
 <p>Write the mitochondrial consensus FASTA (output role <code>mt_fasta</code>).</p>
 <p><code>MitoFastaParams</code>: The mitochondrial consensus sequence as <code>&lt;input&gt;_MT.fasta</code>: chrM
 reads called haploid with bcftools and applied to the reference's chrM.</p>
@@ -505,7 +511,8 @@ reads called haploid with bcftools and applied to the reference's chrM.</p>
 </tbody>
 </table></div>
 <h3><code>api.extract.mito_vcf(MitoVcfParams)</code></h3>
-<p>CLI: <code>wgsextract extract mito-vcf</code>.</p>
+<p>CLI: <code>wgsextract extract mito-vcf</code>.
+Certification: Tested. Haploid mitochondrial calling checked against a planted SNP.</p>
 <p>Call mitochondrial variants (output role <code>mt_vcf</code>; the <code>variants</code>
 metric counts them).</p>
 <p><code>MitoVcfParams</code>: Mitochondrial variants as <code>&lt;input&gt;_MT.vcf.gz</code>, called haploid.</p>
@@ -558,7 +565,8 @@ metric counts them).</p>
 </tbody>
 </table></div>
 <h3><code>api.extract.mt_bam(MtBamParams)</code></h3>
-<p>CLI: <code>wgsextract extract mt-bam</code>.</p>
+<p>CLI: <code>wgsextract extract mt-bam</code>.
+Certification: Tested. Mitochondrial read extraction checked on fixture alignments.</p>
 <p>Extract the chrM reads (output role <code>mt_bam</code>).</p>
 <p><code>MtBamParams</code>: The chrM reads as <code>&lt;input&gt;_mtDNA.bam</code>.</p>
 <div class="table-wrap"><table>
@@ -610,7 +618,8 @@ metric counts them).</p>
 </tbody>
 </table></div>
 <h3><code>api.extract.bam_subset(BamSubsetParams)</code></h3>
-<p>CLI: <code>wgsextract extract bam-subset</code>.</p>
+<p>CLI: <code>wgsextract extract bam-subset</code>.
+Certification: Tested. Read fraction and output checked on fixture BAMs.</p>
 <p>Subsample the reads (output role <code>subset_bam</code>).</p>
 <p><code>BamSubsetParams</code>: A random fraction of the reads as <code>&lt;input&gt;_subset.bam</code>, optionally
 limited to a region or gene.</p>
@@ -684,7 +693,8 @@ limited to a region or gene.</p>
 </tbody>
 </table></div>
 <h3><code>api.extract.ydna_bam(YdnaBamParams)</code></h3>
-<p>CLI: <code>wgsextract extract ydna-bam</code>.</p>
+<p>CLI: <code>wgsextract extract ydna-bam</code>.
+Certification: Tested. Y read extraction checked on fixture alignments.</p>
 <p>Extract the chrY reads (output role <code>y_bam</code>).</p>
 <p><code>YdnaBamParams</code>: The chrY reads as <code>&lt;input&gt;_Y.bam</code> (<code>&lt;input&gt;_Y_poz.bam</code> with <code>poz</code>,
 <code>&lt;input&gt;_Y_associated.bam</code> with <code>y_scope=&quot;associated&quot;</code>, which also reads
@@ -753,7 +763,8 @@ whose chrY reads are mismapped.</p>
 </tbody>
 </table></div>
 <h3><code>api.extract.ydna_vcf(YdnaVcfParams)</code></h3>
-<p>CLI: <code>wgsextract extract ydna-vcf</code>.</p>
+<p>CLI: <code>wgsextract extract ydna-vcf</code>.
+Certification: Tested. Haploid Y calling checked against a planted SNP.</p>
 <p>Call Y-chromosome variants (output role <code>y_vcf</code>; the <code>variants</code>
 metric counts them).</p>
 <p><code>YdnaVcfParams</code>: Y-chromosome variants as <code>&lt;input&gt;_Y.vcf.gz</code>, called haploid, or with
@@ -814,7 +825,8 @@ metric counts them).</p>
 </tbody>
 </table></div>
 <h3><code>api.extract.y_mt_extract(YMtExtractParams)</code></h3>
-<p>CLI: <code>wgsextract extract y-mt-extract</code>.</p>
+<p>CLI: <code>wgsextract extract y-mt-extract</code>.
+Certification: Tested. Sorted Y and mitochondrial output checked on fixtures.</p>
 <p>Extract the chrY and chrM reads together (output role <code>y_mt_bam</code>).</p>
 <p><code>YMtExtractParams</code>: The chrY and chrM reads in one <code>&lt;input&gt;_Y_MT.bam</code>, or with
 <code>y_scope=&quot;associated&quot;</code> those and the reference's Y-associated contigs'
@@ -875,7 +887,8 @@ in <code>&lt;input&gt;_Y_MT_associated.bam</code>.</p>
 </tbody>
 </table></div>
 <h3><code>api.extract.unmapped(UnmappedParams)</code></h3>
-<p>CLI: <code>wgsextract extract unmapped</code>.</p>
+<p>CLI: <code>wgsextract extract unmapped</code>.
+Certification: Tested. Unmapped read and mate preservation checked on fixtures.</p>
 <p>Extract the unmapped reads (output role <code>unmapped_bam</code>; with <code>fastq</code>
 also <code>fastq_r1</code>, <code>fastq_r2</code>, <code>fastq_other</code> and <code>fastq_singletons</code>
 for the FASTQs that have reads).</p>
@@ -936,7 +949,8 @@ for the FASTQs that have reads).</p>
 </tbody>
 </table></div>
 <h3><code>api.extract.custom(CustomParams)</code></h3>
-<p>CLI: <code>wgsextract extract custom</code>.</p>
+<p>CLI: <code>wgsextract extract custom</code>.
+Certification: Tested. Region and BED extraction checked on fixture alignments.</p>
 <p>Extract the reads of a region, BED file or gene (output role
 <code>region_bam</code>).</p>
 <p><code>CustomParams</code>: The reads in a region, a comma-separated list of regions, a BED file or a
@@ -1006,7 +1020,8 @@ and holds each read once.</p>
 </tbody>
 </table></div>
 <h3><code>api.extract.region(ExtractRegionParams)</code></h3>
-<p>CLI: <code>wgsextract extract region</code>.</p>
+<p>CLI: <code>wgsextract extract region</code>.
+Certification: Tested. Regional BAM and CRAM outputs checked on fixture alignments.</p>
 <p>Extract one region in each chosen format (output roles <code>&lt;t&gt;_bam</code>,
 <code>&lt;t&gt;_vcf</code> and <code>&lt;t&gt;_fasta</code>, <code>&lt;t&gt;</code> being <code>mt</code>, <code>y</code>, <code>y_mt</code> or
 <code>autox</code>; the <code>variants</code> metric counts the VCF's calls).</p>
@@ -1116,7 +1131,8 @@ and written to <code>outdir</code>, else beside the input. A CRAM is read with t
 matching reference: <code>ref</code>, else the one the input's header names in the
 reference library.</p>
 <h3><code>api.bam.sort(BamSortParams)</code></h3>
-<p>CLI: <code>wgsextract bam sort</code>.</p>
+<p>CLI: <code>wgsextract bam sort</code>.
+Certification: Tested. Sort order checked on fixture alignments.</p>
 <p>Coordinate-sort and index (output role <code>sorted_alignment</code>).</p>
 <p><code>BamSortParams</code>: Coordinate-sort and index the input as <code>&lt;input&gt;_sorted.bam</code> (or
 <code>.cram</code>), optionally limited to a region or gene. A whole-file sort first
@@ -1184,7 +1200,8 @@ checks that the temporary and final files fit on disk.</p>
 </tbody>
 </table></div>
 <h3><code>api.bam.index(BamIndexParams)</code></h3>
-<p>CLI: <code>wgsextract bam index</code>.</p>
+<p>CLI: <code>wgsextract bam index</code>.
+Certification: Tested. Index creation checked on fixture alignments.</p>
 <p>Index the input (output role <code>alignment_index</code>).</p>
 <p><code>BamIndexParams</code>: Index the input in place (<code>.bai</code> or <code>.crai</code>).</p>
 <div class="table-wrap"><table>
@@ -1208,7 +1225,8 @@ checks that the temporary and final files fit on disk.</p>
 </tbody>
 </table></div>
 <h3><code>api.bam.unindex(BamUnindexParams)</code></h3>
-<p>CLI: <code>wgsextract bam unindex</code>.</p>
+<p>CLI: <code>wgsextract bam unindex</code>.
+Certification: Tested. Index removal checked on fixture alignments.</p>
 <p>Delete the input's indexes (the <code>removed_indexes</code> metric counts them).</p>
 <p><code>BamUnindexParams</code>: Delete the input's index files (<code>.bai</code>, <code>.crai</code>, <code>.csi</code>).</p>
 <div class="table-wrap"><table>
@@ -1232,7 +1250,8 @@ checks that the temporary and final files fit on disk.</p>
 </tbody>
 </table></div>
 <h3><code>api.bam.unsort(BamUnsortParams)</code></h3>
-<p>CLI: <code>wgsextract bam unsort</code>.</p>
+<p>CLI: <code>wgsextract bam unsort</code>.
+Certification: Tested. BAM and CRAM sort-order headers are relabeled without changing any records.</p>
 <p>Write the copy marked unsorted (output role <code>unsorted_alignment</code>).</p>
 <p><code>BamUnsortParams</code>: A copy marked unsorted (<code>SO:unsorted</code>) as <code>&lt;input&gt;_unsorted.bam</code>
 (or <code>.cram</code>); the reads are unchanged.</p>
@@ -1271,7 +1290,8 @@ checks that the temporary and final files fit on disk.</p>
 </tbody>
 </table></div>
 <h3><code>api.bam.to_cram(BamToCramParams)</code></h3>
-<p>CLI: <code>wgsextract bam to-cram</code>.</p>
+<p>CLI: <code>wgsextract bam to-cram</code>.
+Certification: Tested. CRAM conversion and reference handling checked on fixtures.</p>
 <p>Convert to CRAM (output role <code>alignment</code>).</p>
 <p><code>BamToCramParams</code>: Convert to an indexed <code>&lt;input&gt;.cram</code>, optionally limited to a region
 or gene.</p>
@@ -1345,7 +1365,8 @@ or gene.</p>
 </tbody>
 </table></div>
 <h3><code>api.bam.to_bam(BamToBamParams)</code></h3>
-<p>CLI: <code>wgsextract bam to-bam</code>.</p>
+<p>CLI: <code>wgsextract bam to-bam</code>.
+Certification: Tested. BAM conversion checked on fixture alignments.</p>
 <p>Convert to BAM (output role <code>alignment</code>).</p>
 <p><code>BamToBamParams</code>: Convert to an indexed <code>&lt;input&gt;.bam</code>, optionally limited to a region or
 gene.</p>
@@ -1405,7 +1426,8 @@ gene.</p>
 </tbody>
 </table></div>
 <h3><code>api.bam.unalign(BamUnalignParams)</code></h3>
-<p>CLI: <code>wgsextract bam unalign</code>.</p>
+<p>CLI: <code>wgsextract bam unalign</code>.
+Certification: Tested. FASTQ output checked on fixture alignments.</p>
 <p>Write FASTQs (output roles <code>fastq_r1</code>, <code>fastq_r2</code> and, with <code>se</code>,
 <code>fastq_single</code>; the <code>read_groups</code> metric counts the input's).</p>
 <p><code>BamUnalignParams</code>: Write the reads back to paired FASTQs, name-sorted so mates line up:
@@ -1496,7 +1518,8 @@ than one read group, which FASTQ can't keep apart.</p>
 </tbody>
 </table></div>
 <h3><code>api.bam.identify(BamIdentifyParams)</code></h3>
-<p>CLI: <code>wgsextract bam identify</code>.</p>
+<p>CLI: <code>wgsextract bam identify</code>.
+Certification: Tested. Build identification checked on fixture alignments.</p>
 <p>Identify the reference (the <code>reference_md5_signature</code> metric).</p>
 <p><code>BamIdentifyParams</code>: Identify the reference the input was aligned to: the <code>reference_md5_signature</code>
 metric is the MD5 of its sequence names and lengths.</p>
@@ -1528,7 +1551,8 @@ metric is the MD5 of its sequence names and lengths.</p>
 </tbody>
 </table></div>
 <h3><code>api.bam.merge(BamMergeParams)</code></h3>
-<p>CLI: <code>wgsextract bam merge</code>.</p>
+<p>CLI: <code>wgsextract bam merge</code>.
+Certification: Tested. Merge and publication checked on fixture alignments.</p>
 <p>Merge the inputs (output role <code>merged_alignment</code>; the
 <code>merged_inputs</code> metric counts them).</p>
 <p><code>BamMergeParams</code>: Merge coordinate-sorted BAM/CRAM files of one sample aligned to the
@@ -1610,7 +1634,8 @@ merged file's autosomal depth.</p>
 </tbody>
 </table></div>
 <h3><code>api.bam.to_ubam(BamToUbamParams)</code></h3>
-<p>CLI: <code>wgsextract bam to-ubam</code>.</p>
+<p>CLI: <code>wgsextract bam to-ubam</code>.
+Certification: Tested. Unmapped BAM conversion checked on fixture alignments.</p>
 <p>Write the unaligned BAM (output role <code>unaligned_bam</code>).</p>
 <p><code>BamToUbamParams</code>: A queryname-sorted unaligned BAM, as GATK's pipelines start from
 (<code>&lt;input&gt;_unaligned.bam</code>), from an aligned <code>input</code> (read-describing
@@ -1703,7 +1728,8 @@ without read groups gets one from <code>sample</code>, <code>library</code> and
 <h2><code>api.fastq</code></h2>
 <p>Create and restore lossless, reference-free FASTQ archives.</p>
 <h3><code>api.fastq.archive(FastqArchiveParams)</code></h3>
-<p>CLI: <code>wgsextract fastq archive</code>.</p>
+<p>CLI: <code>wgsextract fastq archive</code>.
+Certification: Tested. Byte-preserving FASTQ archive round trips on fixtures.</p>
 <p>Write a new archive (output role <code>fastq_archive</code>).</p>
 <p><code>FastqArchiveParams</code>: Archive a single-end FASTQ or a synchronized pair without changing the input.</p>
 <div class="table-wrap"><table>
@@ -1741,7 +1767,8 @@ without read groups gets one from <code>sample</code>, <code>library</code> and
 </tbody>
 </table></div>
 <h3><code>api.fastq.restore(FastqRestoreParams)</code></h3>
-<p>CLI: <code>wgsextract fastq restore</code>.</p>
+<p>CLI: <code>wgsextract fastq restore</code>.
+Certification: Tested. Archive integrity and byte-exact FASTQ restoration on fixtures.</p>
 <p>Restore verified reads (output roles <code>fastq_r1</code> and <code>fastq_r2</code>).</p>
 <p><code>FastqRestoreParams</code>: Verify a FASTQ archive and restore the original, uncompressed FASTQ bytes.</p>
 <div class="table-wrap"><table>
@@ -1784,7 +1811,8 @@ without read groups gets one from <code>sample</code>, <code>library</code> and
 variants and earlier results. Outputs go to <code>outdir</code>, else beside the
 input.</p>
 <h3><code>api.qc.fastp(FastpParams)</code></h3>
-<p>CLI: <code>wgsextract qc fastp</code>.</p>
+<p>CLI: <code>wgsextract qc fastp</code>.
+Certification: Tested. FASTQ processing checked on fixtures.</p>
 <p>Trim the reads (output roles <code>trimmed_fastq_r1</code>, <code>trimmed_fastq_r2</code>,
 <code>fastp_report_json</code> and <code>fastp_report_html</code>).</p>
 <p><code>FastpParams</code>: Trim and filter reads with fastp into <code>&lt;reads&gt;_fp_1.fastq.gz</code> (and
@@ -1832,7 +1860,8 @@ rate and duplication rate are metrics.</p>
 </tbody>
 </table></div>
 <h3><code>api.qc.fastqc(FastqcParams)</code></h3>
-<p>CLI: <code>wgsextract qc fastqc</code>.</p>
+<p>CLI: <code>wgsextract qc fastqc</code>.
+Certification: Tested. FastQC reports checked on fixtures when installed.</p>
 <p>Run FastQC (output roles <code>fastqc_report_html</code> and <code>fastqc_report_zip</code>).</p>
 <p><code>FastqcParams</code>: A FastQC report on a FASTQ, BAM or SAM file as <code>&lt;input&gt;_fastqc.html</code>
 and <code>.zip</code>, and on <code>r2</code> too when set. Module PASS/WARN/FAIL counts and
@@ -1887,7 +1916,8 @@ the read count are metrics (<code>r2_</code>-prefixed for <code>r2</code>). With
 </tbody>
 </table></div>
 <h3><code>api.qc.multiqc(MultiqcParams)</code></h3>
-<p>CLI: <code>wgsextract qc multiqc</code>.</p>
+<p>CLI: <code>wgsextract qc multiqc</code>.
+Certification: Tested. MultiQC reports checked on fixtures when installed.</p>
 <p>Write the MultiQC report (output role <code>multiqc_report</code>).</p>
 <p><code>MultiqcParams</code>: One MultiQC HTML report, <code>multiqc_report.html</code>, from FastQC reports,
 <code>bcftools stats</code> files and WGS Extract result manifests. Runs offline,
@@ -1927,7 +1957,8 @@ with MultiQC's AI summaries off.</p>
 </tbody>
 </table></div>
 <h3><code>api.qc.multiqc_metrics(MultiqcMetricsParams)</code></h3>
-<p>CLI: <code>wgsextract qc multiqc-metrics</code>.</p>
+<p>CLI: <code>wgsextract qc multiqc-metrics</code>.
+Certification: Tested. Custom content checked against fixture manifests.</p>
 <p>Write the custom-content files (output role <code>multiqc_custom_content</code>).</p>
 <p><code>MultiqcMetricsParams</code>: MultiQC custom-content files (<code>wgsextract_*_mqc.json</code>) from the
 metrics in WGS Extract result manifests; MultiQC isn't needed.</p>
@@ -1959,7 +1990,8 @@ metrics in WGS Extract result manifests; MultiQC isn't needed.</p>
 </tbody>
 </table></div>
 <h3><code>api.qc.vcf(QcVcfParams)</code></h3>
-<p>CLI: <code>wgsextract qc vcf</code>.</p>
+<p>CLI: <code>wgsextract qc vcf</code>.
+Certification: Tested. bcftools QC statistics checked on fixture VCFs.</p>
 <p>Write the VCF statistics (output role <code>vcf_stats</code>).</p>
 <p><code>QcVcfParams</code>: <code>bcftools stats</code> on a VCF as <code>&lt;vcf&gt;.vcfstats.txt</code>; record, SNP and
 indel counts and Ts/Tv are metrics. Set <code>input</code> or <code>vcf_input</code>; the
@@ -1999,7 +2031,8 @@ latter wins.</p>
 </tbody>
 </table></div>
 <h3><code>api.qc.contamination(QcContaminationParams)</code></h3>
-<p>CLI: <code>wgsextract qc contamination</code>.</p>
+<p>CLI: <code>wgsextract qc contamination</code>.
+Certification: Tested. Fixture contamination workflow and report checks.</p>
 <p>Estimate contamination (output roles <code>contamination_report</code> and
 <code>contamination_ancestry</code>).</p>
 <p><code>QcContaminationParams</code>: Estimate how much of a BAM/CRAM's DNA comes from another person
@@ -2064,7 +2097,8 @@ ancestry PCs; recorded as the sample's <code>contamination</code> fact. Optional
 </tbody>
 </table></div>
 <h3><code>api.qc.relate(RelateParams)</code></h3>
-<p>CLI: <code>wgsextract qc relate</code>.</p>
+<p>CLI: <code>wgsextract qc relate</code>.
+Certification: Tested. Relatedness inputs and output checked on fixture genotypes.</p>
 <p>Compare the inputs (see <code>RelateParams</code>); output roles
 <code>relate_samples</code>, <code>relate_pairs</code>, <code>somalier_sketch</code> and
 <code>somalier_report</code>.</p>
@@ -2149,7 +2183,8 @@ is optional (<code>pixi install -e somalier</code>) and unavailable on Windows.<
 </tbody>
 </table></div>
 <h3><code>api.qc.ancestry(QcAncestryParams)</code></h3>
-<p>CLI: <code>wgsextract qc ancestry</code>.</p>
+<p>CLI: <code>wgsextract qc ancestry</code>.
+Certification: Experimental. Reference-dependent ancestry estimates are not clinical classifications.</p>
 <p>Estimate ancestry proportions (output role <code>ancestry_table</code>).</p>
 <p><code>QcAncestryParams</code>: Admixture-style proportions of 7 continental and 12 sub-continental
 HGDP+1KG reference components (not an ethnicity), with 95% intervals,
@@ -2225,7 +2260,8 @@ and the <code>ancestry</code> fact; see docs/ancestry.md.</p>
 </tbody>
 </table></div>
 <h3><code>api.qc.roh(QcRohParams)</code></h3>
-<p>CLI: <code>wgsextract qc roh</code>.</p>
+<p>CLI: <code>wgsextract qc roh</code>.
+Certification: Tested. ROH calls and abstention checked on fixture VCFs.</p>
 <p>Find runs of homozygosity (output roles <code>roh_segments</code>, <code>roh_report</code>
 and <code>roh_markers</code>; <code>details</code> is the <code>wgsextract.roh/1</code> document).</p>
 <p><code>QcRohParams</code>: Runs of homozygosity (ROH) in a VCF sample with <code>bcftools roh</code>, using
@@ -2341,7 +2377,8 @@ chromosome came from, and it isn't a diagnosis. See docs/roh.md.</p>
 </tbody>
 </table></div>
 <h3><code>api.qc.fake_data(FakeDataParams)</code></h3>
-<p>CLI: <code>wgsextract qc fake-data</code>.</p>
+<p>CLI: <code>wgsextract qc fake-data</code>.
+Certification: Tested. Generated fixture alignments and variants checked with real tools.</p>
 <p>Generate the fake data (output roles <code>reference</code>, <code>alignment</code>,
 <code>variants</code>, <code>fastq_r1</code> and <code>fastq_r2</code>, by type).</p>
 <p><code>FakeDataParams</code>: Generate a small fake genome for tests: reference, reads and calls
@@ -2426,7 +2463,8 @@ output is named after the reads (<code>sample_R1.fastq.gz</code> and
 <code>sample_R2.fastq.gz</code> give <code>sample_aligned.bam</code>) and written to
 <code>outdir</code>, else beside the reads.</p>
 <h3><code>api.align.basecall(BasecallParams)</code></h3>
-<p>CLI: <code>wgsextract basecall</code>.</p>
+<p>CLI: <code>wgsextract basecall</code>.
+Certification: Experimental. Dorado integration fixtures do not qualify basecalling accuracy.</p>
 <p>Basecall POD5 signal into an unaligned BAM (output role
 <code>unaligned_reads</code>); see <code>BasecallParams</code>.</p>
 <p><code>BasecallParams</code>: Basecall Nanopore POD5 signal with ONT's Dorado into an unaligned BAM,
@@ -2533,7 +2571,8 @@ sent to Oxford Nanopore). Without it, use a local model directory.</p>
 </tbody>
 </table></div>
 <h3><code>api.align.align(AlignParams)</code></h3>
-<p>CLI: <code>wgsextract align</code>.</p>
+<p>CLI: <code>wgsextract align</code>.
+Certification: Validated. CPU/CUDA decoded-record parity on 5 million HG002 Illumina read pairs; not an all-backend qualification.</p>
 <p>Align reads to a reference (see <code>AlignParams</code>).</p>
 <p><code>AlignParams</code>: Align FASTQ reads (or a BAM/CRAM of long or Ultima reads) to <code>ref</code> as <code>&lt;reads stem&gt;_aligned.bam</code> (or <code>.cram</code>) with its index.
 <code>r1</code> is required; the CLI's <code>--genome</code> may fill it in from a sample
@@ -2699,7 +2738,8 @@ workspace.</p>
 </tbody>
 </table></div>
 <h3><code>api.align.realign(RealignParams)</code></h3>
-<p>CLI: <code>wgsextract realign</code>.</p>
+<p>CLI: <code>wgsextract realign</code>.
+Certification: Validated. HG002 30× SNP/indel qualification and ONT CUDA parity on tested inputs; not all backends or platforms.</p>
 <p>Re-align a BAM/CRAM to a reference (see <code>RealignParams</code>).</p>
 <p><code>RealignParams</code>: Re-align a BAM/CRAM to <code>ref</code> (possibly a different build) as
 <code>&lt;input stem&gt;_aligned.bam</code> (or <code>.cram</code>) with its index.</p>
@@ -2927,7 +2967,8 @@ species' reference, then <code>bcftools mpileup | call</code> writes the variant
 The outputs, <code>&lt;reads stem&gt;_&lt;species&gt;.bam</code> (or <code>.cram</code>) and
 <code>&lt;reads stem&gt;_&lt;species&gt;.vcf.gz</code>, go to <code>outdir</code>, else beside the reads.</p>
 <h3><code>api.pet.align(PetAlignParams)</code></h3>
-<p>CLI: <code>wgsextract pet-align</code>.</p>
+<p>CLI: <code>wgsextract pet-align</code>.
+Certification: Tested. Paired-end processing checked on fixture FASTQs.</p>
 <p>Align a pet's reads and call its variants (see <code>PetAlignParams</code>).</p>
 <p><code>PetAlignParams</code>: Align a dog's or cat's FASTQ reads to <code>ref</code> and call its variants.
 <code>ref</code> is the species' FASTA, or a reference library whose <code>genomes</code>
@@ -3015,7 +3056,8 @@ field, else config.toml, else the reference library (<code>ref</code>); see
 <h3><code>api.vcf.reference_evidence_param(gvcf: str, cost: str) -&gt; Any</code></h3>
 <p><code>--reference-evidence</code>: every caller's opt-in gVCF (#863).</p>
 <h3><code>api.vcf.snp(VcfSnpParams)</code></h3>
-<p>CLI: <code>wgsextract vcf snp</code>.</p>
+<p>CLI: <code>wgsextract vcf snp</code>.
+Certification: Validated. HG002 GRCh38 30× Windows qualification matched published counts; not per-genotype parity or all presets.</p>
 <p>Call SNPs; the <code>snps</code> output carries the record count in its metrics.</p>
 <p><code>VcfSnpParams</code>: Call SNPs from a BAM/CRAM into <code>snps.vcf.gz</code>.</p>
 <p>Ploidy comes from <code>ploidy</code> or <code>ploidy_file</code>, else the reference
@@ -3120,7 +3162,8 @@ A file or folder name alone does not select a ploidy table.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.indel(VcfIndelParams)</code></h3>
-<p>CLI: <code>wgsextract vcf indel</code>.</p>
+<p>CLI: <code>wgsextract vcf indel</code>.
+Certification: Validated. HG002 GRCh38 30× Windows qualification matched published counts; not per-genotype parity or all presets.</p>
 <p>Call indels; the <code>indels</code> output carries the record count in its metrics.</p>
 <p><code>VcfIndelParams</code>: Call indels from a BAM/CRAM into <code>indels.vcf.gz</code>; ploidy as for SNPs.</p>
 <div class="table-wrap"><table>
@@ -3221,7 +3264,8 @@ A file or folder name alone does not select a ploidy table.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.annotate(VcfAnnotateParams)</code></h3>
-<p>CLI: <code>wgsextract vcf annotate</code>.</p>
+<p>CLI: <code>wgsextract vcf annotate</code>.
+Certification: Tested. Annotation field copying checked with real bcftools.</p>
 <p>Annotate; output role <code>annotated</code>, with the record count in its metrics.</p>
 <p><code>VcfAnnotateParams</code>: Copy columns from an annotation VCF or tab file into <code>annotated.vcf.gz</code>.</p>
 <div class="table-wrap"><table>
@@ -3280,7 +3324,8 @@ A file or folder name alone does not select a ploidy table.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.filter(VcfFilterParams)</code></h3>
-<p>CLI: <code>wgsextract vcf filter</code>.</p>
+<p>CLI: <code>wgsextract vcf filter</code>.
+Certification: Tested. Filtering of fixture variants checked with bcftools.</p>
 <p>Filter; output role <code>filtered_vcf</code>, with the record count in its metrics.</p>
 <p><code>VcfFilterParams</code>: Keep the calls in a region or panel, matching an expression, into
 <code>filtered.vcf.gz</code>.</p>
@@ -3389,7 +3434,8 @@ A file or folder name alone does not select a ploidy table.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.callability(VcfCallabilityParams)</code></h3>
-<p>CLI: <code>wgsextract vcf callability</code>.</p>
+<p>CLI: <code>wgsextract vcf callability</code>.
+Certification: Tested. Reference and no-call evidence checked on fixture gVCFs.</p>
 <p>Classify the gene list's coding exons from the gVCF: outputs
 <code>exon_callability</code> (the per-gene JSON document; <code>details</code> holds its
 summary and provenance) and
@@ -3471,7 +3517,8 @@ see docs/exon-callability.md.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.table(VcfTableParams)</code></h3>
-<p>CLI: <code>wgsextract vcf table</code>.</p>
+<p>CLI: <code>wgsextract vcf table</code>.
+Certification: Tested. Tabular exports checked against fixture variant calls.</p>
 <p>Write the table (role <code>variant_table</code>) and database (<code>variant_database</code>);
 <code>rows</code> is a metric.</p>
 <p><code>VcfTableParams</code>: One row per variant with its annotations, as <code>&lt;stem&gt;_variants.tsv</code>
@@ -3602,7 +3649,8 @@ see docs/exon-callability.md.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.compare(VcfCompareParams)</code></h3>
-<p>CLI: <code>wgsextract vcf compare</code>.</p>
+<p>CLI: <code>wgsextract vcf compare</code>.
+Certification: Validated. Normalized allele and gVCF comparison checked on a 12 kb HG002 slice; no whole-genome or inheritance claim.</p>
 <p>Write local allele concordance tables and optionally an indexed anchor VCF.</p>
 <p><code>VcfCompareParams</code>: Compare normalized small alleles across two or more local callsets.</p>
 <div class="table-wrap"><table>
@@ -3724,7 +3772,8 @@ see docs/exon-callability.md.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.to_fasta(VcfToFastaParams)</code></h3>
-<p>CLI: <code>wgsextract vcf to-fasta</code>.</p>
+<p>CLI: <code>wgsextract vcf to-fasta</code>.
+Certification: Tested. Consensus sequence checked on fixture variants and references.</p>
 <p>Build the consensus (role <code>consensus_fasta</code>, and <code>liftover_chain</code> with
 <code>chain</code>).</p>
 <p><code>VcfToFastaParams</code>: The reference with the VCF's variants applied, as
@@ -3827,7 +3876,8 @@ see docs/exon-callability.md.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.prepare(VcfPrepareParams)</code></h3>
-<p>CLI: <code>wgsextract vcf prepare</code>.</p>
+<p>CLI: <code>wgsextract vcf prepare</code>.
+Certification: Tested. Normalization and preparation checked on fixture VCFs.</p>
 <p>Write the prepared VCF (role <code>prepared_vcf</code>, with its <code>records</code>) and
 its index (<code>prepared_vcf_index</code>); every repair is a <code>vcf_prepare_*</code>
 warning.</p>
@@ -3900,7 +3950,8 @@ records and left-aligns indels. Each repair is a structured warning.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.trio(VcfTrioParams)</code></h3>
-<p>CLI: <code>wgsextract vcf trio</code>.</p>
+<p>CLI: <code>wgsextract vcf trio</code>.
+Certification: Tested. Trio sample and inheritance states checked on fixture variants.</p>
 <p>Filter the trio; output roles <code>trio_&lt;mode&gt;</code> and, for VCF de novo/comphet,
 <code>trio_&lt;mode&gt;_inconclusive</code> (and <code>trio_joint</code>,
 <code>trio_denovo_isolated</code> from BAM/CRAMs).</p>
@@ -4011,7 +4062,8 @@ Covering gVCF reference blocks are assessed when a matching --ref is given.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.clinvar(VcfClinvarParams)</code></h3>
-<p>CLI: <code>wgsextract vcf clinvar</code>.</p>
+<p>CLI: <code>wgsextract vcf clinvar</code>.
+Certification: Tested. Allele matching checked against local ClinVar fixtures.</p>
 <p>Annotate with ClinVar; output roles <code>annotated_vcf</code> and
 <code>clinvar_pathogenic</code>.</p>
 <p><code>VcfClinvarParams</code>: ClinVar significance and disease (CLNSIG, CLNDN) as
@@ -4092,7 +4144,8 @@ their own confidence table, not the consensus pathogenic subset.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.revel(VcfRevelParams)</code></h3>
-<p>CLI: <code>wgsextract vcf revel</code>.</p>
+<p>CLI: <code>wgsextract vcf revel</code>.
+Certification: Tested. REVEL score annotation checked on fixture alleles.</p>
 <p>Annotate with REVEL; output roles <code>annotated_vcf</code> and, with <code>min_score</code>,
 <code>filtered_vcf</code>.</p>
 <p><code>VcfRevelParams</code>: REVEL missense pathogenicity scores as <code>revel_annotated.vcf.gz</code>.</p>
@@ -4159,7 +4212,8 @@ their own confidence table, not the consensus pathogenic subset.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.phylop(VcfPhylopParams)</code></h3>
-<p>CLI: <code>wgsextract vcf phylop</code>.</p>
+<p>CLI: <code>wgsextract vcf phylop</code>.
+Certification: Tested. phyloP annotation checked on fixture score tracks.</p>
 <p>Annotate with PhyloP; output roles <code>annotated_vcf</code> and, with <code>min_score</code>,
 <code>filtered_vcf</code>.</p>
 <p><code>VcfPhylopParams</code>: PhyloP conservation scores as <code>phylop_annotated.vcf.gz</code>.</p>
@@ -4226,7 +4280,8 @@ their own confidence table, not the consensus pathogenic subset.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.cadd(VcfCaddParams)</code></h3>
-<p>CLI: <code>wgsextract vcf cadd</code>.</p>
+<p>CLI: <code>wgsextract vcf cadd</code>.
+Certification: Tested. CADD score annotation checked on fixture alleles.</p>
 <p>Annotate with CADD; output roles <code>annotated_vcf</code> and, with <code>min_score</code>,
 <code>filtered_vcf</code>.</p>
 <p><code>VcfCaddParams</code>: CADD deleteriousness scores (CADD_RAW, CADD_PHRED) as
@@ -4301,7 +4356,8 @@ their own confidence table, not the consensus pathogenic subset.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.gerp(VcfGerpParams)</code></h3>
-<p>CLI: <code>wgsextract vcf gerp</code>.</p>
+<p>CLI: <code>wgsextract vcf gerp</code>.
+Certification: Tested. GERP annotation checked on fixture score tracks.</p>
 <p>Annotate with GERP++; output roles <code>annotated_vcf</code> and, with <code>min_score</code>,
 <code>filtered_vcf</code>.</p>
 <p><code>VcfGerpParams</code>: GERP++ conservation scores as <code>gerp_annotated.vcf.gz</code>.</p>
@@ -4368,7 +4424,8 @@ their own confidence table, not the consensus pathogenic subset.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.gnomad(VcfGnomadParams)</code></h3>
-<p>CLI: <code>wgsextract vcf gnomad</code>.</p>
+<p>CLI: <code>wgsextract vcf gnomad</code>.
+Certification: Tested. Frequency annotation checked on fixture alleles.</p>
 <p>Annotate with gnomAD; output roles <code>annotated_vcf</code> and, with <code>max_af</code>,
 <code>rare_variants</code>.</p>
 <p><code>VcfGnomadParams</code>: gnomAD allele frequencies and available homozygote counts as
@@ -4450,7 +4507,8 @@ their own confidence table, not the consensus pathogenic subset.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.sv_freq(VcfSvFreqParams)</code></h3>
-<p>CLI: <code>wgsextract vcf sv-freq</code>.</p>
+<p>CLI: <code>wgsextract vcf sv-freq</code>.
+Certification: Tested. Structural-variant frequency matching checked on fixtures.</p>
 <p>Annotate SVs with gnomAD-SV/gnomAD-LR frequencies; output roles
 <code>annotated_vcf</code> and <code>sv_frequencies</code> (the table), with the counts per
 frequency class in the metrics.</p>
@@ -4560,7 +4618,8 @@ CNV carrier frequencies and cross-type INS/DUP matches are excluded.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.spliceai(VcfSpliceaiParams)</code></h3>
-<p>CLI: <code>wgsextract vcf spliceai</code>.</p>
+<p>CLI: <code>wgsextract vcf spliceai</code>.
+Certification: Tested. SpliceAI scores checked on fixture variants.</p>
 <p>Annotate with SpliceAI; output role <code>annotated_vcf</code>.</p>
 <p><code>VcfSpliceaiParams</code>: SpliceAI splicing scores as <code>spliceai_annotated.vcf.gz</code>.</p>
 <div class="table-wrap"><table>
@@ -4619,7 +4678,8 @@ CNV carrier frequencies and cross-type INS/DUP matches are excluded.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.acmg(VcfAcmgParams)</code></h3>
-<p>CLI: <code>wgsextract vcf acmg</code>.</p>
+<p>CLI: <code>wgsextract vcf acmg</code>.
+Certification: Experimental. Research-only interpretation; no clinical classification is certified.</p>
 <p>Classify with fastVEP (research only); output roles <code>annotated_vcf</code>
 and <code>acmg_summary</code>, with the class counts in the metrics.</p>
 <p><code>VcfAcmgParams</code>: Research-only ACMG/AMP classes from fastVEP for a <code>vep run</code> (vep-rs)
@@ -4703,7 +4763,8 @@ unless <code>research_acmg</code> is set; GRCh38 only.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.alphamissense(VcfAlphamissenseParams)</code></h3>
-<p>CLI: <code>wgsextract vcf alphamissense</code>.</p>
+<p>CLI: <code>wgsextract vcf alphamissense</code>.
+Certification: Tested. AlphaMissense scores checked on fixture variants.</p>
 <p>Annotate with AlphaMissense; output roles <code>annotated_vcf</code> and, with
 <code>min_score</code>, <code>filtered_vcf</code>.</p>
 <p><code>VcfAlphamissenseParams</code>: AlphaMissense pathogenicity scores as <code>alphamissense_annotated.vcf.gz</code>.</p>
@@ -4770,7 +4831,8 @@ unless <code>research_acmg</code> is set; GRCh38 only.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.pharmgkb(VcfPharmgkbParams)</code></h3>
-<p>CLI: <code>wgsextract vcf pharmgkb</code>.</p>
+<p>CLI: <code>wgsextract vcf pharmgkb</code>.
+Certification: Tested. PharmGKB annotations checked on fixture variants.</p>
 <p>Annotate with PharmGKB; output role <code>annotated_vcf</code>.</p>
 <p><code>VcfPharmgkbParams</code>: PharmGKB drug-response annotations as <code>pharmgkb_annotated.vcf.gz</code>
 (GRCh38 only).</p>
@@ -4830,7 +4892,8 @@ unless <code>research_acmg</code> is set; GRCh38 only.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.pharmcat(VcfPharmcatParams)</code></h3>
-<p>CLI: <code>wgsextract vcf pharmcat</code>.</p>
+<p>CLI: <code>wgsextract vcf pharmcat</code>.
+Certification: Experimental. Research pharmacogenomics; fixture workflow tests do not qualify medical recommendations.</p>
 <p>Run PharmCAT; output roles <code>pharmcat_report</code>, <code>pharmcat_report_json</code> and
 <code>pharmcat_phenotypes</code>.</p>
 <p><code>VcfPharmcatParams</code>: Star-allele diplotypes and drug-response phenotypes from a GRCh38 VCF
@@ -4935,7 +4998,8 @@ no sample data is sent to its public reference publisher.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.chain_annotate(VcfChainAnnotateParams)</code></h3>
-<p>CLI: <code>wgsextract vcf chain-annotate</code>.</p>
+<p>CLI: <code>wgsextract vcf chain-annotate</code>.
+Certification: Tested. Local annotation chains checked against fixture variants and artifacts.</p>
 <p>Run the chain; output role <code>annotated_vcf</code>; <code>annotations_applied</code> is a
 metric.</p>
 <p><code>VcfChainAnnotateParams</code>: Several annotations applied in turn, as <code>chain_annotated.vcf.gz</code>;
@@ -5055,7 +5119,8 @@ journal lets interrupted chains resume from their last completed step.</p>
 <h3><code>api.vcf.call_types(value: str) -&gt; list[str]</code></h3>
 <p><code>--types</code>' variant types, each once, in <code>CALL_TYPES</code> order.</p>
 <h3><code>api.vcf.cnv(VcfCnvParams)</code></h3>
-<p>CLI: <code>wgsextract vcf cnv</code>.</p>
+<p>CLI: <code>wgsextract vcf cnv</code>.
+Certification: Experimental. Integration fixtures do not qualify CNV accuracy.</p>
 <p>Call CNVs; output role <code>copy_number_variants</code>.</p>
 <p><code>VcfCnvParams</code>: Call copy-number variants with delly into <code>cnv.vcf.gz</code>.</p>
 <div class="table-wrap"><table>
@@ -5128,7 +5193,8 @@ journal lets interrupted chains resume from their last completed step.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.sv(VcfSvParams)</code></h3>
-<p>CLI: <code>wgsextract vcf sv</code>.</p>
+<p>CLI: <code>wgsextract vcf sv</code>.
+Certification: Validated. HG002 ONT Sniffles calls scored against GIAB SV truth; does not qualify Delly or other read types.</p>
 <p>Call SVs; output role <code>structural_variants</code>, the <code>caller</code> metric
 names the tool chosen and <code>caller_reason</code> why.</p>
 <p><code>VcfSvParams</code>: Call structural variants into <code>sv.vcf.gz</code> (delly), <code>pbsv.vcf.gz</code>
@@ -5234,7 +5300,8 @@ or <code>pacbio</code>), else delly. The <code>caller_reason</code> metric says 
 </tbody>
 </table></div>
 <h3><code>api.vcf.call(VcfCallParams)</code></h3>
-<p>CLI: <code>wgsextract vcf call</code>.</p>
+<p>CLI: <code>wgsextract vcf call</code>.
+Certification: Tested. SNP/indel and gVCF orchestration checked on fixture alignments.</p>
 <p>Call the chosen types; each type's output carries its own role, and
 <code>merge</code> adds <code>merged_variants</code>.</p>
 <p><code>VcfCallParams</code>: Call the chosen variant types in one run, each into the file its own
@@ -5377,7 +5444,8 @@ command writes: <code>snps.vcf.gz</code> (<code>vcf snp</code>), <code>indels.vc
 </tbody>
 </table></div>
 <h3><code>api.vcf.freebayes(VcfFreebayesParams)</code></h3>
-<p>CLI: <code>wgsextract vcf freebayes</code>.</p>
+<p>CLI: <code>wgsextract vcf freebayes</code>.
+Certification: Tested. Real FreeBayes calls checked against a planted SNP.</p>
 <p>Call with FreeBayes; output role <code>variants</code>.</p>
 <p><code>VcfFreebayesParams</code>: Call small variants with FreeBayes into <code>freebayes.vcf.gz</code>.</p>
 <div class="table-wrap"><table>
@@ -5436,7 +5504,8 @@ command writes: <code>snps.vcf.gz</code> (<code>vcf snp</code>), <code>indels.vc
 </tbody>
 </table></div>
 <h3><code>api.vcf.gatk(VcfGatkParams)</code></h3>
-<p>CLI: <code>wgsextract vcf gatk</code>.</p>
+<p>CLI: <code>wgsextract vcf gatk</code>.
+Certification: Tested. Fixture GATK calls and CRAM/BAM handling checked.</p>
 <p>Call with GATK; output role <code>variants</code>.</p>
 <p><code>VcfGatkParams</code>: Call small variants with GATK HaplotypeCaller into <code>gatk.vcf.gz</code>
 (flow mode for Ultima reads), or with Parabricks on a GPU.</p>
@@ -5538,7 +5607,8 @@ command writes: <code>snps.vcf.gz</code> (<code>vcf snp</code>), <code>indels.vc
 </tbody>
 </table></div>
 <h3><code>api.vcf.deepvariant(VcfDeepvariantParams)</code></h3>
-<p>CLI: <code>wgsextract vcf deepvariant</code>.</p>
+<p>CLI: <code>wgsextract vcf deepvariant</code>.
+Certification: Validated. GIAB-scored ONT chr20 and same-input Linux WGS ARM/x64 parity; not all DeepVariant modes.</p>
 <p>Call with DeepVariant; output role <code>variants</code>.</p>
 <p><code>VcfDeepvariantParams</code>: Call small variants with DeepVariant into <code>deepvariant.vcf.gz</code>.</p>
 <p>The model follows <code>ont</code>, <code>pacbio</code>, <code>model_type</code> and <code>wes</code>, else the
@@ -5693,7 +5763,8 @@ Google's ULTIMA GPU image runs the stages with call_variants on the GPU.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.clair3(VcfClair3Params)</code></h3>
-<p>CLI: <code>wgsextract vcf clair3</code>.</p>
+<p>CLI: <code>wgsextract vcf clair3</code>.
+Certification: Validated. HG002 chr20–22 CPU/MPS checks against GIAB truth; no whole-genome or all-model guarantee.</p>
 <p>Call with Clair3; output role <code>variants</code>.</p>
 <p><code>VcfClair3Params</code>: Call small variants in Nanopore reads with Clair3 into
 <code>clair3.vcf.gz</code>.</p>
@@ -5781,7 +5852,8 @@ Google's ULTIMA GPU image runs the stages with call_variants on the GPU.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.phase(VcfPhaseParams)</code></h3>
-<p>CLI: <code>wgsextract vcf phase</code>.</p>
+<p>CLI: <code>wgsextract vcf phase</code>.
+Certification: Validated. LongPhase and WhatsHap scored against GIAB phasing on HG002 chr20 ONT and a HiFi slice; no whole-genome claim.</p>
 <p>Phase a VCF with its reads; output roles <code>phased_variants</code>,
 <code>phase_blocks</code> and, with <code>haplotag</code>, <code>haplotagged_alignments</code>.</p>
 <p><code>VcfPhaseParams</code>: Phase one sample's heterozygous calls with its reads into
@@ -5866,7 +5938,8 @@ HP/PS tags to <code>haplotagged.bam</code> (or <code>.cram</code>).</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.impute(VcfImputeParams)</code></h3>
-<p>CLI: <code>wgsextract vcf impute</code>.</p>
+<p>CLI: <code>wgsextract vcf impute</code>.
+Certification: Validated. HG002 ~1× GLIMPSE2 chr21/22 pilot cross-checked against GIAB; not all depths, ancestries or imputation engines.</p>
 <p>Impute a sample's genotypes; output role <code>imputed_variants</code>.</p>
 <p><code>VcfImputeParams</code>: Impute one GRCh38 sample's genotypes from the 1000 Genomes 30x panel
 into <code>imputed.vcf.gz</code>: low-coverage reads (<code>input</code>) with GLIMPSE2, or
@@ -5957,7 +6030,8 @@ the output doesn't depend on how many.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.info(VcfInfoParams)</code></h3>
-<p>CLI: <code>wgsextract vcf info</code>.</p>
+<p>CLI: <code>wgsextract vcf info</code>.
+Certification: Tested. VCF statistics and build checks on fixtures.</p>
 <p>Inspect a VCF/gVCF/BCF header, reference model/build, samples, and variant counts.</p>
 <p><code>VcfInfoParams</code>: Inspect a VCF, gVCF, or BCF file: reference build/model, samples, counts, and format.</p>
 <div class="table-wrap"><table>
@@ -6002,7 +6076,8 @@ the output doesn't depend on how many.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.variantqc(VcfVariantQcParams)</code></h3>
-<p>CLI: <code>wgsextract vcf variantqc</code>.</p>
+<p>CLI: <code>wgsextract vcf variantqc</code>.
+Certification: Experimental. External VariantQC integration does not establish output correctness.</p>
 <p>Run DISCVRSeq VariantQC; output role <code>variantqc_report</code>.</p>
 <p><code>VcfVariantQcParams</code>: Run DISCVRSeq VariantQC to write an interactive HTML VCF quality report.</p>
 <div class="table-wrap"><table>
@@ -6075,7 +6150,8 @@ the output doesn't depend on how many.</p>
 </tbody>
 </table></div>
 <h3><code>api.vcf.granite_qc(VcfGraniteQcParams)</code></h3>
-<p>CLI: <code>wgsextract vcf granite-qc</code>.</p>
+<p>CLI: <code>wgsextract vcf granite-qc</code>.
+Certification: Experimental. External GRANITE integration does not establish output correctness.</p>
 <p>Run granite qcVCF; output role <code>granite_qc_json</code>.</p>
 <p><code>VcfGraniteQcParams</code>: Run granite qcVCF (dbmi-bgm/granite) to compute single-sample or family VCF QC metrics.</p>
 <div class="table-wrap"><table>
@@ -6143,7 +6219,8 @@ the output doesn't depend on how many.</p>
 <h2><code>api.cohort</code></h2>
 <p>Local, callability-aware cohort summaries for research.</p>
 <h3><code>api.cohort.summarize(CohortSummarizeParams)</code></h3>
-<p>CLI: <code>wgsextract cohort summarize</code>.</p>
+<p>CLI: <code>wgsextract cohort summarize</code>.
+Certification: Tested. Disclosure thresholds and summaries checked on fixture VCFs.</p>
 <p>Write a local allele-count table and a result manifest.</p>
 <p><code>CohortSummarizeParams</code>: Summarize autosomal SNVs from a local cohort manifest and matched gVCFs.</p>
 <div class="table-wrap"><table>
@@ -6257,7 +6334,8 @@ VCFs, annotates them and keeps the significant variants; a batch file runs
 it for many samples. <code>batch_gen</code> writes such a
 batch file from a folder of genomes.</p>
 <h3><code>api.analyze.comprehensive(AnalyzeComprehensiveParams)</code></h3>
-<p>CLI: <code>wgsextract analyze comprehensive</code>.</p>
+<p>CLI: <code>wgsextract analyze comprehensive</code>.
+Certification: Tested. Fixture workflow checks; external backends are not all qualified.</p>
 <p>Run the full-chain analysis (see <code>AnalyzeComprehensiveParams</code>).</p>
 <p><code>AnalyzeComprehensiveParams</code>: Analyze a sample from end to end into <code>outdir</code>: the BAM/CRAM
 <code>input</code>'s info, mtDNA and Y haplogroups, and its <code>vcf_inputs</code> (else
@@ -6366,7 +6444,8 @@ or <code>vcf_input_paths</code> supply them.</p>
 </tbody>
 </table></div>
 <h3><code>api.analyze.batch_gen(AnalyzeBatchGenParams)</code></h3>
-<p>CLI: <code>wgsextract analyze batch-gen</code>.</p>
+<p>CLI: <code>wgsextract analyze batch-gen</code>.
+Certification: Tested. Local batch generation with fixture inputs.</p>
 <p>Write a batch file from a folder (see <code>AnalyzeBatchGenParams</code>).</p>
 <p><code>AnalyzeBatchGenParams</code>: Write a batch file for <code>comprehensive</code> from the BAMs, CRAMs and
 VCFs under <code>directory</code>, grouping files into samples by name
@@ -6402,7 +6481,8 @@ VCFs under <code>directory</code>, grouping files into samples by name
 <p><code>lineage</code>: mtDNA haplogroups (Haplogrep 3), Y haplogroups (native Yleaf),
 Y-STR repeat counts and candidate private Y SNVs.</p>
 <h3><code>api.lineage.mt_haplogroup(MtHaplogroupParams)</code></h3>
-<p>CLI: <code>wgsextract lineage mt-haplogroup</code>.</p>
+<p>CLI: <code>wgsextract lineage mt-haplogroup</code>.
+Certification: Tested. Fixture mitochondrial input and lineage checks.</p>
 <p>mtDNA haplogroup; <code>metrics</code> holds <code>haplogroup</code> and
 <code>haplogroup_quality</code> (plus <code>mt_contamination</code> and
 <code>mt_contamination_level</code> with <code>contamination</code>). <code>details</code> holds the
@@ -6507,7 +6587,8 @@ confirm as the rCRS is warned of (<code>mt_reference_unconfirmed</code>).</p>
 </tbody>
 </table></div>
 <h3><code>api.lineage.y_haplogroup(YHaplogroupParams)</code></h3>
-<p>CLI: <code>wgsextract lineage y-haplogroup</code>.</p>
+<p>CLI: <code>wgsextract lineage y-haplogroup</code>.
+Certification: Tested. Fixture lineage results compared across reference builds.</p>
 <p>Y haplogroup; <code>metrics</code> holds <code>haplogroup</code>, <code>haplogroup_marker</code> and
 <code>qc_score</code>, <code>details[&quot;predictions&quot;]</code> every Yleaf prediction row and
 <code>details[&quot;tree&quot;]</code> the tree's <code>id</code>, <code>name</code>, <code>version</code>, <code>date</code> and
@@ -6640,7 +6721,8 @@ or single-sample VCF/BCF. Outputs go to <code>yleaf/</code> in the output folder
 </tbody>
 </table></div>
 <h3><code>api.lineage.y_str(YStrParams)</code></h3>
-<p>CLI: <code>wgsextract lineage y-str</code>.</p>
+<p>CLI: <code>wgsextract lineage y-str</code>.
+Certification: Tested. Fixture Y-STR outputs and no-call cases.</p>
 <p>Y-STR calls; <code>details[&quot;calls&quot;]</code> lists every marker with its value and
 read support.</p>
 <p><code>YStrParams</code>: Call Y-STR repeat counts from a BAM/CRAM into <code>ystr/</code> (a table and a
@@ -6715,7 +6797,8 @@ FamilyTreeDNA-order CSV).</p>
 </tbody>
 </table></div>
 <h3><code>api.lineage.y_private(YPrivateParams)</code></h3>
-<p>CLI: <code>wgsextract lineage y-private</code>.</p>
+<p>CLI: <code>wgsextract lineage y-private</code>.
+Certification: Experimental. Private Y variants are research evidence, not confirmed novel lineage markers.</p>
 <p>Candidate private Y SNVs; <code>metrics</code> holds <code>y_private_candidates</code>,
 <code>y_called_snvs</code> and <code>y_known_snvs</code>. <code>details</code> states the
 <code>definition</code>, the <code>marker_sets</code> used, the <code>callable_mask</code>, the
@@ -6828,7 +6911,8 @@ and, per modification, the sites, median coverage and weighted percentage
 modified. modkit is optional (<code>pixi install -e modkit</code>) and unavailable on
 Windows.</p>
 <h3><code>api.methylation.pileup(MethylationPileupParams)</code></h3>
-<p>CLI: <code>wgsextract methylation pileup</code>.</p>
+<p>CLI: <code>wgsextract methylation pileup</code>.
+Certification: Tested. modkit output and tag handling checked on fixture reads.</p>
 <p>Tabulate base modifications (see <code>MethylationPileupParams</code>).</p>
 <p><code>MethylationPileupParams</code>: Tabulate 5mC (and optionally 5hmC) per site with modkit (see the
 module docstring). <code>context</code>, <code>hydroxymethyl</code> and <code>combine_strands</code>
@@ -6911,7 +6995,8 @@ methylation_combine_strands, else CpG, 5mC only and strands combined.</p>
 </tbody>
 </table></div>
 <h3><code>api.methylation.regions(MethylationRegionsParams)</code></h3>
-<p>CLI: <code>wgsextract methylation regions</code>.</p>
+<p>CLI: <code>wgsextract methylation regions</code>.
+Certification: Validated. HG002 promoter/island BGZF–Parquet parity and chr21 HP checks; not whole-genome read-level phasing validation.</p>
 <p>Summarize methylation over the selected build-matched regions.</p>
 <p><code>MethylationRegionsParams</code>: Summarize pooled or haplotype-split CpG calls over RefSeq promoters or UCSC islands.</p>
 <div class="table-wrap"><table>
@@ -7036,7 +7121,8 @@ methylation_combine_strands, else CpG, 5mC only and strands combined.</p>
 <p><code>microarray</code>: consumer microarray (23andMe, AncestryDNA, ...) and AADR
 files generated from a BAM/CRAM or VCF.</p>
 <h3><code>api.microarray.generate(MicroarrayParams)</code></h3>
-<p>CLI: <code>wgsextract microarray</code>.</p>
+<p>CLI: <code>wgsextract microarray</code>.
+Certification: Validated. HG00096 GRCh38 and CHM13 vendor exports compared with independent chip truth in sampled windows, not at every chip site.</p>
 <p>Generate the kits; each output carries its marker tallies in <code>metrics</code>.</p>
 <p><code>MicroarrayParams</code>: Generate a combined 23andMe-style kit and the selected vendor or AADR
 formats from a BAM, CRAM or VCF.</p>
@@ -7235,7 +7321,8 @@ into the library and record what they wrote as the result's outputs:</p>
 api.ref.status(api.RefStatusParams()).details[&quot;genomes&quot;]
 </code></pre>
 <h3><code>api.ref.aadr(RefAadrParams)</code></h3>
-<p>CLI: <code>wgsextract ref aadr</code>.</p>
+<p>CLI: <code>wgsextract ref aadr</code>.
+Certification: Experimental. Resource acquisition fixtures do not qualify upstream AADR releases.</p>
 <p>Install the panel; output role <code>reference_resource</code>.</p>
 <p><code>RefAadrParams</code>: Install the hash-pinned CC0 AADR v66.p1 2M SNP panel into the library,
 or delete it. <code>ref bootstrap</code> does not install it: the Harvard Dataverse
@@ -7268,7 +7355,8 @@ server is slow, so the panel is only downloaded on request.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.somalier(RefSomalierParams)</code></h3>
-<p>CLI: <code>wgsextract ref somalier</code>.</p>
+<p>CLI: <code>wgsextract ref somalier</code>.
+Certification: Tested. Resource install, validation and removal checked with fixture archives.</p>
 <p>Install the resources; output role <code>reference_resource</code>.</p>
 <p><code>RefSomalierParams</code>: Install somalier's hash-pinned sites files (MIT) and the labelled
 1000 Genomes sketches (CC BY 4.0, Zenodo 3479773) that <code>qc relate</code>
@@ -7301,7 +7389,8 @@ uses, about 85 MB, or delete them.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.imputation(RefImputationParams)</code></h3>
-<p>CLI: <code>wgsextract ref imputation</code>.</p>
+<p>CLI: <code>wgsextract ref imputation</code>.
+Certification: Tested. Panel installation and reuse checked with fixture GLIMPSE2 resources.</p>
 <p>Install or delete panel chromosomes; output role <code>reference_resource</code>.</p>
 <p><code>RefImputationParams</code>: Install SHA-256-pinned GRCh38 1000 Genomes 30x panel chromosomes
 and prepare GLIMPSE2 binary references, or delete installed chromosomes.</p>
@@ -7347,7 +7436,8 @@ and prepare GLIMPSE2 binary references, or delete installed chromosomes.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.ancestry(RefAncestryParams)</code></h3>
-<p>CLI: <code>wgsextract ref ancestry</code>.</p>
+<p>CLI: <code>wgsextract ref ancestry</code>.
+Certification: Tested. Reference panel installation and reuse checked on fixtures.</p>
 <p>Install the resources; output role <code>reference_resource</code>.</p>
 <p><code>RefAncestryParams</code>: Install the hash-pinned ancestry reference of <code>qc ancestry</code>, or
 delete it.</p>
@@ -7379,7 +7469,8 @@ delete it.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.gnomad_sv(RefGnomadSvParams)</code></h3>
-<p>CLI: <code>wgsextract ref gnomad-sv</code>.</p>
+<p>CLI: <code>wgsextract ref gnomad-sv</code>.
+Certification: Tested. Structural-variant resource preparation checked on fixtures.</p>
 <p>Install the tables; output role <code>reference_resource</code>.</p>
 <p><code>RefGnomadSvParams</code>: Install the gnomAD structural-variant sites tables that <code>vcf sv-freq</code>
 matches SV calls against, or delete them. Each sites VCF is checked
@@ -7431,7 +7522,8 @@ a time).</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.ybrowse(RefYbrowseParams)</code></h3>
-<p>CLI: <code>wgsextract ref ybrowse</code>.</p>
+<p>CLI: <code>wgsextract ref ybrowse</code>.
+Certification: Tested. YBrowse resource preparation checked on fixtures.</p>
 <p>Install the snapshot; output role <code>reference_resource</code>.</p>
 <p><code>RefYbrowseParams</code>: Install a verified, sites-only GRCh38 yBrowse snapshot into the
 library, or delete the installed snapshots; <code>grch37</code> lifts it to GRCh37.</p>
@@ -7491,7 +7583,8 @@ library, or delete the installed snapshots; <code>grch37</code> lifts it to GRCh
 </tbody>
 </table></div>
 <h3><code>api.ref.download(RefDownloadParams)</code></h3>
-<p>CLI: <code>wgsextract ref download</code>.</p>
+<p>CLI: <code>wgsextract ref download</code>.
+Certification: Tested. The shared downloader's checksum verification and local publication are tested against a local HTTP server.</p>
 <p>Download the file; output role <code>download</code>. Not offered by the server.</p>
 <p><code>RefDownloadParams</code>: Download a reference FASTA from <code>url</code> to <code>out</code>.</p>
 <div class="table-wrap"><table>
@@ -7522,7 +7615,8 @@ library, or delete the installed snapshots; <code>grch37</code> lifts it to GRCh
 </tbody>
 </table></div>
 <h3><code>api.ref.index(RefIndexParams)</code></h3>
-<p>CLI: <code>wgsextract ref index</code>.</p>
+<p>CLI: <code>wgsextract ref index</code>.
+Certification: Validated. Canonical hs38 BWA index used in the HG002 30× Windows qualification; other indexes were not part of that run.</p>
 <p>Index the FASTA; output role <code>reference_index</code> for each file written.</p>
 <p><code>RefIndexParams</code>: Index a FASTA: <code>.fai</code> (and <code>.gzi</code>), the <code>.dict</code> sequence
 dictionary and the aligner's index, written beside it.</p>
@@ -7561,7 +7655,8 @@ dictionary and the aligner's index, written beside it.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.dense_sa(RefDenseSaParams)</code></h3>
-<p>CLI: <code>wgsextract ref dense-sa</code>.</p>
+<p>CLI: <code>wgsextract ref dense-sa</code>.
+Certification: Tested. Dense suffix array artifacts checked on fixture FASTAs.</p>
 <p>Build (output role <code>reference_index</code>), list or delete the FASTA's
 dense suffix-array files.</p>
 <p><code>RefDenseSaParams</code>: Build wgse-bwa's optional dense suffix-array file for a FASTA's BWA
@@ -7618,7 +7713,8 @@ FASTA's files, or delete them. Needs wgse-bwa 0.11.0 or later on PATH;
 </tbody>
 </table></div>
 <h3><code>api.ref.count_ns(RefCountNsParams)</code></h3>
-<p>CLI: <code>wgsextract ref count-ns</code>.</p>
+<p>CLI: <code>wgsextract ref count-ns</code>.
+Certification: Tested. Known N runs counted in fixture FASTAs.</p>
 <p>Count the Ns; output roles <code>n_counts</code> and <code>n_bins</code>.</p>
 <p><code>RefCountNsParams</code>: Count the FASTA's N runs into <code>&lt;ref&gt;_ncnt.csv</code> and <code>&lt;ref&gt;_nbin.csv</code>;
 sequence, length and N totals are metrics.</p>
@@ -7650,7 +7746,8 @@ sequence, length and N totals are metrics.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.verify(RefVerifyParams)</code></h3>
-<p>CLI: <code>wgsextract ref verify</code>.</p>
+<p>CLI: <code>wgsextract ref verify</code>.
+Certification: Tested. Reference checks exercised with real faidx and fixture FASTAs.</p>
 <p>Verify the FASTA; a mismatch fails, a missing <code>.dict</code> is a warning.</p>
 <p><code>RefVerifyParams</code>: Check a FASTA's compression, its <code>.fai</code>/<code>.gzi</code> and <code>.dict</code> against
 the file, and its sequence signature against the library catalog. Writes
@@ -7676,7 +7773,8 @@ a missing <code>.fai</code>/<code>.gzi</code>; <code>contigs</code> and <code>si
 </tbody>
 </table></div>
 <h3><code>api.ref.library(RefLibraryParams)</code></h3>
-<p>CLI: <code>wgsextract ref library</code>.</p>
+<p>CLI: <code>wgsextract ref library</code>.
+Certification: Tested. Local reference inventory and resource state checked.</p>
 <p>Install <code>params.install</code>; output roles <code>reference</code> (the FASTA) and
 <code>reference_sidecar</code>. The CLI's menu isn't offered: <code>library_list</code>
 lists the catalog's genomes and <code>status</code> reports what is installed.</p>
@@ -7710,7 +7808,8 @@ each mirror that hosts it.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.library_list(RefLibraryListParams)</code></h3>
-<p>CLI: <code>wgsextract ref library --list</code>.</p>
+<p>CLI: <code>wgsextract ref library --list</code>.
+Certification: Tested. Local reference inventory and resource state checked.</p>
 <p>List the library. <code>details</code> has <code>library</code>, <code>genomes_dir</code> (the
 folder its genomes are in), <code>genomes</code> and <code>resources</code>.</p>
 <p>Each of <code>genomes</code>, in catalog order, has the catalog's <code>code</code>,
@@ -7757,7 +7856,8 @@ gene maps and annotation data it holds.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.library_delete(RefLibraryDeleteParams)</code></h3>
-<p>CLI: <code>wgsextract ref library --delete</code>.</p>
+<p>CLI: <code>wgsextract ref library --delete</code>.
+Certification: Tested. Local reference inventory and resource state checked.</p>
 <p>Delete <code>params.genome</code>; nothing installed is no error. <code>details</code>
 has <code>library</code>, <code>genomes_dir</code>, the genome's <code>code</code> and <code>file</code>,
 <code>deleted</code> (the paths deleted, the FASTA first) and <code>bytes_freed</code>.</p>
@@ -7792,7 +7892,8 @@ which never change, stay.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.status(RefStatusParams)</code></h3>
-<p>CLI: <code>wgsextract ref status</code>.</p>
+<p>CLI: <code>wgsextract ref status</code>.
+Certification: Tested. Resource inventory checked in a local fixture library.</p>
 <p>Report the library; the report is the result's <code>details</code>.</p>
 <p><code>RefStatusParams</code>: What the reference library holds, as the result's <code>details</code>: genomes
 and their indexes, annotation data, gene maps, VEP cache, PharmCAT,
@@ -7839,7 +7940,8 @@ ploidy and mappability files, and the test genome.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.test_genome(RefTestGenomeParams)</code></h3>
-<p>CLI: <code>wgsextract ref test-genome</code>.</p>
+<p>CLI: <code>wgsextract ref test-genome</code>.
+Certification: Tested. Build identification checked on fixture references and alignments.</p>
 <p>Report, install or delete the test genome. <code>details</code> has the dataset
 <code>library</code>, <code>installed</code>, <code>status</code> (<code>installed</code>, <code>incomplete</code>
 while a download is partial, else <code>missing</code>) and <code>path</code> (its
@@ -7891,7 +7993,8 @@ HG00096) in the My Genomes library. Reports whether it is installed;
 </tbody>
 </table></div>
 <h3><code>api.ref.recheck(RefRecheckParams)</code></h3>
-<p>CLI: <code>wgsextract ref recheck</code>.</p>
+<p>CLI: <code>wgsextract ref recheck</code>.
+Certification: Experimental. Release comparison fixtures do not establish real-data correctness.</p>
 <p><code>details</code>: wgsextract.recheck/1. Only <code>online=True</code> uses the network.</p>
 <p><code>RefRecheckParams</code>: Compare the resource releases that result manifests recorded (ClinVar,
 gene lists, ...) with the newest ones: from an answers file, or only with
@@ -7940,7 +8043,8 @@ downloaded and no analysis is rerun; <code>details</code> is the
 </tbody>
 </table></div>
 <h3><code>api.ref.cytobands(RefCytobandsParams)</code></h3>
-<p>CLI: <code>wgsextract ref cytobands</code>.</p>
+<p>CLI: <code>wgsextract ref cytobands</code>.
+Certification: Tested. Cytoband normalization checked on fixture resources.</p>
 <p>Validate/install UCSC cytobands (output role <code>reference_resource</code>).
 Missing or invalid tables require explicit <code>download=True</code>.</p>
 <p><code>RefCytobandsParams</code>: Validate installed UCSC cytobands; fetch a missing table only with
@@ -7981,7 +8085,8 @@ offline viewer; no sample data is sent.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.gene_map(RefGeneMapParams)</code></h3>
-<p>CLI: <code>wgsextract ref gene-map</code>.</p>
+<p>CLI: <code>wgsextract ref gene-map</code>.
+Certification: Tested. Gene maps and aliases checked on fixture annotations.</p>
 <p>Download the gene maps (output role <code>reference_resource</code>) or delete them.</p>
 <p><code>RefGeneMapParams</code>: Download the hg19 and hg38 gene maps into the library, or delete them.</p>
 <div class="table-wrap"><table>
@@ -8012,7 +8117,8 @@ offline viewer; no sample data is sent.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.clinvar(RefClinvarParams)</code></h3>
-<p>CLI: <code>wgsextract ref clinvar</code>.</p>
+<p>CLI: <code>wgsextract ref clinvar</code>.
+Certification: Tested. ClinVar resource preparation checked on fixtures.</p>
 <p>Download ClinVar; output role <code>reference_resource</code> for each file.</p>
 <p><code>RefClinvarParams</code>: Download the official ClinVar VCF for hg19 and hg38.</p>
 <div class="table-wrap"><table>
@@ -8036,7 +8142,8 @@ offline viewer; no sample data is sent.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.dbsnp(RefDbsnpParams)</code></h3>
-<p>CLI: <code>wgsextract ref dbsnp</code>.</p>
+<p>CLI: <code>wgsextract ref dbsnp</code>.
+Certification: Tested. dbSNP resource checks on fixture variants.</p>
 <p>Download NCBI dbSNP b151 common rsIDs and build their offline SQLite
 lookup index (output role <code>reference_resource</code>), or delete them.</p>
 <p><code>RefDbsnpParams</code>: Download NCBI dbSNP b151 common human rsIDs (~37M SNPs, VCF + tabix +
@@ -8076,7 +8183,8 @@ offline SQLite rsID search index) for hg38 and hg19, or delete them.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.revel(RefRevelParams)</code></h3>
-<p>CLI: <code>wgsextract ref revel</code>.</p>
+<p>CLI: <code>wgsextract ref revel</code>.
+Certification: Tested. REVEL resource preparation checked on fixtures.</p>
 <p>Download REVEL; output role <code>reference_resource</code> for each file.</p>
 <p><code>RefRevelParams</code>: Download REVEL pathogenicity scores for hg19 and hg38.</p>
 <div class="table-wrap"><table>
@@ -8100,7 +8208,8 @@ offline SQLite rsID search index) for hg38 and hg19, or delete them.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.phylop(RefPhylopParams)</code></h3>
-<p>CLI: <code>wgsextract ref phylop</code>.</p>
+<p>CLI: <code>wgsextract ref phylop</code>.
+Certification: Tested. phyloP resource preparation checked on fixtures.</p>
 <p>Download PhyloP; output role <code>reference_resource</code>.</p>
 <p><code>RefPhylopParams</code>: Download UCSC's PhyloP 100-way conservation scores (~10 GB bigWig).</p>
 <div class="table-wrap"><table>
@@ -8131,7 +8240,8 @@ offline SQLite rsID search index) for hg38 and hg19, or delete them.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.gnomad(RefGnomadParams)</code></h3>
-<p>CLI: <code>wgsextract ref gnomad</code>.</p>
+<p>CLI: <code>wgsextract ref gnomad</code>.
+Certification: Tested. gnomAD resource preparation checked on fixtures.</p>
 <p>Download or build gnomAD; output role <code>reference_resource</code> for each file.</p>
 <p><code>RefGnomadParams</code>: Check or download the gnomAD 2.1.1 exome sites VCFs or the gnomAD 4.1
 frequency and homozygote-count table.</p>
@@ -8177,7 +8287,8 @@ frequency and homozygote-count table.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.spliceai(RefSpliceaiParams)</code></h3>
-<p>CLI: <code>wgsextract ref spliceai</code>.</p>
+<p>CLI: <code>wgsextract ref spliceai</code>.
+Certification: Tested. SpliceAI resource preparation checked on fixtures.</p>
 <p>Download SpliceAI; output role <code>reference_resource</code> for each file.</p>
 <p><code>RefSpliceaiParams</code>: Download SpliceAI scores for hg38 (Ensembl, MANE SNVs), or index a
 manual hg19 download; or delete the installed score files.</p>
@@ -8209,7 +8320,8 @@ manual hg19 download; or delete the installed score files.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.alphamissense(RefAlphamissenseParams)</code></h3>
-<p>CLI: <code>wgsextract ref alphamissense</code>.</p>
+<p>CLI: <code>wgsextract ref alphamissense</code>.
+Certification: Tested. AlphaMissense resource preparation checked on fixtures.</p>
 <p>Download AlphaMissense; output role <code>reference_resource</code> for each file.</p>
 <p><code>RefAlphamissenseParams</code>: Download AlphaMissense scores for hg19 and hg38, or delete them.</p>
 <div class="table-wrap"><table>
@@ -8240,7 +8352,8 @@ manual hg19 download; or delete the installed score files.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.pharmgkb(RefPharmgkbParams)</code></h3>
-<p>CLI: <code>wgsextract ref pharmgkb</code>.</p>
+<p>CLI: <code>wgsextract ref pharmgkb</code>.
+Certification: Tested. PharmGKB resource preparation checked on fixtures.</p>
 <p>Download PharmGKB; output role <code>reference_resource</code> for each file.</p>
 <p><code>RefPharmgkbParams</code>: Download PharmGKB annotations, or delete them.</p>
 <div class="table-wrap"><table>
@@ -8271,7 +8384,8 @@ manual hg19 download; or delete the installed score files.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.cadd(RefCaddParams)</code></h3>
-<p>CLI: <code>wgsextract ref cadd</code>.</p>
+<p>CLI: <code>wgsextract ref cadd</code>.
+Certification: Tested. CADD resource preparation checked on fixtures.</p>
 <p>Download CADD; output role <code>reference_resource</code> for each file.</p>
 <p><code>RefCaddParams</code>: Download CADD v1.7 deleteriousness scores (~85 GB per build).</p>
 <div class="table-wrap"><table>
@@ -8302,7 +8416,8 @@ manual hg19 download; or delete the installed score files.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.gerp(RefGerpParams)</code></h3>
-<p>CLI: <code>wgsextract ref gerp</code>.</p>
+<p>CLI: <code>wgsextract ref gerp</code>.
+Certification: Tested. GERP resource preparation checked on fixtures.</p>
 <p>Download GERP; output role <code>reference_resource</code>.</p>
 <p><code>RefGerpParams</code>: Download GERP++ conservation scores as a bigWig.</p>
 <div class="table-wrap"><table>
@@ -8333,7 +8448,8 @@ manual hg19 download; or delete the installed score files.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.acmg_data(RefAcmgDataParams)</code></h3>
-<p>CLI: <code>wgsextract ref acmg-data</code>.</p>
+<p>CLI: <code>wgsextract ref acmg-data</code>.
+Certification: Experimental. Research resource preparation checked on fixtures; not a clinical resource qualification.</p>
 <p>Build the databases (output role <code>reference_resource</code> for each file,
 the GFF3 and <code>acmg_data.json</code>); with <code>dry_run</code>, only the plan in
 <code>details</code>.</p>
@@ -8417,7 +8533,8 @@ reruns resume. Downloads public sources only with <code>--download</code>.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.bootstrap(RefBootstrapParams)</code></h3>
-<p>CLI: <code>wgsextract ref bootstrap</code>.</p>
+<p>CLI: <code>wgsextract ref bootstrap</code>.
+Certification: Tested. Local resource bundle setup checked on fixtures.</p>
 <p>Install the bootstrap; output role <code>reference_resource</code> for each file.
 Not offered by the server.</p>
 <p><code>RefBootstrapParams</code>: Download the reference library bootstrap (liftover chains, chip
@@ -8445,7 +8562,8 @@ is unset.</p>
 </tbody>
 </table></div>
 <h3><code>api.ref.microarray_targets(RefMicroarrayTargetsParams)</code></h3>
-<p>CLI: <code>wgsextract ref microarray-targets</code>.</p>
+<p>CLI: <code>wgsextract ref microarray-targets</code>.
+Certification: Tested. Microarray target files and validation checked on fixtures.</p>
 <p>Build (output role <code>reference_resource</code>) or delete the targets.</p>
 <p><code>RefMicroarrayTargetsParams</code>: Build the genome-wide hg19 and hg38 microarray targets
 (<code>microarray/All_SNPs_&lt;build&gt;_ref.tab.gz</code>) from the bootstrap's chip
@@ -8488,7 +8606,8 @@ input, or the <code>output</code> path. The result's metrics count the records r
 stream from stdin to stdout when <code>--input</code> is not given; the API reads and
 writes files only.</p>
 <h3><code>api.repair.ftdna_bam(RepairFtdnaBamParams)</code></h3>
-<p>CLI: <code>wgsextract repair ftdna-bam</code>.</p>
+<p>CLI: <code>wgsextract repair ftdna-bam</code>.
+Certification: Tested. BAM repair checked on fixture records.</p>
 <p>Repair an FTDNA BAM or CRAM's read names (see <code>RepairFtdnaBamParams</code>).</p>
 <p><code>RepairFtdnaBamParams</code>: Copy an FTDNA BAM or CRAM to a BAM whose read names have no spaces
 (<code>FTDNA read 7</code> becomes <code>FTDNA:read:7</code>), so GATK and other tools
@@ -8535,7 +8654,8 @@ accept it. A CRAM is decoded with <code>ref</code>, else the reference it names.
 </tbody>
 </table></div>
 <h3><code>api.repair.ftdna_vcf(RepairFtdnaVcfParams)</code></h3>
-<p>CLI: <code>wgsextract repair ftdna-vcf</code>.</p>
+<p>CLI: <code>wgsextract repair ftdna-vcf</code>.
+Certification: Tested. VCF repair checked on fixture records.</p>
 <p>Repair an FTDNA VCF's FILTER column (see <code>RepairFtdnaVcfParams</code>).</p>
 <p><code>RepairFtdnaVcfParams</code>: Copy an FTDNA VCF (plain, gzipped or BCF) to a plain VCF whose FILTER
 IDs are all declared, so bcftools and VEP accept it. Legacy expressions
@@ -8589,7 +8709,8 @@ OpenSSH's <code>ssh-keygen</code> 8.1 or newer.</p>
 <p>The result's metrics: <code>files</code> (listed), <code>signed</code>, and for <code>verify</code>
 <code>missing_files</code> and <code>changed_files</code>.</p>
 <h3><code>api.sign.create(SignCreateParams)</code></h3>
-<p>CLI: <code>wgsextract sign create</code>.</p>
+<p>CLI: <code>wgsextract sign create</code>.
+Certification: Tested. Fixture signatures created and checked with ssh-keygen.</p>
 <p>Write (and sign) a checksum manifest (see <code>SignCreateParams</code>).</p>
 <p><code>SignCreateParams</code>: Write a checksum manifest of <code>paths</code>, signed when a key is given.</p>
 <div class="table-wrap"><table>
@@ -8641,7 +8762,8 @@ OpenSSH's <code>ssh-keygen</code> 8.1 or newer.</p>
 </tbody>
 </table></div>
 <h3><code>api.sign.verify(SignVerifyParams)</code></h3>
-<p>CLI: <code>wgsextract sign verify</code>.</p>
+<p>CLI: <code>wgsextract sign verify</code>.
+Certification: Tested. Verification and tamper detection checked on fixture signatures.</p>
 <p>Verify a checksum manifest and its signature (see <code>SignVerifyParams</code>).</p>
 <p><code>SignVerifyParams</code>: Check a checksum manifest's signature and every file it lists. With
 neither <code>public_key</code> nor <code>allowed_signers</code>, a signature is only
@@ -8707,7 +8829,8 @@ key); with no signature file, only the hashes are checked.</p>
 <p>Curated GRCh38 scores also get an ancestry-adjusted percentile against the
 HGDP+1KG reference (docs/pgs.md), or a reason it is withheld.</p>
 <h3><code>api.score.pgs(ScorePgsParams)</code></h3>
-<p>CLI: <code>wgsextract score pgs</code>.</p>
+<p>CLI: <code>wgsextract score pgs</code>.
+Certification: Experimental. Research-only polygenic scores; fixture checks are not clinical calibration.</p>
 <p>Compute an additive score without imputing missing genotypes.</p>
 <p><code>ScorePgsParams</code>: Score one sample's VCF on the specified build. Explicit calls and
 reference blocks are supported; a variants-only VCF needs a matching
@@ -8849,7 +8972,8 @@ needs <code>ref</code>.</li>
 (<code>.cyp2d6.pharmcat.tsv</code>, <code>.hla.pharmcat.tsv</code>) for <code>vcf pharmcat --outside-call</code> when they make a confident call. The genotypes are in the
 result's metrics.</p>
 <h3><code>api.genotyping.cyp2d6(TypingCyp2d6Params)</code></h3>
-<p>CLI: <code>wgsextract typing cyp2d6</code>.</p>
+<p>CLI: <code>wgsextract typing cyp2d6</code>.
+Certification: Experimental. Caller integration fixtures do not qualify CYP2D6 results.</p>
 <p>Call CYP2D6 star alleles with Cyrius (see <code>TypingCyp2d6Params</code>).</p>
 <p><code>TypingCyp2d6Params</code>: Call CYP2D6 star alleles, including copy-number and CYP2D6/CYP2D7
 hybrids, with Cyrius (about 30x WGS). On GRCh38 with chr22 ALT contigs,
@@ -8902,7 +9026,8 @@ outside call. Metrics: <code>cyp2d6_genotype</code>, <code>cyp2d6_filter</code>,
 </tbody>
 </table></div>
 <h3><code>api.genotyping.smn(TypingSmnParams)</code></h3>
-<p>CLI: <code>wgsextract typing smn</code>.</p>
+<p>CLI: <code>wgsextract typing smn</code>.
+Certification: Experimental. Caller integration fixtures do not qualify SMN results.</p>
 <p>Call SMN1/SMN2 copy number with SMNCopyNumberCaller (see
 <code>TypingSmnParams</code>).</p>
 <p><code>TypingSmnParams</code>: Call SMN1, SMN2 and SMN2Δ7–8 copy numbers with SMNCopyNumberCaller for
@@ -8957,7 +9082,8 @@ median depth no calls are reported (files kept as
 </tbody>
 </table></div>
 <h3><code>api.genotyping.target_cnv(TypingTargetCnvParams)</code></h3>
-<p>CLI: <code>wgsextract typing target-cnv</code>.</p>
+<p>CLI: <code>wgsextract typing target-cnv</code>.
+Certification: Tested. Target-depth and callability checks on fixture alignments; not a clinical validation.</p>
 <p>Screen BED targets for short-read copy number (see <code>TypingTargetCnvParams</code>).</p>
 <p><code>TypingTargetCnvParams</code>: Estimate copy-number classes (0, 1, 2, 3+) with heuristic confidence
 from GC-matched autosomal depth in short-read whole-genome sequencing.
@@ -9019,7 +9145,8 @@ with clear depth evidence. This is a screen, not a diagnosis.</p>
 </tbody>
 </table></div>
 <h3><code>api.genotyping.paraphase(TypingParaphaseParams)</code></h3>
-<p>CLI: <code>wgsextract typing paraphase</code>.</p>
+<p>CLI: <code>wgsextract typing paraphase</code>.
+Certification: Experimental. Integration fixtures do not qualify Paraphase calls.</p>
 <p>Type long-read paralogs (see <code>TypingParaphaseParams</code>).</p>
 <p><code>TypingParaphaseParams</code>: Type paralogous loci from an indexed long-read BAM or CRAM, with
 the matching indexed FASTA. Reports locus copy number, gene-specific
@@ -9080,7 +9207,8 @@ calls and explicit no-calls. ONT is experimental and unvalidated.</p>
 </tbody>
 </table></div>
 <h3><code>api.genotyping.hla(TypingHlaParams)</code></h3>
-<p>CLI: <code>wgsextract typing hla</code>.</p>
+<p>CLI: <code>wgsextract typing hla</code>.
+Certification: Experimental. Caller integration fixtures do not qualify HLA results.</p>
 <p>Type HLA genes with T1K (see <code>TypingHlaParams</code>).</p>
 <p><code>TypingHlaParams</code>: Type HLA class I and II genes with T1K from reads of the MHC, HLA
 decoys and chr6 ALT contigs. Metrics: diplotypes of HLA-A, -B, -C,
@@ -9142,7 +9270,8 @@ decoys and chr6 ALT contigs. Metrics: diplotypes of HLA-A, -B, -C,
 </tbody>
 </table></div>
 <h3><code>api.genotyping.repeats(TypingStrParams)</code></h3>
-<p>CLI: <code>wgsextract typing str</code>.</p>
+<p>CLI: <code>wgsextract typing str</code>.
+Certification: Validated. HG002 ONT repeats compared with GIAB and PacBio PureTarget expansions; long or weakly supported alleles remain uncertain.</p>
 <p>Size disease repeats with ExpansionHunter, LongTR or STRkit (<code>typing str</code>; see <code>TypingStrParams</code>).</p>
 <p><code>TypingStrParams</code>: Size disease short tandem repeats (HTT, FMR1, C9ORF72, ...) and flag
 those outside the normal range, with ExpansionHunter for short reads and
@@ -9246,7 +9375,8 @@ report = res.details          # the wgsextract.report/1 document
 sample folder, plus region) and the &quot;technical result, not diagnosis&quot;
 disclaimer. See docs/personal-report.md.</p>
 <h3><code>api.report.build(ReportParams)</code></h3>
-<p>CLI: <code>wgsextract report</code>.</p>
+<p>CLI: <code>wgsextract report</code>.
+Certification: Tested. Report findings and limitations checked on fixture VCFs; not clinical validation.</p>
 <p>Write the report. <code>details</code> is the <code>wgsextract.report/1</code> document;
 <code>outputs</code> are the HTML (<code>report_html</code>), Markdown
 (<code>report_markdown</code>), JSON (<code>report_json</code>) and findings table
@@ -9323,7 +9453,8 @@ plus a findings table, from the result manifests in its folder.</p>
 </tbody>
 </table></div>
 <h3><code>api.report.delta(ReportDeltaParams)</code></h3>
-<p>CLI: <code>wgsextract report-delta</code>.</p>
+<p>CLI: <code>wgsextract report-delta</code>.
+Certification: Tested. Differences checked on paired fixture reports.</p>
 <p>Compare two manifests. <code>details</code> is the <code>wgsextract.delta/1</code>
 document; incompatible runs (other command, sample or build) fail with
 error codes <code>delta_command_mismatch</code>, <code>delta_sample_mismatch</code> or
@@ -9371,7 +9502,8 @@ res.details[&quot;site&quot;][&quot;status&quot;]   # confident_call, confident_
 </code></pre>
 <p>See docs/lookup.md.</p>
 <h3><code>api.lookup.lookup(LookupParams)</code></h3>
-<p>CLI: <code>wgsextract lookup</code>.</p>
+<p>CLI: <code>wgsextract lookup</code>.
+Certification: Tested. Site evidence states checked on fixtures, including real bcftools gVCF output.</p>
 <p><code>details</code> is the <code>wgsextract.lookup/1</code> document: <code>resolution</code>
 (and its <code>candidates</code> when the identifier is ambiguous), <code>site</code> or
 <code>region</code> (genotype, <code>status</code> and evidence state, calls),
@@ -9487,7 +9619,8 @@ there. Local files only; writes nothing.</p>
 <p><code>sample</code>: show and correct what is recorded about a sample in its
 workspace, <code>wgsextract.sample.toml</code> (see docs/sample-workspace.md).</p>
 <h3><code>api.sample.show(SampleShowParams)</code></h3>
-<p>CLI: <code>wgsextract sample show</code>.</p>
+<p>CLI: <code>wgsextract sample show</code>.
+Certification: Tested. Local sample metadata lookup checked.</p>
 <p>Read the workspace. <code>details</code> holds <code>genome_folder</code>, the
 folder-wide <code>overrides</code>, <code>files</code> (each recorded file's <code>status</code> —
 current, changed or missing — its detected <code>facts</code> and its own
@@ -9524,7 +9657,8 @@ the result manifests indexed in its workspace.</p>
 </tbody>
 </table></div>
 <h3><code>api.sample.set_overrides(SampleSetParams)</code></h3>
-<p>CLI: <code>wgsextract sample set</code>.</p>
+<p>CLI: <code>wgsextract sample set</code>.
+Certification: Tested. Local sample metadata updates checked.</p>
 <p>Set overrides; <code>details</code> is the workspace afterwards, as <code>show</code>.</p>
 <p><code>SampleSetParams</code>: Set overrides: facts commands use instead of what they detect. A sex
 override is folder-wide in a genome folder (one person's files); anything
@@ -9573,7 +9707,8 @@ cheaply and warn when the reads disagree.</p>
 </tbody>
 </table></div>
 <h3><code>api.sample.unset_overrides(SampleUnsetParams)</code></h3>
-<p>CLI: <code>wgsextract sample unset</code>.</p>
+<p>CLI: <code>wgsextract sample unset</code>.
+Certification: Tested. Local sample metadata removal checked.</p>
 <p>Remove overrides; <code>details</code> is the workspace afterwards, as <code>show</code>.</p>
 <p><code>SampleUnsetParams</code>: Remove overrides, so commands detect those facts again: the
 folder-wide one and, with <code>input</code>, that file's own.</p>
@@ -9632,7 +9767,8 @@ api.support.open_issue(report)         # the user submits it on GitHub
 where the user reviews and submits it. Reports never contain genotypes, reads,
 file contents, sample, user or computer names, full paths or secrets.</p>
 <h3><code>api.support.build_issue_report(ReportIssueParams)</code></h3>
-<p>CLI: <code>wgsextract report-issue</code>.</p>
+<p>CLI: <code>wgsextract report-issue</code>.
+Certification: Tested. Report content and redaction checked against fixture logs and manifests.</p>
 <p>Collect, redact and fit a report; writes nothing and opens nothing.</p>
 <p><code>result</code> reports on that run (e.g. one the API just returned) instead of
 <code>params.run</code> or the last recorded run. Raises <code>UsageError</code> when
@@ -9761,7 +9897,8 @@ optional tool (<code>pixi install --locked -e &lt;env&gt;</code>); <code>uninsta
 Tools that come with the CLI itself, or that you install yourself, are
 refused with how to get them.</p>
 <h3><code>api.deps.check(DepsCheckParams)</code></h3>
-<p>CLI: <code>wgsextract deps check</code>.</p>
+<p>CLI: <code>wgsextract deps check</code>.
+Certification: Tested. Local dependency probes checked.</p>
 <p>Check the installed tools (see <code>DepsCheckParams</code>).</p>
 <p><code>DepsCheckParams</code>: Check the installed tools, or one <code>tool</code>.</p>
 <div class="table-wrap"><table>
@@ -9785,7 +9922,8 @@ refused with how to get them.</p>
 </tbody>
 </table></div>
 <h3><code>api.deps.list_tools(DepsListParams)</code></h3>
-<p>CLI: <code>wgsextract deps list</code>.</p>
+<p>CLI: <code>wgsextract deps list</code>.
+Certification: Tested. Local dependency inventory checked.</p>
 <p>List every tool and its status (see <code>DepsListParams</code>).</p>
 <p><code>DepsListParams</code>: List every tool, its status and whether it can be installed or removed.</p>
 <div class="table-wrap"><table>
@@ -9800,7 +9938,8 @@ refused with how to get them.</p>
 </thead>
 </table></div>
 <h3><code>api.deps.ready(DepsReadyParams)</code></h3>
-<p>CLI: <code>wgsextract deps ready</code>.</p>
+<p>CLI: <code>wgsextract deps ready</code>.
+Certification: Tested. Local dependency readiness checked.</p>
 <p>Report a command line's offline readiness (see <code>DepsReadyParams</code>).</p>
 <p><code>DepsReadyParams</code>: Report whether a command line can run here without the network.</p>
 <div class="table-wrap"><table>
@@ -9824,7 +9963,8 @@ refused with how to get them.</p>
 </tbody>
 </table></div>
 <h3><code>api.deps.install(DepsInstallParams)</code></h3>
-<p>CLI: <code>wgsextract deps install</code>.</p>
+<p>CLI: <code>wgsextract deps install</code>.
+Certification: Experimental. External installers are mocked in fixture tests.</p>
 <p>Install an optional tool's Pixi environment (see <code>DepsInstallParams</code>).</p>
 <p><code>DepsInstallParams</code>: Download and install the Pixi environment providing an optional tool.</p>
 <div class="table-wrap"><table>
@@ -9848,7 +9988,8 @@ refused with how to get them.</p>
 </tbody>
 </table></div>
 <h3><code>api.deps.uninstall(DepsUninstallParams)</code></h3>
-<p>CLI: <code>wgsextract deps uninstall</code>.</p>
+<p>CLI: <code>wgsextract deps uninstall</code>.
+Certification: Experimental. External uninstallers are mocked in fixture tests.</p>
 <p>Remove an optional tool's Pixi environment (see <code>DepsUninstallParams</code>).</p>
 <p><code>DepsUninstallParams</code>: Remove the Pixi environment providing an optional tool.</p>
 <div class="table-wrap"><table>
@@ -9881,7 +10022,8 @@ them. Completed files are kept and interrupted downloads resume unless
 <code>force</code> is set. A <code>dry_run</code> downloads nothing; its result's <code>details</code>
 hold the plan.</p>
 <h3><code>api.examples.list_examples(ExampleGenomeListParams)</code></h3>
-<p>CLI: <code>wgsextract example-genome list</code>.</p>
+<p>CLI: <code>wgsextract example-genome list</code>.
+Certification: Tested. Local example catalog entries and tag selection checked.</p>
 <p>Describe the example catalog; the description is the result's
 <code>details</code>.</p>
 <p><code>ExampleGenomeListParams</code>: List the curated examples: each one's id, label, data type, size,
@@ -9914,7 +10056,8 @@ tags and file count.</p>
 </tbody>
 </table></div>
 <h3><code>api.examples.download(ExampleGenomeDownloadParams)</code></h3>
-<p>CLI: <code>wgsextract example-genome download</code>.</p>
+<p>CLI: <code>wgsextract example-genome download</code>.
+Certification: Experimental. Resume and publication are exercised against a local HTTP server, but public sources and all transports are not qualified.</p>
 <p>Download example genomes (see <code>ExampleGenomeDownloadParams</code>); each file
 is an output with its catalog role (<code>bam</code>, <code>vcf</code>, <code>fastq_r1</code> ...),
 plus each example's <code>genome_config</code>.</p>
@@ -10020,7 +10163,8 @@ CHM13 gene set (no known variants); <code>run</code> takes the assembly from the
 reference library's build, else the VCF's contigs. See docs/vep-engines.md.</p>
 <h3><code>api.vep.engine_param() -&gt; Any</code></h3>
 <h3><code>api.vep.run(VepRunParams)</code></h3>
-<p>CLI: <code>wgsextract vep run</code>.</p>
+<p>CLI: <code>wgsextract vep run</code>.
+Certification: Tested. Fixture annotation output checked; not all engines and options are qualified.</p>
 <p>Annotate variants with VEP (see <code>VepRunParams</code>).</p>
 <p><code>VepRunParams</code>: Annotate variants with VEP (see the module docstring).</p>
 <div class="table-wrap"><table>
@@ -10156,7 +10300,8 @@ reference library's build, else the VCF's contigs. See docs/vep-engines.md.</p>
 </tbody>
 </table></div>
 <h3><code>api.vep.download(VepDownloadParams)</code></h3>
-<p>CLI: <code>wgsextract vep download</code>.</p>
+<p>CLI: <code>wgsextract vep download</code>.
+Certification: Experimental. Fixture resource acquisition does not qualify all upstream downloads.</p>
 <p>Download and unpack the VEP cache (see <code>VepDownloadParams</code>).</p>
 <p><code>VepDownloadParams</code>: Download and unpack Ensembl's VEP cache (see the module docstring).</p>
 <p>The download resumes after an interruption or cancellation; a checksum
@@ -10232,7 +10377,8 @@ unpacked; an unpacked cache replaces the same release's old one.</p>
 </tbody>
 </table></div>
 <h3><code>api.vep.verify(VepVerifyParams)</code></h3>
-<p>CLI: <code>wgsextract vep verify</code>.</p>
+<p>CLI: <code>wgsextract vep verify</code>.
+Certification: Tested. Local cache and resource checks on fixtures.</p>
 <p>Check an unpacked VEP cache (see <code>VepVerifyParams</code>).</p>
 <p><code>VepVerifyParams</code>: Check an unpacked VEP cache (see the module docstring). Warns about a
 missing <code>info.txt</code> or chromosome folder (metric <code>missing_chromosomes</code>)
@@ -10294,7 +10440,8 @@ missing.</p>
 </tbody>
 </table></div>
 <h3><code>api.vep.delete(VepDeleteParams)</code></h3>
-<p>CLI: <code>wgsextract vep delete</code>.</p>
+<p>CLI: <code>wgsextract vep delete</code>.
+Certification: Tested. Local cache deletion checked on fixtures.</p>
 <p>Delete one release of the VEP cache (see <code>VepDeleteParams</code>).</p>
 <p><code>VepDeleteParams</code>: Delete one release and assembly of an unpacked VEP cache (see the
 module docstring), with any download of it left in the cache folder.</p>
@@ -10365,7 +10512,8 @@ step fails the operation once the report is written; with <code>keep_going</code
 other steps run first. A cancelled run's folder is removed; downloaded
 datasets stay cached. Local only: it downloads any dataset URL.</p>
 <h3><code>api.benchmark.benchmark(BenchmarkParams)</code></h3>
-<p>CLI: <code>wgsextract benchmark</code>.</p>
+<p>CLI: <code>wgsextract benchmark</code>.
+Certification: Tested. Benchmark orchestration and outputs checked on fixture inputs.</p>
 <p>Run the benchmark (see <code>BenchmarkParams</code>).</p>
 <p><code>BenchmarkParams</code>: Benchmark the operations on generated or real data (see the module
 docstring). <code>coverage</code>, <code>full_size</code>, <code>region</code> and <code>target_count</code>
