@@ -135,6 +135,20 @@ BAM/CRAM. Metrics are cached in the output folder's <code>manifests/</code> as
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -200,6 +214,20 @@ variants in it with their annotations, and read depth over its exons.
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>gene</code></td>
 <td><code>str</code></td>
@@ -283,6 +311,20 @@ reports <code>with_bins</code> writes are <code>current</code> (both newer than 
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
@@ -372,6 +414,20 @@ Certification: Tested. Sampled chromosome breadth checked on fixture alignments 
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -427,6 +483,20 @@ raw-data file, or list the catalogued revisions.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -473,6 +543,20 @@ reads called haploid with bcftools and applied to the reference's chrM.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -528,6 +612,20 @@ metric counts them).</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -580,6 +678,20 @@ Certification: Tested. Mitochondrial read extraction checked on fixture alignmen
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -634,6 +746,20 @@ limited to a region or gene.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -712,6 +838,20 @@ whose chrY reads are mismapped.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -781,6 +921,20 @@ metric counts them).</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -843,6 +997,20 @@ in <code>&lt;input&gt;_Y_MT_associated.bam</code>.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -904,6 +1072,20 @@ for the FASTQs that have reads).</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -968,6 +1150,20 @@ and holds each read once.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -1052,6 +1248,20 @@ are mismapped.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -1149,6 +1359,20 @@ checks that the temporary and final files fit on disk.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -1216,6 +1440,20 @@ Certification: Tested. Index creation checked on fixture alignments.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -1240,6 +1478,20 @@ Certification: Tested. Index removal checked on fixture alignments.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -1266,6 +1518,20 @@ Certification: Tested. BAM and CRAM sort-order headers are relabeled without cha
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -1306,6 +1572,20 @@ or gene.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -1382,6 +1662,20 @@ gene.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -1445,6 +1739,20 @@ than one read group, which FASTQ can't keep apart.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -1535,6 +1843,20 @@ metric is the MD5 of its sequence names and lengths.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -1575,6 +1897,20 @@ merged file's autosomal depth.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>inputs</code></td>
 <td><code>tuple[Path, ...]</code></td>
@@ -1653,6 +1989,20 @@ without read groups gets one from <code>sample</code>, <code>library</code> and
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
@@ -1744,6 +2094,20 @@ Certification: Tested. Byte-preserving FASTQ archive round trips on fixtures.</p
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>r1</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -1782,6 +2146,20 @@ Certification: Tested. Archive integrity and byte-exact FASTQ restoration on fix
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -1829,6 +2207,20 @@ rate and duplication rate are metrics.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>r1</code></td>
 <td><code>Path | None</code></td>
@@ -1878,6 +2270,20 @@ the read count are metrics (<code>r2_</code>-prefixed for <code>r2</code>). With
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -1934,6 +2340,20 @@ with MultiQC's AI summaries off.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -1974,6 +2394,20 @@ metrics in WGS Extract result manifests; MultiQC isn't needed.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -2007,6 +2441,20 @@ latter wins.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
@@ -2052,6 +2500,20 @@ ancestry PCs; recorded as the sample's <code>contamination</code> fact. Optional
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -2124,6 +2586,20 @@ is optional (<code>pixi install -e somalier</code>) and unavailable on Windows.<
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>inputs</code></td>
 <td><code>tuple[Path, ...]</code></td>
@@ -2201,6 +2677,20 @@ and the <code>ancestry</code> fact; see docs/ancestry.md.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>download</code></td>
 <td><code>bool | None</code></td>
@@ -2283,6 +2773,20 @@ chromosome came from, and it isn't a diagnosis. See docs/roh.md.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -2396,6 +2900,20 @@ reference when there is one.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>coverage</code></td>
 <td><code>float</code></td>
 <td><code>1.0</code></td>
@@ -2484,6 +3002,20 @@ sent to Oxford Nanopore). Without it, use a local model directory.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>download</code></td>
 <td><code>bool | None</code></td>
@@ -2588,6 +3120,20 @@ workspace.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>r1</code></td>
 <td><code>Path | None</code></td>
@@ -2762,6 +3308,20 @@ settings and tools are unchanged.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>r1</code></td>
 <td><code>Path | None</code></td>
@@ -2986,6 +3546,20 @@ required; the CLI's <code>--genome</code> may fill it in from a sample workspace
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>r1</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -3075,6 +3649,20 @@ A file or folder name alone does not select a ploidy table.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -3178,6 +3766,20 @@ Certification: Validated. HG002 GRCh38 30× Windows qualification matched publis
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -3280,6 +3882,20 @@ Certification: Tested. Annotation field copying checked with real bcftools.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -3340,6 +3956,20 @@ Certification: Tested. Filtering of fixture variants checked with bcftools.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
@@ -3459,6 +4089,20 @@ see docs/exon-callability.md.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -3534,6 +4178,20 @@ Certification: Tested. Tabular exports checked against fixture variant calls.</p
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
@@ -3664,6 +4322,20 @@ Certification: Validated. Normalized allele and gVCF comparison checked on a 12 
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>callset</code></td>
 <td><code>tuple[str, ...]</code></td>
@@ -3804,6 +4476,20 @@ Certification: Tested. Consensus sequence checked on fixture variants and refere
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -3913,6 +4599,20 @@ records and left-aligns indels. Each repair is a structured warning.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -3989,6 +4689,20 @@ Covering gVCF reference blocks are assessed when a matching --ref is given.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
@@ -4100,6 +4814,20 @@ their own confidence table, not the consensus pathogenic subset.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -4175,6 +4903,20 @@ Certification: Tested. REVEL score annotation checked on fixture alleles.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -4242,6 +4984,20 @@ Certification: Tested. phyloP annotation checked on fixture score tracks.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
@@ -4311,6 +5067,20 @@ Certification: Tested. CADD score annotation checked on fixture alleles.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
@@ -4387,6 +5157,20 @@ Certification: Tested. GERP annotation checked on fixture score tracks.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -4455,6 +5239,20 @@ Certification: Tested. Frequency annotation checked on fixture alleles.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
@@ -4545,6 +5343,20 @@ CNV carrier frequencies and cross-type INS/DUP matches are excluded.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
@@ -4648,6 +5460,20 @@ Certification: Tested. SpliceAI scores checked on fixture variants.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -4711,6 +5537,20 @@ unless <code>research_acmg</code> is set; GRCh38 only.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
@@ -4794,6 +5634,20 @@ Certification: Tested. AlphaMissense scores checked on fixture variants.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -4862,6 +5716,20 @@ Certification: Tested. PharmGKB annotations checked on fixture variants.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -4925,6 +5793,20 @@ no sample data is sent to its public reference publisher.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>download</code></td>
 <td><code>bool | None</code></td>
@@ -5030,6 +5912,20 @@ journal lets interrupted chains resume from their last completed step.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
@@ -5149,6 +6045,20 @@ Certification: Experimental. Integration fixtures do not qualify CNV accuracy.</
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -5227,6 +6137,20 @@ or <code>pacbio</code>), else delly. The <code>caller_reason</code> metric says 
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -5336,6 +6260,20 @@ command writes: <code>snps.vcf.gz</code> (<code>vcf snp</code>), <code>indels.vc
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -5474,6 +6412,20 @@ Certification: Tested. Real FreeBayes calls checked against a planted SNP.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -5534,6 +6486,20 @@ Certification: Tested. Fixture GATK calls and CRAM/BAM handling checked.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -5641,6 +6607,20 @@ Google's ULTIMA GPU image runs the stages with call_variants on the GPU.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -5794,6 +6774,20 @@ Certification: Validated. HG002 chr20–22 CPU/MPS checks against GIAB truth; no
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -5887,6 +6881,20 @@ HP/PS tags to <code>haplotagged.bam</code> (or <code>.cram</code>).</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -5979,6 +6987,20 @@ the output doesn't depend on how many.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -6060,6 +7082,20 @@ Certification: Tested. VCF statistics and build checks on fixtures.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -6105,6 +7141,20 @@ Certification: Experimental. External VariantQC integration does not establish o
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
@@ -6180,6 +7230,20 @@ Certification: Experimental. External GRANITE integration does not establish out
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -6248,6 +7312,20 @@ Certification: Tested. Disclosure thresholds and summaries checked on fixture VC
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>cohort_manifest</code></td>
 <td><code>Path</code></td>
@@ -6372,6 +7450,20 @@ or <code>vcf_input_paths</code> supply them.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>vcf_inputs</code></td>
 <td><code>tuple[Path, ...] | None</code></td>
 <td><code>None</code></td>
@@ -6476,6 +7568,20 @@ VCFs under <code>directory</code>, grouping files into samples by name
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>directory</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -6528,6 +7634,20 @@ confirm as the rCRS is warned of (<code>mt_reference_unconfirmed</code>).</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>download</code></td>
 <td><code>bool | None</code></td>
@@ -6620,6 +7740,20 @@ or single-sample VCF/BCF. Outputs go to <code>yleaf/</code> in the output folder
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>download</code></td>
 <td><code>bool | None</code></td>
@@ -6753,6 +7887,20 @@ FamilyTreeDNA-order CSV).</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -6834,6 +7982,20 @@ and pass strict allele-fraction, read and quality gates. Outputs go to
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>download</code></td>
 <td><code>bool | None</code></td>
@@ -6944,6 +8106,20 @@ methylation_combine_strands, else CpG, 5mC only and strands combined.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -7024,6 +8200,20 @@ Certification: Validated. HG002 promoter/island BGZF–Parquet parity and chr21 
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -7154,6 +8344,20 @@ chains require <code>download</code>; lifting sample coordinates stays local.</p
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>download</code></td>
 <td><code>bool | None</code></td>
@@ -7353,6 +8557,20 @@ server is slow, so the panel is only downloaded on request.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>delete</code></td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
@@ -7387,6 +8605,20 @@ uses, about 85 MB, or delete them.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>delete</code></td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
@@ -7419,6 +8651,20 @@ and prepare GLIMPSE2 binary references, or delete installed chromosomes.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>delete</code></td>
 <td><code>bool</code></td>
@@ -7467,6 +8713,20 @@ delete it.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>delete</code></td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
@@ -7505,6 +8765,20 @@ a time).</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>source</code></td>
 <td><code>str</code></td>
@@ -7552,6 +8826,20 @@ library, or delete the installed snapshots; <code>grch37</code> lifts it to GRCh
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>delete</code></td>
 <td><code>bool</code></td>
@@ -7613,6 +8901,20 @@ Certification: Tested. The shared downloader's checksum verification and local p
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>url</code></td>
 <td><code>str</code></td>
 <td>required</td>
@@ -7645,6 +8947,20 @@ dictionary and the aligner's index, written beside it.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>download</code></td>
 <td><code>bool | None</code></td>
@@ -7689,6 +9005,20 @@ FASTA's files, or delete them. Needs wgse-bwa 0.11.0 or later on PATH;
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
@@ -7744,6 +9074,20 @@ sequence, length and N totals are metrics.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>reference_fasta</code>)</td>
@@ -7778,6 +9122,20 @@ a missing <code>.fai</code>/<code>.gzi</code>; <code>contigs</code> and <code>si
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>reference_fasta</code>)</td>
@@ -7805,6 +9163,20 @@ each mirror that hosts it.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>install</code></td>
 <td><code>str | None</code></td>
@@ -7854,6 +9226,20 @@ gene maps and annotation data it holds.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>reference_fasta</code>)</td>
@@ -7890,6 +9276,20 @@ which never change, stay.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>genome</code></td>
 <td><code>str | None</code></td>
 <td><code>None</code></td>
@@ -7923,6 +9323,20 @@ ploidy and mappability files, and the test genome.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
@@ -7977,6 +9391,20 @@ HG00096) in the My Genomes library. Reports whether it is installed;
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -8027,6 +9455,20 @@ downloaded and no analysis is rerun; <code>details</code> is the
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>manifests</code></td>
 <td><code>tuple[Path, ...]</code></td>
 <td>required</td>
@@ -8076,6 +9518,20 @@ offline viewer; no sample data is sent.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>build</code></td>
 <td><code>str</code></td>
 <td><code>'hg38'</code></td>
@@ -8115,6 +9571,20 @@ Certification: Tested. Gene maps and aliases checked on fixture annotations.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>delete</code></td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
@@ -8147,6 +9617,20 @@ Certification: Tested. ClinVar resource preparation checked on fixtures.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>reference_fasta</code>)</td>
@@ -8173,6 +9657,20 @@ offline SQLite rsID search index) for hg38 and hg19, or delete them.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
@@ -8213,6 +9711,20 @@ Certification: Tested. REVEL resource preparation checked on fixtures.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>reference_fasta</code>)</td>
@@ -8237,6 +9749,20 @@ Certification: Tested. phyloP resource preparation checked on fixtures.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
@@ -8270,6 +9796,20 @@ frequency and homozygote-count table.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
@@ -8318,6 +9858,20 @@ manual hg19 download; or delete the installed score files.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>reference_fasta</code>)</td>
@@ -8349,6 +9903,20 @@ Certification: Tested. AlphaMissense resource preparation checked on fixtures.</
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
@@ -8382,6 +9950,20 @@ Certification: Tested. PharmGKB resource preparation checked on fixtures.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>reference_fasta</code>)</td>
@@ -8414,6 +9996,20 @@ Certification: Tested. CADD resource preparation checked on fixtures.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>reference_fasta</code>)</td>
@@ -8445,6 +10041,20 @@ Certification: Tested. GERP resource preparation checked on fixtures.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
@@ -8481,6 +10091,20 @@ reruns resume. Downloads public sources only with <code>--download</code>.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>download</code></td>
 <td><code>bool</code></td>
@@ -8567,6 +10191,20 @@ is unset.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>ref</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code> (config <code>reference_fasta</code>)</td>
@@ -8594,6 +10232,20 @@ templates, or delete them. Missing liftOver chains require <code>download</code>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>download</code></td>
 <td><code>bool</code></td>
@@ -8646,6 +10298,20 @@ accept it. A CRAM is decoded with <code>ref</code>, else the reference it names.
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -8697,6 +10363,20 @@ are kept in <code>INFO/FTDNA_FILTER</code>. See docs/ftdna-vcf-repair.md.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -8746,6 +10426,20 @@ Certification: Tested. Fixture signatures created and checked with ssh-keygen.</
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>paths</code></td>
 <td><code>tuple[Path, ...]</code></td>
@@ -8802,6 +10496,20 @@ key); with no signature file, only the hashes are checked.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>manifest</code></td>
 <td><code>Path</code></td>
@@ -8869,6 +10577,20 @@ Custom scoring files take precedence over Catalog selection.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>download</code></td>
 <td><code>bool | None</code></td>
@@ -9018,6 +10740,20 @@ outside call. Metrics: <code>cyp2d6_genotype</code>, <code>cyp2d6_filter</code>,
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -9074,6 +10810,20 @@ median depth no calls are reported (files kept as
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -9122,6 +10872,20 @@ with clear depth evidence. This is a screen, not a diagnosis.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -9185,6 +10949,20 @@ calls and explicit no-calls. ONT is experimental and unvalidated.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -9247,6 +11025,20 @@ decoys and chr6 ALT contigs. Metrics: diplotypes of HLA-A, -B, -C,
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>download</code></td>
 <td><code>bool | None</code></td>
@@ -9316,6 +11108,20 @@ all-weak or incomplete call,
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -9417,6 +11223,20 @@ plus a findings table, from the result manifests in its folder.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>download</code></td>
 <td><code>bool | None</code></td>
 <td><code>None</code> (config <code>allow_reference_downloads</code>)</td>
@@ -9499,6 +11319,20 @@ resource releases and provenance. Timestamps and ordering are ignored.
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>before</code></td>
 <td><code>Path</code></td>
 <td>required</td>
@@ -9544,6 +11378,20 @@ there. Local files only; writes nothing.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -9663,6 +11511,20 @@ the result manifests indexed in its workspace.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -9698,6 +11560,20 @@ cheaply and warn when the reads disagree.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
@@ -9745,6 +11621,20 @@ folder-wide one and, with <code>input</code>, that file's own.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path | None</code></td>
@@ -9808,6 +11698,20 @@ Certification: Tested. Report content and redaction checked against fixture logs
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>run</code></td>
 <td><code>Path | None</code></td>
@@ -9935,6 +11839,20 @@ Certification: Tested. Local dependency probes checked.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>tool</code></td>
 <td><code>str | None</code></td>
 <td><code>None</code></td>
@@ -9958,6 +11876,22 @@ Certification: Tested. Local dependency inventory checked.</p>
 <th>Description</th>
 </tr>
 </thead>
+<tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+</tbody>
 </table></div>
 <h3><code>api.deps.ready(DepsReadyParams)</code></h3>
 <p>CLI: <code>wgsextract deps ready</code>.
@@ -9975,6 +11909,20 @@ Certification: Tested. Local dependency readiness checked.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>command_line</code></td>
 <td><code>tuple[str, ...]</code></td>
@@ -10001,6 +11949,20 @@ Certification: Experimental. External installers are mocked in fixture tests.</p
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>tool</code></td>
 <td><code>str</code></td>
 <td>required</td>
@@ -10025,6 +11987,20 @@ Certification: Experimental. External uninstallers are mocked in fixture tests.<
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>tool</code></td>
 <td><code>str</code></td>
@@ -10062,6 +12038,20 @@ tags and file count.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>target_root</code></td>
 <td><code>Path | None</code></td>
 <td><code>None</code></td>
@@ -10097,6 +12087,20 @@ starter set (a chrMT VCF and a chr20 BAM) is downloaded.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>example_ids</code></td>
 <td><code>tuple[str, ...]</code></td>
@@ -10200,6 +12204,20 @@ Certification: Tested. Fixture annotation output checked; not all engines and op
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>input</code></td>
 <td><code>Path</code></td>
@@ -10341,6 +12359,20 @@ unpacked; an unpacked cache replaces the same release's old one.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>engine</code></td>
 <td><code>str | None</code></td>
 <td><code>None</code> (config <code>vep_engine</code>)</td>
@@ -10418,6 +12450,20 @@ missing.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
 <td><code>engine</code></td>
 <td><code>str | None</code></td>
 <td><code>None</code> (config <code>vep_engine</code>)</td>
@@ -10478,6 +12524,20 @@ module docstring), with any download of it left in the cache folder.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>engine</code></td>
 <td><code>str | None</code></td>
@@ -10552,6 +12612,20 @@ for every step.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
 <tr>
 <td><code>outdir</code></td>
 <td><code>Path | None</code></td>

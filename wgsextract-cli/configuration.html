@@ -159,6 +159,13 @@ macOS uses <code>caffeinate</code>, Linux uses already-installed/permitted
 Missing helpers, denied permissions or cleanup errors never fail the run.
 This prevents automatic sleep, not shutdown or forced/manual suspension;
 display sleep is allowed. Report-only help/config/deps never inhibit sleep.</p>
+<h2>Network mode</h2>
+<p>Set <code>network_mode = &quot;full&quot;</code> (the default), <code>&quot;low&quot;</code> or <code>&quot;off&quot;</code>. Use
+<code>--network</code> to override the setting for one run. In low mode, pass
+<code>--allow-large-download</code> to confirm a bulk transfer. In off mode, no transfer
+opt-in can override the block. The mode never replaces <code>--download</code> or any
+other operation-specific consent. See
+<a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/privacy.md#cli-network-mode">Privacy and network access</a>.</p>
 <h2>Settings</h2>
 <div class="table-wrap"><table>
 <thead>
@@ -181,6 +188,12 @@ display sleep is allowed. Report-only help/config/deps never inhibit sleep.</p>
 <td>boolean</td>
 <td><code>false</code></td>
 <td>Allow first-use public reference/model downloads for commands with --download (hosts and request data: docs/privacy.md); no sample uploads</td>
+</tr>
+<tr>
+<td><code>network_mode</code></td>
+<td><code>full</code> or <code>low</code> or <code>off</code></td>
+<td><code>&quot;full&quot;</code></td>
+<td>Outbound network mode: full keeps existing opt-ins, low also requires --allow-large-download for bulk transfers, off refuses network access</td>
 </tr>
 <tr>
 <td><code>cohort_min_samples</code></td>
