@@ -195,14 +195,14 @@
 <td><code>realign</code></td>
 <td>Re-map a BAM/CRAM to another build, e.g. hg19 to hg38.</td>
 <td>&lt;input stem&gt;_aligned.bam or .cram (+ index); with --keep-fastq, also &lt;input stem&gt;_R1/_R2.fastq.gz (single-end ONT/PacBio: &lt;input stem&gt;.fastq.gz). Completed steps are recorded in &lt;output&gt;.steps.json, so a rerun resumes after a crash.</td>
-<td>samtools; depending on options and inputs, also: bcftools, bgzip, bwa, bwa-mem2, bwa-mem3, curl, gatk, minimap2, pbmm2, sambamba, samblaster; hours on a 30x genome</td>
+<td>samtools; depending on options and inputs, also: bcftools, bgzip, bonefish, bwa, bwa-mem2, bwa-mem3, curl, gatk, minimap2, pbmm2, sambamba, samblaster; hours on a 30x genome</td>
 <td><code>wgsextract realign --input sample_hg19.bam --ref hs38.fa</code></td>
 </tr>
 <tr>
 <td><code>align</code></td>
 <td>Map raw FASTQ reads to a reference, making a BAM/CRAM.</td>
 <td>&lt;reads stem&gt;_aligned.bam or .cram (+ index).</td>
-<td>samtools; depending on options and inputs, also: bcftools, bwa, bwa-mem2, bwa-mem3, curl, gatk, minimap2, pbmm2, sambamba, samblaster; hours on a 30x genome</td>
+<td>samtools; depending on options and inputs, also: bcftools, bonefish, bwa, bwa-mem2, bwa-mem3, curl, gatk, minimap2, pbmm2, sambamba, samblaster; hours on a 30x genome</td>
 <td><code>wgsextract align --r1 sample_R1.fastq.gz --r2 sample_R2.fastq.gz --ref hs38.fa</code></td>
 </tr>
 <tr>

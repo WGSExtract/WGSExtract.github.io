@@ -3104,7 +3104,7 @@ sent to Oxford Nanopore). Without it, use a local model directory.</p>
 </table></div>
 <h3><code>api.align.align(AlignParams)</code></h3>
 <p>CLI: <code>wgsextract align</code>.
-Certification: Validated. CPU/CUDA decoded-record parity on 5 million HG002 Illumina read pairs; not an all-backend qualification.</p>
+Certification: Validated. CPU/CUDA decoded-record parity on 5 million HG002 Illumina read pairs. The optional bonefish backend is Experimental.</p>
 <p>Align reads to a reference (see <code>AlignParams</code>).</p>
 <p><code>AlignParams</code>: Align FASTQ reads (or a BAM/CRAM of long or Ultima reads) to <code>ref</code> as <code>&lt;reads stem&gt;_aligned.bam</code> (or <code>.cram</code>) with its index.
 <code>r1</code> is required; the CLI's <code>--genome</code> may fill it in from a sample
@@ -3167,7 +3167,7 @@ workspace.</p>
 <td><code>str</code></td>
 <td><code>'auto'</code></td>
 <td><code>--aligner</code></td>
-<td>Aligner to use. Auto uses bwa-mem2 for short reads when the reference has its index (see <code>ref index</code>), else bwa; for long reads pbmm2 for PacBio when installed, otherwise minimap2. bwa-mem3 (wgse-bwa-mem3 on Apple Silicon and Linux x86-64, else bwa-mem3 from PATH or its Pixi environment) writes bwa's exact records faster, from bwa-mem2's index. One of: <code>auto</code>, <code>bwa</code>, <code>bwa-mem2</code>, <code>bwa-mem3</code>, <code>minimap2</code>, <code>pbmm2</code></td>
+<td>Aligner to use. Auto uses bwa-mem2 for short reads when the reference has its index (see <code>ref index</code>), else bwa; for long reads pbmm2 for PacBio when installed, otherwise minimap2. bwa-mem3 (wgse-bwa-mem3 on Apple Silicon and Linux x86-64, else bwa-mem3 from PATH or its Pixi environment) writes bwa's exact records faster, from bwa-mem2's index. Experimental bonefish 0.5.2+ maps ONT/HiFi DNA. One of: <code>auto</code>, <code>bwa</code>, <code>bwa-mem2</code>, <code>bwa-mem3</code>, <code>minimap2</code>, <code>pbmm2</code>, <code>bonefish</code></td>
 </tr>
 <tr>
 <td><code>fast</code></td>
@@ -3223,7 +3223,7 @@ workspace.</p>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 <td><code>--long-read</code></td>
-<td>Treat the reads as long reads (PacBio/ONT) and align them with pbmm2 or minimap2.</td>
+<td>Treat the reads as long reads (PacBio/ONT) and align them with pbmm2, minimap2, or an explicitly selected bonefish.</td>
 </tr>
 <tr>
 <td><code>format</code></td>
@@ -3285,7 +3285,7 @@ workspace.</p>
 </table></div>
 <h3><code>api.align.realign(RealignParams)</code></h3>
 <p>CLI: <code>wgsextract realign</code>.
-Certification: Validated. HG002 30× SNP/indel qualification and ONT CUDA parity on tested inputs; not all backends or platforms.</p>
+Certification: Validated. HG002 30× SNP/indel qualification and ONT CUDA parity on tested inputs. The optional bonefish backend is Experimental.</p>
 <p>Re-align a BAM/CRAM to a reference (see <code>RealignParams</code>).</p>
 <p><code>RealignParams</code>: Re-align a BAM/CRAM to <code>ref</code> (possibly a different build) as
 <code>&lt;input stem&gt;_aligned.bam</code> (or <code>.cram</code>) with its index.</p>
@@ -3293,7 +3293,7 @@ Certification: Validated. HG002 30× SNP/indel qualification and ONT CUDA parity
 the machine has the memory; FASTQs from an earlier extraction (beside the
 input or in <code>outdir</code>) or given as <code>r1</code>/<code>r2</code> are reused. Single-end
 ONT and PacBio reads (detected, or <code>platform</code>) stream each read's primary
-record with its MM/ML tags into minimap2. Free disk
+record with its MM/ML tags into minimap2 or experimental bonefish. Free disk
 space is checked first. Completed steps (extract, align, index) are
 recorded in <code>&lt;output&gt;.steps.json</code> and skipped on a rerun whose inputs,
 settings and tools are unchanged.</p>
@@ -3341,7 +3341,7 @@ settings and tools are unchanged.</p>
 <td><code>str</code></td>
 <td><code>'auto'</code></td>
 <td><code>--aligner</code></td>
-<td>Aligner: auto, bwa, bwa-mem2, bwa-mem3, minimap2 or pbmm2, chosen as for align. One of: <code>auto</code>, <code>bwa</code>, <code>bwa-mem2</code>, <code>bwa-mem3</code>, <code>minimap2</code>, <code>pbmm2</code></td>
+<td>Aligner: auto, bwa, bwa-mem2, bwa-mem3, minimap2, pbmm2 or experimental bonefish, chosen as for align. One of: <code>auto</code>, <code>bwa</code>, <code>bwa-mem2</code>, <code>bwa-mem3</code>, <code>minimap2</code>, <code>pbmm2</code>, <code>bonefish</code></td>
 </tr>
 <tr>
 <td><code>fast</code></td>
@@ -3453,7 +3453,7 @@ settings and tools are unchanged.</p>
 <td><code>str</code></td>
 <td><code>'4G'</code></td>
 <td><code>--chunk-size</code></td>
-<td>ONT/PacBio input per chunk (K/M/G/T; 0: one pass). Resumes unfinished chunks and bounds temporary files. Requires sorted, indexed input; ignored with --keep-fastq.</td>
+<td>ONT/PacBio input per chunk (K/M/G/T; 0: one pass). Resumes unfinished chunks and bounds temporary files. Requires sorted, indexed input and minimap2; ignored with --keep-fastq or bonefish.</td>
 </tr>
 <tr>
 <td><code>no_preflight</code></td>
