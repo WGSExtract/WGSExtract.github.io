@@ -223,7 +223,7 @@
 <td><code>vcf call</code></td>
 <td>Call several variant types in one run: SNPs and InDels (bcftools), SVs and CNVs, each into its own VCF, and with --merge also into one combined VCF.</td>
 <td>Each type's own VCF (snps.vcf.gz, indels.vcf.gz, the SV caller's VCF, cnv.vcf.gz), with --reference-evidence gvcf one bcftools.g.vcf.gz for SNPs and indels instead; --merge replaces them with variants.vcf.gz (variants.g.vcf.gz with the gVCF) (+ .tbi).</td>
-<td>bcftools, samtools, tabix; depending on options and inputs, also: delly, pbsv, sambamba, sniffles; hours on a 30x genome</td>
+<td>bcftools, samtools, tabix; depending on options and inputs, also: bgzip, delly, pbsv, sambamba, sniffles; hours on a 30x genome</td>
 <td><code>wgsextract vcf call --input sample.cram --types snp,indel --merge</code></td>
 </tr>
 <tr>
@@ -727,42 +727,42 @@
 <td><code>vcf cnv</code></td>
 <td>Call Copy Number Variants (CNVs) using Delly.</td>
 <td>cnv.vcf.gz (+ .tbi).</td>
-<td>bcftools, delly, samtools, tabix; hours on a 30x genome</td>
+<td>bcftools, bgzip, delly, samtools, tabix; hours on a 30x genome</td>
 <td><code>wgsextract vcf cnv --input sample.cram</code></td>
 </tr>
 <tr>
 <td><code>vcf sv</code></td>
 <td>Call Structural Variants (SVs) using Delly for short reads, Sniffles for Nanopore (ONT, auto-detected) or other long reads, or pbsv/Sniffles for PacBio.</td>
 <td>sv.vcf.gz (Delly), pbsv.vcf.gz or sniffles.vcf.gz (+ .tbi).</td>
-<td>bcftools, samtools, tabix; depending on options and inputs, also: delly, pbsv, sambamba, sniffles; hours on a 30x genome</td>
+<td>bcftools, samtools, tabix, bgzip; depending on options and inputs, also: delly, pbsv, sambamba, sniffles; hours on a 30x genome</td>
 <td><code>wgsextract vcf sv --input sample.cram</code></td>
 </tr>
 <tr>
 <td><code>vcf freebayes</code></td>
 <td>A Bayesian genetic variant detector.</td>
 <td>freebayes.vcf.gz (+ .tbi).</td>
-<td>bcftools, freebayes, samtools, tabix; hours on a 30x genome</td>
+<td>bcftools, bgzip, freebayes, samtools, tabix; hours on a 30x genome</td>
 <td><code>wgsextract vcf freebayes --input sample.cram --region chr20</code></td>
 </tr>
 <tr>
 <td><code>vcf gatk</code></td>
-<td>Industry-standard GATK HaplotypeCaller.</td>
+<td>Call SNPs and indels with GATK HaplotypeCaller using local de novo assembly.</td>
 <td>gatk.vcf.gz (+ .tbi).</td>
-<td>gatk, samtools, tabix; depending on options and inputs, also: bcftools; hours on a 30x genome</td>
+<td>bgzip, gatk, samtools, tabix; depending on options and inputs, also: bcftools; hours on a 30x genome</td>
 <td><code>wgsextract vcf gatk --input sample.cram</code></td>
 </tr>
 <tr>
 <td><code>vcf deepvariant</code></td>
 <td>Google's Deep Variant variant caller.</td>
-<td>deepvariant.vcf.gz (+ .tbi) and deepvariant.vcf.gz.steps.json; with --reference-evidence gvcf also deepvariant.g.vcf.gz (+ .tbi); until it finishes, the stages' work in .deepvariant.work, where a rerun resumes.</td>
-<td>samtools, tabix; depending on options and inputs, also: bcftools, docker, run_deepvariant, wgse-deepvariant, sambamba; hours on a 30x genome</td>
+<td>deepvariant.vcf.gz (+ .tbi), deepvariant.vcf.gz.steps.json; optional deepvariant.g.vcf.gz (+ .tbi). Resume work: .deepvariant.work.</td>
+<td>bgzip, samtools, tabix; depending on options and inputs, also: bcftools, docker, run_deepvariant, wgse-deepvariant, sambamba; hours on a 30x genome</td>
 <td><code>wgsextract vcf deepvariant --input sample.cram</code></td>
 </tr>
 <tr>
 <td><code>vcf clair3</code></td>
 <td>Clair3 small-variant caller for Oxford Nanopore reads (optional; Linux x86-64/ARM64 and Apple Silicon macOS, install with <code>pixi install -e clair3</code>).</td>
 <td>clair3.vcf.gz (+ .tbi).</td>
-<td>bcftools, samtools, tabix; depending on options and inputs, also: docker, run_clair3.sh, sambamba, wgse-clair3; hours on a 30x genome</td>
+<td>bcftools, bgzip, samtools, tabix; depending on options and inputs, also: docker, run_clair3.sh, sambamba, wgse-clair3; hours on a 30x genome</td>
 <td><code>wgsextract vcf clair3 --input ont.bam</code></td>
 </tr>
 <tr>
