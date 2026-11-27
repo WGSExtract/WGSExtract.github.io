@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Process rule ledger | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/process_rules.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="../app/mockups/preview/v2/index.html">UI mockups</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Process rule ledger</span></nav>
+<h1 id="process-rule-ledger">Process rule ledger</h1>
+<p>The owner approved these decisions on 2026-11-27. Dates and costs come from the <a href="https://github.com/WGSExtract/wgsextract-cli/issues/1633" target="_blank" rel="noopener noreferrer">process-rule audit (#1633)</a> and the <a href="https://github.com/WGSExtract/wgsextract-cli/issues/1632" target="_blank" rel="noopener noreferrer">final-head certification research (#1632)</a>. Costs are historical observations or proxies, not additive. “No incident found” means none in the audited history. Introduction dates are in 2026.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Rule</th><th>Introduced or revised</th><th>Incident or measured risk</th><th>Cost</th><th>Keep, narrow or drop</th><th>Review date</th></tr></thead>
+<tbody>
+<tr><td>Generic and OS certification before readiness, including review rounds</td><td>Nov 15 <code>28c8e527d</code>; Nov 22 <code>7756524fc</code>, <code>f0f57cee2</code></td><td><a href="https://github.com/WGSExtract/wgsextract-cli/issues/1373" target="_blank" rel="noopener noreferrer">Queue starvation (#1373)</a> supports admission; <a href="https://github.com/WGSExtract/wgsextract-cli/issues/1297" target="_blank" rel="noopener noreferrer">Windows reset (#1297)</a> and <a href="https://github.com/WGSExtract/wgsextract-cli/pull/1264" target="_blank" rel="noopener noreferrer">macOS OpenMP (#1264)</a> support native evidence</td><td>201 superseded certs in volume audit; 190 busy refusals in 310 controller attempts</td><td><strong>Narrow:</strong> routed layers, settled head; unavailable → hosted</td><td>2026-12-10</td></tr>
+<tr><td>Trusted writer certificates on exact head</td><td>Nov 15 <code>28c8e527d</code>, <code>e708bdcf5</code></td><td>Wrong SHA/platform can suppress required tests; <a href="https://github.com/WGSExtract/wgsextract-cli/pull/952" target="_blank" rel="noopener noreferrer">missing inputs (#952)</a></td><td>Check status and provenance; marginal time not isolated</td><td><strong>Keep:</strong> never carry statuses forward</td><td>2027-01-15</td></tr>
+<tr><td>Ready <code>required</code> and independent merged-tree smoke</td><td>Nov 13 <code>d9c5069b6</code>; Nov 15 <code>b6af44ec8</code>; Nov 24–25 <code>beeb029d5</code>, <code>50dd6b24b</code></td><td><a href="https://github.com/WGSExtract/wgsextract-cli/pull/950" target="_blank" rel="noopener noreferrer">Area failures bypassed (#950)</a>; 30 of 535 audited merge-group runs failed, not all product faults</td><td>67 queue runner-min/PR mean in the pre-cutover audit, not the current smoke cost</td><td><strong>Keep:</strong> no PR certificate reuse in the queue</td><td>2027-01-15</td></tr>
+<tr><td>Capacity check and serialized owner admission</td><td>Nov 22 <code>7756524fc</code></td><td><a href="https://github.com/WGSExtract/wgsextract-cli/issues/1373" target="_blank" rel="noopener noreferrer">Queue starvation (#1373)</a> and <a href="https://github.com/WGSExtract/wgsextract-cli/pull/1545" target="_blank" rel="noopener noreferrer">overbroad priority hold (#1545)</a></td><td>&gt;35 min observed admission wait with four valid layers; collaborator waits up to 88 min/job in the old regime</td><td><strong>Narrow:</strong> use spare slots; retain queue and author priority, measure before changing caps</td><td>2026-12-10</td></tr>
+<tr><td>Independent agent and Copilot review plus broad local gate on low-risk changes</td><td>Nov 3 <code>23bd60db0</code>; Nov 14 <code>498cde277</code>, <code>1ade9c833</code>, <code>78fc6ca3e</code>; Nov 22 <code>f0f57cee2</code></td><td>Independent review caught fixture handoff defects; no evidence a second reviewer helps trivial nav/prose</td><td><a href="https://github.com/WGSExtract/wgsextract-cli/issues/757" target="_blank" rel="noopener noreferrer">Old prose CI (#757)</a> ~125 runner-min/push; current docs lane &lt;1–3 min; duplicate review unmeasured</td><td><strong>Narrow:</strong> one review with scoped lint, secret and freshness checks for trivial site/docs; retain stronger review for policy, contracts and product risk</td><td>2026-12-10</td></tr>
+<tr><td>Broad test repetition at PR, queue and main</td><td>May 2 <code>35f7ba8d4</code> onward; relaxed Nov 24–25 <code>beeb029d5</code>, <code>84458fcd7</code>, <code>50dd6b24b</code></td><td><a href="https://github.com/WGSExtract/wgsextract-cli/pull/79" target="_blank" rel="noopener noreferrer">Installer defects (#79)</a> justify platform/release coverage; 11,207 Ubuntu and 12,261 Windows repeated test files from PR to queue in a 50-PR audit</td><td>Pre-cutover means: 259 PR-area and 67 queue runner-min/PR, not all removable</td><td><strong>Keep</strong> current affected, merged-tree, nightly and exact-tag release split; no blanket runs</td><td>2027-01-15</td></tr>
+<tr><td><code>research-first</code> and explicit approval</td><td>Nov 3 <code>23bd60db0</code>; Nov 14 <code>5edb8f90f</code></td><td>No breakage cited for routine approvals in <a href="https://github.com/WGSExtract/wgsextract-cli/pull/362" target="_blank" rel="noopener noreferrer">supervisor queue (#362)</a> or <a href="https://github.com/WGSExtract/wgsextract-cli/pull/828" target="_blank" rel="noopener noreferrer">research status (#828)</a></td><td>13.2 h across 34 fleet-wide blocking questions; not isolated by label</td><td><strong>Narrow:</strong> owner-requested reviews and materially irreversible, scientific or disputed decisions; otherwise proceed with a stated default</td><td>2026-12-10</td></tr>
+<tr><td>Blanket whole-host or GPU-exclusive reservation</td><td>Practice; narrower GPU lock introduced Nov 6 <code>5266ba6</code></td><td>CPU timing held GPU reservation; certification waited 16h23m to run 24m</td><td>16h23m observed delay; Mac reservation also triggered repeat prepares</td><td><strong>Drop</strong> blanket use; lock only the resource and phase that need isolation</td><td>2026-12-10</td></tr>
+<tr><td>Long-run slice, alert and off-slot handoff</td><td>Nov 11 <code>6876b6b41</code>; Nov 22 <code>fdda5f234</code></td><td><a href="https://github.com/WGSExtract/wgsextract-cli/issues/431" target="_blank" rel="noopener noreferrer">Lost long runs (#431)</a>: ~9 h lost to memory/disk; a fast failure unnoticed for ~6 h</td><td>A 1–2% slice and one alert smoke; 142 model-tool-hours of polling overall are not the rule's cost</td><td><strong>Keep</strong> sizing, checkpoints, alerts and watcher ownership; automate handoff</td><td>2027-01-15</td></tr>
+<tr><td>Go silent when nothing is immediately eligible</td><td>Practice, not a gate; queue rules Nov 3 <code>23bd60db0</code></td><td>Nov 11 idle gap; 49 owner-resumed gaps in postmortem</td><td>23 h for the observed gap; not all 155 h of gaps attributable</td><td><strong>Drop</strong> that interpretation; continue eligible work, gather bounded evidence or wait on an idle event; respect real holds</td><td>2026-12-10</td></tr>
+<tr><td>Repeat failed runs or downloads unchanged</td><td>Bounded transient recovery Oct 19 <code>d2cfcfd51</code>, <code>10f00868e</code>; extra repeats were practice</td><td><a href="https://github.com/WGSExtract/wgsextract-cli/pull/84" target="_blank" rel="noopener noreferrer">WSL delay (#84)</a>, <a href="https://github.com/WGSExtract/wgsextract-cli/pull/89" target="_blank" rel="noopener noreferrer">lost runner (#89)</a>; full-panel verification repeated three times</td><td>~5 h on panel repeats; ~410 extra runner-hours across mixed causes in broad audit</td><td><strong>Narrow:</strong> recover transient failures; after two identical failures, diagnose or change method</td><td>2026-12-10</td></tr>
+<tr><td>Blocking size and test-style gates</td><td>Nov 17 <code>8b156e477</code>; Nov 25 <code>af7102b25</code></td><td>Test-volume audit supports cheaper, higher-signal tests, not blocking for style; the separate size ratchet hit 802/800 after a merge</td><td>One observed rejected merged tree; catches and friction from style gating not measured</td><td><strong>Narrow:</strong> scope to new code; measure before expanding, prefer advisory when benefit is unmeasured</td><td>2027-01-15</td></tr>
+<tr><td>Trust, endorsement and no implicit networking</td><td>Nov 3 <code>f1bab8af5</code>; Nov 16 <code>1c5459158</code></td><td>Untrusted instructions, silent reference fetch or sample disclosure are concrete risks even without an incident</td><td>Permission/opt-in check; no independent timing</td><td><strong>Keep:</strong> routing may not weaken authority or consent</td><td>2027-01-15</td></tr>
+</tbody>
+</table></div>
+<p>New gates need an owner, an incident or concrete threat model, a measurable cost, narrow scope and a dated keep/narrow/drop review. At the first review, compare approval wait-hours, trivial review rounds, stale certification attempts and runner minutes, fallback rates, ready-to-runner p50/p90, and missed regressions by area. Separate genuine late fixes from routine supersession; the target for the latter is under 5% of attempts. Keep safety gates until an owner approves a replacement.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/process_rules.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/process_rules.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>
