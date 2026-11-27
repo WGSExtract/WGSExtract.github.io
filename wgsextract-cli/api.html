@@ -4165,9 +4165,9 @@ see docs/exon-callability.md.</p>
 Certification: Tested. Tabular exports checked against fixture variant calls.</p>
 <p>Write the table (role <code>variant_table</code>) and database (<code>variant_database</code>);
 <code>rows</code> is a metric.</p>
-<p><code>VcfTableParams</code>: One row per variant with its annotations, as <code>&lt;stem&gt;_variants.tsv</code>
-(or <code>.parquet</code>) and an SQLite database. Includes gnomAD ancestry-group
-maximum FAF95 when available.</p>
+<p><code>VcfTableParams</code>: One row per ALT with offline annotations, as <code>&lt;stem&gt;_variants.tsv</code>
+(or <code>.parquet</code>) and SQLite. Includes reported protein positions,
+domains and gnomAD ancestry-group maximum FAF95 when available.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>

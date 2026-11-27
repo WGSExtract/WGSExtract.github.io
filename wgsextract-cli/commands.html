@@ -242,7 +242,7 @@
 </tr>
 <tr>
 <td><code>vcf table</code></td>
-<td>Export variants and their annotations (gene, consequence, ClinVar, gnomAD, genotype, depth, ...) as one row per variant, in a TSV (or Parquet) table and an SQLite database to query.</td>
+<td>Export one row per ALT to TSV, Parquet or SQLite, including reported protein positions, domains and gnomAD FAF95.</td>
 <td>&lt;input stem&gt;_variants.tsv (or .parquet with --format parquet) and &lt;input stem&gt;_variants.sqlite: one row per variant allele, with its annotations.</td>
 <td>bcftools; depending on options and inputs, also: bgzip, tabix; minutes on a 30x genome</td>
 <td><code>wgsextract vcf table --vcf-input sample.vcf.gz --bed targets.bed</code></td>
