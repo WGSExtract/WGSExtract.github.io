@@ -1117,7 +1117,7 @@
 </tr>
 <tr>
 <td><code>panel audit</code></td>
-<td>Audit one local annotated genome against a research panel: variant filters, coding callability, watched loci and phased allele patterns.</td>
+<td>Audit a local annotated genome: variant filters, optional weighted burden, coding callability and phased watches.</td>
 <td>&lt;sample&gt;.panel_audit.json, &lt;sample&gt;.panel_audit.tsv (or Parquet) and a result manifest.</td>
 <td>bcftools; depending on options and inputs, also: curl; seconds on a 30x genome</td>
 <td><code>wgsextract panel audit --panel my_panel.toml --vcf-input sample.vcf.gz --research-panel</code></td>
