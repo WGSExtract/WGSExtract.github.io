@@ -4166,7 +4166,8 @@ Certification: Tested. Tabular exports checked against fixture variant calls.</p
 <p>Write the table (role <code>variant_table</code>) and database (<code>variant_database</code>);
 <code>rows</code> is a metric.</p>
 <p><code>VcfTableParams</code>: One row per variant with its annotations, as <code>&lt;stem&gt;_variants.tsv</code>
-(or <code>.parquet</code>) and an SQLite database.</p>
+(or <code>.parquet</code>) and an SQLite database. Includes gnomAD ancestry-group
+maximum FAF95 when available.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -5226,7 +5227,7 @@ Certification: Tested. GERP annotation checked on fixture score tracks.</p>
 Certification: Tested. Frequency annotation checked on fixture alleles.</p>
 <p>Annotate with gnomAD; output roles <code>annotated_vcf</code> and, with <code>max_af</code>,
 <code>rare_variants</code>.</p>
-<p><code>VcfGnomadParams</code>: gnomAD allele frequencies and available homozygote counts as
+<p><code>VcfGnomadParams</code>: gnomAD allele frequencies, available ancestry-group maximum FAF95 and homozygote counts as
 <code>gnomad_annotated.vcf.gz</code>.</p>
 <div class="table-wrap"><table>
 <thead>
@@ -9784,7 +9785,7 @@ Certification: Tested. phyloP resource preparation checked on fixtures.</p>
 Certification: Tested. gnomAD resource preparation checked on fixtures.</p>
 <p>Download or build gnomAD; output role <code>reference_resource</code> for each file.</p>
 <p><code>RefGnomadParams</code>: Check or download the gnomAD 2.1.1 exome sites VCFs or the gnomAD 4.1
-frequency and homozygote-count table.</p>
+frequency table with ancestry-group maximum FAF95 and homozygote counts.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -9822,7 +9823,7 @@ frequency and homozygote-count table.</p>
 <td><code>str</code></td>
 <td><code>'2.1.1'</code></td>
 <td><code>--release</code></td>
-<td>2.1.1: exome sites VCFs for hg19 and hg38 (hg38 lifted over). 4.1: native hg38 exomes+genomes, with allele frequency, maximum ancestry-group frequency and homozygote counts; --threads sets parallel streams. One of: <code>2.1.1</code>, <code>4.1</code></td>
+<td>2.1.1: exome sites VCFs for hg19 and hg38 (hg38 lifted over). 4.1: native hg38 exomes+genomes, with allele frequency, maximum ancestry-group frequency, maximum ancestry-group FAF95 and homozygote counts; --threads sets parallel streams. One of: <code>2.1.1</code>, <code>4.1</code></td>
 </tr>
 <tr>
 <td><code>threads</code></td>
@@ -9836,7 +9837,7 @@ frequency and homozygote-count table.</p>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 <td><code>--download</code></td>
-<td>Allow fetching the public sites VCFs for the selected release (4.1 streams ~900 GB, hours, to build or rebuild the table).</td>
+<td>Allow fetching the public sites VCFs for the selected release (4.1 streams ~900 GB, hours, to build or upgrade the table for FAF95).</td>
 </tr>
 </tbody>
 </table></div>
