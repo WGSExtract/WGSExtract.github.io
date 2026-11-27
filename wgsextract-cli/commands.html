@@ -297,6 +297,13 @@
 <td><code>wgsextract vcf pharmgkb --vcf-input sample.vcf.gz</code></td>
 </tr>
 <tr>
+<td><code>vcf regulatory</code></td>
+<td>Annotate GRCh38 variants with offline SCREEN cCRE overlap (research only).</td>
+<td>regulatory_annotated.vcf.gz (+ .tbi)</td>
+<td>bcftools, tabix, bgzip; depending on options and inputs, also: samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf regulatory --vcf-input sample.vcf.gz</code></td>
+</tr>
+<tr>
 <td><code>vcf info</code></td>
 <td>Quick summary of a VCF, gVCF or BCF: reference build/model, samples, format, and record counts.</td>
 <td>Prints a VCF summary (reference model/build, samples, format, record counts); writes no files unless --card is set.</td>
@@ -491,6 +498,13 @@
 <td>Into the reference library (reflib)/downloads/cytobands_hg19.tsv or cytobands_hg38.tsv; validated zero-based UCSC primary-chromosome bands for offline viewing.</td>
 <td>no external tools; depending on options and inputs, also: curl; depends on download speed</td>
 <td><code>wgsextract ref cytobands --build hg38 --download</code></td>
+</tr>
+<tr>
+<td><code>ref regulatory</code></td>
+<td>Check, download or import the GRCh38 SCREEN cCRE track.</td>
+<td>Into the reference library (reflib)/downloads/screen-v4-hg38.bed.gz, tabix index and provenance.</td>
+<td>no external tools; depending on options and inputs, also: bgzip, tabix, curl; depends on download speed</td>
+<td><code>wgsextract ref regulatory --download</code></td>
 </tr>
 <tr>
 <td><code>ref clinvar</code></td>

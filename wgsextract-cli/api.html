@@ -5699,6 +5699,73 @@ Certification: Tested. AlphaMissense scores checked on fixture variants.</p>
 </tr>
 </tbody>
 </table></div>
+<h3><code>api.vcf.regulatory(VcfRegulatoryParams)</code></h3>
+<p>CLI: <code>wgsextract vcf regulatory</code>.
+Certification: Tested. Per-ALT SCREEN overlap checked on fixtures.</p>
+<p>Annotate GRCh38 variants with local SCREEN cCRE overlap.</p>
+<p><code>VcfRegulatoryParams</code>: Research-only SCREEN cCRE overlap per ALT in <code>regulatory_annotated.vcf.gz</code>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>CLI</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
+<td><code>input</code></td>
+<td><code>Path | None</code></td>
+<td><code>None</code></td>
+<td><code>--input</code>, <code>-i</code></td>
+<td>The VCF to read when <code>vcf_input</code> is unset.</td>
+</tr>
+<tr>
+<td><code>vcf_input</code></td>
+<td><code>Path | None</code></td>
+<td><code>None</code></td>
+<td><code>--vcf-input</code></td>
+<td>The VCF to read; wins over <code>input</code>. On the CLI, --vcf-input defaults to config default_input_vcf when --input isn't given.</td>
+</tr>
+<tr>
+<td><code>outdir</code></td>
+<td><code>Path | None</code></td>
+<td><code>None</code> (config <code>output_directory</code>)</td>
+<td><code>--outdir</code>, <code>-o</code></td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
+</tr>
+<tr>
+<td><code>ref</code></td>
+<td><code>Path | None</code></td>
+<td><code>None</code> (config <code>reference_fasta</code>)</td>
+<td><code>--ref</code></td>
+<td>Reference FASTA or reference library folder; resolved from the input's header when omitted (default: config reference_fasta).</td>
+</tr>
+<tr>
+<td><code>threads</code></td>
+<td><code>int | None</code></td>
+<td><code>None</code> (config <code>cpu_threads</code>)</td>
+<td><code>--threads</code>, <code>-t</code></td>
+<td>CPU threads; None picks a count for this machine (default: config cpu_threads, else auto).</td>
+</tr>
+</tbody>
+</table></div>
 <h3><code>api.vcf.pharmgkb(VcfPharmgkbParams)</code></h3>
 <p>CLI: <code>wgsextract vcf pharmgkb</code>.
 Certification: Tested. PharmGKB annotations checked on fixture variants.</p>
@@ -5900,8 +5967,8 @@ Certification: Tested. Local annotation chains checked against fixture variants 
 <p>Run the chain; output role <code>annotated_vcf</code>; <code>annotations_applied</code> is a
 metric.</p>
 <p><code>VcfChainAnnotateParams</code>: Several annotations applied in turn, as <code>chain_annotated.vcf.gz</code>;
-steps whose tool or data is missing are skipped with a warning. A step
-journal lets interrupted chains resume from their last completed step.</p>
+steps whose tool or data is missing are skipped with a warning, except
+explicitly requested SCREEN overlap. A step journal supports resuming.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -6002,7 +6069,7 @@ journal lets interrupted chains resume from their last completed step.</p>
 <td><code>tuple[str, ...] | None</code></td>
 <td><code>None</code></td>
 <td><code>--force-step</code>, <code>--force-steps</code></td>
-<td>Steps to rerun with the steps that use their outputs; None reruns none. Steps: select, clinvar, revel, phylop, cadd, gerp, gnomad, spliceai, alphamissense, pharmgkb, vep, trim. One of: <code>select</code>, <code>clinvar</code>, <code>revel</code>, <code>phylop</code>, <code>cadd</code>, <code>gerp</code>, <code>gnomad</code>, <code>spliceai</code>, <code>alphamissense</code>, <code>pharmgkb</code>, <code>vep</code>, <code>trim</code></td>
+<td>Steps to rerun with the steps that use their outputs; None reruns none. Steps: select, clinvar, revel, phylop, cadd, gerp, gnomad, spliceai, alphamissense, pharmgkb, regulatory, vep, trim. One of: <code>select</code>, <code>clinvar</code>, <code>revel</code>, <code>phylop</code>, <code>cadd</code>, <code>gerp</code>, <code>gnomad</code>, <code>spliceai</code>, <code>alphamissense</code>, <code>pharmgkb</code>, <code>regulatory</code>, <code>vep</code>, <code>trim</code></td>
 </tr>
 <tr>
 <td><code>dry_run</code></td>
@@ -8800,6 +8867,73 @@ a time).</p>
 <td><code>False</code></td>
 <td><code>--delete</code></td>
 <td>Delete the installed gnomAD SV tables</td>
+</tr>
+<tr>
+<td><code>ref</code></td>
+<td><code>Path | None</code></td>
+<td><code>None</code> (config <code>reference_fasta</code>)</td>
+<td><code>--ref</code></td>
+<td>Reference FASTA or reference library folder; resolved from the input's header when omitted (default: config reference_fasta).</td>
+</tr>
+</tbody>
+</table></div>
+<h3><code>api.ref.regulatory(RefRegulatoryParams)</code></h3>
+<p>CLI: <code>wgsextract ref regulatory</code>.
+Certification: Tested. SCREEN track acquisition checked on fixtures.</p>
+<p>Check or install the track; output role <code>regulatory_track</code>.</p>
+<p><code>RefRegulatoryParams</code>: Check, download or import the GRCh38 SCREEN cCRE Registry v4 BED.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>CLI</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
+<td><code>source</code></td>
+<td><code>str</code></td>
+<td><code>'screen'</code></td>
+<td><code>--source</code></td>
+<td>Regulatory data source. One of: <code>screen</code></td>
+</tr>
+<tr>
+<td><code>build</code></td>
+<td><code>str</code></td>
+<td><code>'hg38'</code></td>
+<td><code>--build</code></td>
+<td>Assembly of the BED. One of: <code>hg38</code></td>
+</tr>
+<tr>
+<td><code>download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--download</code></td>
+<td>Fetch the pinned public BED (129 MB) from downloads.wenglab.org.</td>
+</tr>
+<tr>
+<td><code>bed</code></td>
+<td><code>Path | None</code></td>
+<td><code>None</code></td>
+<td><code>--bed</code></td>
+<td>Import a sorted, six-column GRCh38 SCREEN v4 BED (may be gzip-compressed).</td>
 </tr>
 <tr>
 <td><code>ref</code></td>

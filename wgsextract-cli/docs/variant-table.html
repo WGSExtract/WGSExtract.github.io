@@ -94,6 +94,7 @@ wgsextract vcf table --vcf-input sample.vcf.gz --preset acmg-sf --region chr17</
 <tr><td><code>gnomad_faf95</code></td><td>real</td><td>Maximum filtering allele frequency at 95% confidence across gnomAD ancestry groups for this ALT (<code>GNOMAD_FAF95</code> from <code>vcf gnomad</code>, or the native group-maximum field). Zero is a reported value; empty means unavailable.</td></tr>
 <tr><td><code>protein_position</code>, <code>protein_position_end</code></td><td>integer, integer</td><td>Start and inclusive end of the reported residue span, 1-based. Equal for a single residue. Only exported for protein-altering effects.</td></tr>
 <tr><td><code>domains</code></td><td>text</td><td>Overlapping protein features reported by VEP for the chosen transcript, as unique <code>source:id</code> entries separated by <code>&amp;</code>.</td></tr>
+<tr><td><code>ccre_class</code></td><td>text</td><td><strong>Research use only.</strong> SCREEN cCRE classes overlapping this ALT from <a href="regulatory-annotation.html"><code>vcf regulatory</code></a>, separated by <code>|</code>. Empty if unannotated or no overlap.</td></tr>
 </tbody>
 </table></div>
 <p>When a WGSE annotation splits a multi-allelic record, it saves the original AD total so the read fraction stays the same. A known split without a complete original total can only use <code>FORMAT/VAF</code> or <code>FORMAT/AF</code>.</p>
