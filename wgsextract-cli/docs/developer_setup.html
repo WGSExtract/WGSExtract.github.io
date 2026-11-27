@@ -79,6 +79,35 @@ powershell -ExecutionPolicy Bypass -File scripts\dev_setup.ps1</code></pre>
 <p>On macOS, <code>bio-tools</code> environments and the separate <code>pharmcat</code> environment use Apple's Accelerate BLAS so <code>bcftools</code> does not load LLVM OpenMP through GSL. Before starting workers, pytest removes only current-user, unwritten OpenMP registration files whose PID is absent. For other tools and manual cleanup, see <a href="installation.html#macos-openmp-error-15-with-unknown-library">OpenMP troubleshooting</a>.</p>
 <h3 id="benchmarking-on-macos">Benchmarking on macOS<a class="heading-anchor" href="#benchmarking-on-macos" aria-label="Link to section">#</a></h3>
 <p>Setup creates <code>.metadata_never_index</code> in <code>out/</code>, <code>scratch/</code> and <code>tmp/</code> (safe to rerun). For existing indexed trees, also add those folders or the repository to <strong>System Settings → Spotlight → Search Privacy</strong>. Keep heavy benchmark inputs and outputs out of Photos libraries and Spotlight-indexed folders. Check volume indexing with <code>mdutil -s /</code> and thermal pressure with <code>pmset -g therm</code> before timing; wait for indexing and throttling to settle.</p>
+<h3 id="long-run-benchmark-drivers">Long-run benchmark drivers<a class="heading-anchor" href="#long-run-benchmark-drivers" aria-label="Link to section">#</a></h3>
+<p>Use <code>scripts.longrun.LongRun</code> from a driver in <code>scratch/</code>. It needs Python 3.10+ on Linux (including WSL) or macOS, and can run scripts with macOS's stock Bash. It does not need <code>/usr/bin/time</code>. Put each run in its own gitignored <code>out/</code> directory on an SSD.</p>
+<p>For example, from the checkout root, run <code>python -m scratch.bench slice</code> before <code>python -m scratch.bench full</code>. In <code>scratch/bench.py</code>:</p>
+<pre><code class="language-python">import argparse
+from pathlib import Path
+
+from scripts.longrun import LongRun
+
+parser = argparse.ArgumentParser()
+parser.add_argument(&quot;mode&quot;, choices=(&quot;slice&quot;, &quot;full&quot;))
+mode = parser.parse_args().mode
+out = Path(&quot;out/bench&quot;)
+root = out / mode
+with LongRun(root, name=&quot;bench-123&quot;, target=&quot;wgsextract-cli&quot;) as run:
+    reference = Path(&quot;out/shared/reference.dict&quot;)
+    pin = Path(&quot;scratch/reference.dict.sha256&quot;).read_text().strip()
+    run.check_sha256(reference, pin)
+    run.check_reference(
+        Path(&quot;out/shared/reads.cram&quot;), reference, dictionary=True
+    )
+    if mode == &quot;full&quot;:
+        run.require_slice(out / &quot;slice&quot;)
+    run.stage(mode, [&quot;bash&quot;, &quot;scratch/benchmark.sh&quot;, mode, str(root)])</code></pre>
+<ul>
+<li><strong>Check inputs before staging or resuming.</strong> Use a SHA-256 from a trusted source, not a pin computed from the just-downloaded file. <code>check_reference</code> uses <code>samtools view -H</code> on a local CRAM and checks every <code>@SQ</code> name and M5. Pass a pinned <code>samtools dict</code> file to verify before staging a large FASTA, or pass a local FASTA without <code>dictionary=True</code> to generate the dictionary in place. Still verify that the FASTA you actually use matches the pin. For remote sources, opt in explicitly and check the source version or checksum in the driver; the helper never fetches inputs.</li>
+<li><strong>Size first.</strong> Have the slice command run the same workflow on 1–2% of the data. Review <code>slice/metrics.json</code> for wall time and peak RSS before estimating the full run; measure peak temp disk and output size in the benchmark itself. RSS is the OS-reported high-water mark for the stage command, not simultaneous use across a process tree. Record slice measurements and full-run estimates on the issue.</li>
+<li><strong>Reserve resources and exercise the alert.</strong> Launch heavy work with <code>agent-coord run</code> and size the lease from the slice. If the driver has already started outside a lease and needs registering, call <code>run.hold(&quot;--cores&quot;, &quot;2&quot;, &quot;--mem&quot;, &quot;4G&quot;)</code> inside the context; it registers <code>driver.pid</code> with the coordinator but does not cap or queue the job. On the target host, smoke-test both a valid run and an intentional missing input. The exit alert names the driver, host, step, exit code and log. If <code>agent-coord</code> cannot send, check the launcher's stderr. Keep an external watcher for power loss or <code>SIGKILL</code>, which cannot send an exit alert.</li>
+<li><strong>Resume deliberately.</strong> Use foreground stage commands that validate their outputs before returning zero and can retry after partial writes. For power-loss recovery, have each command sync its outputs and their directories before returning. The helper appends <code>stage.log</code> and syncs <code>metrics.json</code> before atomically publishing and syncing <code>PASS</code>. The driver updates <code>handoff.md</code> for the watcher and holds an OS lock on the run directory. Rerun the same driver in the same directory to skip passed stages. Use a new directory if inputs, commands or parameters change; a <code>PASS</code> marker does not fingerprint them or revalidate outputs.</li>
+</ul>
 <h2 id="make-a-change">Make a change<a class="heading-anchor" href="#make-a-change" aria-label="Link to section">#</a></h2>
 <pre><code class="language-bash">git switch -c my-change
 # edit code
