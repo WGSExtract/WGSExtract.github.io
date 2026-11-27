@@ -70,7 +70,7 @@
 <li>This contract keeps scripts, servers, MCP clients, and air-gapped machines safe by construction. See <a href="../../docs/privacy.html"><code>docs/privacy.md</code></a>.</li>
 </ul>
 <h3 id="layer-2-desktop-gui-front-end-helpful-transparent-and-controllable">Layer 2 — Desktop GUI front-end: helpful, transparent, and controllable<a class="heading-anchor" href="#layer-2-desktop-gui-front-end-helpful-transparent-and-controllable" aria-label="Link to section">#</a></h3>
-<p>The desktop app sits <em>above</em> the CLI and invokes the CLI's explicit commands on the user's behalf. On a fresh install, it makes no outbound requests before the first-launch network choice. <strong>OK</strong> starts setup if needed and enables <strong>Check for updates at launch</strong>, which is off by default. <strong>Not now</strong> opens <strong>Settings → Network &amp; Privacy</strong> without contacting an external server. After that choice, the app distinguishes four kinds of network activity:</p>
+<p>The desktop app sits <em>above</em> the CLI and invokes the CLI's explicit commands on the user's behalf. On a fresh install, it makes no outbound requests before the first-launch network choice. <strong>OK</strong> starts setup if needed in Full mode and enables <strong>Check for updates at launch</strong>, which is off by default. <strong>Not now</strong> opens <strong>Settings → Network &amp; Privacy</strong> without contacting an external server. Automatic mode uses local OS signals to select Low for metered, constrained, or unknown-cost connections. Low defers large automatic downloads; Off blocks outbound operations. The effective mode is passed to the CLI. After that choice, the app distinguishes four kinds of network activity:</p>
 <div class="table-wrap"><table>
 <thead><tr><th>Tier</th><th>Policy</th><th>Examples</th></tr></thead>
 <tbody>
@@ -83,7 +83,7 @@
 <h3 id="design-rules-for-new-gui-features">Design rules for new GUI features<a class="heading-anchor" href="#design-rules-for-new-gui-features" aria-label="Link to section">#</a></h3>
 <ol>
 <li><strong>Never bypass Layer 1 silently:</strong> The GUI must never inject <code>--download</code> or flip <code>allow_reference_downloads = true</code> without explicit user consent.</li>
-<li><strong>Gate automatic connections:</strong> Before the first-launch choice, make no outbound requests. Afterward, honor <strong>Privacy mode</strong> for all automatic activity and the launch-check setting for app release checks. Future catalog update checks must use metadata only and must not fetch the update itself.</li>
+<li><strong>Gate automatic connections:</strong> Before the first-launch choice, make no outbound requests. Afterward, honor the effective network mode, <strong>Privacy mode</strong> for all automatic activity, and the launch-check setting for app release checks. Future catalog update checks must use metadata only and must not fetch the update itself.</li>
 <li><strong>Never send sample metadata in update or catalog checks:</strong> These checks must never include filenames, local paths, sample IDs, builds inferred from a user's BAM/VCF, or genomic coordinates.</li>
 <li><strong>Clickable documentation links are user-initiated:</strong> Error messages and terminal output may render <code>https://wgse.bio/wgsextract-cli/...</code> links so users can open formatted HTML help in one click, but the app never prefetches those pages in the background.</li>
 </ol>
