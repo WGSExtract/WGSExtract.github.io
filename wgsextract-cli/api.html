@@ -11939,11 +11939,15 @@ built for this platform included, with its <code>group</code> (&quot;mandatory&q
 Pixi <code>environment</code> and the <code>environment_tools</code> it provides,
 <code>can_install</code> and <code>can_uninstall</code>, <code>preinstalled</code> (an optional tool
 that ships in the CLI's own environment, so it can't be removed on its
-own), and a <code>note</code> (how to install it yourself, or why it can't be had).
-A tool installed from its official release carries its <code>license</code>
-(<code>name</code>, <code>terms</code>, <code>url</code>) when it has a restrictive one, and
-<code>license_acceptance_required</code> while install needs <code>accept_license</code>.
-It doesn't fail on a missing tool.</p>
+own), a <code>note</code> (how to install it yourself, or why it can't be had), and
+<code>used_by</code>, the commands whose runs need or may use it. A tool installed
+from its official release carries its <code>license</code> (<code>name</code>, <code>terms</code>,
+<code>url</code>) when it has a restrictive one, and <code>license_acceptance_required</code>
+while install needs <code>accept_license</code>. <code>details[&quot;host&quot;]</code> describes this
+computer: <code>os</code>, <code>architecture</code>, <code>cpu_threads</code>, <code>cpu_cores</code>,
+<code>memory_total</code> and <code>memory_available</code> (bytes), and <code>disks</code>, each with
+the WGS Extract folders it holds (<code>used_for</code>) and its <code>free</code> and
+<code>total</code> bytes. It doesn't fail on a missing tool.</p>
 <p><code>ready</code> reports whether a command line (<code>command_line</code>, as its argv
 after <code>wgsextract</code>) can run on this computer without the network: each
 prerequisite its run checks (platform, tools, Docker images and GPUs, model
