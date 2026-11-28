@@ -52,6 +52,9 @@
 </ul>
 <p>A level applies to the evidence listed, not to every input, option or backend. Research features can remain Experimental even when their mechanics have been tested. Platform entries describe the linked qualification; a missing entry is not an unsupported-platform claim.</p>
 <p>Running a Tested or Experimental operation logs a notice; asking for help does not run the operation. Set <code>certification_notices = false</code> in <code>config.toml</code> to hide it without changing the level recorded in results. The notice is not a run warning.</p>
+<h2>Promoting a command</h2>
+<p>Open a pull request with evidence that meets the new level's criteria. Link the validation reports and regression tests, identify the platforms and inputs covered, and document the limits. Update the command's <code>CERTIFICATION</code> entry in <code>src/wgsextract_cli/cli/registration/</code> with the new level, evidence links and review date.</p>
+<p>For reviewed changes to the original inventory, also update <code>tests/fixtures/certification_inventory_1596.tsv</code>. Regenerate the desktop badge data with <code>python scripts/gen_server_openapi.py --gui</code>. Lower the level if later evidence invalidates the qualification.</p>
 <h2>Evidence by command</h2>
 <div class="table-wrap"><table>
 <thead>
