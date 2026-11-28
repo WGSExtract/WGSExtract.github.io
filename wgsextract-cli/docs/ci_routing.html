@@ -124,20 +124,20 @@ just certify-setup -e default -e dev -e vep-rs --reference</code></pre>
 <h4 id="remote-certification-on-owned-hosts">Remote certification on owned hosts<a class="heading-anchor" href="#remote-certification-on-owned-hosts" aria-label="Link to section">#</a></h4>
 <p>Register SSH aliases and their native platforms in a controller-side <code>config.toml</code> (keep the file outside the Git checkout, or ignore it locally):</p>
 <pre><code class="language-toml">[[certification.hosts]]
-alias = &quot;seraph&quot;
+alias = &quot;windows-host&quot;
 platform = &quot;windows-x64&quot;
 
 [[certification.hosts]]
-alias = &quot;minipc&quot;
+alias = &quot;windows-backup&quot;
 platform = &quot;windows-x64&quot;
 
 [[certification.hosts]]
-alias = &quot;mahyar-pro-14&quot;
+alias = &quot;mac-host&quot;
 platform = &quot;macos-arm64&quot;</code></pre>
 <p>Push the branch, then run on the controller:</p>
 <pre><code class="language-sh">just certify --remote windows-x64 --remote-config /path/to/config.toml --platform-only
 just certify --remote macos-arm64 --remote-config /path/to/config.toml --platform-only</code></pre>
-<p><code>--remote</code> accepts a registered alias or a platform. For a platform it tries hosts in listed order and skips hosts that fail the SSH, checkout, disk or native-platform probe, or whose controller lock is busy. It does not retry a failed or interrupted test on another host. <code>randy-mini</code> remains the built-in macOS ARM64 fallback; <code>just certify --remote randy-mini</code> still works. If <code>--remote-config</code> is omitted, the controller reads <code>config.toml</code> in its working directory if present.</p>
+<p><code>--remote</code> accepts a registered alias or a platform. For a platform it tries hosts in listed order and skips hosts that fail the SSH, checkout, disk or native-platform probe, or whose controller lock is busy. It does not retry a failed or interrupted test on another host. Only hosts listed in the remote-hosts configuration file are eligible; there is no built-in fallback. If <code>--remote-config</code> is omitted, the controller reads <code>config.toml</code> in its working directory.</p>
 <p>The controller enforces the same clean, pushed, same-repository open-PR and writer checks as local certification. It holds a local <code>agent-coord</code> lock named for the selected alias and bound to the controller PID, including for Windows workers. All controllers sharing a coordinator must use the same alias for a machine. SSH requires a known host key and noninteractive authentication. SSH agent, port and environment forwarding are disabled. Workers need neither <code>gh</code> nor a GitHub token; configure the worker checkout for public HTTPS, without credential-bearing remotes or extra Git hooks.</p>
 <p>Prepare an isolated clone at <code>~/src/wgsextract-cli</code> on each registered machine and ensure Git and locked-compatible Pixi are on the SSH user's PATH. POSIX workers need <code>python3</code>; Windows uses OpenSSH and PowerShell with Python from <code>pixi install --locked -e dev</code> in that clone. No administrator access is needed. Check the worker's resource coordinator before preparing inputs. If <code>agent-coord</code> is present on the worker, the test invocation uses its resource lease and a worker-side <code>wgsextract-certification</code> lock. On hosts without it, coordinate explicitly with anyone else using the machine.</p>
 <p>The bootstrap fetches the exact pushed head and base SHAs over public HTTPS and creates <code>~/src/wgsextract-cli/scratch/certify-&lt;head-sha&gt;</code> as a detached worktree if absent. Branch names never enter the remote command. Remote certification uses the same native platform or generic commands as local certification. Prepare locked environments and retained inputs separately from ready admission; if required inputs are absent, fall back to hosted checks rather than provisioning or retrying for that head. Use <code>--prepared-only</code> for coordinated remote attempts; the test phase uses <code>--no-install</code>.</p>

@@ -108,7 +108,7 @@ wgsextract vcf impute --vcf-input chip.vcf.gz</code></pre>
 <p>Beagle GP ≥0.95 meets the aggregate common-site NRC ≥0.97 gate while preserving confident homozygous calls. In these evaluated sites, 16,813 of 18,489 GP-qualified hom-alt calls have DR2 zero; they must not be discarded for that. GLIMPSE2 GP ≥0.9 already clears the NRC gate with broad coverage; increasing it is an optional precision/coverage trade-off, not required by these data.</p>
 <p>Calibration is on one HG002 chip simulation/chromosome, not an independent accuracy guarantee for other ancestries or arrays.</p>
 <h3 id="resources">Resources<a class="heading-anchor" href="#resources" aria-label="Link to section">#</a></h3>
-<p>Measured on lin-big with four threads, before chunks ran side by side:</p>
+<p>Measured on a Linux x86-64 host with 62 GB of RAM and four threads, before chunks ran side by side:</p>
 <div class="table-wrap"><table>
 <thead><tr><th>Step</th><th>chr20 wall time</th><th>Peak RSS</th></tr></thead>
 <tbody>
@@ -132,7 +132,7 @@ wgsextract vcf impute --vcf-input chip.vcf.gz</code></pre>
 <p>Extrapolating chr20 (about 2.2% of autosomal bases) gives <strong>about 5.6 hours for whole-autosome GLIMPSE2 one chunk at a time, and about 1 hour with eight at once</strong>, needing about 10–14 GB at eight. Beagle extrapolates to about 45 minutes. These are projections, not measured whole-genome runs, and exclude panel preparation. <code>vcf impute</code> prints its selected-chromosome time/RAM estimate before running.</p>
 <p>The Phase 0 scripts, per-bin JSON, time.tsv and logs are retained in <code>out/621/phase0/</code> in the validation checkout, with the result summary on <a href="https://github.com/WGSExtract/wgsextract-cli/issues/621" target="_blank" rel="noopener noreferrer">issue #621</a>.</p>
 <h3 id="product-command-validation">Product-command validation<a class="heading-anchor" href="#product-command-validation" aria-label="Link to section">#</a></h3>
-<p>The actual <code>ref imputation --install --chromosomes chr20</code> and <code>vcf impute</code> commands were run on lin-big against the same 1x BAM, under an agent-coord four-core/8 GiB lease (nominal 1x input; product depth estimate 1.15x). The installer reused and SHA-256-verified the original download on that host, then prepared its own panel and binary chunks.</p>
+<p>The actual <code>ref imputation --install --chromosomes chr20</code> and <code>vcf impute</code> commands were run on the same Linux host against the same 1x BAM, under an agent-coord four-core/8 GiB lease (nominal 1x input; product depth estimate 1.15x). The installer reused and SHA-256-verified the original download on that host, then prepared its own panel and binary chunks.</p>
 <div class="table-wrap"><table>
 <thead><tr><th>Panel MAF</th><th>Phase 0 dosage r²</th><th>Product dosage r²</th></tr></thead>
 <tbody>
@@ -140,10 +140,10 @@ wgsextract vcf impute --vcf-input chip.vcf.gz</code></pre>
 <tr><td>20–50%</td><td>0.979164025</td><td>0.979161000</td></tr>
 </tbody>
 </table></div>
-<p>The common-bin differences are below 0.0000031, passing the r² ≥0.9 gate again. The product wrote 1,430,673 labelled sites (9,785 <code>ImpLowConf</code>), with the provenance header and a result manifest. Panel preparation took 7 min 34 s; imputation and labelling took 7 min 3 s, peaking at 2.7 GB RSS. Evidence (<code>comparison.json</code>, GIAB evaluation, header, timings and command log) is retained in <code>out/621/product/</code>. The large output stays on lin-big, under <code>/mnt/models/wgse-621/out/621/product/output/</code>.</p>
+<p>The common-bin differences are below 0.0000031, passing the r² ≥0.9 gate again. The product wrote 1,430,673 labelled sites (9,785 <code>ImpLowConf</code>), with the provenance header and a result manifest. Panel preparation took 7 min 34 s; imputation and labelling took 7 min 3 s, peaking at 2.7 GB RSS. Evidence (<code>comparison.json</code>, GIAB evaluation, header, timings and command log) is retained in <code>out/621/product/</code> in the validation checkout.</p>
 <p>The corrected <strong>Beagle</strong> product command was also run end to end on chr20, with the same chip VCF and product panel, under a four-core/ 8 GiB lease. Its dosage r² exactly matches Phase 0 in every MAF bin, including 0.941519598 (5–20%) and 0.933948882 (20–50%).</p>
 <p>The actual output <code>FILTER</code> values, not just a reconstructed threshold, give 123,445 / 136,208 common sites PASS (<strong>90.63%</strong>) and aggregate NRC <strong>0.973671875</strong>. All <strong>18,489 / 18,489</strong> GP-qualified hom-alt calls in these evaluated sites are PASS; there are zero disagreements between the output filter and the GP-only rule. The header records <code>MinGP=0.95</code> without a <code>MinINFO</code> condition, and the manifest reports the site filter as disabled.</p>
-<p>The product wrote 1,416,853 imputed sites (27,740 <code>ImpLowConf</code>), took 2 min 34 s including input preparation/labelling, and peaked at 2.2 GB RSS. Evidence is in <code>out/621/product-beagle/</code>; its large VCF remains at <code>/mnt/models/wgse-621/out/621/product-beagle/output/</code>.</p>
+<p>The product wrote 1,416,853 imputed sites (27,740 <code>ImpLowConf</code>), took 2 min 34 s including input preparation/labelling, and peaked at 2.2 GB RSS. Evidence is in <code>out/621/product-beagle/</code> in the validation checkout.</p>
 <p>The no-call fixture probe at chr20:10,008,603 is filled as <code>1|1</code>, GP=1, DR2=0, <strong>PASS and IMP</strong>, and its exported table row has <code>imputed=1</code>. It is a direct regression for both the homozygote filtering and missing-probe labelling bugs. Panel-rarity suppression remains in force for imputed calls.</p>
       </div>
     </main>
