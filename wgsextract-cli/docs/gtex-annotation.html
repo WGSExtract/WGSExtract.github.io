@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Offline GTEx eQTL annotation | WGS Extract CLI</title>
+    <link rel="canonical" href="https://wgse.bio/wgsextract-cli/docs/gtex-annotation.html" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>.doc-breadcrumb { font-size: 0.9rem; color: var(--muted, #8a97a8); margin-bottom: 1rem; }
+.doc-breadcrumb a { color: inherit; text-decoration: none; }
+.doc-breadcrumb a:hover { text-decoration: underline; }
+.doc-article { padding: 2.2rem 0 3.5rem; }
+.doc-article h1 { font-size: clamp(1.85rem, 3vw, 2.5rem); margin: 0 0 1.25rem; line-height: 1.2; }
+.doc-article h2 { margin-top: 2.25rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.12)); }
+.doc-article h3 { margin-top: 1.6rem; }
+.doc-article h4, .doc-article h5, .doc-article h6 { margin-top: 1.25rem; }
+.doc-article p, .doc-article li { line-height: 1.65; }
+.doc-article ul, .doc-article ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.doc-article li + li { margin-top: 0.35rem; }
+.doc-article blockquote { margin: 1.1rem 0; padding: 0.85rem 1.15rem; border-left: 3px solid var(--accent, #38bdf8); background: rgba(127, 150, 180, 0.08); border-radius: 0 8px 8px 0; }
+.doc-article blockquote > :first-child { margin-top: 0; }
+.doc-article blockquote > :last-child { margin-bottom: 0; }
+.doc-article pre { overflow-x: auto; padding: 1rem 1.15rem; border-radius: 10px; }
+.doc-article img { max-width: 100%; height: auto; border-radius: 10px; margin: 1rem 0; }
+.doc-article hr { border: 0; border-top: 1px solid var(--border, rgba(255,255,255,0.12)); margin: 2rem 0; }
+.doc-article .table-wrap { overflow-x: auto; margin: 1.1rem 0; }
+.doc-article .heading-anchor { opacity: 0; margin-left: 0.4rem; text-decoration: none; font-weight: 400; font-size: 0.85em; }
+.doc-article h2:hover .heading-anchor, .doc-article h3:hover .heading-anchor, .doc-article h4:hover .heading-anchor { opacity: 0.65; }</style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="wrap nav-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span><span>WGS Extract CLI</span></a>
+        <div class="nav-links"><a href="../index.html">Home</a><a href="../install.html">Install CLI</a><a href="../gui.html">GUI</a><a href="../cli.html">CLI</a><a href="../workflows.html">Workflows</a><a href="../wgs-guide.html">WGS guide</a><a href="../reference.html">Reference</a><a class="active" href="index.html">Docs</a><a href="../app/mockups/preview/v2/index.html">UI mockups</a><a href="https://github.com/WGSExtract/wgsextract-cli" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </nav>
+    <main class="doc-article">
+      <div class="wrap">
+        <nav class="doc-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">WGS Extract CLI</a> / <a href="index.html">CLI Docs</a> / <span>Offline GTEx eQTL annotation</span></nav>
+<h1 id="offline-gtex-eqtl-annotation">Offline GTEx eQTL annotation</h1>
+<p>Install the opt-in GRCh38 track, then annotate a VCF or BCF:</p>
+<pre><code class="language-sh">wgsextract ref gtex --download
+wgsextract vcf gtex --input sample.vcf.gz --outdir annotations</code></pre>
+<p><code>vcf gtex</code> writes <code>gtex_eqtl.tsv</code> and leaves the input unchanged. To match the final variants from a chain, include <code>gtex</code> by name, for example <code>vcf chain-annotate --input sample.vcf.gz --annotations regulatory,gtex</code>. GTEx is not in the default chain. The chain's <code>chain_gtex_eqtl.tsv</code> reflects any region selection and other annotation steps. A rerun without <code>gtex</code> leaves the old sidecar untouched; it may no longer describe the final VCF. A GTEx rebuild replaces the TSV only after it has been written successfully, and the chain rejects a sidecar path that aliases a configured input. The chain does not add GTEx INFO fields to its VCF or GTEx columns to <code>--to-table</code> output. The step journal tracks the VCF and sidecar together; use <code>--force-step gtex</code> to regenerate the pair.</p>
+<p>The VCF header must identify GRCh38 through a build declaration, known primary-contig lengths or versioned accessions. Conflicting build evidence is rejected. Matching uses position, REF and each literal ALT, with case-insensitive bases and known primary chromosome aliases. It does not normalize variants, lift coordinates, reverse-complement alleles or swap REF and ALT. Symbolic alleles, breakends and spanning deletions do not match. A reference FASTA, VCF index and sample genotypes are not needed for the standalone command.</p>
+<h2 id="what-the-sidecar-contains">What the sidecar contains<a class="heading-anchor" href="#what-the-sidecar-contains" aria-label="Link to section">#</a></h2>
+<p>Each row pairs an input ALT with one published gene, tissue and credible set association. <code>chrom</code> uses the input's spelling. <code>pos</code> and <code>alt_index</code> are one-based; the latter is the position in the original ALT list. <code>gene_id</code> is the release's versioned Ensembl phenotype identifier, <code>gene_name</code> is the published label and <code>tissue</code> is the GTEx tissue ID. <code>credible_set</code> is the published <code>cs_id</code>, scoped to the gene and tissue.</p>
+<p><code>pip</code> is SuSiE's posterior inclusion probability for the variant. <code>afc</code> is the published signed allelic fold-change estimate for the matched ALT, in GTEx's reported scale. It is not flipped or inferred, and is blank when not reported. A no-match result has only the column header. The manifest records match counts, source URL, archive and database SHA-256 checksums, release and attribution.</p>
+<p>These are research annotations from a fine-mapped summary. They are not a list of all significant cis-eQTL pairs and do not establish an effect in the person whose VCF was annotated, causality or ACMG evidence.</p>
+<h2 id="installation-privacy-and-terms">Installation, privacy and terms<a class="heading-anchor" href="#installation-privacy-and-terms" aria-label="Link to section">#</a></h2>
+<p><code>--download</code> requests the public <a href="https://storage.googleapis.com/adult-gtex/bulk-qtl/v10/susie-qtl/GTEx_v10_SuSiE_eQTL.tar" target="_blank" rel="noopener noreferrer">GTEx v10 SuSiE eQTL archive</a> from Google Cloud Storage (174 MB, 50 tissue tables). The archive is pinned to SHA-256 <code>294891d94fa04556963fb67434ca33bf5f92a236d4f05ea208c3d9b4b13f211f</code>. There is no transfer of sample data and no controlled-access GTEx data are used. Without <code>--download</code>, <code>ref gtex</code> verifies the installed database against its JSON checksum receipt. Annotation verifies that checksum too. <code>ref status</code> reports whether it is present, and <code>ref needs</code> shows how to install it. Annotation never fetches a missing or damaged track.</p>
+<p>Installation reads Parquet with the optional <code>pyarrow</code> dependency (<code>wgsextract-cli[parquet]</code> or <code>pixi run -e parquet</code>). The installer does not install dependencies. Allow about 2 GB of free disk space in the reference library for the download and SQLite database. Annotation uses <code>bcftools</code> and the local database, not <code>pyarrow</code>.</p>
+<p>Credit the <a href="https://www.gtexportal.org/" target="_blank" rel="noopener noreferrer">Genotype-Tissue Expression (GTEx) Project</a> and cite the GTEx Consortium, <em>The GTEx Consortium atlas of genetic regulatory effects across human tissues</em> (<a href="https://doi.org/10.1126/science.aaz1776" target="_blank" rel="noopener noreferrer">Science, 2020</a>). See the <a href="https://www.gtexportal.org/home/license" target="_blank" rel="noopener noreferrer">GTEx Portal data release policy</a> for attribution and redistribution conditions, including disclosure when redistributing an older release. This track is pinned to v10; it is not the latest GTEx release. WGS Extract does not bundle or mirror the archive.</p>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <div><strong>WGS Extract CLI</strong><p>Rendered from <code>docs/gtex-annotation.md</code>.</p></div>
+        <p><a href="https://github.com/WGSExtract/wgsextract-cli/blob/main/docs/gtex-annotation.md" target="_blank" rel="noopener noreferrer">View Markdown source on GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

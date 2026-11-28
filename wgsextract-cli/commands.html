@@ -304,6 +304,13 @@
 <td><code>wgsextract vcf regulatory --vcf-input sample.vcf.gz</code></td>
 </tr>
 <tr>
+<td><code>vcf gtex</code></td>
+<td>Write exact-ALT GRCh38 GTEx v10 SuSiE eQTL matches.</td>
+<td>gtex_eqtl.tsv (one row per matched ALT, gene, tissue and credible set).</td>
+<td>bcftools; depending on options and inputs, also: samtools; minutes on a 30x genome</td>
+<td><code>wgsextract vcf gtex --vcf-input sample.vcf.gz</code></td>
+</tr>
+<tr>
 <td><code>vcf info</code></td>
 <td>Quick summary of a VCF, gVCF or BCF: reference build/model, samples, format, and record counts.</td>
 <td>Prints a VCF summary (reference model/build, samples, format, record counts); writes no files unless --card is set.</td>
@@ -505,6 +512,13 @@
 <td>Into the reference library (reflib)/downloads/screen-v4-hg38.bed.gz, tabix index and provenance.</td>
 <td>no external tools; depending on options and inputs, also: bgzip, tabix, curl; depends on download speed</td>
 <td><code>wgsextract ref regulatory --download</code></td>
+</tr>
+<tr>
+<td><code>ref gtex</code></td>
+<td>Check or download the GTEx v10 eQTL track.</td>
+<td>Into the reference library (reflib)/downloads/gtex-v10-susie-eqtl-hg38.sqlite and checksum receipt.</td>
+<td>no external tools; depending on options and inputs, also: curl; depends on download speed</td>
+<td><code>wgsextract ref gtex --download</code></td>
 </tr>
 <tr>
 <td><code>ref clinvar</code></td>
@@ -845,7 +859,7 @@
 <tr>
 <td><code>vcf chain-annotate</code></td>
 <td>Sequentially apply multiple annotations to a single VCF.</td>
-<td>chain_annotated.vcf.gz (+ index), chain_annotate.steps.json; with --to-table, chain_annotated_variants.tsv (or .parquet) and .sqlite.</td>
+<td>chain_annotated.vcf.gz (+ index), chain_annotate.steps.json; with gtex, chain_gtex_eqtl.tsv; with --to-table, chain_annotated_variants.tsv (or .parquet) and .sqlite.</td>
 <td>bcftools, tabix; depending on options and inputs, also: bgzip, samtools, vep, vep-rs; minutes on a 30x genome</td>
 <td><code>wgsextract vcf chain-annotate --vcf-input sample.vcf.gz --annotations clinvar,gnomad --region chr22:19000000-20000000 --threads 4 --to-table</code></td>
 </tr>

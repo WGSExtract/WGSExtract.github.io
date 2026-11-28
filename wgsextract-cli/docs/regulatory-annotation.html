@@ -50,7 +50,7 @@ wgsextract vcf table --input regulatory_annotated.vcf.gz</code></pre>
 <h2 id="reading-the-results">Reading the results<a class="heading-anchor" href="#reading-the-results" aria-label="Link to section">#</a></h2>
 <p><code>CCRE_CLASS</code> and <code>CCRE_ID</code> are per-ALT INFO fields (<code>Number=A</code>). Each ALT's classes and accessions are separately sorted and deduplicated and joined by <code>|</code>. A dot marks an ALT without a hit when another ALT at that site has a hit. <code>vcf table</code> exposes the nullable <code>ccre_class</code> column. Labels are retained as published, for example <code>PLS</code> (promoter-like), <code>pELS</code> (proximal enhancer-like), <code>dELS</code> (distal enhancer-like) and <code>CA-TF</code>.</p>
 <p>The overlap uses only the changed REF bases, after trimming shared prefixes and suffixes separately for each ALT. Insertions use the base immediately to the right of the insertion breakpoint. Symbolic alleles, breakends, spanning-deletion markers and gVCF reference blocks get no annotation.</p>
-<p>These are research annotations. Overlap does not establish a causal effect, a target gene, tissue-specific activity, a promoter impact score or ACMG evidence. GTEx eQTLs are not included.</p>
+<p>These are research annotations. Overlap does not establish a causal effect, a target gene, tissue-specific activity, a promoter impact score or ACMG evidence. <a href="gtex-annotation.html">GTEx eQTL annotation</a> is a separate opt-in track and writes its own TSV.</p>
       </div>
     </main>
     <footer class="footer">

@@ -5699,6 +5699,66 @@ Certification: Tested. AlphaMissense scores checked on fixture variants.</p>
 </tr>
 </tbody>
 </table></div>
+<h3><code>api.vcf.gtex(VcfGtexParams)</code></h3>
+<p>CLI: <code>wgsextract vcf gtex</code>.
+Certification: Tested. Exact-ALT GTEx associations checked on fixtures and HG002 GRCh38.</p>
+<p>Write exact-ALT GTEx associations without changing the VCF.</p>
+<p><code>VcfGtexParams</code>: Write research GTEx v10 SuSiE exact-ALT matches to <code>gtex_eqtl.tsv</code>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>CLI</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
+<td><code>input</code></td>
+<td><code>Path | None</code></td>
+<td><code>None</code></td>
+<td><code>--input</code>, <code>-i</code></td>
+<td>The VCF to read when <code>vcf_input</code> is unset.</td>
+</tr>
+<tr>
+<td><code>vcf_input</code></td>
+<td><code>Path | None</code></td>
+<td><code>None</code></td>
+<td><code>--vcf-input</code></td>
+<td>The VCF to read; wins over <code>input</code>. On the CLI, --vcf-input defaults to config default_input_vcf when --input isn't given.</td>
+</tr>
+<tr>
+<td><code>outdir</code></td>
+<td><code>Path | None</code></td>
+<td><code>None</code> (config <code>output_directory</code>)</td>
+<td><code>--outdir</code>, <code>-o</code></td>
+<td>Outputs (default: config output_directory, else WGSEv6/ beside primary input; otherwise the VCF's folder).</td>
+</tr>
+<tr>
+<td><code>ref</code></td>
+<td><code>Path | None</code></td>
+<td><code>None</code> (config <code>reference_fasta</code>)</td>
+<td><code>--ref</code></td>
+<td>Reference FASTA or reference library folder; resolved from the input's header when omitted (default: config reference_fasta).</td>
+</tr>
+</tbody>
+</table></div>
 <h3><code>api.vcf.regulatory(VcfRegulatoryParams)</code></h3>
 <p>CLI: <code>wgsextract vcf regulatory</code>.
 Certification: Tested. Per-ALT SCREEN overlap checked on fixtures.</p>
@@ -5968,7 +6028,7 @@ Certification: Tested. Local annotation chains checked against fixture variants 
 metric.</p>
 <p><code>VcfChainAnnotateParams</code>: Several annotations applied in turn, as <code>chain_annotated.vcf.gz</code>;
 steps whose tool or data is missing are skipped with a warning, except
-explicitly requested SCREEN overlap. A step journal supports resuming.</p>
+explicitly requested SCREEN or GTEx tracks. A step journal supports resuming.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -6034,7 +6094,7 @@ explicitly requested SCREEN overlap. A step journal supports resuming.</p>
 <td><code>str</code></td>
 <td><code>'clinvar,revel,phylop,gnomad,vep'</code></td>
 <td><code>--annotations</code></td>
-<td>Comma-separated list of distinct annotations to apply in order (default: clinvar,revel,phylop,gnomad,vep).</td>
+<td>Distinct comma-separated annotations (default: clinvar,revel,phylop,gnomad,vep). Include gtex to write a separate TSV for the final variants.</td>
 </tr>
 <tr>
 <td><code>keep_intermediates</code></td>
@@ -6069,7 +6129,7 @@ explicitly requested SCREEN overlap. A step journal supports resuming.</p>
 <td><code>tuple[str, ...] | None</code></td>
 <td><code>None</code></td>
 <td><code>--force-step</code>, <code>--force-steps</code></td>
-<td>Steps to rerun with the steps that use their outputs; None reruns none. Steps: select, clinvar, revel, phylop, cadd, gerp, gnomad, spliceai, alphamissense, pharmgkb, regulatory, vep, trim. One of: <code>select</code>, <code>clinvar</code>, <code>revel</code>, <code>phylop</code>, <code>cadd</code>, <code>gerp</code>, <code>gnomad</code>, <code>spliceai</code>, <code>alphamissense</code>, <code>pharmgkb</code>, <code>regulatory</code>, <code>vep</code>, <code>trim</code></td>
+<td>Steps to rerun with the steps that use their outputs; None reruns none. Steps: select, clinvar, revel, phylop, cadd, gerp, gnomad, spliceai, alphamissense, pharmgkb, regulatory, vep, trim, gtex. One of: <code>select</code>, <code>clinvar</code>, <code>revel</code>, <code>phylop</code>, <code>cadd</code>, <code>gerp</code>, <code>gnomad</code>, <code>spliceai</code>, <code>alphamissense</code>, <code>pharmgkb</code>, <code>regulatory</code>, <code>vep</code>, <code>trim</code>, <code>gtex</code></td>
 </tr>
 <tr>
 <td><code>dry_run</code></td>
@@ -8867,6 +8927,52 @@ a time).</p>
 <td><code>False</code></td>
 <td><code>--delete</code></td>
 <td>Delete the installed gnomAD SV tables</td>
+</tr>
+<tr>
+<td><code>ref</code></td>
+<td><code>Path | None</code></td>
+<td><code>None</code> (config <code>reference_fasta</code>)</td>
+<td><code>--ref</code></td>
+<td>Reference FASTA or reference library folder; resolved from the input's header when omitted (default: config reference_fasta).</td>
+</tr>
+</tbody>
+</table></div>
+<h3><code>api.ref.gtex(RefGtexParams)</code></h3>
+<p>CLI: <code>wgsextract ref gtex</code>.
+Certification: Tested. Pinned GTEx archive installation checked on fixtures and the full release.</p>
+<p>Check or install the pinned GTEx track; output role <code>gtex_track</code>.</p>
+<p><code>RefGtexParams</code>: Verify or explicitly download the GRCh38 GTEx v10 SuSiE eQTL archive.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>CLI</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>network</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
+<td><code>--network</code></td>
+<td>Outbound network mode; server jobs cannot relax the server's mode. One of: <code>full</code>, <code>low</code>, <code>off</code></td>
+</tr>
+<tr>
+<td><code>allow_large_download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--allow-large-download</code></td>
+<td>Confirm bulk transfers in low network mode; other opt-ins still apply.</td>
+</tr>
+<tr>
+<td><code>download</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--download</code></td>
+<td>Fetch the pinned public archive (174 MB) from storage.googleapis.com.</td>
 </tr>
 <tr>
 <td><code>ref</code></td>
