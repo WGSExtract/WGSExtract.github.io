@@ -7195,7 +7195,7 @@ Certification: Tested. VCF statistics and build checks on fixtures.</p>
 </table></div>
 <h3><code>api.vcf.variantqc(VcfVariantQcParams)</code></h3>
 <p>CLI: <code>wgsextract vcf variantqc</code>.
-Certification: Experimental. External VariantQC integration does not establish output correctness.</p>
+Certification: Validated. Real DISCVRSeq 1.3.86 on Java 17 matched bcftools counts for HG002 GRCh38 calls on Windows; the same tool WGS Extract v5 used. Report content beyond variant counts is DISCVRSeq's own.</p>
 <p>Run DISCVRSeq VariantQC; output role <code>variantqc_report</code>.</p>
 <p><code>VcfVariantQcParams</code>: Run DISCVRSeq VariantQC to write an interactive HTML VCF quality report.</p>
 <div class="table-wrap"><table>
@@ -11937,8 +11937,10 @@ when there is one.</p>
 built for this platform included, with its <code>group</code> (&quot;mandatory&quot; or
 &quot;optional&quot;), <code>status</code> (&quot;installed&quot;, &quot;missing&quot; or &quot;unavailable&quot;), its own
 Pixi <code>environment</code> and the <code>environment_tools</code> it provides,
-<code>can_install</code> and <code>can_uninstall</code>, and a <code>note</code> (how to install it
-yourself, or why it can't be had). It doesn't fail on a missing tool.</p>
+<code>can_install</code> and <code>can_uninstall</code>, <code>preinstalled</code> (an optional tool
+that ships in the CLI's own environment, so it can't be removed on its
+own), and a <code>note</code> (how to install it yourself, or why it can't be had).
+It doesn't fail on a missing tool.</p>
 <p><code>ready</code> reports whether a command line (<code>command_line</code>, as its argv
 after <code>wgsextract</code>) can run on this computer without the network: each
 prerequisite its run checks (platform, tools, Docker images and GPUs, model
