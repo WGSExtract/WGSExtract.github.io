@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="WGSExtract v0.8.10 workflows and how the first real app shaped GUI-for-CLI." />
+    <meta name="description" content="WGSExtract v0.9.0 workflows and how the first real app shaped GUI-for-CLI." />
     <title>WGSExtract and GUI-for-CLI</title>
     <meta property="og:site_name" content="WGS Extract GUI" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="WGSExtract and GUI-for-CLI" />
-    <meta property="og:description" content="WGSExtract v0.8.10 workflows and how the first real app shaped GUI-for-CLI." />
+    <meta property="og:description" content="WGSExtract v0.9.0 workflows and how the first real app shaped GUI-for-CLI." />
     <meta property="og:url" content="https://wgsextract.github.io/wgsextract-cli/app/wgsextract.html" />
     <meta property="og:image" content="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
     <meta property="og:image:secure_url" content="https://wgsextract.github.io/wgsextract-cli/app/assets/social-preview.webp" />
@@ -69,7 +69,7 @@
 <section>
 <div class="wrap">
 <h2>What the app exposes</h2>
-<p>The desktop app bundles <strong>WGSExtract CLI v0.8.10</strong>. A <strong>Basic / Advanced</strong> switch in the sidebar keeps everyday controls up front; Advanced mode covers the CLI's remaining user options, and Basic runs commands with the hidden settings at their defaults. Nanopore reads work through the actions already in the app with no settings to change, and opt-in controls cover the rest. They start blank or unchecked, so automatic detection and <code>config.toml</code> defaults keep applying.</p>
+<p>The desktop app bundles <strong>WGSExtract CLI v0.9.0</strong>. Basic mode keeps everyday controls up front. Advanced mode shows more options, but experimental bonefish alignment is available only from the CLI. Hidden settings use their defaults in Basic mode. Nanopore reads work through the actions already in the app, and opt-in controls start blank or unchecked so automatic detection and <code>config.toml</code> defaults keep applying.</p>
 <h3>Oxford Nanopore in existing actions</h3>
 <p>Nanopore (ONT) reads are detected from <code>PL:ONT</code> read groups or UUID read names.</p>
 <ul>
@@ -108,7 +108,7 @@
 </ul>
 <p>AADR 2M is excluded from <code>all</code>: explicitly install its pinned metadata from Library first. It supports GRCh37/38 only; GRCh38 also needs an already-installed forward chain. It does not support CHM13/T2T, and extraction never downloads missing metadata or chains. Use non-identifying AADR sample labels.</p>
 <p>CLI setup is native on Windows, without WSL or MSYS2, and GUI settings save real TOML booleans and numbers, including <code>false</code>. Earlier CLI releases also fixed fresh Windows installation, added warnings for invalid configuration values, and improved alignment reproducibility, memory preflight, and native Windows full-genome validation. Tool and platform requirements still vary by workflow.</p>
-<p><a href="index.html">Download v0.8.10</a>, read the <a href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.8.10">v0.8.10 release notes</a> and <a href="../docs/ont.html">ONT limitations</a>, or see the <a href="devdocs/wgsextract-post-v063.html">workflow details and prerequisites</a>.</p>
+<p><a href="index.html">Download v0.9.0</a>, read the <a href="https://github.com/WGSExtract/wgsextract-cli/releases/tag/v0.9.0">v0.9.0 release notes</a> and <a href="../docs/ont.html">ONT limitations</a>, or see the <a href="devdocs/wgsextract-post-v063.html">workflow details and prerequisites</a>.</p>
 </div>
 </section>
 <section>
