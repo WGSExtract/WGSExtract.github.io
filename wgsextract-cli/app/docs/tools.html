@@ -57,7 +57,8 @@
 <div class="table-wrap"><table>
 <thead><tr><th>Action</th><th>Meaning</th></tr></thead>
 <tbody>
-<tr><td><strong>Install</strong></td><td>Runs <code>wgsextract deps install &lt;tool&gt;</code> to install an optional Pixi-managed tool environment. Streams progress to the terminal pane.</td></tr>
+<tr><td><strong>Install</strong></td><td>Runs <code>wgsextract deps install &lt;tool&gt;</code> to install an optional tool: its Pixi environment, or its pinned official release (PLINK 2 on Windows). Streams progress to the terminal pane.</td></tr>
+<tr><td><strong>Install</strong> (licence)</td><td>For a tool with a restrictive licence (Dorado: the Oxford Nanopore Technologies PLC. Public License Version 2.0, research use only), first shows the licence and its terms. <strong>Accept and install</strong> runs <code>wgsextract deps install &lt;tool&gt; --accept-license</code>.</td></tr>
 <tr><td><strong>Uninstall</strong></td><td>Asks for confirmation and runs <code>wgsextract deps uninstall &lt;tool&gt;</code> to remove an optional environment and free disk space.</td></tr>
 <tr><td><strong>Install it yourself</strong> (disabled)</td><td>This tool is managed outside Pixi (for example, Docker-based DeepVariant or a separately installed runtime). Hover over the button to read the CLI's install instructions.</td></tr>
 <tr><td><strong>Not available</strong> (disabled)</td><td>This tool is not supported on your current operating system or CPU architecture (for example, certain Linux-only callers on Windows or x86-64-only models on Apple Silicon). Hover over the button for details.</td></tr>

@@ -621,14 +621,14 @@
 <tr>
 <td><code>deps install</code></td>
 <td>Download and install the Pixi environment that provides an optional tool (e.g. gatk).</td>
-<td>Installs the tool's Pixi environment beside the CLI's own.</td>
+<td>Installs the tool's Pixi environment or pinned release.</td>
 <td>no external tools; depending on options and inputs, also: java, java17; depends on download speed</td>
 <td><code>wgsextract deps install gatk</code></td>
 </tr>
 <tr>
 <td><code>deps uninstall</code></td>
 <td>Remove the Pixi environment that provides an optional tool, and the other tools in it.</td>
-<td>Removes the tool's Pixi environment, and the other tools in it.</td>
+<td>Removes the tool's Pixi environment (and its other tools) or release.</td>
 <td>no external tools; seconds</td>
 <td><code>wgsextract deps uninstall gatk</code></td>
 </tr>

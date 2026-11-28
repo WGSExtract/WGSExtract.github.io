@@ -11924,7 +11924,7 @@ with <code>dataclasses.replace</code> and call <code>issue_url</code> for a new 
 <h2><code>api.deps</code></h2>
 <p><code>deps check</code> and <code>deps list</code>: which bioinformatics tools this
 installation finds, where, and in what version; <code>deps install</code> and
-<code>deps uninstall</code>: add or remove an optional tool's Pixi environment.</p>
+<code>deps uninstall</code>: add or remove an optional tool.</p>
 <p><code>check</code> without <code>tool</code> lists every mandatory and optional tool. The
 result's <code>details</code> hold <code>mandatory</code> and <code>optional</code>: one
 <code>{name, path, runtime, version, alt_env}</code> per tool (<code>path</code> is <code>None</code> for
@@ -11940,6 +11940,9 @@ Pixi <code>environment</code> and the <code>environment_tools</code> it provides
 <code>can_install</code> and <code>can_uninstall</code>, <code>preinstalled</code> (an optional tool
 that ships in the CLI's own environment, so it can't be removed on its
 own), and a <code>note</code> (how to install it yourself, or why it can't be had).
+A tool installed from its official release carries its <code>license</code>
+(<code>name</code>, <code>terms</code>, <code>url</code>) when it has a restrictive one, and
+<code>license_acceptance_required</code> while install needs <code>accept_license</code>.
 It doesn't fail on a missing tool.</p>
 <p><code>ready</code> reports whether a command line (<code>command_line</code>, as its argv
 after <code>wgsextract</code>) can run on this computer without the network: each
@@ -11957,8 +11960,11 @@ names host paths its folder checks can't vet.</p>
 <p><code>install</code> downloads and installs the Pixi environment that provides an
 optional tool (<code>pixi install --locked -e &lt;env&gt;</code>); <code>uninstall</code> removes it
 (<code>pixi clean -e &lt;env&gt;</code>), and with it the other tools in that environment.
-Tools that come with the CLI itself, or that you install yourself, are
-refused with how to get them.</p>
+DISCVRSeq installs as one verified JAR, and PLINK 2 on Windows and Dorado from
+their pinned, verified official releases, into the managed tools folder.
+Dorado's licence allows research use only: install refuses (usage error) until
+<code>accept_license</code> is given. Tools that come with the CLI itself, or that you
+install yourself, are refused with how to get them.</p>
 <h3><code>api.deps.check(DepsCheckParams)</code></h3>
 <p>CLI: <code>wgsextract deps check</code>.
 Certification: Tested. Local dependency probes checked.</p>
@@ -12073,7 +12079,7 @@ Certification: Tested. Local dependency readiness checked.</p>
 <p>CLI: <code>wgsextract deps install</code>.
 Certification: Experimental. External installers are mocked in fixture tests.</p>
 <p>Install an optional tool's Pixi environment (see <code>DepsInstallParams</code>).</p>
-<p><code>DepsInstallParams</code>: Download and install the Pixi environment providing an optional tool.</p>
+<p><code>DepsInstallParams</code>: Download and install an optional tool.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -12105,6 +12111,13 @@ Certification: Experimental. External installers are mocked in fixture tests.</p
 <td>required</td>
 <td><code>TOOL</code></td>
 <td>The optional tool, as list names it (e.g. gatk).</td>
+</tr>
+<tr>
+<td><code>accept_license</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>--accept-license</code></td>
+<td>Accept the tool's licence (dorado: research use only).</td>
 </tr>
 </tbody>
 </table></div>
